@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/db.js"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vrijeplek — Dashboard</title>
+
+  <style>
+    :root{
+      --ocean-900:#0c4a6e; --ocean-800:#155e75; --ocean-700:#0e7490;
+      --ocean-600:#0891b2; --ocean-500:#06b6d4; --ink:#0f172a; --muted:#64748b;
+      --glass-bg:rgba(255,255,255,.6); --glass-brd:rgba(255,255,255,.35);
+      --card:#ffffff; --card-brd:#e5e7eb;
+      --ok:#16a34a; --warn:#f59e0b; --danger:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:#f1f5f9;color:var(--ink);font-family:system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
+
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background:linear-gradient(180deg,var(--ocean-700),var(--ocean-800));
+      color:#fff; border-bottom:1px solid rgba(255,255,255,.2);
+      backdrop-filter:saturate(140%) blur(6px);
+    }
+    .topwrap{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; max-width:1100px; margin:0 auto;}
+    .brand{font-weight:700; letter-spacing:.2px}
+    .brand small{opacity:.9; font-weight:400}
+    .avatar{width:36px;height:36px;border-radius:999px; background:#fff; color:var(--ocean-800); display:grid; place-items:center; font-weight:700}
+    .avatarbtn{display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none}
+    .menu{position:relative}
+    .menu-panel{
+      position:absolute; right:0; top:calc(100% + 8px);
+      background:#fff; color:var(--ink); border:1px solid var(--card-brd);
+      border-radius:12px; min-width:220px; box-shadow:0 10px 30px rgba(2,6,23,.18);
+      padding:8px; display:none;
+    }
+    .menu-panel.show{display:block}
+    .menu a, .menu button{
+      width:100%; text-align:left; padding:10px 12px; border-radius:8px; border:none; background:none; cursor:pointer; color:var(--ink); font:inherit;
+    }
+    .menu a:hover, .menu button:hover{background:#f1f5f9}
+
+    /* Tabs */
+    .tabsbar{background:#fff; border-bottom:1px solid var(--card-brd)}
+    .tabs{max-width:1100px;margin:0 auto; display:flex; gap:6px; padding:0 16px}
+    .tab{padding:12px 14px; cursor:pointer; border-bottom:2px solid transparent; color:var(--muted); font-weight:600}
+    .tab.active{color:var(--ocean-800); border-color:var(--ocean-600)}
+    .container{max-width:1100px;margin:20px auto; padding:0 16px}
+
+    /* Cards */
+    .card{background:var(--card); border:1px solid var(--card-brd); border-radius:14px; box-shadow:0 10px 25px rgba(2,6,23,.06)}
+    .card-h{padding:14px 16px; border-bottom:1px solid var(--card-brd); display:flex; align-items:center; justify-content:space-between}
+    .card-b{padding:16px}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; border:1px solid var(--card-brd); background:#fff; cursor:pointer; font-weight:600}
+    .btn.primary{background:var(--ocean-600); border-color:var(--ocean-600); color:#fff}
+    .btn.ghost{background:#fff}
+    .grid{display:grid; gap:12px}
+    @media(min-width:800px){ .grid.cols-2{grid-template-columns:1fr 1fr} .grid.cols-3{grid-template-columns:repeat(3,1fr)} }
+
+    /* Forms */
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px}
+    input, select, textarea{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--card-brd); outline:none;
+      font:inherit; background:#fff;
+    }
+    input:focus, select:focus, textarea:focus{border-color:var(--ocean-500); box-shadow:0 0 0 3px rgba(6,182,212,.15)}
+    .row{display:grid; gap:12px}
+    @media(min-width:720px){ .row.cols-2{grid-template-columns:1fr 1fr} .row.cols-3{grid-template-columns:repeat(3,1fr)} }
+
+    /* Kalender */
+    .cal-wrap{display:grid; gap:12px}
+    .cal-head{display:flex; align-items:center; justify-content:space-between}
+    .cal-nav{display:flex; gap:8px}
+    .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+    .dow{font-size:12px; color:var(--muted); text-align:center}
+    .day{border:1px solid var(--card-brd); border-radius:10px; min-height:80px; padding:8px; display:flex; flex-direction:column; gap:8px; background:#fff}
+    .day header{font-weight:700; font-size:12px; color:var(--muted)}
+    .slot{font-size:12px; padding:5px 6px; border-radius:8px; background:#f1f5f9; display:inline-flex; align-items:center; gap:6px}
+    .slot input{margin:0}
+    .today{outline:2px solid var(--ocean-500)}
+
+    .muted{color:var(--muted)}
+    .hint{font-size:12px; color:var(--muted)}
+    .hidden{display:none}
+  </style>
+
+  <!-- Supabase: laat deze CDN staan als je géén /js/db.js hebt -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Als je al /js/db.js hebt met window.supabase, mag je deze vars leeg laten of verwijderen.
+    const SUPABASE_URL  = window.SUPABASE_URL  || "";   // <-- vul in indien nodig
+    const SUPABASE_ANON = window.SUPABASE_ANON || "";   // <-- vul in indien nodig
+    if (!window.supabase) {
+      if (!SUPABASE_URL || !SUPABASE_ANON) {
+        console.warn("Supabase client niet gevonden. Vul SUPABASE_URL en SUPABASE_ANON in, of laad /js/db.js vóór deze pagina.");
+      } else {
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topwrap">
+      <div class="avatarbtn" id="profileMenuBtn" aria-haspopup="true" aria-expanded="false">
+        <div class="avatar" id="avatarInitials">VP</div>
+        <div>
+          <div style="font-weight:700;" id="userBusiness">Bedrijf</div>
+          <div style="font-size:12px; opacity:.85" id="userEmail">gebruiker@domein.be</div>
+        </div>
+      </div>
+      <div class="brand">Vrijeplek <small>Dashboard</small></div>
+      <div class="menu">
+        <div class="menu-panel" id="profileMenu">
+          <button id="openSettings">Instellingen</button>
+          <button id="toggleLocation">Locatievoorziening: <span id="locationState">uit</span></button>
+          <button id="logoutBtn">Uitloggen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabsbar">
+    <div class="tabs">
+      <div class="tab active" data-tab="afspraken">Afspraken</div>
+      <div class="tab" data-tab="profiel">Profiel</div>
+      <div class="tab" data-tab="abonnement">Abonnement</div>
+      <div class="tab" data-tab="instellingen">Instellingen</div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Afspraken -->
+    <section id="tab-afspraken">
+      <div class="card">
+        <div class="card-h">
+          <div><strong>Kalender & beschikbaarheid</strong></div>
+          <div class="hint">Deze kalender voedt je **publieke** agenda voor klanten.</div>
+        </div>
+        <div class="card-b">
+          <div class="cal-wrap">
+            <div class="cal-head">
+              <div>
+                <strong id="calMonthLabel">Maand JJJJ</strong><br>
+                <span class="hint">Klik tijdsblokken om beschikbaar te zetten</span>
+              </div>
+              <div class="cal-nav">
+                <button class="btn ghost" id="prevMonth">Vorige</button>
+                <button class="btn ghost" id="todayBtn">Vandaag</button>
+                <button class="btn ghost" id="nextMonth">Volgende</button>
+                <button class="btn primary" id="saveAvail">Opslaan</button>
+              </div>
+            </div>
+            <div class="cal-grid" id="dow"></div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint" style="margin:10px 4px">
+        Beschikbare slots worden opgeslagen in Supabase (`availability`) en getoond aan klanten op je publieke pagina.
+      </p>
+    </section>
+
+    <!-- Profiel -->
+    <section id="tab-profiel" class="hidden">
+      <form id="profileForm" class="card">
+        <div class="card-h"><strong>Profiel</strong></div>
+        <div class="card-b">
+          <div class="row cols-2">
+            <div>
+              <label>Bedrijfsnaam</label>
+              <input id="business_name" autocomplete="organization" />
+            </div>
+            <div>
+              <label>E-mail (read-only)</label>
+              <input id="email_ro" readonly />
+            </div>
+          </div>
+          <div class="row cols-3" style="margin-top:10px">
+            <div>
+              <label>Telefoon</label>
+              <input id="phone" autocomplete="tel" />
+            </div>
+            <div>
+              <label>Categorie</label>
+              <select id="category">
+                <option value="">— kies —</option>
+                <option>Kapster / Barber</option>
+                <option>Ramenwasser</option>
+                <option>Restaurant / Horeca</option>
+                <option>Massage / Wellness</option>
+                <option>Huisonderhoud</option>
+                <option>Gezondheid</option>
+                <option>Overig</option>
+              </select>
+            </div>
+            <div>
+              <label>Stad / Gemeente</label>
+              <input id="city" autocomplete="address-level2" />
+            </div>
+          </div>
+        </div>
+        <div class="card-b" style="border-top:1px solid var(--card-brd); display:flex; justify-content:flex-end; gap:8px">
+          <button type="button" class="btn" id="cancelProfile">Annuleren</button>
+          <button type="submit" class="btn primary">Opslaan</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Abonnement -->
+    <section id="tab-abonnement" class="hidden">
+      <div class="card">
+        <div class="card-h"><strong>Abonnement & betalingen</strong></div>
+        <div class="card-b grid cols-2">
+          <div class="card" style="border:1px dashed var(--card-brd)">
+            <div class="card-b">
+              <h3 style="margin:0 0 6px 0">Huidig plan</h3>
+              <div id="planName" class="muted">—</div>
+              <div class="hint" id="planHint">Je plan bepaalt zichtbaarheid & functies.</div>
+              <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
+                <button class="btn primary" id="manageBilling">Betaling beheren</button>
+                <button class="btn" id="choosePlan">Abonnement kiezen/wijzigen</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border:1px dashed var(--card-brd)">
+            <div class="card-b">
+              <h3 style="margin:0 0 6px 0">Facturatie</h3>
+              <div class="hint">Werkt via Stripe. Na klikken opent een beveiligd portaal.</div>
+              <ul style="margin:10px 0 0 18px">
+                <li>Kaart wijzigen</li>
+                <li>Facturen downloaden</li>
+                <li>Abonnement pauzeren/stopzetten</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instellingen -->
+    <section id="tab-instellingen" class="hidden">
+      <div class="card">
+        <div class="card-h"><strong>Instellingen</strong></div>
+        <div class="card-b grid cols-2">
+          <div class="card">
+            <div class="card-b">
+              <h3 style="margin:0 0 10px 0">Locatievoorziening</h3>
+              <p class="hint">Toon je bedrijf in lokale zoekresultaten en op de kaart.</p>
+              <button class="btn" id="enableLocationBtn">Locatie aan/uit</button>
+              <div id="geoStatus" class="hint" style="margin-top:8px">Locatie: onbekend</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-b">
+              <h3 style="margin:0 0 10px 0">Account</h3>
+              <button class="btn danger" id="logoutBtn2" style="border-color:var(--danger); color:var(--danger)">Uitloggen</button>
+              <p class="hint" style="margin-top:8px">Je wordt teruggestuurd naar de login.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // ------------------------
+    // Auth check + basis state
+    // ------------------------
+    const state = {
+      user: null,
+      profile: null,
+      availability: new Map(), // key=YYYY-MM-DD, value=Set(['09:00','09:30',...])
+      month: new Date(),
+      locationEnabled: false,
+      plan: null
+    };
+
+    async function requireAuth(){
+      const { data:{ session } } = await supabase.auth.getSession();
+      if(!session){ window.location.href = "/login.html"; return; }
+      state.user = session.user;
+      document.getElementById("userEmail").textContent = state.user.email || "";
+      const initials = (state.user.user_metadata?.business_name || state.user.email || "VP").slice(0,2).toUpperCase();
+      document.getElementById("avatarInitials").textContent = initials;
+      await loadProfile();
+      await loadAvailabilityForMonth(state.month);
+      renderCalendar();
+    }
+
+    // ------------------------
+    // Tabs
+    // ------------------------
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.addEventListener("click", ()=>{
+        document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+        t.classList.add("active");
+        const tab = t.dataset.tab;
+        document.querySelectorAll("section[id^='tab-']").forEach(s=>s.classList.add("hidden"));
+        document.getElementById("tab-"+tab).classList.remove("hidden");
+      });
+    });
+
+    // ------------------------
+    // Profile dropdown
+    // ------------------------
+    const menuBtn = document.getElementById("profileMenuBtn");
+    const menu = document.getElementById("profileMenu");
+    menuBtn.addEventListener("click", ()=>{
+      menu.classList.toggle("show");
+    });
+    document.addEventListener("click",(e)=>{
+      if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
+        menu.classList.remove("show");
+      }
+    });
+
+    // ------------------------
+    // Profiel laden & opslaan
+    // ------------------------
+    async function loadProfile(){
+      // Haal profiel uit 'profiles' (1 op 1 met auth.user.id)
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", state.user.id)
+        .maybeSingle();
+      if(error){ console.warn(error); }
+      state.profile = data || { id: state.user.id, business_name:"", phone:"", category:"", city:"", location_enabled:false };
+      state.locationEnabled = !!state.profile.location_enabled;
+      // UI vullen
+      document.getElementById("business_name").value = state.profile.business_name || "";
+      document.getElementById("email_ro").value = state.user.email || "";
+      document.getElementById("phone").value = state.profile.phone || "";
+      document.getElementById("category").value = state.profile.category || "";
+      document.getElementById("city").value = state.profile.city || "";
+      document.getElementById("locationState").textContent = state.locationEnabled ? "aan" : "uit";
+      document.getElementById("userBusiness").textContent = state.profile.business_name || "Mijn bedrijf";
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const payload = {
+        id: state.user.id,
+        business_name: document.getElementById("business_name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        category: document.getElementById("category").value,
+        city: document.getElementById("city").value.trim(),
+        location_enabled: state.locationEnabled,
+        updated_at: new Date().toISOString()
+      };
+      const { error } = await supabase.from("profiles").upsert(payload,{ onConflict: "id" });
+      if(error){ alert("Opslaan mislukt: "+error.message); return; }
+      alert("Profiel opgeslagen.");
+      await loadProfile();
+    });
+    document.getElementById("cancelProfile").addEventListener("click", loadProfile);
+
+    // ------------------------
+    // Locatie
+    // ------------------------
+    document.getElementById("openSettings").addEventListener("click", ()=>{
+      document.querySelector("[data-tab='instellingen']").click();
+    });
+    document.getElementById("toggleLocation").addEventListener("click", async ()=>{
+      state.locationEnabled = !state.locationEnabled;
+      document.getElementById("locationState").textContent = state.locationEnabled ? "aan" : "uit";
+      await supabase.from("profiles").upsert({ id: state.user.id, location_enabled: state.locationEnabled, updated_at:new Date().toISOString() },{ onConflict:"id" });
+    });
+    document.getElementById("enableLocationBtn").addEventListener("click", async ()=>{
+      if(!navigator.geolocation){ alert("Geen geolocatie beschikbaar"); return; }
+      navigator.geolocation.getCurrentPosition(async (pos)=>{
+        const { latitude, longitude } = pos.coords;
+        await supabase.from("profiles").upsert({ id: state.user.id, lat: latitude, lng: longitude, location_enabled:true, updated_at:new Date().toISOString() },{ onConflict:"id" });
+        state.locationEnabled = true;
+        document.getElementById("locationState").textContent = "aan";
+        document.getElementById("geoStatus").textContent = `Locatie opgeslagen: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        alert("Locatie opgeslagen.");
+      }, err=>{
+        alert("Locatie niet toegestaan.");
+      });
+    });
+
+    // ------------------------
+    // Uitloggen
+    // ------------------------
+    async function logout(){
+      await supabase.auth.signOut();
+      window.location.href="/login.html";
+    }
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    document.getElementById("logoutBtn2").addEventListener("click", logout);
+
+    // ------------------------
+    // Abonnement / Stripe (Netlify Functions verwacht)
+    // ------------------------
+    document.getElementById("manageBilling").addEventListener("click", async ()=>{
+      try{
+        const res = await fetch("/.netlify/functions/create-portal-link",{ method:"POST" });
+        const { url } = await res.json(); if(url) window.location.href = url;
+      }catch(e){ alert("Kon Stripe Portal niet openen."); }
+    });
+    document.getElementById("choosePlan").addEventListener("click", async ()=>{
+      try{
+        const res = await fetch("/.netlify/functions/create-checkout",{ method:"POST" });
+        const { url } = await res.json(); if(url) window.location.href = url;
+      }catch(e){ alert("Kon checkout niet openen."); }
+    });
+
+    // ------------------------
+    // Kalender (pure JS) + beschikbaarheid
+    // ------------------------
+    const dow = document.getElementById("dow");
+    const calGrid = document.getElementById("calGrid");
+    "MA DI WO DO VR ZA ZO".split(" ").forEach(d=>{
+      const el = document.createElement("div"); el.textContent=d; el.className="dow"; dow.appendChild(el);
+    });
+
+    function ymd(d){ return d.toISOString().slice(0,10); }
+    function monthLabel(d){
+      const m = d.toLocaleDateString("nl-BE",{ month:"long", year:"numeric" });
+      return m.charAt(0).toUpperCase()+m.slice(1);
+    }
+    function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+    function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+
+    function renderCalendar(){
+      calGrid.innerHTML="";
+      document.getElementById("calMonthLabel").textContent = monthLabel(state.month);
+      const first = startOfMonth(state.month);
+      const last  = endOfMonth(state.month);
+      const startIdx = (first.getDay()+6)%7; // maandag=0
+      const total = startIdx + last.getDate();
+      const todayYMD = ymd(new Date());
+
+      for(let i=0; i<startIdx; i++){
+        const empty = document.createElement("div");
+        calGrid.appendChild(empty);
+      }
+      for(let day=1; day<=last.getDate(); day++){
+        const cell = document.createElement("div");
+        cell.className="day";
+        const d = new Date(state.month.getFullYear(), state.month.getMonth(), day);
+        const dYMD = ymd(d);
+        const head = document.createElement("header"); head.textContent = day;
+        cell.appendChild(head);
+        if(dYMD===todayYMD) cell.classList.add("today");
+
+        // slots UI
+        const slots = ["09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","15:00","16:00"];
+        const chosen = state.availability.get(dYMD) || new Set();
+        slots.forEach(t=>{
+          const label = document.createElement("label"); label.className="slot";
+          const cb = document.createElement("input"); cb.type="checkbox"; cb.checked = chosen.has(t);
+          cb.addEventListener("change", ()=>{
+            let set = state.availability.get(dYMD);
+            if(!set){ set = new Set(); state.availability.set(dYMD,set); }
+            cb.checked ? set.add(t) : set.delete(t);
+          });
+          label.appendChild(cb);
+          const span = document.createElement("span"); span.textContent=t;
+          label.appendChild(span);
+          cell.appendChild(label);
+        });
+
+        calGrid.appendChild(cell);
+      }
+    }
+
+    document.getElementById("prevMonth").addEventListener("click", ()=>{
+      state.month = new Date(state.month.getFullYear(), state.month.getMonth()-1, 1);
+      loadAvailabilityForMonth(state.month).then(renderCalendar);
+    });
+    document.getElementById("nextMonth").addEventListener("click", ()=>{
+      state.month = new Date(state.month.getFullYear(), state.month.getMonth()+1, 1);
+      loadAvailabilityForMonth(state.month).then(renderCalendar);
+    });
+    document.getElementById("todayBtn").addEventListener("click", ()=>{
+      state.month = new Date();
+      loadAvailabilityForMonth(state.month).then(renderCalendar);
+    });
+
+    async function loadAvailabilityForMonth(d){
+      if(!state.user) return;
+      const from = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0,10);
+      const to   = new Date(d.getFullYear(), d.getMonth()+1, 0).toISOString().slice(0,10);
+      state.availability.clear();
+      const { data, error } = await supabase
+        .from("availability")
+        .select("*")
+        .eq("user_id", state.user.id)
+        .gte("day", from)
+        .lte("day", to);
+      if(error){ console.warn(error); return; }
+      (data||[]).forEach(row=>{
+        const set = new Set((row.slots||[]));
+        state.availability.set(row.day, set);
+      });
+    }
+
+    document.getElementById("saveAvail").addEventListener("click", async ()=>{
+      if(!state.user) return;
+      const rows = [];
+      for(const [day,set] of state.availability.entries()){
+        rows.push({ user_id: state.user.id, day, slots: Array.from(set) });
+      }
+      // upsert per dag
+      const { error } = await supabase.from("availability").upsert(rows, { onConflict:"user_id,day" });
+      if(error){ alert("Opslaan mislukt: "+error.message); return; }
+      alert("Beschikbaarheid opgeslagen.");
+    });
+
+    // Start
+    requireAuth();
+  </script>
+</body>
+</html>
