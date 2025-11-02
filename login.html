@@ -46,4 +46,72 @@
     button{
       height:48px;border:none;border-radius:12px;
       background:linear-gradient(180deg,#0ea5e9,#0e7490);
-      color:#fff;font-weight:600
+      color:#fff;font-weight:600;font-size:1rem;
+      cursor:pointer;box-shadow:0 8px 18px rgba(14,116,144,.28);
+    }
+    button:hover{filter:brightness(1.05)}
+    small#error{color:#b91c1c;font-size:.9rem;margin-top:4px;display:block;text-align:center}
+    .auth-fine{text-align:center;font-size:.82rem;color:#64748b;margin-top:8px}
+  </style>
+</head>
+
+<body>
+  <section class="auth-hero">
+    <div class="auth-wrap">
+      <div class="auth-head">
+        <h1>Inloggen</h1>
+        <p>Voer hieronder je gegevens in om verder te gaan.</p>
+      </div>
+
+      <form id="loginForm">
+        <label for="email">E-mailadres</label>
+        <input id="email" type="email" autocomplete="email" placeholder="jij@bedrijf.be" required>
+
+        <label for="password">Wachtwoord</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+
+        <small id="error"></small>
+        <button type="submit">Inloggen</button>
+        <p class="auth-fine">Nog geen account? <a href="/signup.html">Registreer hier</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://xdmrikvxyeebeusnbzav.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById("loginForm");
+    const emailEl = document.getElementById("email");
+    const passEl = document.getElementById("password");
+    const errEl = document.getElementById("error");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errEl.textContent = "";
+      const email = emailEl.value.trim();
+      const password = passEl.value.trim();
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          const msg = (error.message || "").toLowerCase();
+          if (msg.includes("invalid") || msg.includes("credentials")) {
+            errEl.textContent = "Oeps! We vonden jouw account niet terug. Meld je hier aan.";
+          } else if (msg.includes("email not confirmed")) {
+            errEl.textContent = "Je e-mail is nog niet bevestigd. Kijk je inbox of spam.";
+          } else {
+            errEl.textContent = "Inloggen mislukt. Probeer opnieuw.";
+          }
+          return;
+        }
+        window.location.href = "/dashboard.html";
+      } catch {
+        errEl.textContent = "Netwerkfout. Probeer opnieuw.";
+      }
+    });
+  </script>
+</body>
+</html>
