@@ -1,130 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login — Vrijeplek</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inloggen — Vrijeplek</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="/styles.css?v=14">
+  <link rel="stylesheet" href="/styles.css?v=15">
 
   <style>
-    html,body{height:100%}
-    body{min-height:100dvh;display:flex;flex-direction:column}
-    .auth-hero{background:linear-gradient(135deg,#0c4a6e,#0e7490 55%,#0ea5e9);padding:28px 0}
-    .auth-wrap{width:100%;max-width:420px;margin:24px auto;background:#fff;border:1px solid #dbe7f3;border-radius:16px;box-shadow:0 12px 40px rgba(2,12,27,.14)}
-    .auth-head{padding:20px 20px 0 20px;color:#fff}
-    .auth-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;text-decoration:none}
-    .auth-brand .dot{width:10px;height:10px;border-radius:999px;background:#7dd3fc;box-shadow:0 0 0 4px rgba(125,211,252,.25)}
-    .auth-title{margin:12px 0 6px 0;color:#fff;font-size:1.5rem;line-height:1.2;font-weight:700}
-    .auth-sub{margin:0;color:rgba(255,255,255,.9)}
-    .auth-card{background:#fff;margin:20px;border:1px solid #e6eef6;border-radius:16px;box-shadow:0 6px 24px rgba(2,12,27,.06);padding:22px}
-    .auth-form{display:grid;gap:14px;margin-top:6px}
-    .auth-field{display:grid;gap:8px}
-    .auth-label{font-size:.92rem;color:#334155}
-    .auth-input{width:100%;height:44px;padding:0 14px;border:1px solid #dbe7f3;border-radius:12px;background:#fff;font-size:1rem;outline:0;transition:border-color .15s,box-shadow .15s}
-    .auth-input::placeholder{color:#9aa6b2}
-    .auth-input:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px rgba(14,165,233,.18)}
-    .auth-link{font-size:.92rem;color:#0e7490;text-decoration:none}
-    .auth-link:hover{text-decoration:underline}
-    .auth-actions{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
-    .auth-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:46px;padding:0 16px;border:0;border-radius:12px;background:linear-gradient(180deg,#0ea5e9,#0e7490);color:#fff;font-weight:600;font-size:1rem;cursor:pointer;box-shadow:0 8px 18px rgba(14,116,144,.28)}
-    .auth-fine{margin-top:10px;font-size:.82rem;color:#64748b;text-align:center}
-    @media (max-width:480px){
-      .auth-wrap{max-width:94%}
-      .auth-card{margin:14px;padding:18px}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f8fafc;color:#0f172a}
+    .auth-hero{
+      background:linear-gradient(135deg,#0c4a6e,#0e7490 55%,#0ea5e9);
+      padding:60px 0;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
     }
-  </style>
-</head>
-<body class="page-login">
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="index.html" class="brand" style="text-decoration:none;">
-        <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
-      </a>
-      <nav class="header-actions">
-        <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-        <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
-        <a class="nav-btn" href="aanmelden.html">Word lid van Vrijeplek</a>
-        <a class="nav-btn active" aria-current="page" href="login.html">Login</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="auth-hero">
-    <div class="container">
-      <div class="auth-wrap" role="main" aria-labelledby="logintitle">
-        <div class="auth-head">
-          <a class="auth-brand" href="index.html" aria-label="Vrijeplek">
-            <span class="dot"></span><span>Vrijeplek</span>
-          </a>
-          <h1 id="logintitle" class="auth-title">Welkom terug</h1>
-          <p class="auth-sub">Log in om verder te gaan.</p>
-        </div>
-        <div class="auth-card" aria-label="Loginformulier">
-          <form class="auth-form" method="post" action="/api/login">
-            <div class="auth-field">
-              <label class="auth-label" for="email">E-mailadres</label>
-              <input class="auth-input" id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="jij@bedrijf.be" required>
-            </div>
-            <div class="auth-field">
-              <label class="auth-label" for="password">Wachtwoord</label>
-              <input class="auth-input" id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
-            </div>
-            <div class="auth-actions">
-              <a class="auth-link" href="/wachtwoord-vergeten">Wachtwoord vergeten?</a>
-            </div>
-            <button class="auth-btn" type="submit">Login</button>
-            <p class="auth-fine">Door in te loggen ga je akkoord met de gebruiksvoorwaarden en privacyverklaring.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
-      <nav class="footer-nav">
-        <a href="voorwaarden.html" class="link">Voorwaarden</a>
-        <a href="privacy.html" class="link">Privacy</a>
-        <a href="contact.html" class="link">Contact</a>
-      </nav>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/db.js"></script>
-
-</body>
-</html>
-<script>
-  const SUPABASE_URL = "https://xdmrikvxyeebeusnbzav.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0";
-
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-
-  const form = document.getElementById("loginForm");
-  const emailEl = document.getElementById("email");
-  const passEl  = document.getElementById("password");
-  const errEl   = document.getElementById("loginError"); // <small id="loginError"></small> mag je toevoegen
-
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    errEl && (errEl.textContent = "");
-
-    const email = emailEl.value.trim();
-    const password = passEl.value;
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      errEl && (errEl.textContent = error.message || "Login mislukt");
-      return;
+    .auth-wrap{
+      width:100%;max-width:420px;background:#fff;
+      border:1px solid #dbe7f3;border-radius:16px;
+      box-shadow:0 12px 40px rgba(2,12,27,.14);
+      padding:28px;
     }
-
-    window.location.href = "/dashboard.html";  // exact zo met .html en leading slash
-  });
-</script>
+    .auth-head{
+      text-align:center;margin-bottom:18px;
+    }
+    .auth-head h1{
+      margin:0;font-size:1.8rem;line-height:1.2;color:#0c4a6e;
+    }
+    .auth-head p{
+      margin:4px 0 0 0;font-size:.95rem;color:#64748b;
+    }
+    form{display:grid;gap:14px}
+    label{font-weight:600;font-size:.92rem;color:#334155}
+    input{
+      width:100%;height:46px;padding:0 14px;
+      border:1px solid #dbe7f3;border-radius:12px;
+      font-size:1rem;outline:0;
+    }
+    input:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,.25)}
+    button{
+      height:48px;border:none;border-radius:12px;
+      background:linear-gradient(180deg,#0ea5e9,#0e7490);
+      color:#fff;font-weight:600
