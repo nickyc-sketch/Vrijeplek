@@ -1,39 +1,55 @@
-// netlify/functions/signup.js
-import { getClient, json } from './_lib/db.js';
-
-export const handler = async (event) => {
-  if (event.httpMethod !== 'POST') return json(405, { error: 'method' });
-
-  let payload;
-  try {
-    payload = JSON.parse(event.body || '{}');
-  } catch {
-    return json(400, { error: 'invalid_json' });
-  }
-
-  const { email, password, full_name = null, company = null, vat = null } = payload;
-
-  if (!email || !password) {
-    return json(400, { error: 'missing_email_or_password' });
-  }
-
-  // 👉 Zet hier je juiste redirect-URL:
-  const redirect = 'https://vrijeplekv2.netlify.app/geactiveerd.html';
-
-  try {
-    const supa = getClient();
-    const { error } = await supa.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirect,
-        data: { full_name, company, vat },
+// signup.js
+export async function handler(event) {
+  // Dit stukje zorgt dat de browser toestemming krijgt
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // laat alles toe
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
+      body: ''
+    };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
+  }
+
+  try {
+    const { email, password } = JSON.parse(event.body);
+
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+    const EMAIL_REDIRECT_TO = 'https://vrijeplek.netlify.app/geactiveerd.html';
+
+    const resp = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        email_redirect_to: EMAIL_REDIRECT_TO
+      }),
     });
 
-    if (error) return json(400, { error: error.message });
-    return json(200, { ok: true });
-  } catch (e) {
-    return json(500, { error: e.message || 'signup_failed' });
+    const text = await resp.text();
+
+    return {
+      statusCode: resp.status,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: text
+    };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: `Error: ${err.message}`
+    };
   }
-};
+}
