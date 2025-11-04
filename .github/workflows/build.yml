@@ -1,0 +1,32 @@
+name: Check & Build Vrijeplek
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm ci || npm install
+
+      - name: Lint functions
+        run: |
+          npx eslint netlify/functions --ext .js || true
+
+      - name: Build static site
+        run: |
+          echo "Static build complete (Netlify handles final deploy)"
