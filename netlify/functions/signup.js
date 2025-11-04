@@ -1,29 +1,62 @@
-
 import { getClient, json } from './_lib/db.js';
 
+const ALLOWED = [
+  'https://vrijeplek.be',
+  'https://www.vrijeplek.be',
+  'https://vrijeplek.netlify.app'
+];
+
+function allowOrigin(event){
+  const origin = event?.headers?.origin || event?.headers?.Origin || '';
+  return ALLOWED.includes(origin) ? origin : ALLOWED[0];
+}
+
 export const handler = async (event) => {
-  if (event.httpMethod !== 'POST') return json(405, { error: 'method' });
+  // CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204,
+      headers: {
+        'Access-Control-Allow-Origin': allowOrigin(event),
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Credentials': 'true',
+        'Vary': 'Origin'
+      },
+      body: ''
+    };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers: { 'Access-Control-Allow-Origin': allowOrigin(event), 'Allow': 'POST, OPTIONS' },
+      body: JSON.stringify({ error: 'method' })
+    };
+  }
 
   let payload;
   try {
     payload = JSON.parse(event.body || '{}');
   } catch {
-    return json(400, { error: 'invalid_json' });
+    return {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': allowOrigin(event) },
+      body: JSON.stringify({ error: 'invalid_json' })
+    };
   }
 
-  const {
-    email,
-    password,
-    full_name = null,
-    company = null,
-    vat = null,
-  } = payload;
-
+  const { email, password, full_name, company, vat } = payload || {};
   if (!email || !password) {
-    return json(400, { error: 'missing_email_or_password' });
-    
+    return {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': allowOrigin(event) },
+      body: JSON.stringify({ error: 'missing_email_or_password' })
+    };
   }
-const redirect = 'https://vrijeplekv2.netlify.app/geactiveerd.html';
+
+  const site = (process.env.SITE_URL || event?.headers?.origin || 'https://vrijeplek.netlify.app').replace(/\/$/, '');
+  const redirect = `${site}/geactiveerd.html`;
 
   try {
     const supa = getClient();
@@ -36,10 +69,24 @@ const redirect = 'https://vrijeplekv2.netlify.app/geactiveerd.html';
       },
     });
 
-    if (error) return json(400, { error: error.message });
-    // Supabase verstuurt nu automatisch de bevestigingsmail
-    return json(200, { ok: true });
+    if (error) {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': allowOrigin(event) },
+        body: JSON.stringify({ error: error.message })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin': allowOrigin(event) },
+      body: JSON.stringify({ ok: true, redirect })
+    };
   } catch (e) {
-    return json(500, { error: e.message || 'signup_failed' });
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': allowOrigin(event) },
+      body: JSON.stringify({ error: e.message || 'signup_failed' })
+    };
   }
 };
