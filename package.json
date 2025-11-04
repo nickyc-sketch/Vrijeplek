@@ -1,0 +1,13 @@
+{
+  "name": "vrijeplek",
+  "private": true,
+  "version": "1.0.1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "echo 'static site'",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
