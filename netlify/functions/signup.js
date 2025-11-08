@@ -1,15 +1,18 @@
 // netlify/functions/signup.js
-// CommonJS voor Netlify
+// Complete signup + eigen SMTP-mail (Combell) + exists-handling (signup of magic link)
+// Werkt met Supabase JS v2.x (zonder getUserByEmail in SDK) via REST-admin endpoint.
+
 const { createClient } = require('@supabase/supabase-js');
 const nodemailer = require('nodemailer');
 
+// ---- CORS allowlist ----
 const ALLOWED = [
   'https://vrijeplek.be',
   'https://www.vrijeplek.be',
   'https://vrijeplek.netlify.app',
 ];
 
-// ===== helpers =====
+// ---- helpers ----
 function allowOrigin(event){
   const origin = (event.headers && (event.headers.origin || event.headers.Origin)) || '';
   return ALLOWED.includes(origin) ? origin : ALLOWED[0];
@@ -38,7 +41,7 @@ function parseBody(event){
   try { return JSON.parse(raw || '{}'); } catch { return null; }
 }
 
-// simpele timeout wrapper om 504 te vermijden
+// simpele timeout wrapper (voorkomt Netlify 504)
 function withTimeout(promise, ms = 12000){
   let t;
   const timeout = new Promise((_, rej) => { t = setTimeout(() => rej(new Error('timeout')), ms); });
@@ -50,12 +53,30 @@ function makeTransport(){
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,                                 // bv. smtp.mailprotect.be
     port: Number(process.env.SMTP_PORT || 587),
-    secure: (process.env.SMTP_SECURE || 'false') === 'true',     // true => 465 implicit TLS, false => 587 STARTTLS
+    secure: (process.env.SMTP_SECURE || 'false') === 'true',     // true => 465 (implicit TLS), false => 587 (STARTTLS)
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
   });
 }
 
-// ===== handler =====
+// Supabase v2 heeft geen admin.getUserByEmail(); gebruik REST admin endpoint
+async function getUserByEmailAdmin(email, supabaseUrl, serviceRole){
+  const res = await fetch(`${supabaseUrl}/auth/v1/admin/users?email=${encodeURIComponent(email)}`, {
+    method: 'GET',
+    headers: {
+      'apikey': serviceRole,
+      'Authorization': `Bearer ${serviceRole}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (data && Array.isArray(data.users) && data.users.length > 0) {
+    return data.users[0];
+  }
+  return null;
+}
+
+// ---- handler ----
 exports.handler = async (event) => {
   // CORS preflight
   if (event.httpMethod === 'OPTIONS') return json(204, '', event);
@@ -85,10 +106,7 @@ exports.handler = async (event) => {
 
     // --- 1) Bepaal juiste actie-link (signup confirm of magic link) ---
     let actionLink;
-
-    // bestaat deze user al?
-    const lookup = await withTimeout(supa.auth.admin.getUserByEmail(email), 9000).catch(() => null);
-    const existing = lookup && lookup.data && lookup.data.user ? lookup.data.user : null;
+    const existing = await withTimeout(getUserByEmailAdmin(email, SUPABASE_URL, SERVICE), 9000).catch(() => null);
 
     if (existing) {
       if (!existing.email_confirmed_at) {
