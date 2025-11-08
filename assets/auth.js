@@ -1,64 +1,19 @@
-<html lang="nl">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Aanmelden — Vrijeplek</title>
-<link rel="stylesheet" href="/styles.css?v=20" />
-</head>
-<body>
-<header class="header">
-<div class="container brand">
-<div class="dot"></div>
-<strong>Vrijeplek</strong>
-</div>
-</header>
-<main class="container">
-<div class="card" style="padding:24px">
-<h1 style="margin:0 0 6px">Account aanmaken</h1>
-<p class="helper" style="margin:0 0 18px">Vul je bedrijfsgegevens in. Velden met * zijn verplicht.</p>
+// Vul je env via Netlify UI: SUPABASE_URL, SUPABASE_ANON_KEY
+// Gebruik op de frontend ALLEEN de ANON key.
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 
-<form id="signup" class="form" novalidate>
-<div class="grid-2">
-<div>
-<label class="label">Voornaam *</label>
-<input class="input" name="voornaam" required placeholder="Voornaam" />
-</div>
-<div>
-<label class="label">Naam *</label>
-<input class="input" name="naam" required placeholder="Familienaam" />
-</div>
-</div>
-<div class="grid-2">
-<div>
-<label class="label">BTW-nummer *</label>
-<input class="input" name="btw" required placeholder="BE0123.456.789" />
-</div>
-<div>
-<label class="label">Telefoon *</label>
-<input class="input" name="tel" required placeholder="+32 4 12 34 56 78" />
-</div>
-</div>
-<div class="grid-2">
-<div>
-<label class="label">E-mail *</label>
-<input class="input" type="email" name="email" required placeholder="jij@bedrijf.be" />
-</div>
-<div>
-<label class="label">Wachtwoord *</label>
-<input class="input" type="password" name="password" required minlength="8" placeholder="Min. 8 tekens" />
-</div>
-</div>
-<div>
-<label class="label">Bedrijfsnaam</label>
-<input class="input" name="bedrijf" placeholder="(optioneel)" />
-</div>
-<div class="notice">Door je te registreren ga je akkoord met de algemene voorwaarden.</div>
-<button class="btn" type="submit" id="do-signup">Account aanmaken</button>
-<div id="msg" class="helper"></div>
-</form>
-</div>
-</main>
-<script type="module" src="/assets/signup.js?v=7"></script>
-</body>
-</html>
+export const supa = createClient(
+window.ENV?.SUPABASE_URL || (https://xdmrikvxyeebeusnbzav.supabase.co== 'undefined' ? SUPABASE_URL : ''),
+window.ENV?.SUPABASE_ANON_KEY || (eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0== 'undefined' ? SUPABASE_ANON_KEY : '')
+)
+
+
+export async function requireSession(){
+const { data } = await supa.auth.getSession();
+if(!data.session){
+window.location.href = '/aanmelden.html';
+return null;
+}
+return data.session;
+}
