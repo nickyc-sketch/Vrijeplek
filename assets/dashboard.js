@@ -84,4 +84,7 @@ k1.textContent = 0; k3.textContent = 0; k4.textContent = 0
 async function getSlotsForMonth(yyyy, mm){
 const first = new Date(yyyy, mm, 1).toISOString().slice(0,10)
 const last = new Date(yyyy, mm+1, 0).toISOString().slice(0,10)
+const { data } = await supa.from('calendar_slots')
+.select('id,date,start_time,end_time,note')
+.gte('date', first).lte('date', last).eq('user_id', user.id)
 }
