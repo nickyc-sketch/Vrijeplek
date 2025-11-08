@@ -80,10 +80,10 @@ exports.handler = async (event) => {
   }
 
   const site =
-    (process.env.SITE_URL?.replace(/\/$/, '')) ||
-    ((event.headers && (event.headers.origin || event.headers.Origin)) || 'https://vrijeplek.netlify.app').replace(/\/$/, '');
+  (process.env.SITE_URL?.replace(/\/$/, '')) ||
+  ((event.headers && (event.headers.origin || event.headers.Origin)) || 'https://vrijeplek.netlify.app').replace(/\/$/, '');
 
-  const redirect = `${site}/geactiveerd.html`;
+const redirect = `${site}/bevestigen.html`;
 
   try {
     const url = process.env.SUPABASE_URL;
