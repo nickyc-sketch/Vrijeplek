@@ -1,185 +1,64 @@
-<!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Account aanmaken – Vrijeplek</title>
-  <link rel="stylesheet" href="/styles.css?v=14">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ocean-900:#0c4a6e; --ocean-700:#0e7490; --ocean-500:#0ea5e9; --ocean-300:#7dd3fc;
-      --ink-900:#0f172a; --ink-700:#334155; --ink-500:#64748b; --ink-300:#cbd5e1;
-      --bg:#f8fafc; --white:#ffffff; --radius:18px; --shadow:0 16px 48px rgba(2,8,20,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink-900);}
-    .wrap{min-height:100svh;display:grid;place-items:center;padding:24px}
-    .card{
-      width:100%; max-width:520px; background:var(--white); border-radius:var(--radius);
-      box-shadow:var(--shadow); overflow:hidden; border:1px solid #eef2f7;
-    }
-    .head{display:flex;align-items:center;gap:10px;padding:18px 22px;border-bottom:1px solid #eef2f7;background:#fff}
-    .dot{width:12px;height:12px;border-radius:999px;background:var(--ocean-500)}
-    .brand{font-weight:800;letter-spacing:.2px}
-    .body{padding:24px}
-    h1{font-size:22px;margin:0 0 14px}
-    .row{display:flex;gap:12px}
-    .row>div{flex:1}
-    label{display:block;font-size:13px;color:var(--ink-700);margin:10px 0 6px}
-    input[type=text],input[type=email],input[type=password]{
-      width:100%; padding:12px 14px; border:1px solid var(--ink-300); border-radius:12px; font-size:15px;
-      outline:none; transition:border-color .15s, box-shadow .15s; background:#fff;
-    }
-    input:focus{border-color:var(--ocean-500); box-shadow:0 0 0 3px rgba(14,165,233,.15)}
-    .error{color:#b91c1c;font-size:12px;min-height:16px;margin-top:4px}
-    .hint{color:var(--ink-500);font-size:12px;margin-top:6px}
-    .chk{display:flex;gap:10px;align-items:flex-start;margin-top:8px}
-    .actions{display:flex;align-items:center;gap:12px;margin-top:18px}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      background:var(--ocean-700); color:#fff; border:0; padding:12px 16px; border-radius:12px;
-      font-weight:700; cursor:pointer; transition:filter .15s; min-width:160px;
-    }
-    .btn[disabled]{opacity:.55;cursor:not-allowed}
-    .btn:hover{filter:brightness(1.05)}
-    .link{color:var(--ocean-700);text-decoration:none}
-    .foot{padding:0 24px 24px;color:var(--ink-500);font-size:13px}
-    .foot a{color:var(--ocean-700);text-decoration:none}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aanmelden — Vrijeplek</title>
+<link rel="stylesheet" href="/styles.css?v=20" />
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="head">
-        <span class="dot"></span><span class="brand">Vrijeplek</span>
-      </div>
-      <div class="body">
-        <h1>Account aanmaken</h1>
-        <form id="form-aanmelden" novalidate>
-          <div class="row">
-            <div>
-              <label for="full_name">Naam</label>
-              <input id="full_name" name="full_name" type="text" autocomplete="name" required>
-              <div class="error" data-e="full_name"></div>
-            </div>
-            <div>
-              <label for="company">Bedrijf (optioneel)</label>
-              <input id="company" name="company" type="text" autocomplete="organization">
-              <div class="error" data-e="company"></div>
-            </div>
-          </div>
+<header class="header">
+<div class="container brand">
+<div class="dot"></div>
+<strong>Vrijeplek</strong>
+</div>
+</header>
+<main class="container">
+<div class="card" style="padding:24px">
+<h1 style="margin:0 0 6px">Account aanmaken</h1>
+<p class="helper" style="margin:0 0 18px">Vul je bedrijfsgegevens in. Velden met * zijn verplicht.</p>
 
-          <div class="row">
-            <div>
-              <label for="vat">BTW-nummer (optioneel)</label>
-              <input id="vat" name="vat" type="text" placeholder="BE0123.456.789">
-              <div class="error" data-e="vat"></div>
-            </div>
-            <div>
-              <label for="email">E-mail</label>
-              <input id="email" name="email" type="email" autocomplete="email" required>
-              <div class="error" data-e="email"></div>
-            </div>
-          </div>
 
-          <div class="row">
-            <div>
-              <label for="password">Wachtwoord</label>
-              <input id="password" name="password" type="password" autocomplete="new-password" required>
-              <div class="error" data-e="password"></div>
-              <div class="hint">Minstens 8 tekens.</div>
-            </div>
-            <div>
-              <label for="password2">Herhaal wachtwoord</label>
-              <input id="password2" name="password2" type="password" autocomplete="new-password" required>
-              <div class="error" data-e="password2"></div>
-            </div>
-          </div>
-
-          <div class="chk">
-            <input id="terms" name="terms" type="checkbox" required>
-            <label for="terms">Ik ga akkoord met de <a class="link" href="/algemene-voorwaarden.html" target="_blank" rel="noopener">algemene voorwaarden</a>.</label>
-          </div>
-          <div class="error" data-e="terms"></div>
-
-          <div class="actions">
-            <button class="btn" type="submit" id="submitBtn" disabled>Account aanmaken</button>
-            <a class="link" href="/login.html">Heb je al een account? Inloggen</a>
-          </div>
-        </form>
-      </div>
-      <div class="foot">
-        Na aanmelden krijg je een bevestigingsmail. Klik op de link in die mail om je account te activeren.
-      </div>
-    </div>
-  </div>
-
-  <script>
-    (function(){
-      const f = document.getElementById('form-aanmelden');
-      const submitBtn = document.getElementById('submitBtn');
-      const E = k => document.querySelector('[data-e="'+k+'"]');
-
-      function validate(){
-        let ok = true;
-        // reset
-        ['full_name','email','password','password2','terms'].forEach(k => E(k).textContent='');
-
-        const full = f.full_name.value.trim();
-        const email = f.email.value.trim();
-        const p1 = f.password.value;
-        const p2 = f.password2.value;
-        const terms = f.terms.checked;
-
-        if(!full){ E('full_name').textContent='Vul je naam in.'; ok=false; }
-        if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ E('email').textContent='Geef een geldig e-mailadres.'; ok=false; }
-        if(!p1 || p1.length<8){ E('password').textContent='Minstens 8 tekens.'; ok=false; }
-        if(p2!==p1){ E('password2').textContent='Wachtwoorden komen niet overeen.'; ok=false; }
-        if(!terms){ E('terms').textContent='Je moet akkoord gaan met de voorwaarden.'; ok=false; }
-
-        submitBtn.disabled = !ok;
-        return ok;
-      }
-
-      f.addEventListener('input', validate);
-      f.addEventListener('change', validate);
-
-      f.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if(!validate()) return;
-
-        submitBtn.disabled = true;
-
-        const body = {
-          email: f.email.value.trim(),
-          password: f.password.value,
-          full_name: f.full_name.value.trim(),
-          company: f.company.value.trim() || null,
-          vat: f.vat.value.trim() || null
-        };
-
-        try{
-          const r = await fetch('/.netlify/functions/signup', {
-            method:'POST',
-            headers:{ 'Content-Type':'application/json' },
-            body: JSON.stringify(body)
-          });
-          const j = await r.json();
-          if(!r.ok){
-            alert(j.error || 'Er ging iets mis bij aanmelden.');
-            submitBtn.disabled = false;
-            return;
-          }
-          // Supabase verstuurt nu automatisch de bevestigingsmail
-          location.href = '/bevestigen.html';
-        }catch(err){
-          alert('Netwerkfout. Probeer opnieuw.');
-          submitBtn.disabled = false;
-        }
-      });
-    })();
-  </script>
+<form id="signup" class="form" novalidate>
+<div class="grid-2">
+<div>
+<label class="label">Voornaam *</label>
+<input class="input" name="voornaam" required placeholder="Voornaam" />
+</div>
+<div>
+<label class="label">Naam *</label>
+<input class="input" name="naam" required placeholder="Familienaam" />
+</div>
+</div>
+<div class="grid-2">
+<div>
+<label class="label">BTW-nummer *</label>
+<input class="input" name="btw" required placeholder="BE0123.456.789" />
+</div>
+<div>
+<label class="label">Telefoon *</label>
+<input class="input" name="tel" required placeholder="+32 4 12 34 56 78" />
+</div>
+</div>
+<div class="grid-2">
+<div>
+<label class="label">E-mail *</label>
+<input class="input" type="email" name="email" required placeholder="jij@bedrijf.be" />
+</div>
+<div>
+<label class="label">Wachtwoord *</label>
+<input class="input" type="password" name="password" required minlength="8" placeholder="Min. 8 tekens" />
+</div>
+</div>
+<div>
+<label class="label">Bedrijfsnaam</label>
+<input class="input" name="bedrijf" placeholder="(optioneel)" />
+</div>
+<div class="notice">Door je te registreren ga je akkoord met de algemene voorwaarden.</div>
+<button class="btn" type="submit" id="do-signup">Account aanmaken</button>
+<div id="msg" class="helper"></div>
+</form>
+</div>
+</main>
+<script type="module" src="/assets/signup.js?v=7"></script>
 </body>
 </html>
