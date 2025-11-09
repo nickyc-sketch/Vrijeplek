@@ -3,115 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inloggen — Vrijeplek</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=15">
-
-  <style>
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f8fafc;color:#0f172a}
-    .auth-hero{
-      background:linear-gradient(135deg,#0c4a6e,#0e7490 55%,#0ea5e9);
-      padding:60px 0;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      min-height:100vh;
-    }
-    .auth-wrap{
-      width:100%;max-width:420px;background:#fff;
-      border:1px solid #dbe7f3;border-radius:16px;
-      box-shadow:0 12px 40px rgba(2,12,27,.14);
-      padding:28px;
-    }
-    .auth-head{
-      text-align:center;margin-bottom:18px;
-    }
-    .auth-head h1{
-      margin:0;font-size:1.8rem;line-height:1.2;color:#0c4a6e;
-    }
-    .auth-head p{
-      margin:4px 0 0 0;font-size:.95rem;color:#64748b;
-    }
-    form{display:grid;gap:14px}
-    label{font-weight:600;font-size:.92rem;color:#334155}
-    input{
-      width:100%;height:46px;padding:0 14px;
-      border:1px solid #dbe7f3;border-radius:12px;
-      font-size:1rem;outline:0;
-    }
-    input:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,.25)}
-    button{
-      height:48px;border:none;border-radius:12px;
-      background:linear-gradient(180deg,#0ea5e9,#0e7490);
-      color:#fff;font-weight:600;font-size:1rem;
-      cursor:pointer;box-shadow:0 8px 18px rgba(14,116,144,.28);
-    }
-    button:hover{filter:brightness(1.05)}
-    small#error{color:#b91c1c;font-size:.9rem;margin-top:4px;display:block;text-align:center}
-    .auth-fine{text-align:center;font-size:.82rem;color:#64748b;margin-top:8px}
-  </style>
+  <title>LOGIN — Vrijeplek</title>
+  <link rel="stylesheet" href="/styles.css?v=32" />
 </head>
-
 <body>
-  <section class="auth-hero">
-    <div class="auth-wrap">
-      <div class="auth-head">
-        <h1>Inloggen</h1>
-        <p>Voer hieronder je gegevens in om verder te gaan.</p>
+<header class="header">
+  <div class="container brand">
+    <div class="dot"></div><strong>Vrijeplek</strong>
+  </div>
+</header>
+
+<main class="container">
+  <div class="card" style="padding:24px;max-width:560px">
+    <h1 style="margin:0 0 6px">Inloggen</h1>
+    <p class="helper" style="margin:0 0 18px">Log in met je e-mailadres en wachtwoord.</p>
+
+    <form id="login" class="form" novalidate>
+      <div>
+        <label class="label">E-mail *</label>
+        <input class="input" type="email" name="email" required placeholder="jij@bedrijf.be" />
       </div>
+      <div>
+        <label class="label">Wachtwoord *</label>
+        <input class="input" type="password" name="password" required minlength="8" placeholder="••••••••" />
+      </div>
+      <button class="btn" type="submit" id="do-login">Inloggen</button>
+      <div id="msg" class="helper"></div>
+      <div class="helper" style="margin-top:10px">
+        <a href="/wachtwoord-vergeten.html">Wachtwoord vergeten?</a>
+      </div>
+    </form>
+  </div>
+</main>
 
-      <form id="loginForm">
-        <label for="email">E-mailadres</label>
-        <input id="email" type="email" autocomplete="email" placeholder="jij@bedrijf.be" required>
-
-        <label for="password">Wachtwoord</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
-
-        <small id="error"></small>
-        <button type="submit">Inloggen</button>
-        <p class="auth-fine">Nog geen account? <a href="/signup.html">Registreer hier</a>.</p>
-      </form>
-    </div>
-  </section>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://xdmrikvxyeebeusnbzav.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const form = document.getElementById("loginForm");
-    const emailEl = document.getElementById("email");
-    const passEl = document.getElementById("password");
-    const errEl = document.getElementById("error");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      errEl.textContent = "";
-      const email = emailEl.value.trim();
-      const password = passEl.value.trim();
-
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          const msg = (error.message || "").toLowerCase();
-          if (msg.includes("invalid") || msg.includes("credentials")) {
-            errEl.textContent = "Oeps! We vonden jouw account niet terug. Meld je hier aan.";
-          } else if (msg.includes("email not confirmed")) {
-            errEl.textContent = "Je e-mail is nog niet bevestigd. Kijk je inbox of spam.";
-          } else {
-            errEl.textContent = "Inloggen mislukt. Probeer opnieuw.";
-          }
-          return;
-        }
-        window.location.href = "/dashboard.html";
-      } catch {
-        errEl.textContent = "Netwerkfout. Probeer opnieuw.";
-      }
-    });
-  </script>
+<script type="module" src="/assets/login.js?v=2"></script>
 </body>
 </html>
