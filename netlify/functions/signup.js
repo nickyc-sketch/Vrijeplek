@@ -128,7 +128,7 @@ exports.handler = async (event) => {
   const site =
     (process.env.SITE_URL?.replace(/\/$/, '')) ||
     ((event.headers && (event.headers.origin || event.headers.Origin)) || 'https://vrijeplek.netlify.app').replace(/\/$/, '');
-  const redirectTo = `${site}/bevestigen.html`;
+  const redirectTo = `${site}/bedankt.html`;
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
