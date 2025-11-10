@@ -1,50 +1,169 @@
-<form id="signup" class="form" novalidate>
-  <div class="grid-2">
-    <div>
-      <label class="label">Voornaam *</label>
-      <input class="input" name="voornaam" required placeholder="Voornaam" />
-    </div>
-    <div>
-      <label class="label">Naam *</label>
-      <input class="input" name="naam" required placeholder="Familienaam" />
-    </div>
-  </div>
-  <div class="grid-2">
-    <div>
-      <label class="label">BTW-nummer *</label>
-      <input class="input" name="btw" required placeholder="BE0123.456.789" />
-    </div>
-    <div>
-      <label class="label">Telefoon *</label>
-      <input class="input" name="tel" required placeholder="+32 4 12 34 56 78" />
-    </div>
-  </div>
-  <div class="grid-2">
-    <div>
-      <label class="label">E-mail *</label>
-      <input class="input" type="email" name="email" required placeholder="jij@bedrijf.be" />
-    </div>
-    <div>
-      <label class="label">Wachtwoord *</label>
-      <input class="input" type="password" name="password" required minlength="8" placeholder="Min. 8 tekens" />
-    </div>
-  </div>
-  <div>
-    <label class="label">Bedrijfsnaam</label>
-    <input class="input" name="bedrijf" placeholder="(optioneel)" />
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aanmelden — Vrijeplek</title>
+
+  <!-- Fonts + Styles (zelfde stijl als index) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=smurf6">
+</head>
+
+<body>
+  <div class="site">
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="brand" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
+          <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;" onerror="this.remove()">
+          <span class="brand-name">Vrijeplek</span>
+          <span class="brand-dot"></span>
+        </a>
+        <nav class="header-actions">
+          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
+          <a class="nav-btn" href="aanmelden.html" aria-current="page">Word lid</a>
+          <a class="nav-btn" href="login.html">Login</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <section class="hero" style="padding:56px 0 40px;text-align:center;">
+        <div class="container hero-inner">
+          <h1>Meld je aan bij Vrijeplek</h1>
+          <p style="max-width:700px;margin:8px auto 26px;color:#1f2a44;">
+            Registreer jouw zaak en publiceer je vrije momenten. Vul de gegevens correct in; we verifiëren je BTW-nummer.
+          </p>
+
+          <!-- Kaart in dezelfde “glas”-stijl -->
+          <div class="search-wrap" style="max-width:760px;">
+            <form id="aanmelden-form" action="bedankt.html" method="post" aria-label="Aanmelden" class="form-grid" style="grid-template-columns:1fr 1fr;gap:14px;">
+              <!-- ZAAK / CONTACT -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="zaak">Naam van je zaak / contactpersoon</label>
+                <input id="zaak" name="zaak" type="text" class="input" required autocomplete="organization" />
+              </div>
+
+              <!-- EMAIL -->
+              <div class="field">
+                <label for="email">E-mailadres</label>
+                <input id="email" name="email" type="email" class="input" required autocomplete="email" />
+              </div>
+
+              <!-- TELEFOON -->
+              <div class="field">
+                <label for="telefoon">Telefoon</label>
+                <input id="telefoon" name="telefoon" type="tel" class="input" required autocomplete="tel" placeholder="+32 ..." />
+              </div>
+
+              <!-- BTW -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="btw">BTW-nummer <small style="font-weight:600;color:#475569;">(formaat: BE0123456789)</small></label>
+                <input id="btw" name="btw" type="text" class="input"
+                       placeholder="BE0123456789"
+                       required
+                       pattern="^BE[0-9]{10}$"
+                       title="Voer een geldig Belgisch BTW-nummer in (BE + 10 cijfers)" />
+              </div>
+
+              <!-- ADRES -->
+              <div class="field">
+                <label for="straat">Straat + nr.</label>
+                <input id="straat" name="straat" type="text" class="input" required autocomplete="address-line1" />
+              </div>
+              <div class="field">
+                <label for="postcode">Postcode &amp; gemeente</label>
+                <input id="postcode" name="postcode" type="text" class="input" required autocomplete="address-level2" placeholder="3500 Hasselt" />
+              </div>
+
+              <!-- CATEGORIE (optioneel nu) -->
+              <div class="field">
+                <label for="cat">Categorie</label>
+                <select id="cat" name="cat" class="input">
+                  <option value="">Kies een categorie</option>
+                  <option value="horeca">Horeca</option>
+                  <option value="wellness">Wellness</option>
+                  <option value="zorg">Gezondheid</option>
+                  <option value="events">Events</option>
+                  <option value="poetsdiensten">Poetsdiensten</option>
+                  <option value="ramenwasser">Ramenwasser</option>
+                  <option value="dieren">Dieren</option>
+                </select>
+              </div>
+
+              <!-- WEBSITE -->
+              <div class="field">
+                <label for="website">Website (optioneel)</label>
+                <input id="website" name="website" type="url" class="input" placeholder="https://voorbeeld.be" />
+              </div>
+
+              <!-- OMSCHRIJVING -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="bio">Korte omschrijving (optioneel)</label>
+                <input id="bio" name="bio" type="text" class="input" placeholder="Beschrijf kort je diensten of specialisaties" />
+              </div>
+
+              <!-- VOORWAARDEN -->
+              <div class="field" style="grid-column:1 / -1;display:flex;align-items:flex-start;gap:10px;">
+                <input id="voorwaarden" name="voorwaarden" type="checkbox" required style="margin-top:3px;">
+                <label for="voorwaarden" style="font-size:14px;color:#0a0a0a;line-height:1.45;">
+                  Ik ga akkoord met de <a href="voorwaarden.html" style="color:var(--blue-700);font-weight:700;">algemene voorwaarden</a>.
+                </label>
+              </div>
+
+              <!-- SUBMIT -->
+              <div style="grid-column:1 / -1;display:flex;justify-content:center;margin-top:6px;">
+                <button type="submit" class="btn" style="min-width:220px;height:46px;">Aanmelden</button>
+              </div>
+
+              <!-- Opmerking -->
+              <p class="form-note" style="grid-column:1 / -1;text-align:center;">
+                Na je aanmelding verifiëren we je gegevens en ontvang je een bevestiging per e-mail.
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
+        <nav class="footer-nav">
+          <a href="voorwaarden.html">Algemene voorwaarden</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
   </div>
 
-  <!-- Algemene voorwaarden verplicht -->
-  <div class="card" style="padding:14px">
-    <div style="display:flex;gap:10px;align-items:flex-start">
-      <input id="tos" type="checkbox" style="margin-top:3px" />
-      <label for="tos" class="helper" style="line-height:1.4">
-        Ik ga akkoord met de <a href="/voorwaarden.html" target="_blank">algemene voorwaarden</a>
-        en het <a href="/privacy.html" target="_blank">privacybeleid</a> *
-      </label>
-    </div>
-  </div>
+  <!-- Mini script: extra nette validatie & BTW auto-kap -->
+  <script>
+    (function(){
+      // BTW automatisch in BE-formaat houden (maakt BE hoofdletters)
+      const btw = document.getElementById('btw');
+      if (btw) {
+        btw.addEventListener('input', () => {
+          btw.value = btw.value.toUpperCase().replace(/\s+/g,'');
+        });
+      }
 
-  <button class="btn" type="submit" id="do-signup" disabled>Account aanmaken</button>
-  <div id="msg" class="helper"></div>
-</form>
+      // Form validatie prompt (laat standaard HTML5 validatie werken)
+      const form = document.getElementById('aanmelden-form');
+      form.addEventListener('submit', (e) => {
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          alert('Controleer de velden en accepteer de algemene voorwaarden.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
