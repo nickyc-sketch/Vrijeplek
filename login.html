@@ -3,172 +3,192 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inloggen — Vrijeplek</title>
+  <title>Login — Vrijeplek</title>
+
+  <!-- Fonts + globale stijl -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=login3">
+  <link rel="stylesheet" href="styles.css?v=smurf6">
+
+  <!-- Pagina-specifieke aankleding -->
   <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #0e7490 0%, #0c4a6e 100%);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+    /* Header subtiel glansje */
+    .site-header::after{
+      content:""; position:absolute; inset:auto 0 0 0; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+      opacity:.6;
     }
 
-    .login-card {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 1.5rem;
-      padding: 2.5rem;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    /* Card header lint */
+    .card-head{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:14px 16px 12px; margin:-10px -10px 12px -10px; border-radius:14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
+        linear-gradient(120deg, rgba(26,102,255,.18), rgba(0,86,255,.28));
+      border:1px solid rgba(26,102,255,.28);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .card-head h2{
+      font-size:18px; margin:0; color:var(--blue-900); letter-spacing:.2px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
+      background:linear-gradient(180deg, #fff, #f5f9ff);
+      border:1px solid rgba(26,102,255,.28);
+      box-shadow:0 4px 12px rgba(10,27,90,.10);
+      color:var(--blue-900);
+      white-space:nowrap;
+    }
+    .badge-dot{
+      width:8px; height:8px; border-radius:50%;
+      background:conic-gradient(from 200deg, var(--blue-300), var(--blue-600));
+      box-shadow:0 0 0 4px rgba(26,102,255,.12);
     }
 
-    .login-card h1 {
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 1.8rem;
-      color: #fff;
+    /* Sectie-titel en lijntje */
+    .section-title{
+      display:flex; align-items:center; gap:10px;
+      justify-content:center; margin:8px auto 22px; color:var(--blue-900);
+    }
+    .section-title::before, .section-title::after{
+      content:""; flex:1 1 100px; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(26,102,255,.25), transparent);
     }
 
-    label {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
+    /* Form aankleding */
+    .form-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+    .field .hint{ font-size:12px; color:#5b6b86; margin-top:4px; }
 
-    input {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border-radius: 0.8rem;
-      border: none;
-      margin-bottom: 1.2rem;
-      font-size: 1rem;
-    }
+    /* Checkbox kader */
+    .checkwrap{ border:1px dashed rgba(26,102,255,.28); padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.6); }
 
-    input[type="email"], input[type="password"] {
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-    }
+    /* Submit zone */
+    .submit-zone{ display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:6px; }
+    .tiny-note{ font-size:12px; color:#5b6b86; }
 
-    input::placeholder {
-      color: rgba(255,255,255,0.6);
-    }
+    /* Link-rij onder knoppen */
+    .under-links{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; font-size:14px; }
 
-    button {
-      width: 100%;
-      background: #0ea5e9;
-      border: none;
-      padding: 0.9rem 1rem;
-      border-radius: 0.8rem;
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    button:hover {
-      background: #38bdf8;
-      transform: translateY(-2px);
-    }
-
-    .error {
-      color: #f87171;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: -0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .extra-links {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-    }
-
-    .extra-links a {
-      color: #bae6fd;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .extra-links a:hover {
-      text-decoration: underline;
-    }
-
-    .logo {
-      position: absolute;
-      top: 20px;
-      left: 25px;
-    }
-
-    .logo img {
-      width: 120px;
-      cursor: pointer;
-    }
+    /* Responsief */
+    @media (min-width: 720px){ .form-grid{ grid-template-columns:1fr 1fr; } }
   </style>
 </head>
+
 <body>
-  <a href="index.html" class="logo">
-    <img src="img/logo-vrijeplek.png" alt="Vrijeplek logo">
-  </a>
+  <div class="site">
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="brand" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
+          <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;" onerror="this.remove()">
+          <span class="brand-name">Vrijeplek</span>
+          <span class="brand-dot"></span>
+        </a>
+        <nav class="header-actions">
+          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
+          <a class="nav-btn" href="aanmelden.html">Word lid</a>
+          <a class="nav-btn" href="login.html" aria-current="page">Login</a>
+        </nav>
+      </div>
+    </header>
 
-  <div class="login-card">
-    <h1>Inloggen</h1>
-    <form id="loginForm">
-      <label for="email">E-mailadres</label>
-      <input type="email" id="email" name="email" placeholder="jij@bedrijf.be" required>
+    <!-- MAIN -->
+    <main>
+      <section class="hero" style="padding:56px 0 40px;text-align:center;">
+        <div class="container hero-inner">
+          <h1 class="section-title">Log in op je account</h1>
+          <p style="max-width:700px;margin:0 auto 26px;color:#1f2a44;">
+            Meld je aan met je e-mailadres en wachtwoord. Nog geen account? <a href="aanmelden.html" style="font-weight:700;color:var(--blue-800)">Word lid</a>.
+          </p>
 
-      <label for="password">Wachtwoord</label>
-      <input type="password" id="password" name="password" placeholder="••••••••" required>
+          <!-- Kaart in dezelfde “glas”-stijl -->
+          <div class="search-wrap" style="max-width:620px; padding:18px; margin-inline:auto;">
+            <div class="card-head">
+              <h2>Beveiligde login</h2>
+              <span class="badge"><span class="badge-dot"></span> SSL actief</span>
+            </div>
 
-      <div id="errorMsg" class="error"></div>
+            <form id="login-form" aria-label="Login" class="form-grid" novalidate>
+              <!-- EMAIL -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="login-email">E-mailadres</label>
+                <input id="login-email" name="email" type="email" class="input" required autocomplete="email" />
+                <div class="hint">Gebruik hetzelfde e-mailadres als bij je registratie.</div>
+              </div>
 
-      <button type="submit">Inloggen</button>
-    </form>
+              <!-- WACHTWOORD -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="login-password">Wachtwoord</label>
+                <input id="login-password" name="password" type="password" class="input" required autocomplete="current-password" />
+                <div class="hint">Minstens 8 tekens aanbevolen.</div>
+              </div>
 
-    <div class="extra-links">
-      <p>Nog geen account? <a href="aanmelden.html">Aanmelden</a></p>
-      <p><a href="#">Wachtwoord vergeten?</a></p>
-    </div>
+              <!-- REMEMBER -->
+              <div class="field checkwrap" style="grid-column:1 / -1; display:flex; align-items:flex-start; gap:10px;">
+                <input id="remember" name="remember" type="checkbox" style="margin-top:3px;">
+                <label for="remember" style="font-size:14px; color:#0a0a0a; line-height:1.45;">Ingelogd blijven op dit toestel</label>
+              </div>
+
+              <!-- SUBMIT -->
+              <div class="submit-zone" style="grid-column:1 / -1;">
+                <button type="submit" class="btn" style="min-width:220px; height:46px;">Inloggen</button>
+                <div class="under-links">
+                  <a href="wachtwoord-vergeten.html" class="text-link">Wachtwoord vergeten?</a>
+                  <span>•</span>
+                  <a href="aanmelden.html" class="text-link">Account aanmaken</a>
+                </div>
+                <div class="tiny-note">Probleem met aanmelden? Mail <a href="mailto:info@vrijeplek.be">info@vrijeplek.be</a>.</div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
+        <nav class="footer-nav">
+          <a href="voorwaarden.html">Algemene voorwaarden</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
   </div>
 
-  <script src="https://unpkg.com/@supabase/supabase-js@2.45.0"></script>
   <script>
-    const SUPABASE_URL = 'https://YOUR-SUPABASE-URL.supabase.co';
-    const SUPABASE_KEY = 'YOUR-ANON-KEY';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    (function(){
+      const form = document.getElementById('login-form');
+      const email = document.getElementById('login-email');
+      const pass = document.getElementById('login-password');
 
-    const form = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('errorMsg');
+      // Basic HTML5 validatie + nette melding
+      form.addEventListener('submit', (e) => {
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          alert('Vul je e-mailadres en wachtwoord in.');
+          return;
+        }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorMsg.textContent = '';
+        // Laat eventuele bestaande JS-auth (Supabase/Netlify) het overnemen
+        // → Luister in je app op 'login:submit' om eigen loginlogica uit te voeren.
+        const detail = { email: email.value.trim(), password: pass.value };
+        const evt = new CustomEvent('login:submit', { detail });
+        window.dispatchEvent(evt);
 
-      const email = form.email.value.trim();
-      const password = form.password.value.trim();
+        // Voorkom standaard submit als je SPA/JS-auth gebruikt.
+        e.preventDefault();
+      });
 
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) throw error;
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        errorMsg.textContent = 'Ongeldige inloggegevens of fout bij verbinding.';
-      }
-    });
+      // Convenience: enter op wachtwoord triggert submit
+      pass.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'){ form.requestSubmit(); }});
+    })();
   </script>
 </body>
 </html>
