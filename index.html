@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- RELATIEF pad (geen leading slash) + cache-bust -->
   <link rel="stylesheet" href="styles.css?v=smurf5">
 </head>
 
@@ -14,11 +15,12 @@
   <div class="site">
     <header class="site-header">
       <div class="header-inner">
-       <a href="index.html" class="brand" style="text-decoration:none;">
-  <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;">
-  <span class="brand-name">Vrijeplek</span>
-  <span class="brand-dot"></span>
-</a>
+        <a href="index.html" class="brand" style="text-decoration:none;">
+          <!-- Logo met fallback: als 'logo.png' ontbreekt, verwijder de img -->
+          <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;" onerror="this.remove()">
+          <span class="brand-name">Vrijeplek</span>
+          <span class="brand-dot"></span>
+        </a>
         <nav class="header-actions">
           <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
           <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
@@ -29,17 +31,17 @@
     </header>
 
     <main>
-      <!-- Categorie-bolletjes (foto’s overgenomen) -->
+      <!-- Categorie-bolletjes (RELATIEVE paden naar img/) -->
       <section class="cat-dots">
         <div class="container">
           <ul class="cat-dots-row">
-            <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="/img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
-            <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="/img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
-            <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="/img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
-            <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="/img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
-            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="/img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
-            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="/img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
-            <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="/img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
+            <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
+            <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
+            <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
+            <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
+            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
+            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
+            <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
           </ul>
         </div>
       </section>
@@ -49,7 +51,8 @@
         <div class="container hero-inner">
           <h1>Last minute? Zoek een afspraak!</h1>
           <div class="search-wrap">
-            <form id="zoeken" class="search" action="/zoeken" method="get" role="search" aria-label="Zoeken">
+            <!-- RELATIEVE action (geen leading slash) -->
+            <form id="zoeken" class="search" action="zoeken" method="get" role="search" aria-label="Zoeken">
               <div class="field">
                 <label for="q">Welk bedrijf zoek je?</label>
                 <input id="q" name="q" type="search" required>
