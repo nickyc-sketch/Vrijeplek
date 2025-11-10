@@ -68,7 +68,7 @@ export async function handler(event) {
       email,
       password,
       options: {
-        emailRedirectTo: "https://www.vrijeplek.be/bedankt.html"
+        emailRedirectTo: "https://www.vrijeplek.be/geactiveerd.html"
       }
     });
 
