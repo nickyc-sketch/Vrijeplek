@@ -5,11 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aanmelden — Vrijeplek</title>
 
-  <!-- Fonts + Styles (zelfde stijl als index) -->
+  <!-- Fonts + globale stijl -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=smurf6">
+
+  <!-- Pagina-specifieke aankleding -->
+  <style>
+    /* Header subtiel glansje */
+    .site-header::after{
+      content:""; position:absolute; inset:auto 0 0 0; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+      opacity:.6;
+    }
+
+    /* Card header lint */
+    .card-head{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:14px 16px 12px; margin:-10px -10px 12px -10px; border-radius:14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
+        linear-gradient(120deg, rgba(26,102,255,.18), rgba(0,86,255,.28));
+      border:1px solid rgba(26,102,255,.28);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .card-head h2{
+      font-size:18px; margin:0; color:var(--blue-900); letter-spacing:.2px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
+      background:linear-gradient(180deg, #fff, #f5f9ff);
+      border:1px solid rgba(26,102,255,.28);
+      box-shadow:0 4px 12px rgba(10,27,90,.10);
+      color:var(--blue-900);
+      white-space:nowrap;
+    }
+    .badge-dot{
+      width:8px; height:8px; border-radius:50%;
+      background:conic-gradient(from 200deg, var(--blue-300), var(--blue-600));
+      box-shadow:0 0 0 4px rgba(26,102,255,.12);
+    }
+
+    /* Sectie-titel en lijntje */
+    .section-title{
+      display:flex; align-items:center; gap:10px;
+      justify-content:center; margin:8px auto 22px; color:var(--blue-900);
+    }
+    .section-title::before, .section-title::after{
+      content:""; flex:1 1 100px; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(26,102,255,.25), transparent);
+    }
+
+    /* Formularium aankleding */
+    .form-grid .field .hint{
+      font-size:12px; color:#5b6b86; margin-top:4px;
+    }
+    .form-grid .field .row{
+      display:flex; gap:12px;
+    }
+
+    /* Mini divider */
+    .soft-divider{
+      height:1px; background:linear-gradient(90deg, transparent, rgba(26,102,255,.18), transparent);
+      margin:8px 0 2px;
+    }
+
+    /* Checkbox lijntje */
+    .checkwrap{
+      border:1px dashed rgba(26,102,255,.28);
+      padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.6);
+    }
+
+    /* Submit zone */
+    .submit-zone{
+      display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:6px;
+    }
+    .tiny-note{ font-size:12px; color:#5b6b86; }
+
+    /* Responsieve nuance */
+    @media (max-width: 720px){
+      .card-head{ flex-direction:column; align-items:flex-start; }
+    }
+  </style>
 </head>
 
 <body>
@@ -35,40 +114,50 @@
     <main>
       <section class="hero" style="padding:56px 0 40px;text-align:center;">
         <div class="container hero-inner">
-          <h1>Meld je aan bij Vrijeplek</h1>
-          <p style="max-width:700px;margin:8px auto 26px;color:#1f2a44;">
-            Registreer jouw zaak en publiceer je vrije momenten. Vul de gegevens correct in; we verifiëren je BTW-nummer.
+          <h1 class="section-title">Meld je aan bij Vrijeplek</h1>
+          <p style="max-width:700px;margin:0 auto 26px;color:#1f2a44;">
+            Registreer jouw zaak en publiceer je vrije momenten. We verifiëren je BTW-nummer en activeren je profiel.
           </p>
 
           <!-- Kaart in dezelfde “glas”-stijl -->
-          <div class="search-wrap" style="max-width:760px;">
-            <form id="aanmelden-form" action="bedankt.html" method="post" aria-label="Aanmelden" class="form-grid" style="grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="search-wrap" style="max-width:820px; padding:18px;">
+            <div class="card-head">
+              <h2>Gegevens onderneming</h2>
+              <span class="badge"><span class="badge-dot"></span> Verificatie vereist</span>
+            </div>
+
+            <form id="aanmelden-form" action="bedankt.html" method="post" aria-label="Aanmelden" class="form-grid" style="grid-template-columns:1fr 1fr; gap:14px;">
               <!-- ZAAK / CONTACT -->
               <div class="field" style="grid-column:1 / -1;">
                 <label for="zaak">Naam van je zaak / contactpersoon</label>
                 <input id="zaak" name="zaak" type="text" class="input" required autocomplete="organization" />
+                <div class="hint">Gebruik de officiële handelsnaam of de naam die klanten herkennen.</div>
               </div>
 
               <!-- EMAIL -->
               <div class="field">
                 <label for="email">E-mailadres</label>
                 <input id="email" name="email" type="email" class="input" required autocomplete="email" />
+                <div class="hint">We sturen je bevestigingen en belangrijke updates naar dit adres.</div>
               </div>
 
               <!-- TELEFOON -->
               <div class="field">
                 <label for="telefoon">Telefoon</label>
                 <input id="telefoon" name="telefoon" type="tel" class="input" required autocomplete="tel" placeholder="+32 ..." />
+                <div class="hint">Bij voorkeur je zakelijk nummer.</div>
               </div>
 
               <!-- BTW -->
               <div class="field" style="grid-column:1 / -1;">
+                <div class="soft-divider"></div>
                 <label for="btw">BTW-nummer <small style="font-weight:600;color:#475569;">(formaat: BE0123456789)</small></label>
                 <input id="btw" name="btw" type="text" class="input"
                        placeholder="BE0123456789"
                        required
                        pattern="^BE[0-9]{10}$"
                        title="Voer een geldig Belgisch BTW-nummer in (BE + 10 cijfers)" />
+                <div class="hint">Exact in dit formaat. We doen een automatische check bij het verzenden.</div>
               </div>
 
               <!-- ADRES -->
@@ -81,7 +170,7 @@
                 <input id="postcode" name="postcode" type="text" class="input" required autocomplete="address-level2" placeholder="3500 Hasselt" />
               </div>
 
-              <!-- CATEGORIE (optioneel nu) -->
+              <!-- CATEGORIE -->
               <div class="field">
                 <label for="cat">Categorie</label>
                 <select id="cat" name="cat" class="input">
@@ -109,22 +198,18 @@
               </div>
 
               <!-- VOORWAARDEN -->
-              <div class="field" style="grid-column:1 / -1;display:flex;align-items:flex-start;gap:10px;">
+              <div class="field checkwrap" style="grid-column:1 / -1; display:flex; align-items:flex-start; gap:10px;">
                 <input id="voorwaarden" name="voorwaarden" type="checkbox" required style="margin-top:3px;">
-                <label for="voorwaarden" style="font-size:14px;color:#0a0a0a;line-height:1.45;">
-                  Ik ga akkoord met de <a href="voorwaarden.html" style="color:var(--blue-700);font-weight:700;">algemene voorwaarden</a>.
+                <label for="voorwaarden" style="font-size:14px; color:#0a0a0a; line-height:1.45;">
+                  Ik ga akkoord met de <a href="voorwaarden.html" style="color:var(--blue-700); font-weight:700;">algemene voorwaarden</a>.
                 </label>
               </div>
 
               <!-- SUBMIT -->
-              <div style="grid-column:1 / -1;display:flex;justify-content:center;margin-top:6px;">
-                <button type="submit" class="btn" style="min-width:220px;height:46px;">Aanmelden</button>
+              <div class="submit-zone" style="grid-column:1 / -1;">
+                <button type="submit" class="btn" style="min-width:220px; height:46px;">Aanmelden</button>
+                <div class="tiny-note">Na je aanmelding verifiëren we je gegevens en ontvang je een bevestiging per e-mail.</div>
               </div>
-
-              <!-- Opmerking -->
-              <p class="form-note" style="grid-column:1 / -1;text-align:center;">
-                Na je aanmelding verifiëren we je gegevens en ontvang je een bevestiging per e-mail.
-              </p>
             </form>
           </div>
         </div>
@@ -144,10 +229,9 @@
     </footer>
   </div>
 
-  <!-- Mini script: extra nette validatie & BTW auto-kap -->
   <script>
     (function(){
-      // BTW automatisch in BE-formaat houden (maakt BE hoofdletters)
+      // BTW automatisch BE-formaat houden
       const btw = document.getElementById('btw');
       if (btw) {
         btw.addEventListener('input', () => {
@@ -155,12 +239,12 @@
         });
       }
 
-      // Form validatie prompt (laat standaard HTML5 validatie werken)
+      // HTML5 validatie melding
       const form = document.getElementById('aanmelden-form');
       form.addEventListener('submit', (e) => {
         if (!form.checkValidity()) {
           e.preventDefault();
-          alert('Controleer de velden en accepteer de algemene voorwaarden.');
+          alert('Controleer de velden (BTW in BE-formaat) en accepteer de algemene voorwaarden.');
         }
       });
     })();
