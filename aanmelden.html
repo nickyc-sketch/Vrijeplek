@@ -11,83 +11,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=smurf6">
 
-  <!-- Pagina-specifieke aankleding -->
   <style>
-    /* Header subtiel glansje */
-    .site-header::after{
-      content:""; position:absolute; inset:auto 0 0 0; height:1px;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
-      opacity:.6;
-    }
-
-    /* Card header lint */
-    .card-head{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:14px 16px 12px; margin:-10px -10px 12px -10px; border-radius:14px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
-        linear-gradient(120deg, rgba(26,102,255,.18), rgba(0,86,255,.28));
-      border:1px solid rgba(26,102,255,.28);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
-    }
-    .card-head h2{ font-size:18px; margin:0; color:var(--blue-900); letter-spacing:.2px; }
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
-      background:linear-gradient(180deg, #fff, #f5f9ff);
-      border:1px solid rgba(26,102,255,.28);
-      box-shadow:0 4px 12px rgba(10,27,90,.10);
-      color:var(--blue-900);
-      white-space:nowrap;
-    }
-    .badge-dot{
-      width:8px; height:8px; border-radius:50%;
-      background:conic-gradient(from 200deg, var(--blue-300), var(--blue-600));
-      box-shadow:0 0 0 4px rgba(26,102,255,.12);
-    }
-
-    /* Sectie-titel en lijntje */
-    .section-title{
-      display:flex; align-items:center; gap:10px;
-      justify-content:center; margin:8px auto 22px; color:var(--blue-900);
-    }
-    .section-title::before, .section-title::after{
-      content:""; flex:1 1 100px; height:1px;
-      background:linear-gradient(90deg, transparent, rgba(26,102,255,.25), transparent);
-    }
-
-    /* Formularium aankleding */
-    .form-grid .field .hint{ font-size:12px; color:#5b6b86; margin-top:4px; }
-    .form-grid .field .row{ display:flex; gap:12px; }
-
-    /* Mini divider */
-    .soft-divider{
-      height:1px; background:linear-gradient(90deg, transparent, rgba(26,102,255,.18), transparent);
-      margin:8px 0 2px;
-    }
-
-    /* Checkbox lijntje */
-    .checkwrap{
-      border:1px dashed rgba(26,102,255,.28);
-      padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.6);
-    }
-
-    /* Submit zone */
-    .submit-zone{
-      display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:6px;
-    }
-    .tiny-note{ font-size:12px; color:#5b6b86; }
-
-    /* Responsieve nuance */
-    @media (max-width: 720px){
-      .card-head{ flex-direction:column; align-items:flex-start; }
-    }
+    .site-header::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);opacity:.6;}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 12px;margin:-10px -10px 12px -10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35)),linear-gradient(120deg,rgba(26,102,255,.18),rgba(0,86,255,.28));border:1px solid rgba(26,102,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.55);}
+    .card-head h2{font-size:18px;margin:0;color:var(--blue-900);letter-spacing:.2px;}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;background:linear-gradient(180deg,#fff,#f5f9ff);border:1px solid rgba(26,102,255,.28);box-shadow:0 4px 12px rgba(10,27,90,.10);color:var(--blue-900);white-space:nowrap;}
+    .badge-dot{width:8px;height:8px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue-300),var(--blue-600));box-shadow:0 0 0 4px rgba(26,102,255,.12);}
+    .section-title{display:flex;align-items:center;gap:10px;justify-content:center;margin:8px auto 22px;color:var(--blue-900);}
+    .section-title::before,.section-title::after{content:"";flex:1 1 100px;height:1px;background:linear-gradient(90deg,transparent,rgba(26,102,255,.25),transparent);}
+    .form-grid .field .hint{font-size:12px;color:#5b6b86;margin-top:4px;}
+    .soft-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(26,102,255,.18),transparent);margin:8px 0 2px;}
+    .checkwrap{border:1px dashed rgba(26,102,255,.28);padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.6);}
+    .submit-zone{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:6px;}
+    .tiny-note{font-size:12px;color:#5b6b86;}
+    @media (max-width:720px){.card-head{flex-direction:column;align-items:flex-start;}}
   </style>
 </head>
 
 <body>
   <div class="site">
-    <!-- HEADER -->
     <header class="site-header">
       <div class="header-inner">
         <a href="index.html" class="brand" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
@@ -104,7 +46,6 @@
       </div>
     </header>
 
-    <!-- MAIN -->
     <main>
       <section class="hero" style="padding:56px 0 40px;text-align:center;">
         <div class="container hero-inner">
@@ -113,20 +54,20 @@
             Registreer jouw zaak en publiceer je vrije momenten. We verifiëren je BTW-nummer en activeren je profiel.
           </p>
 
-          <!-- Kaart in dezelfde “glas”-stijl -->
-          <div class="search-wrap" style="max-width:820px; padding:18px;">
+          <div class="search-wrap" style="max-width:820px;padding:18px;">
             <div class="card-head">
               <h2>Gegevens onderneming</h2>
               <span class="badge"><span class="badge-dot"></span> Verificatie vereist</span>
             </div>
 
-            <!-- LET OP: action wijst naar de Netlify Function -->
+            <!-- Belangrijk: action wijst naar je Netlify Function -->
             <form id="aanmelden-form"
                   action="/.netlify/functions/signup"
                   method="post"
                   aria-label="Aanmelden"
                   class="form-grid"
-                  style="grid-template-columns:1fr 1fr; gap:14px;">
+                  style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
               <!-- ZAAK / CONTACT -->
               <div class="field" style="grid-column:1 / -1;">
                 <label for="zaak">Naam van je zaak / contactpersoon</label>
@@ -139,6 +80,20 @@
                 <label for="email">E-mailadres</label>
                 <input id="email" name="email" type="email" class="input" required autocomplete="email" />
                 <div class="hint">We sturen je bevestigingen en belangrijke updates naar dit adres.</div>
+              </div>
+
+              <!-- WACHTWOORD -->
+              <div class="field">
+                <label for="password">Wachtwoord</label>
+                <input id="password" name="password" type="password" class="input" required autocomplete="new-password" minlength="8" />
+                <div class="hint">Minstens 8 tekens.</div>
+              </div>
+
+              <!-- WACHTWOORD BEVESTIGEN -->
+              <div class="field" style="grid-column:1 / -1;">
+                <label for="password2">Herhaal wachtwoord</label>
+                <input id="password2" name="password2" type="password" class="input" required autocomplete="new-password" minlength="8" />
+                <div class="hint">Moet gelijk zijn aan je wachtwoord.</div>
               </div>
 
               <!-- TELEFOON -->
@@ -208,7 +163,7 @@
 
               <!-- SUBMIT -->
               <div class="submit-zone" style="grid-column:1 / -1;">
-                <button type="submit" class="btn" style="min-width:220px; height:46px;">Aanmelden</button>
+                <button type="submit" class="btn" style="min-width:220px;height:46px;">Aanmelden</button>
                 <div class="tiny-note">Na je aanmelding verifiëren we je gegevens en ontvang je een bevestiging per e-mail.</div>
               </div>
             </form>
@@ -217,7 +172,6 @@
       </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="footer-inner">
         <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
@@ -231,70 +185,69 @@
   </div>
 
   <script>
-    (function(){
-      const form = document.getElementById('aanmelden-form');
-      const btw  = document.getElementById('btw');
-      const site = document.getElementById('website');
+  (function(){
+    const form = document.getElementById('aanmelden-form');
+    const btw  = document.getElementById('btw');
+    const site = document.getElementById('website');
+    const pw1  = document.getElementById('password');
+    const pw2  = document.getElementById('password2');
 
-      // BTW automatisch BE-formaat houden
-      btw?.addEventListener('input', () => {
-        btw.value = btw.value.toUpperCase().replace(/\s+/g,'');
-      });
+    // BTW automatisch BE-formaat houden
+    btw?.addEventListener('input', () => {
+      btw.value = btw.value.toUpperCase().replace(/\s+/g,'');
+    });
 
-      // Submit → stuur JSON naar Netlify Function en laat die redirecten
-      form.addEventListener('submit', async (e) => {
-        // eerst de native HTML5 validatie
-        if (!form.checkValidity()) {
-          e.preventDefault();
-          alert('Controleer de velden (BTW in BE-formaat) en accepteer de algemene voorwaarden.');
+    form.addEventListener('submit', async (e) => {
+      // native HTML5 check
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        alert('Controleer de velden (BTW in BE-formaat) en accepteer de algemene voorwaarden.');
+        return;
+      }
+
+      // extra: wachtwoord match/min lengte
+      if (pw1.value.length < 8) {
+        e.preventDefault(); alert('Wachtwoord moet minstens 8 tekens zijn.'); return;
+      }
+      if (pw1.value !== pw2.value) {
+        e.preventDefault(); alert('Wachtwoorden komen niet overeen.'); return;
+      }
+
+      e.preventDefault(); // stuur via fetch JSON
+
+      // Website normaliseren (optioneel)
+      if (site && site.value.trim() !== '') {
+        const v = site.value.trim();
+        if (!/^https?:\/\//i.test(v)) site.value = 'https://' + v;
+        try { new URL(site.value); } catch {
+          alert('Controleer je website-URL (bijv. https://voorbeeld.be) of laat dit veld leeg.');
           return;
         }
+      }
 
-        e.preventDefault(); // we sturen zelf via fetch (JSON)
+      // Payload maken
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries()); // bevat nu ook password
 
-        // Website normaliseren (optioneel veld)
-        if (site && site.value.trim() !== '') {
-          const v = site.value.trim();
-          if (!/^https?:\/\//i.test(v)) site.value = 'https://' + v;
-          try { new URL(site.value); } catch {
-            alert('Controleer je website-URL (bijv. https://voorbeeld.be) of laat dit veld leeg.');
-            return;
-          }
-        }
+      try {
+        const resp = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        // Payload maken
-        const fd = new FormData(form);
-        const payload = Object.fromEntries(fd.entries());
+        const loc = resp.headers.get('Location');
+        if (loc && resp.status >= 300 && resp.status < 400) { window.location.href = loc; return; }
+        if (resp.ok) { window.location.href = 'bedankt.html'; return; }
 
-        try {
-          const resp = await fetch(form.action, {
-            method: 'POST',
-            headers: { 'Content-Type':'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          // Als de function een redirect zet (302/303…), volg die
-          const loc = resp.headers.get('Location');
-          if (loc && (resp.status >= 300 && resp.status < 400)) {
-            window.location.href = loc;
-            return;
-          }
-
-          if (resp.ok) {
-            // fallback: toch door naar bedankt.html
-            window.location.href = 'bedankt.html';
-            return;
-          }
-
-          // foutboodschap tonen (tekst uit function als die bestaat)
-          const txt = await resp.text();
-          alert(txt || 'Er ging iets mis bij het aanmelden.');
-        } catch (err) {
-          alert('Netwerkfout bij het aanmelden. Probeer later opnieuw.');
-          console.error(err);
-        }
-      });
-    })();
+        const txt = await resp.text();
+        alert(txt || 'Er ging iets mis bij het aanmelden.');
+      } catch (err) {
+        console.error(err);
+        alert('Netwerkfout bij het aanmelden. Probeer later opnieuw.');
+      }
+    });
+  })();
   </script>
 </body>
 </html>
