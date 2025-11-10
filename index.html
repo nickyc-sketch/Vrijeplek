@@ -259,6 +259,20 @@
       }
     })();
   </script>
+  <script>
+(function(){
+  function sync(el){
+    if(!el) return;
+    const set = ()=> el.dataset.hasValue = el.value ? "1" : "";
+    el.addEventListener('change', set);
+    el.addEventListener('input', set);
+    set();
+  }
+  sync(document.getElementById('from'));
+  sync(document.getElementById('to'));
+})();
+</script>
+
 </body>
 </html>
 /* === HEADER NAV-BUTTONS (kleiner, blauw, subtiele rand) === */
