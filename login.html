@@ -1,41 +1,174 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LOGIN — Vrijeplek</title>
-  <link rel="stylesheet" href="/styles.css?v=32" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inloggen — Vrijeplek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=login3">
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0e7490 0%, #0c4a6e 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    .login-card h1 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1.8rem;
+      color: #fff;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 0.8rem;
+      border: none;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+    }
+
+    input[type="email"], input[type="password"] {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    button {
+      width: 100%;
+      background: #0ea5e9;
+      border: none;
+      padding: 0.9rem 1rem;
+      border-radius: 0.8rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      background: #38bdf8;
+      transform: translateY(-2px);
+    }
+
+    .error {
+      color: #f87171;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .extra-links {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .extra-links a {
+      color: #bae6fd;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+    }
+
+    .logo img {
+      width: 120px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-<header class="header">
-  <div class="container brand">
-    <div class="dot"></div><strong>Vrijeplek</strong>
-  </div>
-</header>
+  <a href="index.html" class="logo">
+    <img src="img/logo-vrijeplek.png" alt="Vrijeplek logo">
+  </a>
 
-<main class="container">
-  <div class="card" style="padding:24px;max-width:560px">
-    <h1 style="margin:0 0 6px">Inloggen</h1>
-    <p class="helper" style="margin:0 0 18px">Log in met je e-mailadres en wachtwoord.</p>
+  <div class="login-card">
+    <h1>Inloggen</h1>
+    <form id="loginForm">
+      <label for="email">E-mailadres</label>
+      <input type="email" id="email" name="email" placeholder="jij@bedrijf.be" required>
 
-    <form id="login" class="form" novalidate>
-      <div>
-        <label class="label">E-mail *</label>
-        <input class="input" type="email" name="email" required placeholder="jij@bedrijf.be" />
-      </div>
-      <div>
-        <label class="label">Wachtwoord *</label>
-        <input class="input" type="password" name="password" required minlength="8" placeholder="••••••••" />
-      </div>
-      <button class="btn" type="submit" id="do-login">Inloggen</button>
-      <div id="msg" class="helper"></div>
-      <div class="helper" style="margin-top:10px">
-        <a href="/wachtwoord-vergeten.html">Wachtwoord vergeten?</a>
-      </div>
+      <label for="password">Wachtwoord</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+      <div id="errorMsg" class="error"></div>
+
+      <button type="submit">Inloggen</button>
     </form>
-  </div>
-</main>
 
-<script type="module" src="/assets/login.js?v=2"></script>
+    <div class="extra-links">
+      <p>Nog geen account? <a href="aanmelden.html">Aanmelden</a></p>
+      <p><a href="#">Wachtwoord vergeten?</a></p>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2.45.0"></script>
+  <script>
+    const SUPABASE_URL = 'https://YOUR-SUPABASE-URL.supabase.co';
+    const SUPABASE_KEY = 'YOUR-ANON-KEY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.textContent = '';
+
+      const email = form.email.value.trim();
+      const password = form.password.value.trim();
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+        if (error) throw error;
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorMsg.textContent = 'Ongeldige inloggegevens of fout bij verbinding.';
+      }
+    });
+  </script>
 </body>
 </html>
