@@ -6,8 +6,8 @@
   <title>Vrijeplek — Last minute? Zoek een afspraak!</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=blue">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=smurf">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         <nav class="header-actions">
           <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
           <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
-          <a class="nav-btn" href="aanmelden.html">Word lid van Vrijeplek</a>
+          <a class="nav-btn" href="aanmelden.html">Word lid</a>
           <a class="nav-btn" href="login.html">Login</a>
         </nav>
       </div>
@@ -45,31 +45,19 @@
         <div class="container hero-inner">
           <h1>Last minute? Zoek een afspraak!</h1>
           <div class="search-wrap">
-            <form id="zoeken" class="search" action="/zoeken" method="get" role="search" aria-label="Zoeken">
-              <div class="field">
-                <label for="q">Welk bedrijf zoek je?</label>
-                <input id="q" name="q" type="search" required>
-              </div>
-              <div class="field">
-                <label for="loc">Locatie</label>
-                <input id="loc" name="loc" type="text" required>
-              </div>
-              <div class="field">
-                <label for="from">Van</label>
-                <input id="from" name="from" type="date">
-              </div>
-              <div class="field">
-                <label for="to">Tot</label>
-                <input id="to" name="to" type="date">
-              </div>
+            <form id="zoeken" class="search" action="/zoeken" method="get" role="search">
+              <div class="field"><label for="q">Welk bedrijf zoek je?</label><input id="q" name="q" type="search" required></div>
+              <div class="field"><label for="loc">Locatie</label><input id="loc" name="loc" type="text" required></div>
+              <div class="field"><label for="from">Van</label><input id="from" name="from" type="date"></div>
+              <div class="field"><label for="to">Tot</label><input id="to" name="to" type="date"></div>
               <div class="field">
                 <label for="cat">Categorie</label>
                 <select id="cat" name="cat">
                   <option value="">Alle categorieën</option>
                   <option value="horeca">Horeca</option>
-                  <option value="wellness">Wellness &amp; Beauty</option>
-                  <option value="zorg">Gezondheidszorg</option>
-                  <option value="events">Events &amp; verhuur</option>
+                  <option value="wellness">Wellness</option>
+                  <option value="zorg">Gezondheid</option>
+                  <option value="events">Events</option>
                   <option value="poetsdiensten">Poetsdiensten</option>
                   <option value="ramenwasser">Ramenwasser</option>
                   <option value="dieren">Dieren</option>
@@ -96,12 +84,11 @@
 
   <script>
   (function(){
-    var catSelect=document.getElementById('cat');
-    document.querySelectorAll('.catdot').forEach(function(el){
-      el.addEventListener('click',function(){
-        var val=el.getAttribute('data-cat')||'';
-        if(!catSelect)return;
-        var opt=[...catSelect.options].find(o=>o.value===val);
+    const catSelect=document.getElementById('cat');
+    document.querySelectorAll('.catdot').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const val=el.dataset.cat||'';
+        const opt=[...catSelect.options].find(o=>o.value===val);
         if(opt)opt.selected=true;
       });
     });
