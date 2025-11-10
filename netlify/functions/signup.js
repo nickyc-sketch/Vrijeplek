@@ -63,14 +63,17 @@ export async function handler(event) {
       website = null;
     }
 
-    // ------ Supabase v2 signUp (enkel 1 object met options) ------
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: "https://www.vrijeplek.be/geactiveerd.html"
-      }
-    });
+   const { data, error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: { emailRedirectTo: "https://www.vrijeplek.be/geactiveerd.html" }
+});
+
+// bij succes:
+return {
+  statusCode: 303,
+  headers: { Location: "https://www.vrijeplek.be/bedankt.html" }
+};
 
     if (error) {
       console.error("Supabase signUp error:", error);
