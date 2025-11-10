@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Je stylesheet met smurfblauw-stijl -->
   <link rel="stylesheet" href="/styles.css?v=smurf">
 </head>
 
@@ -14,8 +15,11 @@
   <div class="site">
     <header class="site-header">
       <div class="header-inner">
-        <a href="index.html" class="brand" style="text-decoration:none;">
-          <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
+        <a href="index.html" class="brand" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+          <!-- LOGO naast 'Vrijeplek' -->
+          <img src="/img/logo.png" alt="Vrijeplek" style="height:40px; width:auto; display:block;" />
+          <span class="brand-name">Vrijeplek</span>
+          <span class="brand-dot"></span>
         </a>
         <nav class="header-actions">
           <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
@@ -27,29 +31,43 @@
     </header>
 
     <main>
+      <!-- Categorie-bolletjes (foto’s overgenomen) -->
       <section class="cat-dots">
         <div class="container">
           <ul class="cat-dots-row">
-            <li><a class="catdot" data-cat="horeca" href="#zoeken"><img src="/img/cat-horeca.jpg"><span>Horeca</span></a></li>
-            <li><a class="catdot" data-cat="wellness" href="#zoeken"><img src="/img/cat-wellness.jpg"><span>Wellness</span></a></li>
-            <li><a class="catdot" data-cat="zorg" href="#zoeken"><img src="/img/cat-gezondheid.jpg"><span>Gezondheid</span></a></li>
-            <li><a class="catdot" data-cat="events" href="#zoeken"><img src="/img/cat-events.jpg"><span>Events</span></a></li>
-            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken"><img src="/img/cat-huishoudhulp.jpg"><span>Huishoudhulp</span></a></li>
-            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken"><img src="/img/cat-ramenwasser.jpg"><span>Ramenwasser</span></a></li>
-            <li><a class="catdot" data-cat="dieren" href="#zoeken"><img src="/img/cat-dieren.jpg"><span>Dieren</span></a></li>
+            <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="/img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
+            <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="/img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
+            <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="/img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
+            <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="/img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
+            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="/img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
+            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="/img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
+            <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="/img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
           </ul>
         </div>
       </section>
 
+      <!-- Hero + zoekbalk -->
       <section class="hero">
         <div class="container hero-inner">
           <h1>Last minute? Zoek een afspraak!</h1>
           <div class="search-wrap">
-            <form id="zoeken" class="search" action="/zoeken" method="get" role="search">
-              <div class="field"><label for="q">Welk bedrijf zoek je?</label><input id="q" name="q" type="search" required></div>
-              <div class="field"><label for="loc">Locatie</label><input id="loc" name="loc" type="text" required></div>
-              <div class="field"><label for="from">Van</label><input id="from" name="from" type="date"></div>
-              <div class="field"><label for="to">Tot</label><input id="to" name="to" type="date"></div>
+            <form id="zoeken" class="search" action="/zoeken" method="get" role="search" aria-label="Zoeken">
+              <div class="field">
+                <label for="q">Welk bedrijf zoek je?</label>
+                <input id="q" name="q" type="search" required>
+              </div>
+              <div class="field">
+                <label for="loc">Locatie</label>
+                <input id="loc" name="loc" type="text" required>
+              </div>
+              <div class="field">
+                <label for="from">Van</label>
+                <input id="from" name="from" type="date">
+              </div>
+              <div class="field">
+                <label for="to">Tot</label>
+                <input id="to" name="to" type="date">
+              </div>
               <div class="field">
                 <label for="cat">Categorie</label>
                 <select id="cat" name="cat">
@@ -82,21 +100,24 @@
     </footer>
   </div>
 
+  <!-- Interactie: cat-dot -> select, date placeholder sync -->
   <script>
   (function(){
-    const catSelect=document.getElementById('cat');
+    const catSelect = document.getElementById('cat');
     document.querySelectorAll('.catdot').forEach(el=>{
       el.addEventListener('click',()=>{
-        const val=el.dataset.cat||'';
-        const opt=[...catSelect.options].find(o=>o.value===val);
-        if(opt)opt.selected=true;
+        const val = el.dataset.cat || '';
+        if(!catSelect) return;
+        const opt = [...catSelect.options].find(o=>o.value===val);
+        if(opt) opt.selected = true;
       });
     });
+
     function sync(el){
-      if(!el)return;
-      const set=()=>el.dataset.hasValue=el.value?'1':'';
-      el.addEventListener('change',set);
-      el.addEventListener('input',set);
+      if(!el) return;
+      const set = ()=> el.dataset.hasValue = el.value ? '1' : '';
+      el.addEventListener('change', set);
+      el.addEventListener('input', set);
       set();
     }
     sync(document.getElementById('from'));
