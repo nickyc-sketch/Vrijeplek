@@ -4,98 +4,159 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vrijeplek — Last minute? Zoek een afspraak!</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=20">
 
-  <!-- HOTFIX: laat staan; ik overschrijf hier alleen wat nodig is -->
-  <style id="hotfix-vp">
-    /* ====== Categorie-bolletjes (onaangeroerd behalve: we voegen "Dieren" toe in HTML) ====== */
-    .cat-dots{padding:10px 0}
-    .cat-dots .container{max-width:1100px;margin:0 auto;padding:0 16px}
-    .cat-dots-row{list-style:none;margin:0;padding:6px 2px;display:flex;align-items:center;gap:14px;overflow-x:auto;scrollbar-width:none;mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
-    .cat-dots-row::-webkit-scrollbar{display:none}
-    .catdot{--size:68px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none}
-    .catdot img{width:var(--size);height:var(--size);border-radius:50%;object-fit:cover;display:block;box-shadow:0 0 0 2px rgba(14,165,233,.4),inset 0 0 0 2px rgba(255,255,255,.9),0 8px 20px rgba(2,12,27,.12);transition:transform .18s ease,box-shadow .18s ease}
-    .catdot:hover img{transform:translateY(-2px);box-shadow:0 0 0 2px rgba(14,165,233,.65),inset 0 0 0 2px rgba(255,255,255,1),0 12px 24px rgba(2,12,27,.16)}
-    .catdot span{font-size:12px;font-weight:700;color:#0f172a;letter-spacing:.2px;text-align:center}
-    @media (min-width:960px){.cat-dots-row{justify-content:center;overflow:visible;mask-image:none}.catdot{--size:76px}}
+  <link rel="stylesheet" href="/styles.css?v=50">
 
-    /* ====== Header ====== */
-    .site-header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #e6eef6}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-    .brand-name{font-weight:700;font-size:20px;letter-spacing:.2px;color:#0f172a}
-    .brand-dot{display:inline-block;width:8px;height:8px;margin-left:6px;border-radius:50%;background:#0ea5e9}
+  <style>
+  /* === HEADER === */
+  .site-header{
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid #e6eef6;
+  }
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    height:64px;max-width:1100px;margin:0 auto;padding:0 16px;
+  }
+  .brand-name{font-weight:800;font-size:22px;color:#0c4a6e;letter-spacing:.3px}
+  .brand-dot{display:inline-block;width:10px;height:10px;margin-left:6px;border-radius:50%;background:#0ea5e9}
+  .header-actions{display:flex;gap:10px;align-items:center}
+  .header-actions .nav-btn{
+    padding:6px 12px;
+    border-radius:12px;
+    border:1px solid rgba(6,182,212,.35);
+    background:linear-gradient(180deg,#06b6d4,#0891b2);
+    color:#fff;text-decoration:none;
+    font-weight:700;
+    box-shadow:0 6px 16px rgba(12,74,110,.16);
+    transition:filter .15s ease,transform .15s ease;
+  }
+  .header-actions .nav-btn:hover{filter:brightness(.97)}
+  .header-actions .nav-btn:active{transform:translateY(1px)}
 
-    /* >>> Knoppen rechtsboven: smaller + subtielere blauwe rand (ghost-stijl) <<< */
-    .header-actions{display:flex!important;gap:8px;align-items:center}
-    .header-actions .nav-btn,
-    .header-actions .nav-btn:link,
-    .header-actions .nav-btn:visited{
-      display:inline-flex!important;align-items:center;justify-content:center;
-      padding:6px 10px; /* SMALLER */
-      border-radius:12px;
-      font-weight:700;text-decoration:none;
-      background:rgba(14,165,233,.06)!important; /* licht tintje */
-      color:#0e7490!important;
-      border:1px solid rgba(14,165,233,.28)!important; /* SUBTIEL */
-      box-shadow:0 6px 16px rgba(2,6,23,.08);
-    }
-    .header-actions .nav-btn:hover{background:rgba(14,165,233,.12)!important}
-    .header-actions .nav-btn:active{transform:translateY(1px)}
+  /* === HERO & SEARCH === */
+  .hero{padding:60px 0 40px;text-align:center}
+  .hero h1{
+    margin:0 0 16px;
+    font-size:clamp(28px,3.4vw,42px);
+    line-height:1.15;color:#082f49;
+  }
 
-    /* ====== Hero + Zoek/werkbalk ====== */
-    .hero .search-wrap{
-      position:relative;max-width:clamp(780px,88vw,980px);margin-inline:auto;padding:14px;border-radius:18px;
-      /* DONKERDER / meer knop-kleur zodat hij uitspringt */
-      background:
-        linear-gradient(180deg, rgba(6,182,212,.18), rgba(14,116,144,.18)),
-        radial-gradient(100% 60% at 20% 0%, rgba(14,165,233,.14), transparent 60%),
-        radial-gradient(100% 60% at 80% 100%, rgba(14,116,144,.12), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.74));
-      box-shadow:0 10px 22px rgba(12,74,110,.12), inset 0 0 0 1px rgba(14,165,233,.35)
-    }
-    .hero .search-wrap::after{content:"";position:absolute;inset:6px;border-radius:14px;z-index:0;pointer-events:none;background:radial-gradient(circle at 1px 1px,rgba(14,165,233,.10) 1px,transparent 1.6px) 0 0/22px 22px,radial-gradient(100% 60% at 20% 0%,rgba(14,165,233,.14),transparent 60%),radial-gradient(100% 60% at 80% 100%,rgba(14,116,144,.12),transparent 60%),linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.74));backdrop-filter:blur(8px) saturate(130%);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(14,116,144,.10)}
-    .hero .search-wrap::before{content:"";position:absolute;inset:6px;border-radius:14px;z-index:1;pointer-events:none;background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.35) 12%,transparent 24%);background-size:200% 100%;animation:vp-sheen 3.2s linear infinite;mix-blend-mode:soft-light}
-    @keyframes vp-sheen{to{background-position:-200% 0}}
-    .hero .search{position:relative;z-index:2}
+  .hero .search-wrap{
+    position:relative;
+    max-width:clamp(880px,92vw,1000px);
+    margin-inline:auto;
+    padding:20px;
+    border-radius:20px;
+    background:
+      linear-gradient(180deg,rgba(6,182,212,.3),rgba(14,116,144,.3)) padding-box,
+      linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.8));
+    border:1px solid rgba(6,182,212,.6);
+    box-shadow:0 18px 36px rgba(12,74,110,.22), inset 0 0 0 1px rgba(14,165,233,.45);
+  }
 
-    .search{display:grid;grid-template-columns:1.2fr 1fr .9fr .9fr;gap:10px;width:100%}
-    .search input,.search select{height:44px;padding:0 12px;border:1px solid #dbe7f3;border-radius:12px;background:#fff;font-size:14px;min-width:0}
-    .search .btn{grid-column:1/-1;justify-self:center;width:220px;height:46px;border-radius:12px;margin-top:6px}
+  .search{
+    display:grid;
+    grid-template-columns:1.2fr 1fr 0.9fr 0.9fr 1fr auto;
+    gap:12px;
+    align-items:end;
+  }
+  .field{display:flex;flex-direction:column;gap:4px;text-align:left}
+  label{font-weight:700;font-size:13px;color:#0f172a}
 
-    /* >>> LABELS zichtbaar boven velden (ipv sr-only) <<< */
-    .search label{
-      position:static;width:auto;height:auto;margin:0 0 4px;clip:auto;white-space:normal;border:0;pointer-events:auto;
-      display:block;font-weight:700;color:#0f172a;font-size:13px
-    }
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;pointer-events:none}
+  .search input,
+  .search select{
+    height:44px;
+    padding:0 12px;
+    border:1px solid rgba(8,47,73,.18);
+    border-radius:12px;
+    background:#fff;
+    font-size:14px;
+    color:#0f172a;
+    transition:border-color .15s ease,box-shadow .15s ease;
+  }
+  .search input:focus,
+  .search select:focus{
+    border-color:#06b6d4;
+    box-shadow:0 0 0 2px rgba(6,182,212,.25);
+    outline:none;
+  }
 
-    /* Datumveld: placeholder-tekst verbergen zolang leeg en niet in focus */
-    input[type="date"]{position:relative}
-    input[type="date"]::-webkit-calendar-picker-indicator{opacity:1;display:block;cursor:pointer;padding:0 8px;margin-right:6px}
-    input[type="date"]::-webkit-datetime-edit{color:transparent}
-    input[type="date"]:focus::-webkit-datetime-edit,
-    input[type="date"][data-has-value="1"]::-webkit-datetime-edit{color:inherit}
+  .search .btn{
+    height:44px;
+    align-self:end;
+    padding:0 18px;
+    border:1px solid rgba(6,182,212,.35);
+    border-radius:12px;
+    background:linear-gradient(180deg,#06b6d4,#0891b2);
+    color:#fff;font-weight:700;
+    box-shadow:0 6px 16px rgba(12,74,110,.16);
+    cursor:pointer;
+  }
+  .search .btn:hover{filter:brightness(.97)}
+  .search .btn:active{transform:translateY(1px)}
 
-    /* ====== Footer ALTIJD BENEDEN ====== */
-    html,body{height:100%}
-    main{min-height:calc(100vh - 64px); display:flex; flex-direction:column;} /* 64px header */
-    .site-footer{margin-top:auto}
+  /* Datumvelden: verberg dd/mm/jjjj tot waarde */
+  input[type="date"]::-webkit-datetime-edit{color:transparent}
+  input[type="date"]:focus::-webkit-datetime-edit{color:inherit}
+  input[type="date"][data-has-value="1"]::-webkit-datetime-edit{color:inherit}
 
-    /* ====== Mobile aanpassingen (ongewijzigd, behoud jouw bestaande gedrag) ====== */
+  @media (max-width:900px){
+    .search{grid-template-columns:1fr}
+    .search .btn{width:100%}
+  }
+
+  /* === CATEGORIEËN === */
+  .cat-dots{padding:10px 0}
+  .cat-dots .container{max-width:1100px;margin:0 auto;padding:0 16px}
+  .cat-dots-row{
+    display:flex;gap:14px;align-items:center;
+    overflow-x:auto;scrollbar-width:none;
+    list-style:none;padding:6px 2px;margin:0;
+  }
+  .cat-dots-row::-webkit-scrollbar{display:none}
+  .catdot{--size:72px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none}
+  .catdot img{
+    width:var(--size);height:var(--size);border-radius:50%;
+    object-fit:cover;
+    box-shadow:0 0 0 2px rgba(14,165,233,.5),inset 0 0 0 2px #fff,0 8px 20px rgba(2,12,27,.12);
+    transition:transform .18s ease,box-shadow .18s ease;
+  }
+  .catdot:hover img{
+    transform:translateY(-3px);
+    box-shadow:0 0 0 2px rgba(14,165,233,.75),inset 0 0 0 2px #fff,0 12px 24px rgba(2,12,27,.18);
+  }
+  .catdot span{font-size:13px;font-weight:700;color:#0f172a}
+
+  /* === FOOTER === */
+  .site-footer{
+    font-size:12px;
+    border-top:1px solid rgba(8,47,73,.1);
+    background:rgba(255,255,255,.8);
+    backdrop-filter:saturate(130%) blur(10px);
+    margin-top:auto;
+  }
+  .footer-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;max-width:1100px;margin:0 auto;padding:12px 16px;
+  }
+  .footer-inner p{margin:0;white-space:nowrap}
+  .footer-nav{display:flex;gap:12px;align-items:center}
+  .footer-nav a{font-weight:700;color:#0e7490;text-decoration:none}
+  @media(max-width:480px){
+    .footer-inner{flex-direction:column;gap:6px;text-align:center}
+  }
   </style>
-
-  <!-- Mobile styles blijven zoals jij had -->
-  <style id="vp-mobile">/* ... onveranderd uit jouw versie ... */</style>
-  <style id="vp-mobile-hard">/* ... onveranderd uit jouw versie ... */</style>
-  <style id="vp-mobile-grid">/* ... onveranderd uit jouw versie ... */</style>
 </head>
 
 <body>
   <header class="site-header">
-    <div class="container header-inner">
+    <div class="header-inner">
       <a href="index.html" class="brand" style="text-decoration:none;">
         <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
       </a>
@@ -112,49 +173,13 @@
     <section class="cat-dots" aria-label="Populaire categorieën">
       <div class="container">
         <ul class="cat-dots-row">
-          <li>
-            <a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca">
-              <img src="/img/cat-horeca.jpg" alt="Horeca">
-              <span>Horeca</span>
-            </a>
-          </li>
-          <li>
-            <a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness &amp; Beauty">
-              <img src="/img/cat-wellness.jpg" alt="Wellness &amp; Beauty">
-              <span>Wellness</span>
-            </a>
-          </li>
-          <li>
-            <a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheidszorg">
-              <img src="/img/cat-gezondheid.jpg" alt="Gezondheidszorg">
-              <span>Gezondheid</span>
-            </a>
-          </li>
-          <li>
-            <a class="catdot" data-cat="events" href="#zoeken" title="Events &amp; verhuur">
-              <img src="/img/cat-events.jpg" alt="Events &amp; Verhuur">
-              <span>Events</span>
-            </a>
-          </li>
-          <li>
-            <a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp">
-              <img src="/img/cat-huishoudhulp.jpg" alt="Huishoudhulp">
-              <span>Huishoudhulp</span>
-            </a>
-          </li>
-          <li>
-            <a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser">
-              <img src="/img/cat-ramenwasser.jpg" alt="Ramenwasser">
-              <span>Ramenwasser</span>
-            </a>
-          </li>
-          <!-- NIEUW: Dieren -->
-          <li>
-            <a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren (trimsalons, veeartsen)">
-              <img src="/img/cat-dieren.jpg" alt="Dieren">
-              <span>Dieren</span>
-            </a>
-          </li>
+          <li><a class="catdot" data-cat="horeca" href="#zoeken"><img src="/img/cat-horeca.jpg" alt=""><span>Horeca</span></a></li>
+          <li><a class="catdot" data-cat="wellness" href="#zoeken"><img src="/img/cat-wellness.jpg" alt=""><span>Wellness</span></a></li>
+          <li><a class="catdot" data-cat="zorg" href="#zoeken"><img src="/img/cat-gezondheid.jpg" alt=""><span>Gezondheid</span></a></li>
+          <li><a class="catdot" data-cat="events" href="#zoeken"><img src="/img/cat-events.jpg" alt=""><span>Events</span></a></li>
+          <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken"><img src="/img/cat-huishoudhulp.jpg" alt=""><span>Huishoudhulp</span></a></li>
+          <li><a class="catdot" data-cat="ramenwasser" href="#zoeken"><img src="/img/cat-ramenwasser.jpg" alt=""><span>Ramenwasser</span></a></li>
+          <li><a class="catdot" data-cat="dieren" href="#zoeken"><img src="/img/cat-dieren.jpg" alt=""><span>Dieren</span></a></li>
         </ul>
       </div>
     </section>
@@ -163,169 +188,66 @@
       <div class="container hero-inner">
         <h1>Last minute? Zoek een afspraak!</h1>
         <div class="search-wrap">
-  <form id="zoeken" class="search" action="/zoeken" method="get" role="search" aria-label="Zoeken">
-    <div>
-      <label for="q">Welk bedrijf zoek je?</label>
-      <input id="q" name="q" type="search" placeholder="" required>
-    </div>
-
-    <div>
-      <label for="loc">Locatie</label>
-      <input id="loc" name="loc" type="text" placeholder="" required>
-    </div>
-
-    <div>
-      <label for="from">Van</label>
-      <input id="from" name="from" type="date">
-    </div>
-
-    <div>
-      <label for="to">Tot</label>
-      <input id="to" name="to" type="date">
-    </div>
-
-    <div>
-      <label for="cat">Categorie</label>
-      <select id="cat" name="cat">
-        <option value="">Alle categorieën</option>
-        <option value="horeca">Horeca</option>
-        <option value="wellness">Wellness &amp; Beauty</option>
-        <option value="zorg">Gezondheidszorg</option>
-        <option value="events">Events &amp; verhuur</option>
-        <option value="poetsdiensten">Poetsdiensten</option>
-        <option value="ramenwasser">Ramenwasser</option>
-        <option value="dieren">Dieren</option>
-      </select>
-    </div>
-
-    <button class="btn" type="submit">Zoek</button>
-  </form>
-</div>
-
+          <form id="zoeken" class="search" action="/zoeken" method="get" role="search">
+            <div class="field">
+              <label for="q">Welk bedrijf zoek je?</label>
+              <input id="q" name="q" type="search" required>
+            </div>
+            <div class="field">
+              <label for="loc">Locatie</label>
+              <input id="loc" name="loc" type="text" required>
+            </div>
+            <div class="field">
+              <label for="from">Van</label>
+              <input id="from" name="from" type="date">
+            </div>
+            <div class="field">
+              <label for="to">Tot</label>
+              <input id="to" name="to" type="date">
+            </div>
+            <div class="field">
+              <label for="cat">Categorie</label>
+              <select id="cat" name="cat">
+                <option value="">Alle categorieën</option>
+                <option value="horeca">Horeca</option>
+                <option value="wellness">Wellness &amp; Beauty</option>
+                <option value="zorg">Gezondheidszorg</option>
+                <option value="events">Events &amp; verhuur</option>
+                <option value="poetsdiensten">Poetsdiensten</option>
+                <option value="ramenwasser">Ramenwasser</option>
+                <option value="dieren">Dieren</option>
+              </select>
+            </div>
+            <button class="btn" type="submit">Zoek</button>
+          </form>
+        </div>
       </div>
     </section>
 
     <footer class="site-footer">
-      <div class="container footer-inner">
-        <p>© <span id="year">2025</span> Vrijeplek. Alle rechten voorbehouden.</p>
+      <div class="footer-inner">
+        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
         <nav class="footer-nav">
-          <a href="#algemene-voorwaarden" class="link">Algemene voorwaarden</a>
-          <a href="#privacy" class="link">Privacy</a>
-          <a href="#contact" class="link">Contact</a>
+          <a href="#voorwaarden">Algemene voorwaarden</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#contact">Contact</a>
         </nav>
       </div>
     </footer>
   </main>
 
-  <script src="/script.js"></script>
-
-  <!-- Active state in header (ongewijzigd) -->
   <script>
-    (function(){
-      var path=location.pathname;
-      if(path==="/") path="/index.html";
-      document.querySelectorAll(".header-actions a.nav-btn").forEach(function(a){
-        var href=a.getAttribute("href");
-        var active=path.endsWith(href)||(href==="index.html"&&(path==="/index.html"||path==="/"));
-        if(active){a.classList.add("active");a.setAttribute("aria-current","page");}
-      });
-    })();
+  (function(){
+    // Datumvelden tonen tekst pas als er waarde is
+    function sync(el){ if(!el) return;
+      const set=()=>el.dataset.hasValue=el.value?"1":"";
+      el.addEventListener("change",set);
+      el.addEventListener("input",set);
+      set();
+    }
+    sync(document.getElementById("from"));
+    sync(document.getElementById("to"));
+  })();
   </script>
-
-  <!-- Click op cat-dots zet select / inputwaarde; datum hack voor lege placeholder -->
-  <script>
-    (function(){
-      var catInput=document.getElementById("cat");
-      document.querySelectorAll(".catdot").forEach(function(el){
-        el.addEventListener("click",function(){
-          var val=el.getAttribute("data-cat")||"";
-          if(!catInput) return;
-          if(catInput.tagName.toLowerCase()==="select"){
-            var opt=Array.from(catInput.options).find(function(o){return o.value.toLowerCase()===val.toLowerCase()});
-            if(opt){opt.selected=true}else{catInput.add(new Option(val,val,true,true))}
-          }else{ catInput.value=val; }
-        });
-      });
-
-      // Datumveld: toggle data-has-value zodat CSS de 'dd/mm/jjjj' weergave verbergt zolang leeg
-      var dateEl = document.getElementById("when");
-      if(dateEl){
-        var sync = function(){
-          dateEl.dataset.hasValue = dateEl.value ? "1" : "";
-        };
-        dateEl.addEventListener("change", sync);
-        dateEl.addEventListener("input", sync);
-        sync();
-      }
-    })();
-  </script>
-  <script>
-(function(){
-  function sync(el){
-    if(!el) return;
-    const set = ()=> el.dataset.hasValue = el.value ? "1" : "";
-    el.addEventListener('change', set);
-    el.addEventListener('input', set);
-    set();
-  }
-  sync(document.getElementById('from'));
-  sync(document.getElementById('to'));
-})();
-</script>
-
 </body>
 </html>
-/* === HEADER NAV-BUTTONS (kleiner, blauw, subtiele rand) === */
-.header-actions .nav-btn,
-.header-actions .nav-btn:link,
-.header-actions .nav-btn:visited{
-  padding: 6px 12px;            /* smaller */
-  font-weight: 700;
-  border-radius: 12px;
-  border: 1px solid rgba(6,182,212,.35); /* subtiel randje */
-  background: linear-gradient(180deg, var(--ocean-500), var(--ocean-600));
-  color: var(--white);
-  box-shadow: 0 6px 16px rgba(12,74,110,.16);
-  text-decoration: none;
-}
-.header-actions .nav-btn:hover{
-  filter: brightness(.98);
-}
-.header-actions .nav-btn:active{
-  transform: translateY(1px);
-}
-
-/* === FOOTER: kleiner lettertype & alles op 1 lijn === */
-.site-footer{
-  font-size: 12px;
-}
-.site-footer .footer-inner{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: nowrap;            /* geen line-breaks */
-}
-.site-footer .footer-inner p{
-  margin: 0;
-  white-space: nowrap;
-  font-size: inherit;
-}
-.site-footer .footer-nav{
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-.site-footer .footer-nav .link{
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: inherit;
-}
-
-/* (optioneel) voor héél smalle schermen: iets kleinere spaties */
-@media (max-width: 420px){
-  .site-footer .footer-inner{ gap: 8px; }
-  .site-footer .footer-nav{ gap: 8px; }
-}
