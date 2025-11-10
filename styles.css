@@ -237,3 +237,37 @@ main{flex:1 0 auto;}
    HOTFIX HOOK (laat staan)
 ============================== */
 #hotfix-vp{}
+/* === HEADER KNOPPEN: blauw gevuld, kleiner, subtiele rand === */
+.header .btn{
+  padding:6px 10px; /* smaller, zelfde lettergrootte */
+  background:linear-gradient(180deg,var(--ocean-500),var(--ocean-600));
+  color:#fff;
+  border:1px solid rgba(6,182,212,.35); /* subtiel blauw randje */
+  box-shadow:0 6px 16px rgba(12,74,110,.16);
+}
+.header .btn:hover{ filter:brightness(.98); }
+.header .btn:active{ transform:translateY(1px); }
+
+/* === FOOTER: kleiner font + alles op 1 lijn === */
+.site-footer{ font-size:12px; }
+.site-footer .footer-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; flex-wrap:nowrap;
+}
+.site-footer .footer-inner p{
+  margin:0; font-size:12px; white-space:nowrap;
+}
+.site-footer .footer-nav{
+  display:flex; gap:12px; align-items:center; flex-wrap:nowrap;
+}
+.site-footer .footer-nav .link{
+  font-weight:700; text-decoration:none; white-space:nowrap;
+}
+
+/* (optioneel) houd het ook op héél smalle schermen op 1 lijn */
+@media (max-width:420px){
+  .site-footer .footer-inner{ gap:8px; }
+  .site-footer .footer-nav{ gap:10px; }
+  .site-footer{ font-size:11.5px; }
+  .site-footer .footer-inner p{ font-size:11.5px; }
+}
