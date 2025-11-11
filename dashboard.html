@@ -12,31 +12,25 @@
 
   <style>
     body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:#0a2a4a;}
-
-    /* Header */
     .site-header{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50;}
     .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
     .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px;}
     .site-header img{height:38px;}
 
-    /* Tabs */
     .tabs-bar{background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(26,102,255,.25);}
     .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px;}
     .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:#0a2a4a;cursor:pointer;transition:.25s;}
     .tab-btn.active{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15);}
 
-    /* Container */
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px;}
     h1.section-title{font-size:26px;text-align:center;margin-bottom:18px;}
     .card{background:rgba(255,255,255,0.7);border:1px solid rgba(26,102,255,.18);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px;}
 
-    /* Afsprakenlijst */
     .appointment{border-bottom:1px dashed rgba(26,102,255,.25);padding:10px 0;}
     .appointment:last-child{border:none;}
     .appointment h3{margin:0;font-size:16px;color:#0a2a4a;}
     .appointment p{margin:3px 0;font-size:14px;color:#3a4b6a;}
 
-    /* Open tijdstippen formulier */
     .field{display:flex;flex-direction:column;margin-bottom:10px;}
     .field label{font-weight:600;margin-bottom:4px;}
     .input{padding:10px;border:1px solid rgba(26,102,255,.25);border-radius:8px;}
@@ -45,15 +39,15 @@
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;}
     @media(max-width:720px){.form-row{grid-template-columns:1fr;}}
 
-    /* Instellingen */
     .settings-list li{margin-bottom:6px;}
+    .hide{display:none !important;}
   </style>
 </head>
 
 <body>
   <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
+      <a href="dashboard.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
       <button id="btn-logout" class="btn-ghost" style="padding:8px 16px;">Uitloggen</button>
     </div>
   </header>
@@ -61,7 +55,7 @@
   <div class="tabs-bar">
     <div class="tabs-inner">
       <button class="tab-btn active" data-tab="afspraken">Afspraken</button>
-      <button class="tab-btn" data-tab="open">Open tijdstippen</button>
+      <button class="tab-btn" data-tab="open">Open tijdsstippen</button>
       <button class="tab-btn" data-tab="website">Website</button>
       <button class="tab-btn" data-tab="profiel">Profiel</button>
       <button class="tab-btn" data-tab="instellingen">Instellingen</button>
@@ -69,13 +63,14 @@
   </div>
 
   <main class="content-wrap">
-    <h1 class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
+    <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
-    <!-- TABS -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
         <div id="appointments-list">
+          <!-- Dynamisch: groep per dag, daaronder afspraken -->
+          <!-- Voorbeeld placeholders (vervang door live data via Supabase) -->
           <div class="appointment"><h3>12 november — 14:00</h3><p><strong>Jan Peeters</strong> — Massage 60min</p></div>
           <div class="appointment"><h3>13 november — 09:30</h3><p><strong>Sofie Janssens</strong> — Intakegesprek</p></div>
         </div>
@@ -92,7 +87,6 @@
             <div class="field"><label>Tot</label><input type="time" class="input" id="slot-to"></div>
           </div>
           <div class="field"><label>Omschrijving</label><input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt of intake"></div>
-          <div class="field"><label>Capaciteit</label><input type="number" min="1" value="1" class="input" id="slot-cap"></div>
           <button class="btn" type="submit">Publiceren</button>
         </form>
       </div>
@@ -101,7 +95,7 @@
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
-        <p>Hier bouw je binnenkort je eigen pagina op Vrijeplek. 🚀</p>
+        <p>Hier bouw je binnenkort je eigen pagina op Vrijeplek.</p>
       </div>
     </section>
 
@@ -133,69 +127,94 @@
     © 2025 Vrijeplek. Alle rechten voorbehouden.
   </footer>
 
- <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-  const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true }
-  });
+    const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true }
+    });
 
-  const els = {
-    userFirst: document.getElementById('user-firstname'),
-    profileEmail: document.getElementById('profile-email'),
-    logout: document.getElementById('btn-logout')
-  };
+    const els = {
+      welcomeWrap: document.getElementById('welcome-wrap'),
+      userFirst: document.getElementById('user-firstname'),
+      profileEmail: document.getElementById('profile-email'),
+      logout: document.getElementById('btn-logout')
+    };
 
-  function setNameFromUser(user){
-    const raw = user.user_metadata?.name || user.email.split('@')[0] || '';
-    const first = (raw.split(/[.\s_-]/)[0] || '').trim();
-    const nice = first ? first[0].toUpperCase()+first.slice(1) : 'Gebruiker';
-    els.userFirst.textContent = nice;
-    if (els.profileEmail) els.profileEmail.textContent = user.email;
-  }
-
-  async function ensureSession(){
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (session?.user){
-      setNameFromUser(session.user);
-      return;
+    function niceFirstNameFrom(user){
+      const rawName = user.user_metadata?.name || user.user_metadata?.full_name || '';
+      const fromMeta = (rawName || '').split(/[.\s_-]/)[0]?.trim();
+      const fromEmail = (user.email || '').split('@')[0]?.trim();
+      const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
+      const candidate = (fromMeta && fromMeta.length>1 ? fromMeta : fromEmail);
+      if (!candidate) return '';
+      const lower = candidate.toLowerCase();
+      if (blacklist.includes(lower) || lower.length < 2) return '';
+      return candidate.charAt(0).toUpperCase() + candidate.slice(1);
     }
 
-    const fallback = setTimeout(() => {
-      // geen sessie binnen redelijke tijd → terug naar login
-      location.replace('login.html');
-    }, 1800); // kleine buffer voorkomt “flits” na inloggen
+    async function ensureSession(){
+      const { data: { session } } = await supabase.auth.getSession();
 
-    supabase.auth.onAuthStateChange((_event, newSession) => {
-      if (newSession?.user){
-        clearTimeout(fallback);
-        setNameFromUser(newSession.user);
+      if (session?.user){
+        applyUser(session.user);
+        return;
       }
+
+      const fallback = setTimeout(() => {
+        location.replace('login.html');
+      }, 1800);
+
+      supabase.auth.onAuthStateChange((_event, newSession) => {
+        if (newSession?.user){
+          clearTimeout(fallback);
+          applyUser(newSession.user);
+        }
+      });
+    }
+
+    function applyUser(user){
+      const first = niceFirstNameFrom(user);
+      if (first){
+        els.userFirst.textContent = first;
+        els.welcomeWrap.classList.remove('hide');
+      } else {
+        els.welcomeWrap.classList.add('hide');
+      }
+      if (els.profileEmail) els.profileEmail.textContent = user.email || '';
+    }
+
+    await ensureSession();
+
+    document.getElementById('btn-logout')?.addEventListener('click', async ()=>{
+      await supabase.auth.signOut();
+      location.replace('login.html');
     });
-  }
 
-  await ensureSession();
-
-  document.getElementById('btn-logout')?.addEventListener('click', async ()=>{
-    await supabase.auth.signOut();
-    location.replace('login.html');
-  });
-
-  // Tabs
-  const tabs = document.querySelectorAll('.tab-btn');
-  const sections = document.querySelectorAll('.tab-content');
-  tabs.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      tabs.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      const id = btn.dataset.tab;
-      sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.tab-content');
+    tabs.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        tabs.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const id = btn.dataset.tab;
+        sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
+      });
     });
-  });
-</script>
->
+
+    // Open tijdstippen submit (placeholder; koppel later aan function/DB)
+    document.getElementById('slot-form')?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const date = (document.getElementById('slot-date')?.value||'').trim();
+      const from = (document.getElementById('slot-from')?.value||'').trim();
+      const to   = (document.getElementById('slot-to')?.value||'').trim();
+      const desc = (document.getElementById('slot-desc')?.value||'').trim();
+      if(!date || !from || !to){ alert('Kies datum en uren.'); return; }
+      alert('Tijdstip opgeslagen. (koppeling naar backend volgt)');
+      e.target.reset();
+    });
+  </script>
 </body>
 </html>
