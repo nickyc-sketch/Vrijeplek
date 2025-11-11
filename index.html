@@ -120,5 +120,29 @@
     sync(document.getElementById('to'));
   })();
   </script>
+  <script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+  const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+
+  const btnLogin = document.getElementById('nav-login');
+  const btnMijn  = document.getElementById('nav-mijn');
+
+  async function toggleNav(){
+    const { data:{ session } } = await supabase.auth.getSession();
+    const loggedIn = !!session?.user;
+    if(loggedIn){
+      btnLogin.style.display = 'none';
+      btnMijn.style.display  = 'inline-flex';
+    }else{
+      btnLogin.style.display = 'inline-flex';
+      btnMijn.style.display  = 'none';
+    }
+  }
+  await toggleNav();
+  supabase.auth.onAuthStateChange(()=>toggleNav());
+</script>
+
 </body>
 </html>
