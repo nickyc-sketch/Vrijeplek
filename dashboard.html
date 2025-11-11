@@ -31,7 +31,6 @@
     .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px}
     .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s}
     .tab-btn.active{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
-    .tab-btn .dot{margin-left:8px}
 
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
     h1.section-title{font-size:26px;margin:0 0 18px}
@@ -173,7 +172,11 @@
             </div>
             <div class="two">
               <div class="field"><label>Telefoon</label><input id="st-phone" class="input" type="tel" placeholder="+32 ..."></div>
-              <div class="field"><label>E-mail</label><input id="st-email" class="input" type="email" disabled></div>
+              <div class="field">
+                <label>E-mail (wijziging vereist bevestiging)</label>
+                <input id="st-email" class="input" type="email" placeholder="naam@voorbeeld.be">
+                <div class="tiny">Als je dit wijzigt, sturen we een bevestigingsmail via Supabase.</div>
+              </div>
             </div>
             <div class="two">
               <div class="field"><label>BTW-nummer</label><input id="st-btw" class="input" type="text" placeholder="BE0123456789"></div>
@@ -228,10 +231,8 @@
 
           <div class="panel hide" id="panel-account">
             <h3>Accountstatus & Betaling</h3>
-
             <div id="acc-status" class="tiny" style="margin-bottom:10px">Status: <strong>—</strong></div>
             <div class="sep"></div>
-
             <div class="field">
               <label>Plan</label>
               <div id="plan-wrap" class="plan">
@@ -239,12 +240,10 @@
                 <button type="button" class="pill" data-plan="yearly">€180 / jaar</button>
               </div>
             </div>
-
             <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
               <button id="btn-activate" class="btn">Activeer abonnement</button>
               <a id="last-checkout-url" class="tiny" href="#" target="_blank" style="display:none">Laatste betaallink openen</a>
             </div>
-
             <div class="tiny" style="margin-top:8px">Je gegevens worden pas publiek na activatie.</div>
           </div>
 
@@ -353,6 +352,7 @@
     }catch{ return ''; }
   }
 
+  let __origEmail = '';
   async function ensureSession(supabase){
     if(!supabase){
       els.welcomeWrap.classList.add('hide');
@@ -375,6 +375,7 @@
     if(f){ els.userFirst.textContent = f; els.welcomeWrap.classList.remove('hide'); }
     else { els.welcomeWrap.classList.add('hide'); }
     els.st.email.value = user?.email || '';
+    __origEmail = user?.email || '';
     if(!els.st.name.value) els.st.name.value = f || '';
     window.__email = user?.email || '';
     loadProfile(window.__email).then(()=> afterProfileLoaded());
@@ -404,20 +405,81 @@
     }
   }
 
+  // -------- E-mail + profiel opslaan --------
+  async function saveEmailIfChanged(){
+    const newEmail = (els.st.email.value || '').trim();
+    if(!newEmail || newEmail === __origEmail) return { changed:false, ok:true };
+
+    if(!window.__supabase){
+      // Geen supabase beschikbaar: we kunnen auth-mail niet wijzigen, maar weigeren niet.
+      return { changed:true, ok:false, msg:'Geen Supabase; e-mail in auth niet aangepast.' };
+    }
+    try{
+      const { error } = await window.__supabase.auth.updateUser({ email: newEmail });
+      if(error){ return { changed:true, ok:false, msg: error.message || 'Kon e-mail niet wijzigen' }; }
+      __origEmail = newEmail;
+      return { changed:true, ok:true };
+    }catch(e){
+      return { changed:true, ok:false, msg:String(e?.message||e) };
+    }
+  }
+
+  async function saveProfile(){
+    els.st.msg.textContent = 'Opslaan...';
+
+    // 1) E-mailwijziging (triggert bevestigingsmail door Supabase)
+    const emailRes = await saveEmailIfChanged();
+    if(emailRes.changed){
+      if(emailRes.ok){
+        els.st.msg.textContent = 'Bevestigingsmail verzonden. Profiel opslaan...';
+      }else{
+        els.st.msg.textContent = 'E-mail inloggen NIET aangepast (' + (emailRes.msg||'') + '). Profiel opslaan...';
+      }
+    }
+
+    // 2) Profiel wegschrijven naar jouw backend (altijd e-mail meesturen!)
+    const payload = {
+      email: (els.st.email.value || '').trim(),
+      zaak: els.st.company.value.trim(),
+      telefoon: els.st.phone.value.trim(),
+      btw: els.st.btw.value.trim(),
+      cat: els.st.cat.value.trim(),
+      straat: els.st.straat.value.trim(),
+      postcode: els.st.postcode.value.trim(),
+      website: els.st.website.value.trim(),
+      bio: els.st.bio.value.trim()
+    };
+
+    try{
+      const r = await fetch('/.netlify/functions/profile', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if(r.ok){
+        els.st.msg.textContent = 'Opgeslagen';
+      }else{
+        const t = await r.text().catch(()=> '');
+        els.st.msg.textContent = 'Mislukt (' + (t||r.status) + ')';
+      }
+    }catch(e){
+      els.st.msg.textContent = 'Netwerkfout';
+    }
+  }
+
+  document.getElementById('st-save-person')?.addEventListener('click', saveProfile);
+
   // -------- Betalen vanuit Account-panel --------
   function selectPlan(plan){
     window.__plan = plan;
     els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
   }
-  els.planPills.forEach(p=>{
-    p.addEventListener('click', ()=> selectPlan(p.dataset.plan));
-  });
-
+  els.planPills.forEach(p=> p.addEventListener('click', ()=> selectPlan(p.dataset.plan)));
   async function payNow(){
     try{
       els.btnActivate.disabled = true;
       els.btnActivate.textContent = 'Link maken...';
-      const body = { email: window.__email || els.st.email.value || '', plan: window.__plan || 'monthly' };
+      const body = { email: (els.st.email.value||'').trim(), plan: window.__plan || 'monthly' };
       const r = await fetch('/.netlify/functions/create-checkout', {
         method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
       });
@@ -426,7 +488,7 @@
       if(url){
         els.lastCheckout.href = url;
         els.lastCheckout.style.display = 'inline';
-        location.href = url; // meteen naar checkout
+        location.href = url;
       }else{
         alert('Betaallink niet beschikbaar.');
       }
@@ -443,7 +505,6 @@
   function gateUI(status, plan){
     const active = (status === 'active');
 
-    // Top banner + tab dot
     if(!active){
       els.settingsDot.style.display = 'inline-block';
       els.payBanner.style.display = 'block';
@@ -455,11 +516,9 @@
       els.accountDot.style.display = 'none';
     }
 
-    // Account panel status
     els.accStatus.innerHTML = `Status: <strong>${active ? 'actief' : 'niet actief'}</strong> — plan: <strong>${plan || '—'}</strong>`;
     selectPlan(plan || 'monthly');
 
-    // Alleen deze twee zijn gelocked bij pending
     if(!active){
       els.sections.open?.classList.add('locked');
       els.sections.website?.classList.add('locked');
@@ -468,49 +527,7 @@
       els.sections.website?.classList.remove('locked');
     }
   }
-
-  async function afterProfileLoaded(){
-    gateUI(window.__status || 'pending', window.__plan || 'monthly');
-  }
-
-  // -------- Opslaan knoppen --------
-  async function saveProfile(){
-    els.st.msg.textContent = 'Opslaan...';
-    const payload = {
-      email: els.st.email.value.trim(),
-      zaak: els.st.company.value.trim(),
-      telefoon: els.st.phone.value.trim(),
-      btw: els.st.btw.value.trim(),
-      cat: els.st.cat.value.trim(),
-      straat: els.st.straat.value.trim(),
-      postcode: els.st.postcode.value.trim(),
-      website: els.st.website.value.trim(),
-      bio: els.st.bio.value.trim()
-    };
-    try{
-      const r = await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-      els.st.msg.textContent = r.ok ? 'Opgeslagen' : 'Mislukt';
-    }catch{ els.st.msg.textContent = 'Netwerkfout'; }
-  }
-  document.getElementById('st-save-person')?.addEventListener('click', saveProfile);
-  document.getElementById('st-save-privacy')?.addEventListener('click', async ()=>{
-    const body = {
-      show_location: document.getElementById('st-show-location')?.checked || false,
-      public_calendar: document.getElementById('st-public-calendar')?.checked || false
-    };
-    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
-    alert('Opgeslagen');
-  });
-  document.getElementById('st-save-vis')?.addEventListener('click', async ()=>{
-    const body = { show_reviews: document.getElementById('st-reviews')?.checked || false, place: document.getElementById('st-place')?.value?.trim() || '' };
-    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
-    alert('Opgeslagen');
-  });
-  document.getElementById('st-save-notify')?.addEventListener('click', async ()=>{
-    const body = { notify_mail: document.getElementById('st-notify-mail')?.checked || false, daily_mail: document.getElementById('st-daily-mail')?.checked || false };
-    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
-    alert('Opgeslagen');
-  });
+  async function afterProfileLoaded(){ gateUI(window.__status || 'pending', window.__plan || 'monthly'); }
 
   // -------- Agenda (defensief) --------
   function groupByDate(items){ const map={}; items.forEach(x=>{ (map[x.date] ||= []).push(x); }); Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time))); return Object.keys(map).sort().map(d=>({ date:d, items: map[d] })); }
@@ -538,7 +555,7 @@
     const row=document.createElement('div'); row.className='edit-row'; row.dataset.id=item.id;
     const t=document.createElement('input'); t.className='input'; t.type='time'; t.value=item.time;
     const client=document.createElement('input'); client.className='input'; client.type='text'; client.value=item.client||'';
-    const purpose=document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; value=item.purpose||'';
+    const purpose=document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; purpose.value=item.purpose||'';
     const actions=document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
     const bSave=document.createElement('button'); bSave.className='btn'; bSave.textContent='Opslaan';
     const bCancel=document.createElement('button'); bCancel.className='btn-light'; bCancel.textContent='Annuleren';
