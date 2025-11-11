@@ -1,1 +1,23 @@
-/websitevanklant/:slug   /.netlify/functions/site?slug=:slug   200
+https://vrijeplek.be/*    https://www.vrijeplek.be/:splat   301!
+
+/login.html               /login.html               200
+/aanmelden.html           /aanmelden.html           200
+/bedankt.html             /bedankt.html             200
+/geactiveerd.html         /geactiveerd.html         200
+/wachtwoord-reset.html    /wachtwoord-reset.html    200
+/wachtwoord-vergeten.html /wachtwoord-vergeten.html 200
+/voorwaarden.html         /voorwaarden.html         200
+/dashboard.html           /dashboard.html           200
+
+/img/*                    /img/:splat               200
+/css/*                    /css/:splat               200
+/js/*                     /js/:splat                200
+/.well-known/*            /.well-known/:splat       200
+/favicon.ico              /favicon.ico              200
+/robots.txt               /robots.txt               200
+/sitemap.xml              /sitemap.xml              200
+
+/:slug                    /.netlify/functions/render_site?slug=:slug                    200
+/:slug/*                  /.netlify/functions/render_site?slug=:slug&path=:splat        200
+
+/*                        /index.html               200
