@@ -207,3 +207,14 @@ input[type="date"][data-has-value="1"]::-webkit-datetime-edit{ color:inherit; }
 @media(max-width:520px){
   .footer-inner{ flex-direction:column; gap:6px; text-align:center; }
 }
+/* Header: brand netjes uitlijnen */
+.brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; }
+
+/* Groen moet winnen van .header-actions .nav-btn */
+.header-actions .nav-btn.btn-green{
+  background:linear-gradient(120deg,#16a34a,#0e9f6e);
+  border:1px solid rgba(16,185,129,.25);
+  color:#fff !important;
+  box-shadow:0 6px 18px rgba(16,185,129,.18);
+}
+.header-actions .nav-btn.btn-green:hover{ filter:brightness(1.07); }
