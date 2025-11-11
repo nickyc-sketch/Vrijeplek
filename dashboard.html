@@ -236,6 +236,7 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+  // Gebruik je bestaande env of fallback (laat zoals je nu al hebt)
   const SUPABASE_URL = window.env?.SUPABASE_URL || '';
   const SUPABASE_ANON_KEY = window.env?.SUPABASE_ANON_KEY || '';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession:true, autoRefreshToken:true } });
@@ -243,7 +244,6 @@
   const els = {
     welcomeWrap: document.getElementById('welcome-wrap'),
     userFirst: document.getElementById('user-firstname'),
-    logoutTop: document.getElementById('btn-logout'),
     apptList: document.getElementById('appointments-list'),
     payBanner: document.getElementById('pay-banner'),
     settingsDot: document.getElementById('settings-dot'),
@@ -290,14 +290,15 @@
     else { els.welcomeWrap.classList.add('hide'); }
     els.st.email.value = user.email||'';
     if(!els.st.name.value) els.st.name.value = f || '';
-    loadProfile(user.email).then(()=> afterProfileLoaded(user.email));
+    loadProfile(user.email).then(()=> afterProfileLoaded());
     loadAppointments();
   }
 
-  async function signOut(){ await supabase.auth.signOut(); location.replace('login.html'); }
+  async function signOut(){ try{ await supabase.auth.signOut(); }finally{ location.replace('login.html'); } }
   document.getElementById('btn-logout')?.addEventListener('click', signOut);
   document.getElementById('st-logout')?.addEventListener('click', signOut);
 
+  // Tabs
   const tabs = document.querySelectorAll('.tab-btn');
   const sections = document.querySelectorAll('.tab-content');
   tabs.forEach(btn=>{
@@ -309,6 +310,7 @@
     });
   });
 
+  // Sidenav
   const sideBtns = document.querySelectorAll('.side-item');
   const sidePanels = {
     persoonlijk: document.getElementById('panel-persoonlijk'),
@@ -422,7 +424,7 @@
     gateUI(window.__status || 'pending', window.__plan || 'monthly');
   }
 
-  // -------- AGENDA DUMMY (kan later naar DB) --------
+  // -------- AGENDA --------
   function groupByDate(items){
     const map = {};
     items.forEach(x=>{ (map[x.date] ||= []).push(x); });
@@ -439,7 +441,7 @@
     const row = document.createElement('div'); row.className='appt'; row.dataset.id=item.id;
     const t = document.createElement('div'); t.className='appt-time'; t.textContent=item.time;
     const meta = document.createElement('div'); meta.className='appt-meta';
-    const p1 = document.createElement('div'); p1.innerHTML=`<strong>${escapeHtml(item.client)}</strong> — ${escapeHtml(item.purpose||'')}`;
+    const p1 = document.createElement('div'); p1.innerHTML=`<strong>${escapeHtml(item.client||'—')}</strong> — ${escapeHtml(item.purpose||'')}`;
     const p2 = document.createElement('div'); p2.className='tiny'; p2.textContent=item.note||'';
     meta.appendChild(p1); meta.appendChild(p2);
     const actions = document.createElement('div'); actions.className='appt-actions';
@@ -454,7 +456,7 @@
   function editRow(item){
     const row=document.createElement('div'); row.className='edit-row'; row.dataset.id=item.id;
     const t=document.createElement('input'); t.className='input'; t.type='time'; t.value=item.time;
-    const client=document.createElement('input'); client.className='input'; client.type='text'; client.value=item.client;
+    const client=document.createElement('input'); client.className='input'; client.type='text'; client.value=item.client||'';
     const purpose=document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; purpose.value=item.purpose||'';
     const actions=document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
     const bSave=document.createElement('button'); bSave.className='btn'; bSave.textContent='Opslaan';
@@ -505,20 +507,6 @@
     }catch{ appts=[]; }
     renderAppointments(appts);
   }
-
-  document.getElementById('slot-form')?.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const date=document.getElementById('slot-date').value.trim();
-    const from=document.getElementById('slot-from').value.trim();
-    const to=document.getElementById('slot-to').value.trim();
-    const desc=document.getElementById('slot-desc').value.trim();
-    if(!date||!from||!to){ alert('Kies datum en uren.'); return; }
-    try{
-      await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'publish-slot', date, from, to, desc })});
-      e.target.reset();
-      loadAppointments();
-    }catch(_){}
-  });
 
   await ensureSession();
 </script>
