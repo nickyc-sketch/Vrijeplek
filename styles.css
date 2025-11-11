@@ -77,6 +77,15 @@ main{ flex:1; }
   box-shadow:0 14px 28px rgba(17,49,170,.36), 0 0 0 2px rgba(0,194,255,.28);
 }
 .header-actions .nav-btn:active{ transform:translateY(1px); }
+.btn-green{
+  background:linear-gradient(120deg,#16a34a,#0e9f6e);
+  color:#fff!important;
+  border:1px solid rgba(16,185,129,.25);
+  border-radius:999px;
+  padding:10px 16px;
+  font-weight:700;
+  box-shadow:0 6px 18px rgba(16,185,129,.18);
+}
 
 /* HERO */
 .hero{ padding:60px 0 40px; text-align:center; position:relative; }
