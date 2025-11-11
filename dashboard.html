@@ -8,20 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=ocean2">
+  <link rel="stylesheet" href="styles.css?v=ocean3">
 
   <style>
     :root{
-      --ocean-1:#1a66ff; --ocean-2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
       --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
-      --line: rgba(26,102,255,.25);
+      --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
     html,body{height:100%}
-    body{font-family:'Poppins',sans-serif;margin:0;min-height:100svh;display:flex;flex-direction:column;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink);}
+    body{font-family:'Poppins',sans-serif;margin:0;min-height:100svh;display:flex;flex-direction:column;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink)}
     .site{display:flex;flex-direction:column;min-height:100svh}
     main{flex:1}
 
-    .site-header{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50}
+    .site-header{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50}
     .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
     .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px}
     .site-header img{height:38px}
@@ -30,25 +30,33 @@
     .tabs-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
     .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px}
     .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s}
-    .tab-btn.active{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
+    .tab-btn.active{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
 
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
     h1.section-title{font-size:26px;text-align:center;margin:0 0 18px}
     .card{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px}
-
-    .appointment{border-bottom:1px dashed var(--line);padding:10px 0}
-    .appointment:last-child{border:none}
-    .appointment h3{margin:0;font-size:16px;color:var(--ink)}
-    .appointment p{margin:3px 0;font-size:14px;color:var(--muted)}
+    .btn{padding:10px 18px;border:none;border-radius:999px;background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;font-weight:700;cursor:pointer}
+    .btn-light{padding:10px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:600;cursor:pointer}
+    .btn-danger{background:var(--danger);border:none;color:#fff}
+    .tiny{font-size:12px;color:#5b6b86}
 
     .field{display:flex;flex-direction:column;margin-bottom:10px}
     .field label{font-weight:600;margin-bottom:4px}
     .input{padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
-    .btn{padding:10px 20px;border:none;border-radius:999px;background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;font-weight:700;cursor:pointer}
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
-    /* Instellingen: links tabs, rechts panel */
+    /* Afspraken */
+    .day-group{margin:8px 0 14px}
+    .day-head{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-weight:700;color:var(--ink)}
+    .appt{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:8px}
+    .appt-time{font-weight:700}
+    .appt-meta{display:flex;flex-direction:column;gap:3px}
+    .appt-actions{display:flex;gap:8px}
+    .badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#f0f5ff;border:1px solid var(--line);font-weight:600;font-size:12px;color:var(--ink)}
+    .edit-row{display:grid;grid-template-columns:110px 1fr 1fr auto;gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);border-radius:12px;background:#fcfdff;margin-bottom:8px}
+
+    /* Instellingen */
     .settings{display:grid;grid-template-columns:260px 1fr;gap:14px}
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
     .sidenav{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:8px}
@@ -63,7 +71,7 @@
     @media(max-width:720px){.two{grid-template-columns:1fr}}
 
     .toggle{appearance:none;width:44px;height:26px;border-radius:999px;background:#cfe0ff;position:relative;outline:none;cursor:pointer;border:1px solid var(--line)}
-    .toggle:checked{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2))}
+    .toggle:checked{background:linear-gradient(120deg,var(--o1),var(--o2))}
     .toggle:before{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s ease}
     .toggle:checked:before{transform:translateX(18px)}
 
@@ -86,7 +94,6 @@
       <button class="tab-btn active" data-tab="afspraken">Afspraken</button>
       <button class="tab-btn" data-tab="open">Open tijdsstippen</button>
       <button class="tab-btn" data-tab="website">Website</button>
-      <button class="tab-btn" data-tab="profiel">Profiel</button>
       <button class="tab-btn" data-tab="instellingen">Instellingen</button>
     </div>
   </div>
@@ -98,10 +105,8 @@
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
-        <div id="appointments-list">
-          <div class="appointment"><h3>12 november — 14:00</h3><p><strong>Jan Peeters</strong> — Massage 60min</p></div>
-          <div class="appointment"><h3>13 november — 09:30</h3><p><strong>Sofie Janssens</strong> — Intakegesprek</p></div>
-        </div>
+        <div id="appointments-list"></div>
+        <div class="tiny">Klik op <strong>Bewerken</strong> om een afspraak aan te passen of <strong>Verwijderen</strong> om te annuleren.</div>
       </div>
     </section>
 
@@ -129,20 +134,7 @@
       </div>
     </section>
 
-    <!-- Profieloverzicht -->
-    <section id="tab-profiel" class="tab-content" hidden>
-      <div class="card">
-        <h2>Profieloverzicht</h2>
-        <ul>
-          <li>E-mail: <span id="profile-email">—</span></li>
-          <li>Bedrijfsnaam: <span id="profile-company">—</span></li>
-          <li>BTW-nummer: <span id="profile-btw">—</span></li>
-          <li>Categorie: <span id="profile-cat">—</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Instellingen: links tabs + blauwe vinkjes -->
+    <!-- Instellingen -->
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
@@ -157,7 +149,7 @@
           <div class="panel" id="panel-persoonlijk">
             <h3>Persoonlijk</h3>
             <div class="two">
-              <div class="field"><label>Naam</label><input id="st-name" class="input" type="text" placeholder="Voornaam"></div>
+              <div class="field"><label>Naam (toon op dashboard)</label><input id="st-name" class="input" type="text" placeholder="Voornaam"></div>
               <div class="field"><label>Bedrijfsnaam</label><input id="st-company" class="input" type="text" placeholder="Naam van je zaak"></div>
             </div>
             <div class="two">
@@ -185,14 +177,17 @@
             </div>
             <div class="field"><label>Website</label><input id="st-website" class="input" type="url" placeholder="https://voorbeeld.be"></div>
             <div class="field"><label>Korte omschrijving</label><input id="st-bio" class="input" type="text" placeholder="Beschrijf kort je diensten"></div>
-            <button id="st-save-person" class="btn">Opslaan</button>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+              <button id="st-save-person" class="btn">Opslaan</button>
+              <span id="st-msg" class="tiny"></span>
+            </div>
           </div>
 
           <div class="panel hide" id="panel-privacy">
             <h3>Privacy & locatie</h3>
             <div class="two">
               <div class="field">
-                <label>Locatie tonen op je publieke pagina</label>
+                <label>Locatie tonen op publieke pagina</label>
                 <input id="st-show-location" class="toggle" type="checkbox">
               </div>
               <div class="field">
@@ -248,12 +243,25 @@
   const els = {
     welcomeWrap: document.getElementById('welcome-wrap'),
     userFirst: document.getElementById('user-firstname'),
-    profileEmail: document.getElementById('profile-email'),
-    logoutTop: document.getElementById('btn-logout')
+    logoutTop: document.getElementById('btn-logout'),
+    apptList: document.getElementById('appointments-list'),
+    st: {
+      name: document.getElementById('st-name'),
+      company: document.getElementById('st-company'),
+      phone: document.getElementById('st-phone'),
+      email: document.getElementById('st-email'),
+      btw: document.getElementById('st-btw'),
+      cat: document.getElementById('st-cat'),
+      straat: document.getElementById('st-straat'),
+      postcode: document.getElementById('st-postcode'),
+      website: document.getElementById('st-website'),
+      bio: document.getElementById('st-bio'),
+      msg: document.getElementById('st-msg')
+    }
   };
 
   function firstNameFrom(user){
-    const meta = user.user_metadata?.name || user.user_metadata?.full_name || '';
+    const meta = user.user_metadata?.display_name || user.user_metadata?.name || user.user_metadata?.full_name || '';
     const metaFirst = (meta||'').split(/[.\s_-]/)[0]?.trim();
     const mailFirst = (user.email||'').split('@')[0]?.trim();
     const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
@@ -274,18 +282,15 @@
     const f = firstNameFrom(user);
     if(f){ els.userFirst.textContent = f; els.welcomeWrap.classList.remove('hide'); }
     else { els.welcomeWrap.classList.add('hide'); }
-    if(els.profileEmail) els.profileEmail.textContent = user.email||'';
-
-    // Prefill instellingen
-    document.getElementById('st-email').value = user.email||'';
-    document.getElementById('st-name').value = f || '';
+    els.st.email.value = user.email||'';
+    if(!els.st.name.value) els.st.name.value = f || '';
+    loadProfile(user.email);
+    loadAppointments();
   }
 
-  await ensureSession();
-
+  async function signOut(){ await supabase.auth.signOut(); location.replace('login.html'); }
   document.getElementById('btn-logout')?.addEventListener('click', signOut);
   document.getElementById('st-logout')?.addEventListener('click', signOut);
-  async function signOut(){ await supabase.auth.signOut(); location.replace('login.html'); }
 
   const tabs = document.querySelectorAll('.tab-btn');
   const sections = document.querySelectorAll('.tab-content');
@@ -315,57 +320,223 @@
     });
   });
 
-  document.getElementById('slot-form')?.addEventListener('submit',(e)=>{
+  document.getElementById('slot-form')?.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const date = document.getElementById('slot-date').value.trim();
     const from = document.getElementById('slot-from').value.trim();
     const to   = document.getElementById('slot-to').value.trim();
     const desc = document.getElementById('slot-desc').value.trim();
     if(!date || !from || !to){ alert('Kies datum en uren.'); return; }
-    alert('Tijdstip opgeslagen (koppeling volgt).');
-    e.target.reset();
+    try{
+      await fetch('/.netlify/functions/appointments', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'publish-slot', date, from, to, desc })
+      });
+      alert('Tijdstip opgeslagen.');
+      e.target.reset();
+      loadAppointments();
+    }catch(_){}
   });
 
-  // Instellingen "Opslaan" knoppen (placeholder POSTs)
-  function payloadBase(){
-    return {
-      name: document.getElementById('st-name').value.trim(),
-      company: document.getElementById('st-company').value.trim(),
-      phone: document.getElementById('st-phone').value.trim(),
-      email: document.getElementById('st-email').value.trim(),
-      btw: document.getElementById('st-btw').value.trim(),
-      cat: document.getElementById('st-cat').value.trim(),
-      straat: document.getElementById('st-straat').value.trim(),
-      postcode: document.getElementById('st-postcode').value.trim(),
-      website: document.getElementById('st-website').value.trim(),
-      bio: document.getElementById('st-bio').value.trim()
-    };
+  async function loadProfile(email){
+    try{
+      const r = await fetch('/.netlify/functions/profile?email=' + encodeURIComponent(email));
+      if(!r.ok) return;
+      const d = await r.json();
+      els.st.company.value = d?.zaak || '';
+      els.st.phone.value = d?.telefoon || '';
+      els.st.btw.value = d?.btw || '';
+      els.st.cat.value = d?.cat || '';
+      els.st.straat.value = d?.straat || '';
+      els.st.postcode.value = d?.postcode || '';
+      els.st.website.value = d?.website || '';
+      els.st.bio.value = d?.bio || '';
+    }catch(_){}
   }
+
+  async function saveProfile(){
+    els.st.msg.textContent = 'Opslaan...';
+    const payload = {
+      email: els.st.email.value.trim(),
+      zaak: els.st.company.value.trim(),
+      telefoon: els.st.phone.value.trim(),
+      btw: els.st.btw.value.trim(),
+      cat: els.st.cat.value.trim(),
+      straat: els.st.straat.value.trim(),
+      postcode: els.st.postcode.value.trim(),
+      website: els.st.website.value.trim(),
+      bio: els.st.bio.value.trim()
+    };
+    try{
+      const r = await fetch('/.netlify/functions/profile', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      });
+      if(!r.ok){ els.st.msg.textContent = 'Mislukt'; return; }
+      els.st.msg.textContent = 'Opgeslagen';
+    }catch(_){ els.st.msg.textContent = 'Netwerkfout'; }
+  }
+
+  async function saveDisplayName(){
+    const name = els.st.name.value.trim();
+    if(!name){ return; }
+    try{
+      const { error } = await supabase.auth.updateUser({ data: { display_name: name }});
+      if(!error){
+        els.userFirst.textContent = name.split(/[.\s_-]/)[0].replace(/^./, c=>c.toUpperCase());
+      }
+    }catch(_){}
+  }
+
   document.getElementById('st-save-person')?.addEventListener('click', async ()=>{
-    const body = { ...payloadBase() };
-    console.log('Save persoonlijk', body); alert('Opgeslagen (koppeling volgt).');
+    await saveDisplayName();
+    await saveProfile();
   });
+
   document.getElementById('st-save-privacy')?.addEventListener('click', async ()=>{
     const body = {
       show_location: document.getElementById('st-show-location').checked,
       public_calendar: document.getElementById('st-public-calendar').checked
     };
-    console.log('Save privacy', body); alert('Opgeslagen (koppeling volgt).');
+    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    alert('Opgeslagen');
   });
+
   document.getElementById('st-save-vis')?.addEventListener('click', async ()=>{
     const body = {
       show_reviews: document.getElementById('st-reviews').checked,
       place: document.getElementById('st-place').value.trim()
     };
-    console.log('Save zichtbaarheid', body); alert('Opgeslagen (koppeling volgt).');
+    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    alert('Opgeslagen');
   });
+
   document.getElementById('st-save-notify')?.addEventListener('click', async ()=>{
     const body = {
       notify_mail: document.getElementById('st-notify-mail').checked,
       daily_mail: document.getElementById('st-daily-mail').checked
     };
-    console.log('Save notificaties', body); alert('Opgeslagen (koppeling volgt).');
+    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    alert('Opgeslagen');
   });
+
+  function groupByDate(items){
+    const map = {};
+    items.forEach(x=>{
+      (map[x.date] ||= []).push(x);
+    });
+    Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time)));
+    const dates = Object.keys(map).sort();
+    return dates.map(d=>({ date:d, items: map[d] }));
+  }
+
+  function formatDateLabel(iso){
+    try{
+      const d = new Date(iso+'T00:00:00');
+      return d.toLocaleDateString('nl-BE', { weekday:'long', day:'2-digit', month:'long' });
+    }catch{ return iso; }
+  }
+
+  function renderAppointments(list){
+    els.apptList.innerHTML = '';
+    const groups = groupByDate(list);
+    if(!groups.length){
+      const empty = document.createElement('div');
+      empty.className = 'tiny'; empty.textContent = 'Nog geen afspraken.';
+      els.apptList.appendChild(empty);
+      return;
+    }
+    groups.forEach(g=>{
+      const wrap = document.createElement('div'); wrap.className = 'day-group';
+      const head = document.createElement('div'); head.className = 'day-head'; head.textContent = formatDateLabel(g.date);
+      wrap.appendChild(head);
+      g.items.forEach(item=>{
+        if(item.__editing){ wrap.appendChild(editRow(item)); }
+        else { wrap.appendChild(viewRow(item)); }
+      });
+      els.apptList.appendChild(wrap);
+    });
+  }
+
+  function viewRow(item){
+    const row = document.createElement('div'); row.className = 'appt'; row.dataset.id = item.id;
+    const t = document.createElement('div'); t.className = 'appt-time'; t.textContent = item.time;
+    const meta = document.createElement('div'); meta.className = 'appt-meta';
+    const p1 = document.createElement('div'); p1.innerHTML = `<strong>${escapeHtml(item.client)}</strong> — ${escapeHtml(item.purpose||'')}`;
+    const p2 = document.createElement('div'); p2.className='tiny'; p2.textContent = item.note||'';
+    meta.appendChild(p1); meta.appendChild(p2);
+    const actions = document.createElement('div'); actions.className = 'appt-actions';
+    const bEdit = document.createElement('button'); bEdit.className='btn-light'; bEdit.textContent='Bewerken';
+    const bDel  = document.createElement('button'); bDel.className='btn-danger'; bDel.textContent='Verwijderen';
+    bEdit.addEventListener('click', ()=> startEdit(item.id));
+    bDel.addEventListener('click', ()=> deleteAppt(item.id));
+    actions.appendChild(bEdit); actions.appendChild(bDel);
+    row.appendChild(t); row.appendChild(meta); row.appendChild(actions);
+    return row;
+  }
+
+  function editRow(item){
+    const row = document.createElement('div'); row.className = 'edit-row'; row.dataset.id = item.id;
+    const t = document.createElement('input'); t.className='input'; t.type='time'; t.value=item.time;
+    const client = document.createElement('input'); client.className='input'; client.type='text'; client.value=item.client;
+    const purpose = document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; purpose.value=item.purpose||'';
+    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
+    const bSave = document.createElement('button'); bSave.className='btn'; bSave.textContent='Opslaan';
+    const bCancel = document.createElement('button'); bCancel.className='btn-light'; bCancel.textContent='Annuleren';
+    bSave.addEventListener('click', ()=> saveAppt({ id:item.id, date:item.date, time:t.value, client:client.value.trim(), purpose:purpose.value.trim(), note:item.note||'' }));
+    bCancel.addEventListener('click', ()=> cancelEdit(item.id));
+    row.appendChild(t); row.appendChild(client); row.appendChild(purpose); row.appendChild(actions);
+    actions.appendChild(bSave); actions.appendChild(bCancel);
+    return row;
+  }
+
+  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+  let appts = [
+    { id:'a1', date:'2025-11-12', time:'14:00', client:'Jan Peeters', purpose:'Massage 60min', note:'' },
+    { id:'a2', date:'2025-11-13', time:'09:30', client:'Sofie Janssens', purpose:'Intakegesprek', note:'' }
+  ];
+
+  function startEdit(id){ const x = appts.find(a=>a.id===id); if(x){ x.__editing = true; renderAppointments(appts); } }
+  function cancelEdit(id){ const x = appts.find(a=>a.id===id); if(x){ delete x.__editing; renderAppointments(appts); } }
+
+  async function saveAppt(payload){
+    try{
+      await fetch('/.netlify/functions/appointments', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'update', ...payload })
+      });
+      const idx = appts.findIndex(a=>a.id===payload.id);
+      if(idx>-1){ appts[idx] = { ...appts[idx], ...payload }; delete appts[idx].__editing; }
+      renderAppointments(appts);
+    }catch(_){}
+  }
+
+  async function deleteAppt(id){
+    if(!confirm('Deze afspraak verwijderen?')) return;
+    try{
+      await fetch('/.netlify/functions/appointments', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'delete', id })
+      });
+      appts = appts.filter(a=>a.id!==id);
+      renderAppointments(appts);
+    }catch(_){}
+  }
+
+  async function loadAppointments(){
+    try{
+      const r = await fetch('/.netlify/functions/appointments?action=list');
+      if(r.ok){
+        const data = await r.json();
+        if(Array.isArray(data) && data.length){ appts = data; }
+      }
+    }catch(_){}
+    renderAppointments(appts);
+  }
+
+  await ensureSession();
 </script>
 </body>
 </html>
+
