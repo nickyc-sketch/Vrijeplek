@@ -5,63 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aanmelden — Vrijeplek</title>
 
-  <!-- Fonts + globale stijl -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=ocean3">
+  <link rel="stylesheet" href="styles.css?v=ocean7">
 
   <style>
     :root{
       --o1:#1a66ff; --o2:#0056ff;
-      --ink:#0a2a4a; --muted:#3a4b6a;
-      --line:rgba(26,102,255,.25); --glass:rgba(255,255,255,.8);
-      --danger:#e23b3b;
+      --ink:#0a2a4a; --muted:#5b6b86;
+      --glass:rgba(255,255,255,.12); --line:rgba(255,255,255,.2);
+      --danger:#ff3b3b;
     }
+    html,body{height:100%;margin:0;font-family:'Poppins',sans-serif;}
     body{
-      font-family:'Poppins',sans-serif;
-      background:linear-gradient(180deg,#eaf1ff,#f6f9ff);
-      margin:0; display:flex; flex-direction:column; min-height:100vh; color:var(--ink);
+      background:radial-gradient(circle at top,#0040ff 0%,#001f66 100%);
+      display:flex;flex-direction:column;min-height:100vh;color:#fff;
     }
     header{
-      display:flex; align-items:center; gap:10px;
-      background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff; padding:12px 20px;
-    }
-    header img{height:38px;}
-    header a{text-decoration:none;color:#fff;font-weight:700;font-size:20px;}
-
-    main{flex:1;display:flex;align-items:center;justify-content:center;padding:30px 12px;}
-    .card{
-      background:var(--glass);
+      position:fixed;top:0;left:0;width:100%;
+      padding:14px 24px;
+      display:flex;align-items:center;gap:10px;
+      background:rgba(0,0,0,.15);
       backdrop-filter:blur(10px);
-      border:1px solid var(--line);
-      border-radius:16px;
-      box-shadow:0 6px 24px rgba(10,27,90,.08);
-      max-width:460px; width:100%;
-      padding:30px 26px;
+      z-index:50;
+      border-bottom:1px solid rgba(255,255,255,.1);
     }
-    h1{margin:0 0 20px;text-align:center;font-size:24px;font-weight:700;color:var(--ink);}
-    form{display:flex;flex-direction:column;gap:12px;}
-    label{font-weight:600;font-size:14px;margin-bottom:3px;}
+    header a{color:#fff;text-decoration:none;font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px;}
+    header img{height:38px;}
+    main{
+      flex:1;display:flex;align-items:center;justify-content:center;
+      padding:80px 12px 40px;
+    }
+    .card{
+      width:100%;max-width:460px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:20px;
+      padding:34px 30px 40px;
+      box-shadow:0 8px 30px rgba(0,0,0,.25);
+      backdrop-filter:blur(14px);
+    }
+    h1{text-align:center;margin:0 0 24px;font-size:26px;font-weight:700;color:#fff;}
+    form{display:flex;flex-direction:column;gap:14px;}
+    label{font-weight:600;font-size:14px;margin-bottom:3px;display:block;}
     input,select{
-      padding:10px 12px;border:1px solid var(--line);
-      border-radius:8px;background:#fff;font-family:inherit;font-size:15px;
+      width:100%;padding:11px 14px;
+      border:1px solid rgba(255,255,255,.25);
+      border-radius:10px;background:rgba(255,255,255,.1);
+      color:#fff;font-family:inherit;font-size:15px;
     }
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    input::placeholder{color:rgba(255,255,255,.5);}
+    option{color:#000;}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
     .btn{
       background:linear-gradient(120deg,var(--o1),var(--o2));
-      border:none;border-radius:999px;color:#fff;
-      font-weight:700;padding:12px;margin-top:8px;cursor:pointer;
-      transition:.25s;
+      border:none;border-radius:999px;
+      color:#fff;font-weight:700;padding:13px;
+      cursor:pointer;font-size:15px;transition:.25s;margin-top:4px;
     }
-    .btn:hover{opacity:.9;}
-    .tiny{font-size:13px;color:var(--muted);}
-    .error{color:var(--danger);font-weight:600;margin-top:6px;text-align:center;}
-    .ok{color:var(--o2);font-weight:600;margin-top:6px;text-align:center;}
-    .terms{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--muted);}
-    .terms input{margin-top:2px;}
-    footer{text-align:center;padding:14px 0;font-size:13px;color:#5b6b86;}
+    .btn:hover{opacity:.9;transform:translateY(-1px);}
+    .terms{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:rgba(255,255,255,.8);}
+    .terms a{color:#fff;text-decoration:underline;}
+    .error{color:var(--danger);text-align:center;margin-top:8px;font-weight:600;}
+    .ok{color:#00ff99;text-align:center;margin-top:8px;font-weight:600;}
+    footer{text-align:center;padding:16px 0 20px;font-size:13px;color:rgba(255,255,255,.6);}
   </style>
 </head>
 
@@ -77,7 +85,7 @@
         <div class="two">
           <div>
             <label>Naam</label>
-            <input id="name" type="text" required placeholder="Voornaam en achternaam">
+            <input id="name" type="text" required placeholder="Volledige naam">
           </div>
           <div>
             <label>Bedrijfsnaam</label>
@@ -85,22 +93,34 @@
           </div>
         </div>
 
+        <div>
+          <label>E-mail</label>
+          <input id="email" type="email" required placeholder="naam@voorbeeld.be">
+        </div>
+
         <div class="two">
           <div>
-            <label>E-mail</label>
-            <input id="email" type="email" required placeholder="naam@voorbeeld.be">
+            <label>Wachtwoord</label>
+            <input id="password" type="password" required minlength="6" placeholder="Min. 6 tekens">
           </div>
           <div>
-            <label>Telefoon</label>
-            <input id="phone" type="tel" placeholder="+32 ...">
+            <label>Herhaal wachtwoord</label>
+            <input id="password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord">
           </div>
         </div>
 
         <div class="two">
           <div>
+            <label>Telefoon</label>
+            <input id="phone" type="tel" placeholder="+32 ...">
+          </div>
+          <div>
             <label>BTW-nummer</label>
             <input id="btw" type="text" placeholder="BE0123456789">
           </div>
+        </div>
+
+        <div class="two">
           <div>
             <label>Categorie</label>
             <select id="cat" required>
@@ -114,26 +134,15 @@
               <option value="dieren">Dieren</option>
             </select>
           </div>
-        </div>
-
-        <div class="two">
           <div>
             <label>Postcode & gemeente</label>
             <input id="postcode" type="text" placeholder="3500 Hasselt">
           </div>
-          <div>
-            <label>Straat + nr.</label>
-            <input id="straat" type="text" placeholder="Bergstraat 1">
-          </div>
         </div>
 
         <div>
-          <label>Wachtwoord</label>
-          <input id="password" type="password" required minlength="6">
-        </div>
-        <div>
-          <label>Herhaal wachtwoord</label>
-          <input id="password2" type="password" required minlength="6">
+          <label>Straat + nr.</label>
+          <input id="straat" type="text" placeholder="Bergstraat 1">
         </div>
 
         <div class="terms">
@@ -164,45 +173,35 @@
 
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim().toLowerCase();
-      const password = document.getElementById('password').value.trim();
-      const password2 = document.getElementById('password2').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const pass2 = document.getElementById('password2').value.trim();
 
-      if(password !== password2){
-        msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return;
-      }
-
-      const accepted = document.getElementById('terms').checked;
-      if(!accepted){
-        msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return;
-      }
+      if(pass !== pass2){ msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return; }
+      if(!document.getElementById('terms').checked){ msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return; }
 
       try{
-        const { data, error } = await supabase.auth.signUp({
-          email, password,
+        const { error } = await supabase.auth.signUp({
+          email, password: pass,
           options:{
             data:{
-              display_name:name,
-              bedrijf:document.getElementById('company').value.trim(),
-              telefoon:document.getElementById('phone').value.trim(),
-              btw:document.getElementById('btw').value.trim(),
-              cat:document.getElementById('cat').value,
-              straat:document.getElementById('straat').value.trim(),
-              postcode:document.getElementById('postcode').value.trim()
+              display_name: name,
+              bedrijf: document.getElementById('company').value.trim(),
+              telefoon: document.getElementById('phone').value.trim(),
+              btw: document.getElementById('btw').value.trim(),
+              cat: document.getElementById('cat').value,
+              straat: document.getElementById('straat').value.trim(),
+              postcode: document.getElementById('postcode').value.trim()
             },
             emailRedirectTo: window.location.origin + '/dashboard.html'
           }
         });
-
         if(error){
           msg.className='error';
-          msg.textContent = (error.message.includes('already registered'))
-            ? 'Er bestaat al een account met dit e-mailadres.'
-            : 'Registratie mislukt: ' + error.message;
+          msg.textContent=error.message.includes('already')?'Er bestaat al een account met dit e-mailadres.':'Registratie mislukt: '+error.message;
           return;
         }
-
         msg.className='ok';
-        msg.innerHTML='Bevestigingsmail verstuurd. Controleer je inbox of spamfolder.';
+        msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spamfolder.';
         form.reset();
       }catch(err){
         msg.className='error';
