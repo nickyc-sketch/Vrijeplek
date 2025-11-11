@@ -160,8 +160,9 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    const SUPABASE_URL = window.env?.SUPABASE_URL || '';
-    const SUPABASE_ANON_KEY = window.env?.SUPABASE_ANON_KEY || '';
+const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg4ODgxNjksImV4cCI6MjAxNDQ2NDE2OX0.xF6zA8zCINCFyFjC7y6x0PaB7mnX8v6Wv0xdrfHfGY';
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const form = document.getElementById('signup-form');
