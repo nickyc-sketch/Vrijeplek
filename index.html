@@ -4,29 +4,75 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vrijeplek — Last minute? Zoek een afspraak!</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- RELATIEF pad (geen leading slash) + cache-bust -->
+
   <link rel="stylesheet" href="styles.css?v=smurf5">
+
+  <style>
+    :root{
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --line:rgba(26,102,255,.25);
+    }
+    html,body{height:100%}
+    body{margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:linear-gradient(180deg,#e9f2ff,#f6f9ff);}
+    .site{min-height:100svh; display:flex; flex-direction:column;}
+    main{flex:1}
+
+    .site-header{position:sticky; top:0; z-index:50; background:linear-gradient(120deg,var(--o1),var(--o2)); color:#fff;}
+    .site-header .inner{max-width:1200px; margin:0 auto; padding:14px 12px; display:flex; align-items:center; gap:16px;}
+    .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; font-weight:700; font-size:20px; margin-right:auto;}
+    .brand img{height:38px}
+
+    .header-actions{display:flex; align-items:center; gap:10px; margin-left:auto;}
+    .nav-btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; text-decoration:none; font-weight:600; border:1px solid rgba(255,255,255,.35); color:#fff; background:rgba(255,255,255,.12);}
+    .nav-btn:hover{background:rgba(255,255,255,.2)}
+    .btn-green{background:linear-gradient(120deg,#16a34a,#0e9f6e); border:1px solid rgba(16,185,129,.25); color:#fff!important; box-shadow:0 6px 18px rgba(16,185,129,.18);}
+
+    .container{max-width:1200px; margin:0 auto; padding:0 12px;}
+    .hero{padding:36px 0 8px;}
+    .hero-inner{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;}
+    .hero h1{margin:0; font-size:32px;}
+
+    .search-wrap{width:100%; max-width:920px; margin:10px auto 28px; padding:14px; border-radius:16px; background:rgba(255,255,255,.7); border:1px solid var(--line); box-shadow:0 8px 30px rgba(10,27,90,.08);}
+    .search{display:grid; grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto; gap:10px;}
+    .search .field{display:flex; flex-direction:column; gap:6px; text-align:left;}
+    .search label{font-size:12px; font-weight:700; color:#223655;}
+    .search input,.search select{padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff;}
+    .btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 18px; border-radius:999px; border:0; background:linear-gradient(120deg,var(--o1),var(--o2)); color:#fff; font-weight:700; cursor:pointer;}
+    @media(max-width:1024px){ .search{grid-template-columns:1fr 1fr 1fr; } }
+    @media(max-width:720px){ .search{grid-template-columns:1fr; } }
+
+    .cat-dots{padding:18px 0 0;}
+    .cat-dots-row{display:flex; flex-wrap:wrap; gap:12px; list-style:none; padding:0; margin:0; justify-content:center;}
+    .catdot{display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; color:var(--ink);}
+    .catdot img{width:86px; height:86px; object-fit:cover; border-radius:999px; border:1px solid var(--line); box-shadow:0 8px 24px rgba(10,27,90,.08); background:#fff;}
+    .catdot span{font-weight:700; font-size:13px;}
+
+    .site-footer{border-top:1px solid var(--line); background:rgba(255,255,255,.8);}
+    .footer-inner{max-width:1200px; margin:0 auto; padding:16px 12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+    .footer-nav{display:flex; gap:12px;}
+    .footer-nav a{text-decoration:none; color:#244; font-weight:600;}
+  </style>
 </head>
 
 <body>
   <div class="site">
+
     <header class="site-header">
-  <div class="inner">
-    <a href="index.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
-    <nav class="header-actions">
-      <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-      <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
-      <a id="nav-login" class="nav-btn" href="login.html">Login</a>
-      <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
-    </nav>
-  </div>
-</header>
+      <div class="inner">
+        <a href="index.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
+        <nav class="header-actions">
+          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
+          <a id="nav-login" class="nav-btn" href="login.html">Login</a>
+          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+        </nav>
+      </div>
+    </header>
 
     <main>
-      <!-- Categorie-bolletjes (RELATIEVE paden naar img/) -->
       <section class="cat-dots">
         <div class="container">
           <ul class="cat-dots-row">
@@ -41,12 +87,10 @@
         </div>
       </section>
 
-      <!-- Hero + zoekbalk -->
       <section class="hero">
         <div class="container hero-inner">
           <h1>Last minute? Zoek een afspraak!</h1>
           <div class="search-wrap">
-            <!-- RELATIEVE action (geen leading slash) -->
             <form id="zoeken" class="search" action="zoeken" method="get" role="search" aria-label="Zoeken">
               <div class="field">
                 <label for="q">Welk bedrijf zoek je?</label>
@@ -96,7 +140,6 @@
     </footer>
   </div>
 
-  <!-- Interactie: cat-dot -> select, date placeholder sync -->
   <script>
   (function(){
     const catSelect = document.getElementById('cat');
@@ -108,7 +151,6 @@
         if(opt) opt.selected = true;
       });
     });
-
     function sync(el){
       if(!el) return;
       const set = ()=> el.dataset.hasValue = el.value ? '1' : '';
@@ -120,29 +162,30 @@
     sync(document.getElementById('to'));
   })();
   </script>
+
   <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-  const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
 
-  const btnLogin = document.getElementById('nav-login');
-  const btnMijn  = document.getElementById('nav-mijn');
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
 
-  async function toggleNav(){
-    const { data:{ session } } = await supabase.auth.getSession();
-    const loggedIn = !!session?.user;
-    if(loggedIn){
-      btnLogin.style.display = 'none';
-      btnMijn.style.display  = 'inline-flex';
-    }else{
-      btnLogin.style.display = 'inline-flex';
-      btnMijn.style.display  = 'none';
+    async function toggleNav(){
+      const { data:{ session } } = await supabase.auth.getSession();
+      const loggedIn = !!session?.user;
+      if(loggedIn){
+        btnLogin.style.display = 'none';
+        btnMijn.style.display  = 'inline-flex';
+      }else{
+        btnLogin.style.display = 'inline-flex';
+        btnMijn.style.display  = 'inline-flex';
+        btnMijn.style.display  = 'none';
+      }
     }
-  }
-  await toggleNav();
-  supabase.auth.onAuthStateChange(()=>toggleNav());
-</script>
-
+    await toggleNav();
+    supabase.auth.onAuthStateChange(()=>toggleNav());
+  </script>
 </body>
 </html>
