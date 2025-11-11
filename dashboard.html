@@ -1,397 +1,171 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Vrijeplek</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=smurf6" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=ocean">
+
   <style>
-    .site-header::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);opacity:.6}
-    .wrap{max-width:1200px;margin-inline:auto;padding:24px 12px 64px}
-    .welcome{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 16px}
-    .welcome h1{margin:0;font-size:22px;color:var(--blue-900)}
-    .subtitle{margin:0;color:#1f2a44}
-    .tabs{position:sticky;top:64px;z-index:10;margin:10px 0 18px}
-    .tabbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:8px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 24px rgba(10,27,90,.08)}
-    .tabbar-left{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .tabbar button{appearance:none;border:1px solid transparent;background:transparent;color:#0a2a4a;padding:10px 14px;border-radius:999px;font-weight:700;letter-spacing:.2px;cursor:pointer}
-    .tabbar button[aria-selected="true"]{background:linear-gradient(120deg,rgba(26,102,255,.18),rgba(0,86,255,.28));border-color:rgba(26,102,255,.28);box-shadow:0 6px 16px rgba(10,27,90,.12)}
-    .logout-btn{appearance:none;border:1px solid rgba(26,102,255,.28);background:#fff;color:#0a2a4a;padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer}
-    .logout-btn:hover{border-color:rgba(26,102,255,.45)}
-    [role="tabpanel"][hidden]{display:none!important}
-    .card{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(10,27,90,.08)}
-    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;margin:-6px -6px 10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35)),linear-gradient(120deg,rgba(26,102,255,.18),rgba(0,86,255,.28));border:1px solid rgba(26,102,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
-    .card-head h3{font-size:15px;margin:0;color:var(--blue-900)}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;background:linear-gradient(180deg,#fff,#f5f9ff);border:1px solid rgba(26,102,255,.28);box-shadow:0 4px 12px rgba(10,27,90,.10);color:var(--blue-900)}
-    .badge-dot{width:8px;height:8px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue-300),var(--blue-600));box-shadow:0 0 0 4px rgba(26,102,255,.12)}
-    .soft-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(26,102,255,.18),transparent);margin:8px 0 2px}
-    .tiny-note{font-size:12px;color:#5b6b86}
-    .grid{display:grid;gap:14px;grid-template-columns:2fr 1fr}
-    .kpi-grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-    .kpi{display:flex;align-items:baseline;gap:10px}
-    .kpi .value{font-size:30px;font-weight:700;color:var(--blue-900)}
-    .kpi .sub{font-size:12px;color:#5b6b86}
-    table{width:100%;border-collapse:separate;border-spacing:0}
-    thead th{text-align:left;font-size:12px;color:#3a4b6a;padding:8px 10px;border-bottom:1px solid rgba(26,102,255,.22)}
-    tbody td{padding:10px;font-size:14px;border-bottom:1px dashed rgba(26,102,255,.16)}
-    tbody tr:last-child td{border-bottom:none}
-    .row{display:flex;gap:10px}.row>*{flex:1}
-    .submit-zone{display:flex;gap:10px;align-items:center}
-    .progress{height:10px;border-radius:999px;background:rgba(26,102,255,.12);overflow:hidden}
-    .progress>i{display:block;height:100%;background:linear-gradient(90deg,rgba(26,102,255,.6),rgba(0,86,255,.85));width:0%;transition:width .5s ease}
-    .builder{display:grid;gap:12px}
-    .builder .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .builder .preview{border-radius:12px;border:1px solid rgba(26,102,255,.22);background:#fff;overflow:hidden}
-    .builder iframe{width:100%;height:420px;border:0;background:#fff}
-    @media (max-width:1024px){.grid{grid-template-columns:1fr}}
-    @media (max-width:720px){.kpi-grid{grid-template-columns:1fr}.builder .two{grid-template-columns:1fr}}
+    body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:#0a2a4a;}
+
+    /* Header */
+    .site-header{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50;}
+    .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+    .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px;}
+    .site-header img{height:38px;}
+
+    /* Tabs */
+    .tabs-bar{background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(26,102,255,.25);}
+    .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px;}
+    .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:#0a2a4a;cursor:pointer;transition:.25s;}
+    .tab-btn.active{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15);}
+
+    /* Container */
+    .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px;}
+    h1.section-title{font-size:26px;text-align:center;margin-bottom:18px;}
+    .card{background:rgba(255,255,255,0.7);border:1px solid rgba(26,102,255,.18);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px;}
+
+    /* Afsprakenlijst */
+    .appointment{border-bottom:1px dashed rgba(26,102,255,.25);padding:10px 0;}
+    .appointment:last-child{border:none;}
+    .appointment h3{margin:0;font-size:16px;color:#0a2a4a;}
+    .appointment p{margin:3px 0;font-size:14px;color:#3a4b6a;}
+
+    /* Open tijdstippen formulier */
+    .field{display:flex;flex-direction:column;margin-bottom:10px;}
+    .field label{font-weight:600;margin-bottom:4px;}
+    .input{padding:10px;border:1px solid rgba(26,102,255,.25);border-radius:8px;}
+    .btn{padding:10px 20px;border:none;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;font-weight:700;cursor:pointer;}
+    .btn-ghost{background:rgba(255,255,255,.4);border:1px solid rgba(26,102,255,.25);color:#0a2a4a;}
+    .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;}
+    @media(max-width:720px){.form-row{grid-template-columns:1fr;}}
+
+    /* Instellingen */
+    .settings-list li{margin-bottom:6px;}
   </style>
 </head>
+
 <body>
-  <div class="site">
-    <header class="site-header">
-      <div class="header-inner">
-        <a href="index.html" class="brand" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
-          <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;" onerror="this.remove()">
-          <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
-        </a>
-      </div>
-    </header>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
+      <button id="btn-logout" class="btn-ghost" style="padding:8px 16px;">Uitloggen</button>
+    </div>
+  </header>
 
-    <main class="wrap">
-      <div class="welcome">
-        <div>
-          <h1>Welkom, <span id="user-first">—</span> 👋</h1>
-          <p class="subtitle">Beheer je vrije momenten, reservaties, mini-website en abonnement.</p>
-        </div>
-      </div>
-
-      <div class="tabs" role="tablist" aria-label="Dashboard secties">
-        <div class="tabbar">
-          <div class="tabbar-left">
-            <button role="tab" aria-selected="true"  data-tab="vrijemomenten" id="tab-vrijemomenten">Vrije momenten</button>
-            <button role="tab" aria-selected="false" data-tab="reservaties"    id="tab-reservaties">Reservaties</button>
-            <button role="tab" aria-selected="false" data-tab="website"        id="tab-website">Website</button>
-            <button role="tab" aria-selected="false" data-tab="profiel"        id="tab-profiel">Profiel</button>
-            <button role="tab" aria-selected="false" data-tab="abonnement"     id="tab-abonnement">Abonnement</button>
-          </div>
-          <button id="btn-logout" class="logout-btn" title="Uitloggen">Uitloggen</button>
-        </div>
-      </div>
-
-      <!-- Vrije momenten -->
-      <section id="panel-vrijemomenten" role="tabpanel" aria-labelledby="tab-vrijemomenten">
-        <div class="kpi-grid">
-          <div class="card">
-            <div class="card-head"><h3>Vrije momenten</h3><span class="badge"><span class="badge-dot"></span> Live</span></div>
-            <div class="kpi"><div class="value" id="kpi-free">0</div><div class="sub">gepland</div></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Reserveringen</h3><span class="badge">30 d</span></div>
-            <div class="kpi"><div class="value" id="kpi-bookings">0</div><div class="sub">nieuwe</div></div>
-          </div>
-        </div>
-
-        <div class="grid" style="margin-top:16px;">
-          <div>
-            <div class="card">
-              <div class="card-head"><h3>Aankomende afspraken</h3><span class="badge">Overzicht</span></div>
-              <table aria-label="Aankomende afspraken">
-                <thead><tr><th>Datum</th><th>Tijd</th><th>Klant</th><th>Notities</th></tr></thead>
-                <tbody id="appt-body"><tr><td colspan="4" style="color:#5b6b86;">Nog geen afspraken…</td></tr></tbody>
-              </table>
-            </div>
-
-            <div class="card" style="margin-top:14px;">
-              <div class="card-head"><h3>Vrij moment publiceren</h3><span class="badge"><span class="badge-dot"></span> Snel</span></div>
-              <div class="row" style="margin-bottom:10px;">
-                <div class="field"><label for="slot-date">Datum</label><input id="slot-date" type="date" class="input"></div>
-                <div class="field"><label for="slot-from">Van</label><input id="slot-from" type="time" class="input"></div>
-                <div class="field"><label for="slot-to">Tot</label><input id="slot-to" type="time" class="input"></div>
-              </div>
-              <div class="row">
-                <div class="field"><label for="slot-cap">Capaciteit</label><input id="slot-cap" type="number" min="1" value="1" class="input"></div>
-                <div class="field"><label for="slot-note">Omschrijving</label><input id="slot-note" type="text" placeholder="vb. Snelle beurt of intake" class="input"></div>
-              </div>
-              <div class="soft-divider"></div>
-              <div class="submit-zone">
-                <button id="btn-publish" class="btn">Publiceer</button>
-                <button id="btn-clear" class="btn btn-ghost">Leegmaken</button>
-                <span id="slot-msg" class="tiny-note"></span>
-              </div>
-            </div>
-          </div>
-
-          <aside>
-            <div class="card">
-              <div class="card-head"><h3>Profielstatus</h3><span class="badge">Checklist</span></div>
-              <ul style="margin:0;padding-left:18px;">
-                <li id="chk-email">E-mail bevestigd</li>
-                <li id="chk-btw">BTW-nummer geverifieerd</li>
-                <li id="chk-cat">Categorie ingevuld</li>
-              </ul>
-              <div class="soft-divider"></div>
-              <div class="progress" aria-label="Profiel compleetheid"><i id="progress-bar" style="width:0%"></i></div>
-              <p class="tiny-note" id="progress-text" style="margin-top:6px;">0% compleet</p>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <!-- Reservaties -->
-      <section id="panel-reservaties" role="tabpanel" aria-labelledby="tab-reservaties" hidden>
-        <div class="card">
-          <div class="card-head"><h3>Reservaties</h3><span class="badge">Overzicht</span></div>
-          <table aria-label="Aankomende afspraken">
-            <thead><tr><th>Datum</th><th>Tijd</th><th>Klant</th><th>Notities</th></tr></thead>
-            <tbody id="appt-body-2"><tr><td colspan="4" style="color:#5b6b86;">Nog geen afspraken…</td></tr></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Website -->
-      <section id="panel-website" role="tabpanel" aria-labelledby="tab-website" hidden>
-        <div class="card">
-          <div class="card-head"><h3>Mini-website</h3><span class="badge">Builder</span></div>
-          <div class="builder">
-            <div class="two">
-              <div class="field"><label for="wb-title">Titel</label><input id="wb-title" type="text" class="input" placeholder="Naam van je zaak"></div>
-              <div class="field"><label for="wb-tag">Tagline</label><input id="wb-tag" type="text" class="input" placeholder="Korte slagzin"></div>
-            </div>
-            <div class="two">
-              <div class="field">
-                <label for="wb-slug">Adres (slug)</label>
-                <input id="wb-slug" type="text" class="input" placeholder="bv. kapper-els"/>
-                <div class="hint tiny-note">Wordt: https://www.vrijeplek.be/websitevanklant/<b id="wb-slug-preview">—</b></div>
-              </div>
-              <div class="field">
-                <label for="wb-theme">Thema</label>
-                <select id="wb-theme" class="input">
-                  <option value="ocean">Ocean (glas)</option>
-                  <option value="light">Licht</option>
-                </select>
-              </div>
-            </div>
-            <div class="field"><label for="wb-about">Over ons</label><textarea id="wb-about" class="input" rows="4" placeholder="Korte intro over je zaak"></textarea></div>
-            <div class="field"><label for="wb-services">Diensten (komma-gescheiden)</label><input id="wb-services" class="input" placeholder="Knippen, Kleuren, Baardtrim"></div>
-            <div class="two">
-              <div class="field"><label for="wb-phone">Telefoon</label><input id="wb-phone" class="input" placeholder="+32 …"></div>
-              <div class="field"><label for="wb-site">Website (optioneel)</label><input id="wb-site" class="input" placeholder="https://"></div>
-            </div>
-            <div class="two">
-              <div class="field"><label for="wb-place">Google Place ID / Review-link</label><input id="wb-place" class="input" placeholder="ChIJN1t_tDeuEmsRUsoyG83frY4"></div>
-              <div class="field" style="display:flex;align-items:flex-end;gap:10px;">
-                <label style="display:flex;align-items:center;gap:8px;"><input id="wb-gr-on" type="checkbox"/><span>Google reviews tonen</span></label>
-                <label style="display:flex;align-items:center;gap:8px;"><input id="wb-public" type="checkbox"/><span>Tonen op Vrijeplek</span></label>
-              </div>
-            </div>
-            <div class="soft-divider"></div>
-            <div class="submit-zone">
-              <button id="wb-save" class="btn">Opslaan & publiceren</button>
-              <a id="wb-view" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Bekijken</a>
-              <span id="wb-msg" class="tiny-note"></span>
-            </div>
-            <div class="preview"><iframe id="wb-iframe" title="Voorbeeld"></iframe></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Profiel -->
-      <section id="panel-profiel" role="tabpanel" aria-labelledby="tab-profiel" hidden>
-        <div class="card">
-          <div class="card-head"><h3>Mijn gegevens</h3><span class="badge">Account</span></div>
-          <div class="row">
-            <div class="field"><label>E-mail</label><input id="pf-email" class="input" disabled></div>
-            <div class="field"><label>Naam</label><input id="pf-name" class="input" placeholder="Voornaam en/of zaak"></div>
-          </div>
-          <div class="row">
-            <div class="field"><label>Telefoon</label><input id="pf-phone" class="input" placeholder="+32 …"></div>
-            <div class="field"><label>Categorie</label><input id="pf-cat" class="input" placeholder="bv. Ramenwasser"></div>
-          </div>
-          <div class="soft-divider"></div>
-          <div class="submit-zone">
-            <button id="pf-save" class="btn">Opslaan</button>
-            <span id="pf-msg" class="tiny-note"></span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Abonnement -->
-      <section id="panel-abonnement" role="tabpanel" aria-labelledby="tab-abonnement" hidden>
-        <div class="card">
-          <div class="card-head"><h3>Abonnement</h3><span class="badge">Plan</span></div>
-          <p style="margin:6px 0 10px;">Huidig plan: <strong id="plan-name">Gratis proef</strong><br><span class="tiny-note">Eindigt op <span id="plan-end">—</span></span></p>
-          <div class="submit-zone">
-            <a href="/billing.html" class="btn">Beheer abonnement</a>
-            <button id="btn-logout-2" class="btn btn-ghost">Uitloggen</button>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
-      </div>
-    </footer>
+  <div class="tabs-bar">
+    <div class="tabs-inner">
+      <button class="tab-btn active" data-tab="afspraken">Afspraken</button>
+      <button class="tab-btn" data-tab="open">Open tijdstippen</button>
+      <button class="tab-btn" data-tab="website">Website</button>
+      <button class="tab-btn" data-tab="profiel">Profiel</button>
+      <button class="tab-btn" data-tab="instellingen">Instellingen</button>
+    </div>
   </div>
 
-  <script src="/js/config.js"></script>
+  <main class="content-wrap">
+    <h1 class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
+
+    <!-- TABS -->
+    <section id="tab-afspraken" class="tab-content">
+      <div class="card">
+        <h2>Jouw afspraken</h2>
+        <div id="appointments-list">
+          <div class="appointment"><h3>12 november — 14:00</h3><p><strong>Jan Peeters</strong> — Massage 60min</p></div>
+          <div class="appointment"><h3>13 november — 09:30</h3><p><strong>Sofie Janssens</strong> — Intakegesprek</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-open" class="tab-content" hidden>
+      <div class="card">
+        <h2>Nieuw tijdstip publiceren</h2>
+        <form id="slot-form">
+          <div class="form-row">
+            <div class="field"><label>Datum</label><input type="date" class="input" id="slot-date"></div>
+            <div class="field"><label>Van</label><input type="time" class="input" id="slot-from"></div>
+            <div class="field"><label>Tot</label><input type="time" class="input" id="slot-to"></div>
+          </div>
+          <div class="field"><label>Omschrijving</label><input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt of intake"></div>
+          <div class="field"><label>Capaciteit</label><input type="number" min="1" value="1" class="input" id="slot-cap"></div>
+          <button class="btn" type="submit">Publiceren</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="tab-website" class="tab-content" hidden>
+      <div class="card">
+        <h2>Mijn mini-website</h2>
+        <p>Hier bouw je binnenkort je eigen pagina op Vrijeplek. 🚀</p>
+      </div>
+    </section>
+
+    <section id="tab-profiel" class="tab-content" hidden>
+      <div class="card">
+        <h2>Profieloverzicht</h2>
+        <ul>
+          <li>E-mail: <span id="profile-email">—</span></li>
+          <li>Bedrijfsnaam: <span id="profile-company">—</span></li>
+          <li>BTW-nummer: <span id="profile-btw">—</span></li>
+          <li>Categorie: <span id="profile-cat">—</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="tab-instellingen" class="tab-content" hidden>
+      <div class="card">
+        <h2>Instellingen</h2>
+        <ul class="settings-list">
+          <li><a href="wachtwoord-vergeten.html">Wachtwoord herstellen</a></li>
+          <li><label><input type="checkbox" id="toggle-reviews"> Google reviews tonen</label></li>
+          <li><label><input type="checkbox" id="toggle-public"> Publiek zichtbaar op Vrijeplek</label></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" style="text-align:center;padding:20px 0;color:#5b6b86;font-size:13px;">
+    © 2025 Vrijeplek. Alle rechten voorbehouden.
+  </footer>
+
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const supabase = createClient('https://xdmrikvxyeebeusnbzav.supabase.co','<YOUR-ANON-KEY>');
 
-    const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || 'https://xdmrikvxyeebeusnbzav.supabase.co';
-    const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0';
+    const userNameEl = document.getElementById('user-firstname');
+    const profileEmailEl = document.getElementById('profile-email');
 
-    // Altijd localStorage
-    const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
-    });
-
-    // Wacht op INITIAL_SESSION zodat we niet te vroeg redirecten
-    async function requireSession(){
-      let { data: { session } } = await supa.auth.getSession();
-      if (session) return session;
-      await new Promise((resolve)=>{
-        const { data: sub } = supa.auth.onAuthStateChange((event)=>{ if(event==='INITIAL_SESSION'){ sub.subscription.unsubscribe(); resolve(); } });
-      });
-      ({ data: { session } } = await supa.auth.getSession());
-      return session;
+    // Haal sessie op
+    const { data: { user } } = await supabase.auth.getUser();
+    if(!user){ location.href='login.html'; }
+    else {
+      const namePart = user.user_metadata?.name || user.email.split('@')[0];
+      const firstName = namePart.split(/[.\s_-]/)[0];
+      userNameEl.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+      profileEmailEl.textContent = user.email;
     }
-
-    const session = await requireSession();
-    if (!session) { window.location.href = '/login.html'; throw new Error('Geen sessie'); }
-
-    // Voornaam tonen
-    const user = session.user;
-    const email = user?.email || '';
-    const fullname = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
-    const first = (fullname || email.split('@')[0] || '').split(/[\s._-]/)[0] || 'gebruiker';
-    document.getElementById('user-first').textContent = first.charAt(0).toUpperCase() + first.slice(1);
-    document.getElementById('pf-email').value = email;
-    document.getElementById('pf-name').value = fullname || first;
 
     // Tabs
-    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
-    const panels = {
-      vrijemomenten: document.getElementById('panel-vrijemomenten'),
-      reservaties: document.getElementById('panel-reservaties'),
-      website: document.getElementById('panel-website'),
-      profiel: document.getElementById('panel-profiel'),
-      abonnement: document.getElementById('panel-abonnement')
-    };
-    function showTab(key){
-      tabs.forEach(b=> b.setAttribute('aria-selected', String(b.dataset.tab===key)));
-      Object.entries(panels).forEach(([k,el])=> el.hidden = (k!==key));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.tab-content');
     tabs.forEach(btn=>{
-      btn.addEventListener('click', ()=> showTab(btn.dataset.tab));
-      btn.addEventListener('keydown', (e)=>{
-        if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
-          const i=tabs.indexOf(btn), n=e.key==='ArrowRight'?(i+1)%tabs.length:(i-1+tabs.length)%tabs.length;
-          tabs[n].focus();
-        }
+      btn.addEventListener('click',()=>{
+        tabs.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const id = btn.dataset.tab;
+        sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
       });
     });
-    showTab('vrijemomenten');
 
-    // Uitloggen (2 knoppen)
-    async function doLogout(){ try{ await supa.auth.signOut(); }catch{} window.location.href = '/login.html'; }
-    document.getElementById('btn-logout') .addEventListener('click', doLogout);
-    document.getElementById('btn-logout-2')?.addEventListener('click', doLogout);
-
-    // Demo handlers (vervang later door echte functions/DB)
-    const apptBody = document.getElementById('appt-body');
-    function renderAppts(rows){
-      apptBody.innerHTML = '';
-      if(!rows.length){ apptBody.innerHTML = '<tr><td colspan="4" style="color:#5b6b86;">Nog geen afspraken…</td></tr>'; return; }
-      rows.forEach(r=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${r.date||'-'}</td><td>${r.time||'-'}</td><td>${r.client||'-'}</td><td>${r.note||''}</td>`;
-        apptBody.appendChild(tr);
-      });
-    }
-    renderAppts([]);
-
-    const slot = {
-      date: document.getElementById('slot-date'),
-      from: document.getElementById('slot-from'),
-      to: document.getElementById('slot-to'),
-      cap: document.getElementById('slot-cap'),
-      note: document.getElementById('slot-note'),
-      msg: document.getElementById('slot-msg'),
-      publish: document.getElementById('btn-publish'),
-      clear: document.getElementById('btn-clear'),
-    };
-    slot.publish.addEventListener('click', async ()=>{
-      slot.msg.textContent = 'Versturen…';
-      await new Promise(r=>setTimeout(r,500));
-      slot.msg.textContent = 'Gepubliceerd ✅';
-    });
-    slot.clear.addEventListener('click', ()=>{
-      ['date','from','to','cap','note'].forEach(k=> slot[k].value = (k==='cap'?1:''));
-      slot.msg.textContent = '';
-    });
-
-    // Mini-website live preview + publish (zelfde als eerder)
-    const $ = id => document.getElementById(id);
-    const els = {
-      wbTitle:$('wb-title'), wbTag:$('wb-tag'), wbSlug:$('wb-slug'), wbSlugPrev:$('wb-slug-preview'),
-      wbTheme:$('wb-theme'), wbAbout:$('wb-about'), wbServices:$('wb-services'),
-      wbPhone:$('wb-phone'), wbSite:$('wb-site'), wbPlace:$('wb-place'),
-      wbGR:$('wb-gr-on'), wbPublic:$('wb-public'), wbSave:$('wb-save'),
-      wbView:$('wb-view'), wbMsg:$('wb-msg'), wbIframe:$('wb-iframe')
-    };
-    const slugify = s => (s||'').toLowerCase().trim().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,64);
-    function updateSlugPreview(){ els.wbSlugPrev.textContent = slugify(els.wbSlug.value) || '—'; }
-    function renderPreview(){
-      const services = (els.wbServices.value||'').split(',').map(s=>s.trim()).filter(Boolean);
-      const showGR = els.wbGR.checked && els.wbPlace.value.trim() !== '';
-      const place = els.wbPlace.value.trim();
-      const reviewHref = place.startsWith('http') ? place : `https://search.google.com/local/reviews?placeid=${encodeURIComponent(place)}`;
-      const site = els.wbSite.value.trim();
-      const safeSite = site && !/^https?:\/\//i.test(site) ? 'https://' + site : site;
-      const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${els.wbTitle.value||'Mijn zaak'} — Vrijeplek</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>body{margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);font-family:Poppins,Arial,sans-serif;color:#0a2a4a}.wrap{max-width:900px;margin:32px auto;padding:0 12px}.card{padding:16px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.55));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(10,27,90,.08)}.h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.badge{padding:4px 10px;border-radius:999px;background:#fff;border:1px solid rgba(26,102,255,.28);font-weight:700;font-size:12px;color:#0a2a4a}.btn{display:inline-block;padding:10px 18px;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;text-decoration:none;font-weight:700}ul{margin:8px 0 0 18px}.footer{margin-top:18px;font-size:12px;color:#5b6b86}</style></head><body>
-<div class="wrap"><div class="card"><div class="h"><h1 style="margin:0;font-size:22px;">${els.wbTitle.value||'Mijn zaak'}</h1><span class="badge">Vrijeplek</span></div>
-${els.wbTag.value?`<p style="margin:0 0 8px;color:#1f2a4a;">${els.wbTag.value}</p>`:''}
-${els.wbAbout.value?`<p style="margin:0 0 12px;color:#1f2a4a;">${els.wbAbout.value.replace(/</g,'&lt;')}</p>`:''}
-${services.length?`<h3 style="margin:10px 0 6px;">Diensten</h3><ul>${services.map(s=>`<li>${s.replace(/</g,'&lt;')}</li>`).join('')}</ul>`:''}
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
-${els.wbPhone.value?`<a class="btn" href="tel:${els.wbPhone.value}">Bel ons</a>`:''}
-${safeSite?`<a class="btn" href="${safeSite}" target="_blank" rel="noopener">Website</a>`:''}
-${showGR?`<a class="btn" href="${reviewHref}" target="_blank" rel="noopener">Google reviews</a>`:''}
-</div><div class="footer">Gemaakt met Vrijeplek — ${location.origin}/websitevanklant/${slugify(els.wbSlug.value)||'mijn-zaak'}</div></div></div></body></html>`;
-      const blob = new Blob([html], {type:'text/html'}); els.wbIframe.src = URL.createObjectURL(blob);
-    }
-    ["input","change"].forEach(ev=>{
-      [els.wbTitle,els.wbTag,els.wbAbout,els.wbServices,els.wbPhone,els.wbSite,els.wbPlace,els.wbGR,els.wbTheme,els.wbPublic].forEach(el=> el.addEventListener(ev,renderPreview));
-      els.wbSlug.addEventListener(ev,()=>{ els.wbSlug.value = slugify(els.wbSlug.value); document.getElementById('wb-slug-preview').textContent = slugify(els.wbSlug.value)||'—'; renderPreview(); });
-    });
-    document.getElementById('wb-slug-preview').textContent = '—'; renderPreview();
-    els.wbSave.addEventListener("click", async ()=>{
-      const slug = slugify(els.wbSlug.value); if(!slug){ document.getElementById('wb-msg').textContent="Kies een adres (slug)."; return; }
-      document.getElementById('wb-msg').textContent="Opslaan…";
-      const payload = {
-        slug, title: els.wbTitle.value.trim(), tagline: els.wbTag.value.trim(), about: els.wbAbout.value.trim(),
-        services: (els.wbServices.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-        phone: els.wbPhone.value.trim(), website: els.wbSite.value.trim(), theme: els.wbTheme.value,
-        show_google_reviews: !!document.getElementById('wb-gr-on').checked,
-        google_place: els.wbPlace.value.trim(), is_public: !!document.getElementById('wb-public').checked
-      };
-      const { data: { session: s2 } } = await supa.auth.getSession();
-      const access = s2?.access_token || '';
-      try{
-        const r = await fetch('/.netlify/functions/save_site',{ method:'POST', headers:{ 'Content-Type':'application/json','Authorization':`Bearer ${access}` }, body: JSON.stringify(payload) });
-        if(r.ok){ document.getElementById('wb-msg').textContent="Gepubliceerd ✅"; document.getElementById('wb-view').href=`/websitevanklant/${slug}`; }
-        else{ document.getElementById('wb-msg').textContent=(await r.text())||'Mislukt'; }
-      }catch(e){ document.getElementById('wb-msg').textContent='Netwerkfout'; }
+    // Uitloggen
+    document.getElementById('btn-logout').addEventListener('click', async ()=>{
+      await supabase.auth.signOut();
+      location.href='login.html';
     });
   </script>
 </body>
