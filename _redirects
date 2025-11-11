@@ -1,0 +1,1 @@
+/websitevanklant/:slug   /.netlify/functions/site?slug=:slug   200
