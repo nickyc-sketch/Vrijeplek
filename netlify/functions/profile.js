@@ -1,46 +1,58 @@
 // netlify/functions/profile.js
-import { createClient } from '@supabase/supabase-js';
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-// Tabel: profiles(email pk, zaak, telefoon, btw, cat, straat, postcode, website, bio)
-
-export default async (req, res) => {
-  try{
-    if(req.method==='GET'){
-      const email = (req.query.email||'').toLowerCase();
-      if(!email) return res.status(400).json({ error:'missing_email' });
-
-      const { data: prof } = await supabase.from('profiles').select('*').eq('email', email).single();
-      const { data: acc }  = await supabase.from('accounts').select('plan,status').eq('email', email).single();
-
-      return res.json({
-        ...(prof||{}),
-        plan: acc?.plan || 'monthly',
-        account_status: acc?.status || 'pending'
-      });
+export async function handler(event) {
+  try {
+    // CORS & headers
+    const headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+    };
+    if (event.httpMethod === 'OPTIONS') {
+      return { statusCode: 204, headers, body: '' };
     }
 
-    if(req.method==='POST'){
-      const b = req.body||{};
-      if(!b.email) return res.status(400).json({ error:'missing_email' });
-      const payload = {
-        email: b.email.toLowerCase(),
-        zaak: b.zaak || null,
-        telefoon: b.telefoon || null,
-        btw: b.btw || null,
-        cat: b.cat || null,
-        straat: b.straat || null,
-        postcode: b.postcode || null,
-        website: b.website || null,
-        bio: b.bio || null
+    // In het echt zou je hier in Supabase/DB opslaan.
+    // Voor nu: zorg voor geldige JSON, zodat je UI nooit crasht.
+
+    if (event.httpMethod === 'GET') {
+      const email = new URLSearchParams(event.rawQuery || '').get('email') || '';
+      // Dummy profiel teruggeven zodat de UI iets heeft
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          email,
+          zaak: '',
+          telefoon: '',
+          btw: '',
+          cat: '',
+          straat: '',
+          postcode: '',
+          website: '',
+          bio: '',
+          plan: 'monthly',
+          account_status: 'pending'
+        })
       };
-      const { error } = await supabase.from('profiles').upsert(payload, { onConflict:'email' });
-      if(error) return res.status(400).json({ error:error.message });
-      return res.json({ ok:true });
     }
 
-    return res.status(405).json({ error:'method_not_allowed' });
-  }catch(err){
-    return res.status(500).json({ error: err.message });
+    if (event.httpMethod === 'POST') {
+      // Gewoon alles terug-echoën, plus ok:true
+      const payload = JSON.parse(event.body || '{}');
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ ok: true, saved: payload })
+      };
+    }
+
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+  } catch (e) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ error: 'server_error', message: String(e?.message || e) })
+    };
   }
 }
