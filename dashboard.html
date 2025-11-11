@@ -8,47 +8,76 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=ocean">
+  <link rel="stylesheet" href="styles.css?v=ocean2">
 
   <style>
-    body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:#0a2a4a;}
-    .site-header{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50;}
-    .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-    .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px;}
-    .site-header img{height:38px;}
+    :root{
+      --ocean-1:#1a66ff; --ocean-2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
+      --line: rgba(26,102,255,.25);
+    }
+    html,body{height:100%}
+    body{font-family:'Poppins',sans-serif;margin:0;min-height:100svh;display:flex;flex-direction:column;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink);}
+    .site{display:flex;flex-direction:column;min-height:100svh}
+    main{flex:1}
 
-    .tabs-bar{background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(26,102,255,.25);}
-    .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px;}
-    .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:#0a2a4a;cursor:pointer;transition:.25s;}
-    .tab-btn.active{background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15);}
+    .site-header{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50}
+    .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px}
+    .site-header img{height:38px}
+    .btn-ghost{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
 
-    .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px;}
-    h1.section-title{font-size:26px;text-align:center;margin-bottom:18px;}
-    .card{background:rgba(255,255,255,0.7);border:1px solid rgba(26,102,255,.18);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px;}
+    .tabs-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+    .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px}
+    .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s}
+    .tab-btn.active{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
 
-    .appointment{border-bottom:1px dashed rgba(26,102,255,.25);padding:10px 0;}
-    .appointment:last-child{border:none;}
-    .appointment h3{margin:0;font-size:16px;color:#0a2a4a;}
-    .appointment p{margin:3px 0;font-size:14px;color:#3a4b6a;}
+    .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
+    h1.section-title{font-size:26px;text-align:center;margin:0 0 18px}
+    .card{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px}
 
-    .field{display:flex;flex-direction:column;margin-bottom:10px;}
-    .field label{font-weight:600;margin-bottom:4px;}
-    .input{padding:10px;border:1px solid rgba(26,102,255,.25);border-radius:8px;}
-    .btn{padding:10px 20px;border:none;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;font-weight:700;cursor:pointer;}
-    .btn-ghost{background:rgba(255,255,255,.4);border:1px solid rgba(26,102,255,.25);color:#0a2a4a;}
-    .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;}
-    @media(max-width:720px){.form-row{grid-template-columns:1fr;}}
+    .appointment{border-bottom:1px dashed var(--line);padding:10px 0}
+    .appointment:last-child{border:none}
+    .appointment h3{margin:0;font-size:16px;color:var(--ink)}
+    .appointment p{margin:3px 0;font-size:14px;color:var(--muted)}
 
-    .settings-list li{margin-bottom:6px;}
-    .hide{display:none !important;}
+    .field{display:flex;flex-direction:column;margin-bottom:10px}
+    .field label{font-weight:600;margin-bottom:4px}
+    .input{padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    .btn{padding:10px 20px;border:none;border-radius:999px;background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2));color:#fff;font-weight:700;cursor:pointer}
+    .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
+    @media(max-width:720px){.form-row{grid-template-columns:1fr}}
+
+    /* Instellingen: links tabs, rechts panel */
+    .settings{display:grid;grid-template-columns:260px 1fr;gap:14px}
+    @media(max-width:900px){.settings{grid-template-columns:1fr}}
+    .sidenav{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:8px}
+    .side-item{display:flex;align-items:center;gap:10px;width:100%;border:1px solid transparent;background:transparent;color:var(--ink);font-weight:600;border-radius:12px;padding:12px;cursor:pointer}
+    .side-item.active{background:linear-gradient(180deg,#fff,#f3f7ff);border-color:var(--glass-b);box-shadow:0 6px 18px rgba(10,27,90,.06)}
+    .blue-check{width:18px;height:18px;border-radius:50%;background:conic-gradient(from 210deg,#7fb3ff,#1a66ff);display:inline-grid;place-items:center;box-shadow:0 0 0 4px rgba(26,102,255,.12)}
+    .blue-check:before{content:"";width:9px;height:6px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);margin-top:-2px}
+
+    .panel{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:18px}
+    .panel h3{margin:0 0 10px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.two{grid-template-columns:1fr}}
+
+    .toggle{appearance:none;width:44px;height:26px;border-radius:999px;background:#cfe0ff;position:relative;outline:none;cursor:pointer;border:1px solid var(--line)}
+    .toggle:checked{background:linear-gradient(120deg,var(--ocean-1),var(--ocean-2))}
+    .toggle:before{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s ease}
+    .toggle:checked:before{transform:translateX(18px)}
+
+    .site-footer{margin-top:auto;text-align:center;padding:20px 0;color:#5b6b86;font-size:13px}
+    .hide{display:none!important}
   </style>
 </head>
 
 <body>
+<div class="site">
   <header class="site-header">
     <div class="inner">
       <a href="dashboard.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
-      <button id="btn-logout" class="btn-ghost" style="padding:8px 16px;">Uitloggen</button>
+      <button id="btn-logout" class="btn-ghost">Uitloggen</button>
     </div>
   </header>
 
@@ -65,18 +94,18 @@
   <main class="content-wrap">
     <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
+    <!-- Afspraken -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
         <div id="appointments-list">
-          <!-- Dynamisch: groep per dag, daaronder afspraken -->
-          <!-- Voorbeeld placeholders (vervang door live data via Supabase) -->
           <div class="appointment"><h3>12 november — 14:00</h3><p><strong>Jan Peeters</strong> — Massage 60min</p></div>
           <div class="appointment"><h3>13 november — 09:30</h3><p><strong>Sofie Janssens</strong> — Intakegesprek</p></div>
         </div>
       </div>
     </section>
 
+    <!-- Open tijdstippen -->
     <section id="tab-open" class="tab-content" hidden>
       <div class="card">
         <h2>Nieuw tijdstip publiceren</h2>
@@ -92,6 +121,7 @@
       </div>
     </section>
 
+    <!-- Website -->
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
@@ -99,6 +129,7 @@
       </div>
     </section>
 
+    <!-- Profieloverzicht -->
     <section id="tab-profiel" class="tab-content" hidden>
       <div class="card">
         <h2>Profieloverzicht</h2>
@@ -111,110 +142,230 @@
       </div>
     </section>
 
+    <!-- Instellingen: links tabs + blauwe vinkjes -->
     <section id="tab-instellingen" class="tab-content" hidden>
-      <div class="card">
-        <h2>Instellingen</h2>
-        <ul class="settings-list">
-          <li><a href="wachtwoord-vergeten.html">Wachtwoord herstellen</a></li>
-          <li><label><input type="checkbox" id="toggle-reviews"> Google reviews tonen</label></li>
-          <li><label><input type="checkbox" id="toggle-public"> Publiek zichtbaar op Vrijeplek</label></li>
-        </ul>
+      <div class="settings">
+        <div class="sidenav">
+          <button class="side-item active" data-side="persoonlijk"><i class="blue-check"></i><span>Persoonlijk</span></button>
+          <button class="side-item" data-side="privacy"><i class="blue-check"></i><span>Privacy & locatie</span></button>
+          <button class="side-item" data-side="zichtbaarheid"><i class="blue-check"></i><span>Zichtbaarheid</span></button>
+          <button class="side-item" data-side="account"><i class="blue-check"></i><span>Account</span></button>
+          <button class="side-item" data-side="notificaties"><i class="blue-check"></i><span>Notificaties</span></button>
+        </div>
+
+        <div class="panel-wrap">
+          <div class="panel" id="panel-persoonlijk">
+            <h3>Persoonlijk</h3>
+            <div class="two">
+              <div class="field"><label>Naam</label><input id="st-name" class="input" type="text" placeholder="Voornaam"></div>
+              <div class="field"><label>Bedrijfsnaam</label><input id="st-company" class="input" type="text" placeholder="Naam van je zaak"></div>
+            </div>
+            <div class="two">
+              <div class="field"><label>Telefoon</label><input id="st-phone" class="input" type="tel" placeholder="+32 ..."></div>
+              <div class="field"><label>E-mail</label><input id="st-email" class="input" type="email" disabled></div>
+            </div>
+            <div class="two">
+              <div class="field"><label>BTW-nummer</label><input id="st-btw" class="input" type="text" placeholder="BE0123456789"></div>
+              <div class="field"><label>Categorie</label>
+                <select id="st-cat" class="input">
+                  <option value="">Kies</option>
+                  <option value="horeca">Horeca</option>
+                  <option value="wellness">Wellness</option>
+                  <option value="zorg">Gezondheid</option>
+                  <option value="events">Events</option>
+                  <option value="poetsdiensten">Poetsdiensten</option>
+                  <option value="ramenwasser">Ramenwasser</option>
+                  <option value="dieren">Dieren</option>
+                </select>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field"><label>Straat + nr.</label><input id="st-straat" class="input" type="text"></div>
+              <div class="field"><label>Postcode & gemeente</label><input id="st-postcode" class="input" type="text" placeholder="3500 Hasselt"></div>
+            </div>
+            <div class="field"><label>Website</label><input id="st-website" class="input" type="url" placeholder="https://voorbeeld.be"></div>
+            <div class="field"><label>Korte omschrijving</label><input id="st-bio" class="input" type="text" placeholder="Beschrijf kort je diensten"></div>
+            <button id="st-save-person" class="btn">Opslaan</button>
+          </div>
+
+          <div class="panel hide" id="panel-privacy">
+            <h3>Privacy & locatie</h3>
+            <div class="two">
+              <div class="field">
+                <label>Locatie tonen op je publieke pagina</label>
+                <input id="st-show-location" class="toggle" type="checkbox">
+              </div>
+              <div class="field">
+                <label>Kalender publiek zichtbaar</label>
+                <input id="st-public-calendar" class="toggle" type="checkbox">
+              </div>
+            </div>
+            <button id="st-save-privacy" class="btn">Opslaan</button>
+          </div>
+
+          <div class="panel hide" id="panel-zichtbaarheid">
+            <h3>Zichtbaarheid</h3>
+            <div class="two">
+              <div class="field"><label>Google reviews tonen</label><input id="st-reviews" class="toggle" type="checkbox"></div>
+              <div class="field"><label>Google Place ID / Review-link</label><input id="st-place" class="input" type="text" placeholder="ChIJN1t..."></div>
+            </div>
+            <button id="st-save-vis" class="btn">Opslaan</button>
+          </div>
+
+          <div class="panel hide" id="panel-account">
+            <h3>Account</h3>
+            <div class="two">
+              <a class="btn" href="wachtwoord-vergeten.html">Wachtwoord herstellen</a>
+              <button class="btn-ghost" id="st-logout">Uitloggen</button>
+            </div>
+          </div>
+
+          <div class="panel hide" id="panel-notificaties">
+            <h3>Notificaties</h3>
+            <div class="two">
+              <div class="field"><label>Nieuwe reservatie per e-mail</label><input id="st-notify-mail" class="toggle" type="checkbox"></div>
+              <div class="field"><label>Dagelijkse agenda per e-mail</label><input id="st-daily-mail" class="toggle" type="checkbox"></div>
+            </div>
+            <button id="st-save-notify" class="btn">Opslaan</button>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer" style="text-align:center;padding:20px 0;color:#5b6b86;font-size:13px;">
-    © 2025 Vrijeplek. Alle rechten voorbehouden.
-  </footer>
+  <footer class="site-footer">© 2025 Vrijeplek. Alle rechten voorbehouden.</footer>
+</div>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true }
+  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+  const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession:true, autoRefreshToken:true }
+  });
+
+  const els = {
+    welcomeWrap: document.getElementById('welcome-wrap'),
+    userFirst: document.getElementById('user-firstname'),
+    profileEmail: document.getElementById('profile-email'),
+    logoutTop: document.getElementById('btn-logout')
+  };
+
+  function firstNameFrom(user){
+    const meta = user.user_metadata?.name || user.user_metadata?.full_name || '';
+    const metaFirst = (meta||'').split(/[.\s_-]/)[0]?.trim();
+    const mailFirst = (user.email||'').split('@')[0]?.trim();
+    const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
+    const c = (metaFirst && metaFirst.length>1 ? metaFirst : mailFirst) || '';
+    const lower = c.toLowerCase();
+    if(!c || blacklist.includes(lower) || lower.length<2) return '';
+    return c.charAt(0).toUpperCase()+c.slice(1);
+  }
+
+  async function ensureSession(){
+    const { data:{ session } } = await supabase.auth.getSession();
+    if(session?.user){ applyUser(session.user); return; }
+    const to = setTimeout(()=>location.replace('login.html'), 1800);
+    supabase.auth.onAuthStateChange((_e, s)=>{ if(s?.user){ clearTimeout(to); applyUser(s.user); }});
+  }
+
+  function applyUser(user){
+    const f = firstNameFrom(user);
+    if(f){ els.userFirst.textContent = f; els.welcomeWrap.classList.remove('hide'); }
+    else { els.welcomeWrap.classList.add('hide'); }
+    if(els.profileEmail) els.profileEmail.textContent = user.email||'';
+
+    // Prefill instellingen
+    document.getElementById('st-email').value = user.email||'';
+    document.getElementById('st-name').value = f || '';
+  }
+
+  await ensureSession();
+
+  document.getElementById('btn-logout')?.addEventListener('click', signOut);
+  document.getElementById('st-logout')?.addEventListener('click', signOut);
+  async function signOut(){ await supabase.auth.signOut(); location.replace('login.html'); }
+
+  const tabs = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('.tab-content');
+  tabs.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.tab;
+      sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
     });
+  });
 
-    const els = {
-      welcomeWrap: document.getElementById('welcome-wrap'),
-      userFirst: document.getElementById('user-firstname'),
-      profileEmail: document.getElementById('profile-email'),
-      logout: document.getElementById('btn-logout')
+  const sideBtns = document.querySelectorAll('.side-item');
+  const sidePanels = {
+    persoonlijk: document.getElementById('panel-persoonlijk'),
+    privacy: document.getElementById('panel-privacy'),
+    zichtbaarheid: document.getElementById('panel-zichtbaarheid'),
+    account: document.getElementById('panel-account'),
+    notificaties: document.getElementById('panel-notificaties')
+  };
+  sideBtns.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      sideBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      const key = b.dataset.side;
+      Object.entries(sidePanels).forEach(([k,p])=> p.classList.toggle('hide', k!==key));
+    });
+  });
+
+  document.getElementById('slot-form')?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const date = document.getElementById('slot-date').value.trim();
+    const from = document.getElementById('slot-from').value.trim();
+    const to   = document.getElementById('slot-to').value.trim();
+    const desc = document.getElementById('slot-desc').value.trim();
+    if(!date || !from || !to){ alert('Kies datum en uren.'); return; }
+    alert('Tijdstip opgeslagen (koppeling volgt).');
+    e.target.reset();
+  });
+
+  // Instellingen "Opslaan" knoppen (placeholder POSTs)
+  function payloadBase(){
+    return {
+      name: document.getElementById('st-name').value.trim(),
+      company: document.getElementById('st-company').value.trim(),
+      phone: document.getElementById('st-phone').value.trim(),
+      email: document.getElementById('st-email').value.trim(),
+      btw: document.getElementById('st-btw').value.trim(),
+      cat: document.getElementById('st-cat').value.trim(),
+      straat: document.getElementById('st-straat').value.trim(),
+      postcode: document.getElementById('st-postcode').value.trim(),
+      website: document.getElementById('st-website').value.trim(),
+      bio: document.getElementById('st-bio').value.trim()
     };
-
-    function niceFirstNameFrom(user){
-      const rawName = user.user_metadata?.name || user.user_metadata?.full_name || '';
-      const fromMeta = (rawName || '').split(/[.\s_-]/)[0]?.trim();
-      const fromEmail = (user.email || '').split('@')[0]?.trim();
-      const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
-      const candidate = (fromMeta && fromMeta.length>1 ? fromMeta : fromEmail);
-      if (!candidate) return '';
-      const lower = candidate.toLowerCase();
-      if (blacklist.includes(lower) || lower.length < 2) return '';
-      return candidate.charAt(0).toUpperCase() + candidate.slice(1);
-    }
-
-    async function ensureSession(){
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (session?.user){
-        applyUser(session.user);
-        return;
-      }
-
-      const fallback = setTimeout(() => {
-        location.replace('login.html');
-      }, 1800);
-
-      supabase.auth.onAuthStateChange((_event, newSession) => {
-        if (newSession?.user){
-          clearTimeout(fallback);
-          applyUser(newSession.user);
-        }
-      });
-    }
-
-    function applyUser(user){
-      const first = niceFirstNameFrom(user);
-      if (first){
-        els.userFirst.textContent = first;
-        els.welcomeWrap.classList.remove('hide');
-      } else {
-        els.welcomeWrap.classList.add('hide');
-      }
-      if (els.profileEmail) els.profileEmail.textContent = user.email || '';
-    }
-
-    await ensureSession();
-
-    document.getElementById('btn-logout')?.addEventListener('click', async ()=>{
-      await supabase.auth.signOut();
-      location.replace('login.html');
-    });
-
-    const tabs = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('.tab-content');
-    tabs.forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        tabs.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const id = btn.dataset.tab;
-        sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
-      });
-    });
-
-    // Open tijdstippen submit (placeholder; koppel later aan function/DB)
-    document.getElementById('slot-form')?.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const date = (document.getElementById('slot-date')?.value||'').trim();
-      const from = (document.getElementById('slot-from')?.value||'').trim();
-      const to   = (document.getElementById('slot-to')?.value||'').trim();
-      const desc = (document.getElementById('slot-desc')?.value||'').trim();
-      if(!date || !from || !to){ alert('Kies datum en uren.'); return; }
-      alert('Tijdstip opgeslagen. (koppeling naar backend volgt)');
-      e.target.reset();
-    });
-  </script>
+  }
+  document.getElementById('st-save-person')?.addEventListener('click', async ()=>{
+    const body = { ...payloadBase() };
+    console.log('Save persoonlijk', body); alert('Opgeslagen (koppeling volgt).');
+  });
+  document.getElementById('st-save-privacy')?.addEventListener('click', async ()=>{
+    const body = {
+      show_location: document.getElementById('st-show-location').checked,
+      public_calendar: document.getElementById('st-public-calendar').checked
+    };
+    console.log('Save privacy', body); alert('Opgeslagen (koppeling volgt).');
+  });
+  document.getElementById('st-save-vis')?.addEventListener('click', async ()=>{
+    const body = {
+      show_reviews: document.getElementById('st-reviews').checked,
+      place: document.getElementById('st-place').value.trim()
+    };
+    console.log('Save zichtbaarheid', body); alert('Opgeslagen (koppeling volgt).');
+  });
+  document.getElementById('st-save-notify')?.addEventListener('click', async ()=>{
+    const body = {
+      notify_mail: document.getElementById('st-notify-mail').checked,
+      daily_mail: document.getElementById('st-daily-mail').checked
+    };
+    console.log('Save notificaties', body); alert('Opgeslagen (koppeling volgt).');
+  });
+</script>
 </body>
 </html>
