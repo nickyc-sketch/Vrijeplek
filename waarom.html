@@ -1,253 +1,250 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Waarom VrijePlek — Vul je agenda, geen commissie</title>
-  <meta name="description" content="VrijePlek vult lege momenten in je agenda. Voor €9/maand bereik je klanten die nu willen boeken. Eén extra afspraak en je speelt al quitte.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waarom Vrijeplek — Vul je agenda zonder commissie</title>
+  <meta name="description" content="Waarom Vrijeplek? Minder lege uren, meer omzet. Voor €9/maand zet je last-minute vrije momenten om in klanten — zonder commissie.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=ocean">
+
   <style>
-    :root{
-      --ocean-900:#0c4a6e; --ocean-700:#0e7490; --ocean-500:#0ea5e9; --ocean-300:#7dd3fc;
-      --ink-900:#0f172a; --ink-700:#334155; --ink-500:#64748b; --ink-300:#cbd5e1;
-      --bg:#f8fafc; --white:#ffffff; --radius:16px; --shadow:0 12px 40px rgba(2,12,27,.12);
-      --success:#059669; --warning:#b45309; --rose:#e11d48;
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink-900); background:var(--bg)}
-    .container{max-width:1120px; margin:0 auto; padding:0 20px}
-    .hero{
-      background:
-        radial-gradient(1200px 800px at 80% -10%, rgba(255,255,255,.08), transparent 60%),
-        radial-gradient(900px 600px at 10% 110%, rgba(255,255,255,.06), transparent 60%),
-        linear-gradient(135deg, var(--ocean-900), var(--ocean-700) 55%, var(--ocean-500));
-      color:#fff; padding:64px 0 36px;
-    }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700; opacity:.95; letter-spacing:.3px}
-    .brand .dot{width:10px;height:10px;border-radius:999px;background:var(--ocean-300);box-shadow:0 0 0 4px rgba(125,211,252,.25)}
-    h1{margin:14px 0 10px; font-size:clamp(28px,3.8vw,44px); line-height:1.1}
-    .sub{max-width:780px; font-size:clamp(15px,1.6vw,18px); opacity:.95}
-    .cta-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:14px 18px; border:none; border-radius:14px; cursor:pointer;
-      box-shadow:0 10px 24px rgba(2,12,27,.18); text-decoration:none; font-weight:700;
-    }
-    .btn.primary{background:#fff; color:var(--ocean-900)}
-    .btn.ghost{background:transparent; color:#fff; border:1px solid rgba(255,255,255,.65); box-shadow:none}
-    .hero-grid{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-top:22px}
-    @media(max-width:980px){.hero-grid{grid-template-columns:1fr}}
-    .card{background:#fff; border:1px solid var(--ink-300); border-radius:16px; padding:18px; box-shadow:var(--shadow)}
-    .badge{display:inline-block; background:#ecfeff; border:1px solid #bae6fd; color:#075985; border-radius:999px; padding:6px 10px; font-size:.82rem}
-    .section{padding:44px 0}
-    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
-    @media(max-width:900px){.grid-3,.grid-2{grid-template-columns:1fr}}
-    .title{font-size:clamp(22px,2.8vw,30px); margin:0 0 8px}
-    .muted{color:var(--ink-500)}
-    .list{margin:0; padding:0 0 0 18px}
-    .table{width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:14px; border:1px solid var(--ink-300)}
-    .table th,.table td{padding:12px; text-align:left; border-bottom:1px solid var(--ink-300); background:#fff}
-    .table th{background:#f1f5f9; font-weight:600}
-    .ok{color:var(--success); font-weight:600}
-    .warn{color:var(--warning); font-weight:600}
-    .foot-cta{background:linear-gradient(135deg,var(--ocean-900),var(--ocean-700) 55%,var(--ocean-500)); color:#fff; text-align:center; padding:40px 0}
-    .foot-cta .btn{background:#fff; color:var(--ocean-900)}
-    .ribbon{background:linear-gradient(90deg, rgba(14,165,233,.14), rgba(14,116,144,.14)); border:1px dashed rgba(14,165,233,.35); border-radius:12px; padding:10px 12px}
-    .proof{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    .proof .chip{border:1px solid var(--ink-300); background:#fff; border-radius:999px; padding:6px 10px; font-size:.86rem}
-    .mini{font-size:.82rem; color:var(--ink-500)}
-    .cta-sticky{position:sticky; bottom:12px; display:flex; justify-content:center; padding:10px}
-    .cta-sticky .btn{padding:12px 16px}
-    .price-anchoring b{color:#0ea5e9}
+    /* Pagina-specifiek: rustiger compositie, minder kaders */
+    :root{ --ink:#0a2a4a; --line:rgba(26,102,255,.25); }
+    body{ background:linear-gradient(180deg,#e9f2ff,#f6f9ff); color:var(--ink); }
+
+    .wrap{ max-width:1100px; margin:0 auto; padding:0 12px; }
+
+    /* Hero section: 1 heldere boodschap + 2 CTA’s */
+    .why-hero{ padding:54px 0 24px; text-align:center; position:relative; }
+    .why-hero h1{ font-size:clamp(28px,3.2vw,44px); margin:0 0 10px; }
+    .why-hero p.lead{ max-width:820px; margin:0 auto; font-size:clamp(15px,1.5vw,18px); opacity:.92; }
+    .cta-row{ margin-top:18px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:999px; font-weight:800; text-decoration:none; }
+    .btn-primary{ background:linear-gradient(120deg,#1a66ff,#0056ff); color:#fff; border:1px solid rgba(26,102,255,.35); box-shadow:0 12px 26px rgba(17,49,170,.22); }
+    .btn-ghost{ background:rgba(255,255,255,.65); color:#0a2a4a; border:1px solid var(--line); }
+
+    /* Flow-strip: 3 grote stappen zonder kaarten */
+    .flow{ padding:28px 0 8px; }
+    .flow-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    @media(max-width:900px){ .flow-row{ grid-template-columns:1fr; } }
+    .step{ padding:16px 14px; border-radius:16px; border:1px solid rgba(26,102,255,.18); background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7)); box-shadow:0 8px 26px rgba(10,27,90,.08); }
+    .numb{ width:36px; height:36px; border-radius:999px; display:inline-grid; place-items:center; font-weight:800; color:#fff; background:linear-gradient(120deg,#1a66ff,#0056ff); box-shadow:0 6px 18px rgba(10,27,90,.18); }
+    .step h3{ margin:10px 0 6px; font-size:18px; }
+    .muted{ color:#3a4b6a; font-size:14px; }
+
+    /* Value strip: 2 kolommen met rustige vlakken */
+    .value{ padding:22px 0; }
+    .value-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; }
+    @media(max-width:980px){ .value-grid{ grid-template-columns:1fr; } }
+
+    .panel{ padding:18px; border-radius:16px; border:1px solid rgba(26,102,255,.18); background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.78)); box-shadow:0 8px 26px rgba(10,27,90,.08); }
+    .panel h4{ margin:0 0 8px; font-size:18px; }
+
+    .list{ margin:6px 0 0 18px; }
+    .list li{ margin:4px 0; }
+
+    /* Mini ROI kalkulator – 1 blok, geen extra toeters */
+    .roi p{ margin:6px 0 10px; font-size:14px; color:#1f2a44; }
+    .roi input{ width:100%; padding:10px; border-radius:10px; border:1px solid var(--line); }
+    .ribbon{ margin-top:12px; padding:10px 12px; border:1px dashed rgba(26,102,255,.35); border-radius:12px; background:linear-gradient(90deg,rgba(14,165,233,.10),rgba(14,116,144,.10)); font-weight:700; }
+
+    /* Proof strip */
+    .proof{ padding:16px 0 8px; }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+    .chip{ border:1px solid rgba(26,102,255,.25); background:#fff; border-radius:999px; padding:6px 10px; font-weight:700; font-size:12px; }
+
+    /* FAQ – accordeon, weinig visuele ruis */
+    .faq{ padding:22px 0 10px; }
+    details{ border-top:1px solid rgba(26,102,255,.18); padding:10px 0; }
+    details:first-of-type{ border-top:none; }
+    summary{ font-weight:800; cursor:pointer; }
+    details p{ margin:8px 0 0; color:#3a4b6a; }
+
+    /* Foot CTA */
+    .foot-cta{ text-align:center; padding:36px 0 46px; }
+    .foot-cta h2{ margin:0 0 10px; font-size:clamp(20px,2.4vw,28px); }
+    .mini{ color:#4a5a78; font-size:13px; }
   </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="container">
-    <div class="brand"><span class="dot"></span> VrijePlek</div>
-    <div class="hero-grid">
-      <div>
-        <h1>Stop met omzet laten liggen. Vul vandaag nog je lege momenten.</h1>
-        <p class="sub">VrijePlek brengt klanten die <em>nu</em> willen boeken naar jouw agenda. Voor <strong>€9/maand</strong> (<span class="price-anchoring">minder dan <b>€0,30/dag</b></span>). Één extra afspraak en je zit al in winst.</p>
+  <!-- HEADER (zelfde structuur als index; zonder ‘Hoe werkt het?’) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand"><img src="img/logo.png" alt=""><span class="brand-name">Vrijeplek</span><span class="brand-dot"></span></a>
+      <nav class="header-actions">
+        <a class="nav-btn" href="waarom.html" aria-current="page">Waarom Vrijeplek?</a>
+        <a class="nav-btn" href="aanmelden.html">Word lid</a>
+        <a id="nav-login" class="nav-btn" href="login.html">Login</a>
+        <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="why-hero">
+      <div class="wrap">
+        <h1>Geen lege uren meer. Zet last-minute tijd om in omzet.</h1>
+        <p class="lead">Vrijeplek laat je <strong>alleen de gaten</strong> publiceren die je wil vullen. Klanten dichtbij zien die momenten en vragen aan. <strong>Jij</strong> bevestigt. <em>Geen commissie.</em> Slechts <strong>€9/maand</strong>.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/aanmelden.html">Start nu — €9/maand</a>
-          <a class="btn yearly" href="/aanmelden.html">€80/jaar</a>
-        </div>
-        <div class="proof">
-          <div class="chip">Geen commissie per boeking</div>
-          <div class="chip">Annulatie-gaten opvullen</div>
-          <div class="chip">Jij bevestigt zelf</div>
-          <div class="chip">GDPR-proof</div>
+          <a class="btn btn-primary" href="aanmelden.html">Start nu — €9/maand</a>
+          <a class="btn btn-ghost" href="login.html">Ik heb al een account</a>
         </div>
       </div>
-      <div class="card">
-        <div class="badge">Snelle ROI-schatting</div>
-        <div style="margin-top:10px">
-          <label class="mini">Gemiddelde waarde per afspraak (€)</label>
-          <input id="val" type="number" min="1" value="60" style="width:100%;padding:10px;border:1px solid var(--ink-300);border-radius:10px">
-        </div>
-        <div style="margin-top:10px">
-          <label class="mini">Extra afspraken per maand via VrijePlek</label>
-          <input id="amt" type="number" min="0" value="2" style="width:100%;padding:10px;border:1px solid var(--ink-300);border-radius:10px">
-        </div>
-        <div style="margin-top:14px" class="ribbon">
-          <div id="roi" style="font-weight:700">Verwachte extra omzet: €120 / mnd • ROI: 1233%</div>
-          <div class="mini">Kost blijft €9/mnd — geen percentage per boeking.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
+    </section>
 
-<main>
-  <section class="section">
-    <div class="container grid-3">
-      <div class="card">
-        <h3 class="title">1) Je agenda bepaalt</h3>
-        <p class="muted">Je zet zélf vrij wanneer je gaten wil opvullen. Geen verrassingen; jij bevestigt of weigert.</p>
-        <ul class="list">
-          <li>Lege momenten publiceren in 30 sec</li>
-          <li>Beschikbaarheid wijzigen = realtime</li>
-          <li>Automatische bevestigingsmail naar klant (optioneel)</li>
-        </ul>
+    <!-- 3-STAPPEN FLOW -->
+    <section class="flow">
+      <div class="wrap">
+        <div class="flow-row">
+          <div class="step">
+            <span class="numb">1</span>
+            <h3>Publiceer enkel wat je wil opvullen</h3>
+            <p class="muted">Kies een datum en tijd, zet online, klaar. Je blijft 100% baas over je agenda.</p>
+          </div>
+          <div class="step">
+            <span class="numb">2</span>
+            <h3>Word gevonden door “nu-zoekers”</h3>
+            <p class="muted">Mensen in je buurt die vandaag/tijdelijk vrij zoeken, zien jouw slot meteen.</p>
+          </div>
+          <div class="step">
+            <span class="numb">3</span>
+            <h3>Bevestig met één klik</h3>
+            <p class="muted">Aanvraag binnen? Jij bevestigt of weigert. Geen percentage, geen gedoe.</p>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h3 class="title">2) Lokale boost</h3>
-        <p class="muted">Mensen in de buurt zoeken last-minute. Wij zetten je bovenin wanneer het ertoe doet.</p>
-        <ul class="list">
-          <li>Zichtbaar bij “ik wil nu”-zoekers</li>
-          <li>Geen social-media-gedoe</li>
-          <li>Bewezen “nu boeken”-flow</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3 class="title">3) Lage vaste kost</h3>
-        <p class="muted">Geen 10–25% commissie zoals bij platformen. Vast laag bedrag: €9/mnd.</p>
-        <ul class="list">
-          <li>Volledige marge blijft van jou</li>
-          <li>Maandelijks opzegbaar</li>
-          <li>Factuur & btw in orde</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section">
-    <div class="container">
-      <h3 class="title">Wat kost niets doen je eigenlijk?</h3>
-      <div class="grid-2">
-        <div class="card">
-          <h4>Verliesaversie (pijnlijk maar eerlijk)</h4>
+    <!-- VALUE: LINKS VERLIES, RECHTS ROI -->
+    <section class="value">
+      <div class="wrap value-grid">
+        <div class="panel">
+          <h4>Wat kost niets doen je?</h4>
           <ul class="list">
             <li>1 leeg uur per week × €60 = <strong>€240/mnd</strong> verlies</li>
             <li>Op jaarbasis: <strong>€2.880</strong> die wegloopt</li>
-            <li>€9/mnd voelt als kost — maar niets doen <em>kost veel meer</em></li>
+            <li>Vrijeplek kost <strong>€9/mnd</strong> — één extra afspraak en je zit positief</li>
           </ul>
         </div>
-        <div class="card">
-          <h4>Vergelijking</h4>
-          <table class="table">
-            <tr><th></th><th>VrijePlek</th><th>Social post</th><th>Niets</th></tr>
-            <tr><td>Kost</td><td>€9/mnd</td><td>tijd + bereik onzeker</td><td>€0</td></tr>
-            <tr><td>Directe boekingen</td><td class="ok">Ja</td><td class="warn">Nee</td><td class="warn">Nee</td></tr>
-            <tr><td>Controle over slots</td><td class="ok">100%</td><td>Beperkt</td><td>—</td></tr>
-            <tr><td>Margeverlies</td><td class="ok">Geen commissie</td><td class="warn">Tijd = geld</td><td class="warn">Lege uren</td></tr>
-          </table>
+        <div class="panel roi">
+          <h4>Snelle ROI-schatting</h4>
+          <p>Gemiddelde waarde per afspraak (€)</p>
+          <input id="val" type="number" min="1" value="60">
+          <p style="margin-top:8px">Extra afspraken per maand via Vrijeplek</p>
+          <input id="amt" type="number" min="0" value="2">
+          <div class="ribbon" id="roi">Verwachte extra omzet: €120 / mnd • ROI: 1233%</div>
+          <p class="mini">Kost blijft €9/mnd — geen commissie.</p>
         </div>
       </div>
+    </section>
+
+    <!-- PROOF -->
+    <section class="proof">
+      <div class="wrap">
+        <div class="chips">
+          <span class="chip">Geen commissie</span>
+          <span class="chip">GDPR-proof</span>
+          <span class="chip">Jij bevestigt</span>
+          <span class="chip">Werkt voor lokaal & services</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (kort en to the point) -->
+    <section class="faq">
+      <div class="wrap">
+        <details>
+          <summary>“Ik heb al klanten via Instagram.”</summary>
+          <p>Top. Instagram is bereik. Vrijeplek vangt mensen in <em>boekmodus</em>: “nu, in mijn buurt”. Het werkt complementair.</p>
+        </details>
+        <details>
+          <summary>“€9/maand — is dat het waard?”</summary>
+          <p>Één extra afspraak per maand en je zit al positief. Alles daarboven is pure marge.</p>
+        </details>
+        <details>
+          <summary>“Geeft dit extra werk?”</summary>
+          <p>Neen. Je publiceert enkel wat je wil opvullen. Aanvragen bevestig je met één klik.</p>
+        </details>
+        <details>
+          <summary>“Wat als het niets oplevert?”</summary>
+          <p>Dan stop je. Maandelijks opzegbaar, geen kleine lettertjes.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- SLOT-CTA -->
+    <section class="foot-cta">
+      <div class="wrap">
+        <h2>Het ergste? Je test voor €9. Het beste? Je agenda loopt vol.</h2>
+        <p class="mini">Draai verliesaversie om in je voordeel.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="aanmelden.html">Start nu — €9/maand</a>
+          <a class="btn btn-ghost" href="login.html">Ik heb al een account</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
+      <nav class="footer-nav">
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
-  </section>
+  </footer>
 
-  <section class="section">
-    <div class="container grid-3">
-      <div class="card">
-        <h3 class="title">Sociale bewijskracht</h3>
-        <p class="muted">“Twee annulaties opgevangen in 1 dag — meer dan €180 omzet terug.”</p>
-        <div class="mini">— Kapper, Genk</div>
-        <hr style="border:none;border-top:1px solid var(--ink-300);margin:12px 0">
-        <p class="muted">“Zaterdag last-minute volzet gekregen. Kost is peanuts.”</p>
-        <div class="mini">— Wellness, Hasselt</div>
-      </div>
-      <div class="card">
-        <h3 class="title">Risicoreductie</h3>
-        <ul class="list">
-          <li>Maandelijks opzegbaar</li>
-          <li>Geen opstartfee</li>
-          <li>Jij beslist welke aanvragen je aanneemt</li>
-        </ul>
-        <div class="ribbon" style="margin-top:10px">90% van de waarde zit in het vullen van 1–2 gaten per maand.</div>
-      </div>
-      <div class="card">
-        <h3 class="title">Autoriteit & vertrouwen</h3>
-        <div class="proof">
-          <div class="chip">GDPR-proof</div>
-          <div class="chip">Netlify-hosting</div>
-          <div class="chip">E-mailbevestiging</div>
-          <div class="chip">Eigen branding</div>
-        </div>
-        <p class="mini" style="margin-top:8px">Je data blijft van jou. Jij bepaalt wie je aanneemt.</p>
-      </div>
-    </div>
-  </section>
+  <!-- Mini scripts -->
+  <script>
+    // ROI berekening (simpel, zonder ruis)
+    const val = document.getElementById('val');
+    const amt = document.getElementById('amt');
+    const roi = document.getElementById('roi');
+    function fmt(n){ return (Math.round(n*100)/100).toLocaleString('nl-BE'); }
+    function calc(){
+      const v = Math.max(0, Number(val.value||0));
+      const a = Math.max(0, Number(amt.value||0));
+      const extra = v * a;
+      const cost = 9;
+      const roiPct = extra>0 ? ((extra - cost)/cost)*100 : -100;
+      roi.textContent = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`;
+    }
+    val.addEventListener('input', calc);
+    amt.addEventListener('input', calc);
+    calc();
+  </script>
 
-  <section class="section">
-    <div class="container">
-      <h3 class="title">Veelgestelde bezwaren (en de echte antwoorden)</h3>
-      <div class="grid-2">
-        <div class="card">
-          <strong>“Ik heb al klanten via Instagram.”</strong>
-          <p class="muted">Top. Maar Instagram is scroll-gedrag, geen boek-gedrag. VrijePlek vangt mensen die al in <em>koopmodus</em> zitten: “nu, bij mij in de buurt”.</p>
-        </div>
-        <div class="card">
-          <strong>“€9/maand… ik zie het nut niet.”</strong>
-          <p class="muted">Één afspraak per maand vanaf €9–€20 winst en je zit al positief. Alles daarboven is pure marge. Niets doen is structureel verlies.</p>
-        </div>
-        <div class="card">
-          <strong>“Gaat dit extra werk geven?”</strong>
-          <p class="muted">Nee. Je plaatst enkel de gaten die je wil vullen. Binnenkomende aanvragen bevestig je met 1 klik.</p>
-        </div>
-        <div class="card">
-          <strong>“Wat als het niets oplevert?”</strong>
-          <p class="muted">Dan stop je wanneer je wil. Maandelijks opzegbaar, geen kleine lettertjes.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <script type="module">
+    // Nav: “Login” ↔ “Mijn Vrijeplek”
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
 
-  <section class="foot-cta">
-    <div class="container">
-      <h3 class="title" style="color:#fff">Het ergste dat kan gebeuren? Je betaalt €9. Het beste? Je vult je agenda.</h3>
-      <p class="mini" style="color:#e2e8f0">Verliesaversie werkt tegen je — draai het om in jouw voordeel.</p>
-      <div style="margin-top:14px">
-        <a class="btn" href="/aanmelden.html">Start nu — €9/maand</a>
-        <a class="btn ghost" href="/login.html" style="margin-left:8px; border-color:#fff; color:#fff">Ik heb al een account</a>
-      </div>
-    </div>
-  </section>
-</main>
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
 
-<div class="cta-sticky">
-  <a class="btn primary" href="/aanmelden.html">Nu inschrijven — €9/mnd</a>
-</div>
-
-<script>
-  const val = document.getElementById('val');
-  const amt = document.getElementById('amt');
-  const roi = document.getElementById('roi');
-  function fmt(n){ return (Math.round(n*100)/100).toLocaleString('nl-BE') }
-  function calc(){
-    const v = Math.max(0, Number(val.value||0));
-    const a = Math.max(0, Number(amt.value||0));
-    const extra = v * a;
-    const cost = 9;
-    const roiPct = extra>0 ? ((extra - cost)/cost)*100 : -100;
-    roi.textContent = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`;
-  }
-  val.addEventListener('input', calc);
-  amt.addEventListener('input', calc);
-  calc();
-</script>
-
+    async function toggleNav(){
+      const { data:{ session } } = await supabase.auth.getSession();
+      const loggedIn = !!session?.user;
+      if(loggedIn){
+        btnLogin.style.display = 'none';
+        btnMijn.style.display  = 'inline-flex';
+      }else{
+        btnLogin.style.display = 'inline-flex';
+        btnMijn.style.display  = 'none';
+      }
+    }
+    await toggleNav();
+    supabase.auth.onAuthStateChange(()=>toggleNav());
+  </script>
 </body>
 </html>
