@@ -4,98 +4,211 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aanmelden — Vrijeplek</title>
+
+  <!-- Fonts + globale stijl -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=ocean3">
+
   <style>
-    :root{ --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --line:rgba(26,102,255,.25) }
-    body{margin:0;font-family:Poppins,system-ui;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink)}
-    header{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff}
-    .header-inner{max-width:960px;margin:0 auto;padding:14px 16px;display:flex;gap:10px;align-items:center}
-    .brand{display:flex;gap:10px;align-items:center;color:#fff;text-decoration:none;font-weight:800}
-    .brand img{height:34px}
-    .wrap{max-width:560px;margin:24px auto;padding:0 16px}
-    .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 8px 28px rgba(0,0,0,.06)}
-    .field{display:flex;flex-direction:column;margin-bottom:12px}
-    label{font-weight:600;margin-bottom:6px}
-    .input{border:1px solid var(--line);border-radius:10px;padding:12px}
-    .btn{width:100%;padding:12px 16px;border:0;border-radius:999px;background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;font-weight:800;cursor:pointer}
-    .tiny{font-size:12px;color:#4a5a78}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    :root{
+      --o1:#1a66ff; --o2:#0056ff;
+      --ink:#0a2a4a; --muted:#3a4b6a;
+      --line:rgba(26,102,255,.25); --glass:rgba(255,255,255,.8);
+      --danger:#e23b3b;
+    }
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,#eaf1ff,#f6f9ff);
+      margin:0; display:flex; flex-direction:column; min-height:100vh; color:var(--ink);
+    }
+    header{
+      display:flex; align-items:center; gap:10px;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff; padding:12px 20px;
+    }
+    header img{height:38px;}
+    header a{text-decoration:none;color:#fff;font-weight:700;font-size:20px;}
+
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:30px 12px;}
+    .card{
+      background:var(--glass);
+      backdrop-filter:blur(10px);
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:0 6px 24px rgba(10,27,90,.08);
+      max-width:460px; width:100%;
+      padding:30px 26px;
+    }
+    h1{margin:0 0 20px;text-align:center;font-size:24px;font-weight:700;color:var(--ink);}
+    form{display:flex;flex-direction:column;gap:12px;}
+    label{font-weight:600;font-size:14px;margin-bottom:3px;}
+    input,select{
+      padding:10px 12px;border:1px solid var(--line);
+      border-radius:8px;background:#fff;font-family:inherit;font-size:15px;
+    }
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .btn{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      border:none;border-radius:999px;color:#fff;
+      font-weight:700;padding:12px;margin-top:8px;cursor:pointer;
+      transition:.25s;
+    }
+    .btn:hover{opacity:.9;}
+    .tiny{font-size:13px;color:var(--muted);}
+    .error{color:var(--danger);font-weight:600;margin-top:6px;text-align:center;}
+    .ok{color:var(--o2);font-weight:600;margin-top:6px;text-align:center;}
+    .terms{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--muted);}
+    .terms input{margin-top:2px;}
+    footer{text-align:center;padding:14px 0;font-size:13px;color:#5b6b86;}
   </style>
 </head>
+
 <body>
-<header>
-  <div class="header-inner">
-    <a class="brand" href="index.html"><img src="img/logo.png" alt="">Vrijeplek</a>
-  </div>
-</header>
+  <header>
+    <a href="index.html"><img src="img/logo.png" alt="">Vrijeplek</a>
+  </header>
 
-<div class="wrap">
-  <div class="card">
-    <h1 style="margin:0 0 6px">Account aanmaken</h1>
-    <p class="tiny">Gekozen plan: <strong id="chosen-plan">—</strong></p>
-    <form id="signup-form">
-      <div class="field">
-        <label>E-mail</label>
-        <input id="email" class="input" type="email" required>
-      </div>
-      <div class="row">
-        <div class="field">
+  <main>
+    <div class="card">
+      <h1>Account aanmaken</h1>
+      <form id="signup-form">
+        <div class="two">
+          <div>
+            <label>Naam</label>
+            <input id="name" type="text" required placeholder="Voornaam en achternaam">
+          </div>
+          <div>
+            <label>Bedrijfsnaam</label>
+            <input id="company" type="text" placeholder="Naam van je zaak">
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label>E-mail</label>
+            <input id="email" type="email" required placeholder="naam@voorbeeld.be">
+          </div>
+          <div>
+            <label>Telefoon</label>
+            <input id="phone" type="tel" placeholder="+32 ...">
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label>BTW-nummer</label>
+            <input id="btw" type="text" placeholder="BE0123456789">
+          </div>
+          <div>
+            <label>Categorie</label>
+            <select id="cat" required>
+              <option value="">Kies</option>
+              <option value="horeca">Horeca</option>
+              <option value="wellness">Wellness</option>
+              <option value="zorg">Gezondheid</option>
+              <option value="events">Events</option>
+              <option value="poetsdiensten">Poetsdiensten</option>
+              <option value="ramenwasser">Ramenwasser</option>
+              <option value="dieren">Dieren</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label>Postcode & gemeente</label>
+            <input id="postcode" type="text" placeholder="3500 Hasselt">
+          </div>
+          <div>
+            <label>Straat + nr.</label>
+            <input id="straat" type="text" placeholder="Bergstraat 1">
+          </div>
+        </div>
+
+        <div>
           <label>Wachtwoord</label>
-          <input id="password" class="input" type="password" minlength="6" required>
+          <input id="password" type="password" required minlength="6">
         </div>
-        <div class="field">
-          <label>BTW-nummer</label>
-          <input id="btw" class="input" type="text" placeholder="BE0123456789" required>
+        <div>
+          <label>Herhaal wachtwoord</label>
+          <input id="password2" type="password" required minlength="6">
         </div>
-      </div>
-      <div class="field">
-        <label>Bedrijfsnaam</label>
-        <input id="company" class="input" type="text" required>
-      </div>
-      <div class="field" style="display:flex;gap:10px;align-items:center">
-        <input id="terms" type="checkbox" required>
-        <label for="terms" style="margin:0">Ik ga akkoord met de <a href="algemene-voorwaarden.html" target="_blank">algemene voorwaarden</a>.</label>
-      </div>
-      <button class="btn" type="submit">Account aanmaken</button>
-    </form>
-    <p class="tiny" id="msg" style="margin:8px 0 0"></p>
-  </div>
-</div>
 
-<script type="module">
-  // Plan uit URL lezen
-  const urlPlan = new URL(location.href).searchParams.get('plan');
-  const plan = (urlPlan === 'yearly') ? 'yearly' : 'monthly';
-  document.getElementById('chosen-plan').textContent = plan === 'yearly' ? 'Jaarplan €180/jaar' : 'Maandplan €19,25/maand';
+        <div class="terms">
+          <input id="terms" type="checkbox" required>
+          <label for="terms">Ik ga akkoord met de <a href="voorwaarden.html" target="_blank">algemene voorwaarden</a>.</label>
+        </div>
 
-  async function doSignup(payload){
-    const r = await fetch('/.netlify/functions/signup', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const out = await r.json().catch(()=>({}));
-    if(!r.ok) throw new Error(out.error||'signup_failed');
-  }
+        <button type="submit" class="btn">Account aanmaken</button>
+        <div id="msg" class="tiny"></div>
+      </form>
+    </div>
+  </main>
 
-  document.getElementById('signup-form').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const company = document.getElementById('company').value.trim();
-    const btw = document.getElementById('btw').value.trim();
+  <footer>© 2025 Vrijeplek. Alle rechten voorbehouden.</footer>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const SUPABASE_URL = window.env?.SUPABASE_URL || '';
+    const SUPABASE_ANON_KEY = window.env?.SUPABASE_ANON_KEY || '';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('signup-form');
     const msg = document.getElementById('msg');
-    msg.textContent = 'Verzenden...';
-    try{
-      await doSignup({ email, password, company, btw, plan });
-      location.href = 'bevestigingsmail-verstuurd.html';
-    }catch(err){
-      msg.textContent = 'Registratie mislukt. Probeer opnieuw.';
-    }
-  });
-</script>
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      msg.className='tiny'; msg.textContent='Even geduld…';
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value.trim();
+      const password2 = document.getElementById('password2').value.trim();
+
+      if(password !== password2){
+        msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return;
+      }
+
+      const accepted = document.getElementById('terms').checked;
+      if(!accepted){
+        msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return;
+      }
+
+      try{
+        const { data, error } = await supabase.auth.signUp({
+          email, password,
+          options:{
+            data:{
+              display_name:name,
+              bedrijf:document.getElementById('company').value.trim(),
+              telefoon:document.getElementById('phone').value.trim(),
+              btw:document.getElementById('btw').value.trim(),
+              cat:document.getElementById('cat').value,
+              straat:document.getElementById('straat').value.trim(),
+              postcode:document.getElementById('postcode').value.trim()
+            },
+            emailRedirectTo: window.location.origin + '/dashboard.html'
+          }
+        });
+
+        if(error){
+          msg.className='error';
+          msg.textContent = (error.message.includes('already registered'))
+            ? 'Er bestaat al een account met dit e-mailadres.'
+            : 'Registratie mislukt: ' + error.message;
+          return;
+        }
+
+        msg.className='ok';
+        msg.innerHTML='Bevestigingsmail verstuurd. Controleer je inbox of spamfolder.';
+        form.reset();
+      }catch(err){
+        msg.className='error';
+        msg.textContent='Netwerkfout. Probeer opnieuw.';
+      }
+    });
+  </script>
 </body>
 </html>
