@@ -20,7 +20,6 @@
     body{font-family:'Poppins',sans-serif;margin:0;min-height:100svh;display:flex;flex-direction:column;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink)}
     .site{display:flex;flex-direction:column;min-height:100svh}
     main{flex:1}
-    .brand{margin-right:auto}
 
     .site-header{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50}
     .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
@@ -32,6 +31,7 @@
     .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px}
     .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s}
     .tab-btn.active{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
+    .tab-btn .dot{margin-left:8px}
 
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
     h1.section-title{font-size:26px;margin:0 0 18px}
@@ -48,6 +48,7 @@
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
+    /* Afspraken */
     .day-group{margin:8px 0 14px}
     .day-head{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-weight:700;color:var(--ink)}
     .appt{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:8px}
@@ -56,27 +57,32 @@
     .appt-actions{display:flex;gap:8px}
     .edit-row{display:grid;grid-template-columns:110px 1fr 1fr auto;gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);border-radius:12px;background:#fcfdff;margin-bottom:8px}
 
+    /* Instellingen */
     .settings{display:grid;grid-template-columns:260px 1fr;gap:14px}
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
     .sidenav{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:8px}
-    .side-item{display:flex;align-items:center;gap:10px;width:100%;border:1px solid transparent;background:transparent;color:var(--ink);font-weight:600;border-radius:12px;padding:12px;cursor:pointer}
+    .side-item{display:flex;align-items:center;gap:10px;width:100%;border:1px solid transparent;background:transparent;color:var(--ink);font-weight:600;border-radius:12px;padding:12px;cursor:pointer;justify-content:space-between}
+    .side-item .label{display:flex;align-items:center;gap:10px}
     .side-item.active{background:linear-gradient(180deg,#fff,#f3f7ff);border-color:var(--glass-b);box-shadow:0 6px 18px rgba(10,27,90,.06)}
-    .blue-check{width:18px;height:18px;border-radius:50%;background:conic-gradient(from 210deg,#7fb3ff,#1a66ff);display:inline-grid;place-items:center;box-shadow:0 0 0 4px rgba(26,102,255,.12)}
-    .blue-check:before{content:"";width:9px;height:6px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);margin-top:-2px}
 
     .panel{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:18px}
     .panel h3{margin:0 0 10px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
 
-    /* Gating + indicator */
-    .dot{display:none;width:10px;height:10px;border-radius:50%;margin-left:8px;background:#e23b3b;box-shadow:0 0 0 4px rgba(226,59,59,.15)}
+    /* Indicatoren / gating */
+    .dot{display:none;width:10px;height:10px;border-radius:50%;background:#e23b3b;box-shadow:0 0 0 4px rgba(226,59,59,.15)}
+    .dot-green{display:inline-block;width:10px;height:10px;border-radius:50%;background:#0fa958;box-shadow:0 0 0 4px rgba(15,169,88,.15)}
     .banner{display:none;background:#fff4f4;border:1px solid #ffd1d1;color:#8b1f1f;border-radius:12px;padding:12px 14px;margin:0 0 14px;font-weight:600}
     .locked{opacity:.55;pointer-events:none;position:relative}
     .locked:after{content:"🔒 Betaal je abonnement om dit te gebruiken";position:absolute;inset:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.75);border:1px dashed #e1e7ff;border-radius:12px;font-weight:700}
 
     .site-footer{margin-top:auto;text-align:center;padding:20px 0;color:#5b6b86;font-size:13px}
     .hide{display:none!important}
+    .sep{height:1px;background:var(--line);margin:12px 0}
+    .plan{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:600;cursor:pointer}
+    .pill.active{border-color:var(--o1);box-shadow:0 0 0 3px rgba(26,102,255,.12)}
   </style>
 </head>
 
@@ -140,11 +146,22 @@
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
-          <button class="side-item active" data-side="persoonlijk"><i class="blue-check"></i><span>Persoonlijk</span></button>
-          <button class="side-item" data-side="privacy"><i class="blue-check"></i><span>Privacy & locatie</span></button>
-          <button class="side-item" data-side="zichtbaarheid"><i class="blue-check"></i><span>Zichtbaarheid</span></button>
-          <button class="side-item" data-side="account"><i class="blue-check"></i><span>Account</span></button>
-          <button class="side-item" data-side="notificaties"><i class="blue-check"></i><span>Notificaties</span></button>
+          <button class="side-item active" data-side="persoonlijk">
+            <span class="label"><i class="dot-green"></i><span>Persoonlijk</span></span>
+          </button>
+          <button class="side-item" data-side="privacy">
+            <span class="label"><i class="dot-green"></i><span>Privacy & locatie</span></span>
+          </button>
+          <button class="side-item" data-side="zichtbaarheid">
+            <span class="label"><i class="dot-green"></i><span>Zichtbaarheid</span></span>
+          </button>
+          <button class="side-item" data-side="account" id="nav-account">
+            <span class="label"><span>Account</span></span>
+            <i id="account-dot" class="dot"></i>
+          </button>
+          <button class="side-item" data-side="notificaties">
+            <span class="label"><i class="dot-green"></i><span>Notificaties</span></span>
+          </button>
         </div>
 
         <div class="panel-wrap">
@@ -210,11 +227,25 @@
           </div>
 
           <div class="panel hide" id="panel-account">
-            <h3>Account</h3>
-            <div class="two">
-              <a class="btn" href="wachtwoord-vergeten.html">Wachtwoord herstellen</a>
-              <button class="btn-light" id="st-logout">Uitloggen</button>
+            <h3>Accountstatus & Betaling</h3>
+
+            <div id="acc-status" class="tiny" style="margin-bottom:10px">Status: <strong>—</strong></div>
+            <div class="sep"></div>
+
+            <div class="field">
+              <label>Plan</label>
+              <div id="plan-wrap" class="plan">
+                <button type="button" class="pill" data-plan="monthly">€19,25 / maand</button>
+                <button type="button" class="pill" data-plan="yearly">€180 / jaar</button>
+              </div>
             </div>
+
+            <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+              <button id="btn-activate" class="btn">Activeer abonnement</button>
+              <a id="last-checkout-url" class="tiny" href="#" target="_blank" style="display:none">Laatste betaallink openen</a>
+            </div>
+
+            <div class="tiny" style="margin-top:8px">Je gegevens worden pas publiek na activatie.</div>
           </div>
 
           <div class="panel hide" id="panel-notificaties">
@@ -234,18 +265,22 @@
 </div>
 
 <script type="module">
-  // ---------- VEILIGE INIT (geen crashes) ----------
+  // ---------- Basis UI ----------
   const els = {
     welcomeWrap: document.getElementById('welcome-wrap'),
     userFirst: document.getElementById('user-firstname'),
     payBanner: document.getElementById('pay-banner'),
     settingsDot: document.getElementById('settings-dot'),
-    tabSections: document.querySelectorAll('.tab-content'),
+    accountDot: document.getElementById('account-dot'),
     sections: {
       open: document.getElementById('tab-open'),
       website: document.getElementById('tab-website')
     },
     apptList: document.getElementById('appointments-list'),
+    planPills: document.querySelectorAll('#plan-wrap .pill'),
+    accStatus: document.getElementById('acc-status'),
+    btnActivate: document.getElementById('btn-activate'),
+    lastCheckout: document.getElementById('last-checkout-url'),
     st: {
       name: document.getElementById('st-name'),
       company: document.getElementById('st-company'),
@@ -261,40 +296,48 @@
     }
   };
 
-  // Tabs werken altijd
+  // Tabs
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       const id = btn.dataset.tab;
-      els.tabSections.forEach(sec=> sec.hidden = (sec.id !== 'tab-'+id));
+      document.querySelectorAll('.tab-content').forEach(sec=> sec.hidden = (sec.id !== 'tab-'+id));
     });
   });
 
-  // Logout werkt altijd
-  const safeRedirect = (url) => { try{ location.replace(url); }catch{ location.href=url; } };
-  const doLogout = async () => {
-    try {
-      if (window.__supabase) { await window.__supabase.auth.signOut(); }
-    } catch(_) {}
-    safeRedirect('login.html');
+  // Sidenav
+  const sideBtns = document.querySelectorAll('.side-item');
+  const sidePanels = {
+    persoonlijk: document.getElementById('panel-persoonlijk'),
+    privacy: document.getElementById('panel-privacy'),
+    zichtbaarheid: document.getElementById('panel-zichtbaarheid'),
+    account: document.getElementById('panel-account'),
+    notificaties: document.getElementById('panel-notificaties')
   };
+  sideBtns.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      sideBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      const key = b.dataset.side;
+      Object.entries(sidePanels).forEach(([k,p])=> p.classList.toggle('hide', k!==key));
+    });
+  });
+
+  // Logout (zonder crashes)
+  const safeGo = (u)=>{ try{ location.replace(u) }catch{ location.href=u } };
+  async function doLogout(){ try{ if(window.__supabase) await window.__supabase.auth.signOut(); }catch{} safeGo('login.html'); }
   document.getElementById('btn-logout')?.addEventListener('click', doLogout);
   document.getElementById('st-logout')?.addEventListener('click', doLogout);
 
-  // Supabase (defensief)
+  // Supabase init (defensief)
   async function initSupabase(){
     try{
-      const hasEnv = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
-      if(!hasEnv) return null;
+      const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
+      if(!ok) return null;
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
-        auth: { persistSession:true, autoRefreshToken:true }
-      });
-    }catch(e){
-      console.warn('Supabase niet beschikbaar:', e);
-      return null;
-    }
+      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+    }catch{ return null; }
   }
 
   function firstNameFrom(user){
@@ -311,7 +354,6 @@
   }
 
   async function ensureSession(supabase){
-    // Zonder Supabase: toon lege naam en ga verder (pending status)
     if(!supabase){
       els.welcomeWrap.classList.add('hide');
       window.__email = '';
@@ -321,10 +363,9 @@
     try{
       const { data:{ session } } = await supabase.auth.getSession();
       if(session?.user){ applyUser(session.user); return; }
-      const to = setTimeout(()=>safeRedirect('login.html'), 1500);
+      const to = setTimeout(()=>safeGo('login.html'), 1500);
       supabase.auth.onAuthStateChange((_e, s)=>{ if(s?.user){ clearTimeout(to); applyUser(s.user); }});
     }catch{
-      // als auth faalt: niet crashen
       await afterProfileLoaded();
     }
   }
@@ -340,11 +381,10 @@
     loadAppointments();
   }
 
-  // -------- PROFILE API (defensief) --------
+  // -------- Profile API --------
   async function loadProfile(email){
     try{
-      const u = '/.netlify/functions/profile' + (email ? ('?email=' + encodeURIComponent(email)) : '');
-      const r = await fetch(u);
+      const r = await fetch('/.netlify/functions/profile' + (email ? ('?email=' + encodeURIComponent(email)) : ''));
       if(!r.ok) throw new Error('profile not ok');
       const d = await r.json();
       els.st.company.value = d?.zaak || '';
@@ -355,16 +395,85 @@
       els.st.postcode.value = d?.postcode || '';
       els.st.website.value = d?.website || '';
       els.st.bio.value = d?.bio || '';
+
       window.__plan = d?.plan || 'monthly';
       window.__status = d?.account_status || 'pending';
-    }catch(_){
-      // fallback: pending
+    }catch{
       window.__plan = 'monthly';
       window.__status = 'pending';
     }
   }
 
-  // Opslaan knoppen
+  // -------- Betalen vanuit Account-panel --------
+  function selectPlan(plan){
+    window.__plan = plan;
+    els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
+  }
+  els.planPills.forEach(p=>{
+    p.addEventListener('click', ()=> selectPlan(p.dataset.plan));
+  });
+
+  async function payNow(){
+    try{
+      els.btnActivate.disabled = true;
+      els.btnActivate.textContent = 'Link maken...';
+      const body = { email: window.__email || els.st.email.value || '', plan: window.__plan || 'monthly' };
+      const r = await fetch('/.netlify/functions/create-checkout', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+      const d = await r.json().catch(()=>null);
+      const url = d?.url;
+      if(url){
+        els.lastCheckout.href = url;
+        els.lastCheckout.style.display = 'inline';
+        location.href = url; // meteen naar checkout
+      }else{
+        alert('Betaallink niet beschikbaar.');
+      }
+    }catch{
+      alert('Kon betaallink niet ophalen.');
+    }finally{
+      els.btnActivate.disabled = false;
+      els.btnActivate.textContent = 'Activeer abonnement';
+    }
+  }
+  els.btnActivate.addEventListener('click', payNow);
+
+  // -------- Gating + indicators --------
+  function gateUI(status, plan){
+    const active = (status === 'active');
+
+    // Top banner + tab dot
+    if(!active){
+      els.settingsDot.style.display = 'inline-block';
+      els.payBanner.style.display = 'block';
+      els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Activeer om alles te gebruiken.';
+      els.accountDot.style.display = 'inline-block';
+    }else{
+      els.settingsDot.style.display = 'none';
+      els.payBanner.style.display = 'none';
+      els.accountDot.style.display = 'none';
+    }
+
+    // Account panel status
+    els.accStatus.innerHTML = `Status: <strong>${active ? 'actief' : 'niet actief'}</strong> — plan: <strong>${plan || '—'}</strong>`;
+    selectPlan(plan || 'monthly');
+
+    // Alleen deze twee zijn gelocked bij pending
+    if(!active){
+      els.sections.open?.classList.add('locked');
+      els.sections.website?.classList.add('locked');
+    }else{
+      els.sections.open?.classList.remove('locked');
+      els.sections.website?.classList.remove('locked');
+    }
+  }
+
+  async function afterProfileLoaded(){
+    gateUI(window.__status || 'pending', window.__plan || 'monthly');
+  }
+
+  // -------- Opslaan knoppen --------
   async function saveProfile(){
     els.st.msg.textContent = 'Opslaan...';
     const payload = {
@@ -379,11 +488,9 @@
       bio: els.st.bio.value.trim()
     };
     try{
-      const r = await fetch('/.netlify/functions/profile', {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-      });
+      const r = await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       els.st.msg.textContent = r.ok ? 'Opgeslagen' : 'Mislukt';
-    }catch(_){ els.st.msg.textContent = 'Netwerkfout'; }
+    }catch{ els.st.msg.textContent = 'Netwerkfout'; }
   }
   document.getElementById('st-save-person')?.addEventListener('click', saveProfile);
   document.getElementById('st-save-privacy')?.addEventListener('click', async ()=>{
@@ -395,81 +502,32 @@
     alert('Opgeslagen');
   });
   document.getElementById('st-save-vis')?.addEventListener('click', async ()=>{
-    const body = {
-      show_reviews: document.getElementById('st-reviews')?.checked || false,
-      place: document.getElementById('st-place')?.value?.trim() || ''
-    };
+    const body = { show_reviews: document.getElementById('st-reviews')?.checked || false, place: document.getElementById('st-place')?.value?.trim() || '' };
     try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
     alert('Opgeslagen');
   });
   document.getElementById('st-save-notify')?.addEventListener('click', async ()=>{
-    const body = {
-      notify_mail: document.getElementById('st-notify-mail')?.checked || false,
-      daily_mail: document.getElementById('st-daily-mail')?.checked || false
-    };
+    const body = { notify_mail: document.getElementById('st-notify-mail')?.checked || false, daily_mail: document.getElementById('st-daily-mail')?.checked || false };
     try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
     alert('Opgeslagen');
   });
 
-  // -------- GATING --------
-  function gateUI(status, plan){
-    const active = (status === 'active');
-    if(!active){
-      els.settingsDot.style.display = 'inline-block';
-      els.payBanner.style.display = 'block';
-      els.payBanner.innerHTML = 'Je account is nog <strong>niet actief</strong>. Even betalen om te starten…';
-
-      // Betaallink (defensief)
-      fetch('/.netlify/functions/create-checkout', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email: window.__email || els.st.email.value || '', plan: plan || 'monthly' })
-      }).then(r=>r.json()).then(d=>{
-        if(d?.url){
-          els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. <a class="btn" href="${d.url}">Betaal & activeer</a>`;
-        } else {
-          els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. (Geen betaallink gevonden)`;
-        }
-      }).catch(()=>{
-        els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. (Betaallink niet beschikbaar)`;
-      });
-
-      els.sections.open?.classList.add('locked');
-      els.sections.website?.classList.add('locked');
-    }else{
-      els.settingsDot.style.display = 'none';
-      els.payBanner.style.display = 'none';
-      els.sections.open?.classList.remove('locked');
-      els.sections.website?.classList.remove('locked');
-    }
-  }
-
-  async function afterProfileLoaded(){
-    gateUI(window.__status || 'pending', window.__plan || 'monthly');
-  }
-
-  // -------- AGENDA --------
-  function groupByDate(items){
-    const map = {};
-    items.forEach(x=>{ (map[x.date] ||= []).push(x); });
-    Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time)));
-    return Object.keys(map).sort().map(d=>({ date:d, items: map[d] }));
-  }
-  function formatDateLabel(iso){
-    try{ return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{weekday:'long',day:'2-digit',month:'long'}) }catch{ return iso }
-  }
+  // -------- Agenda (defensief) --------
+  function groupByDate(items){ const map={}; items.forEach(x=>{ (map[x.date] ||= []).push(x); }); Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time))); return Object.keys(map).sort().map(d=>({ date:d, items: map[d] })); }
+  function formatDateLabel(iso){ try{ return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{weekday:'long',day:'2-digit',month:'long'}) }catch{ return iso } }
   function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
   let appts = [];
   function viewRow(item){
-    const row = document.createElement('div'); row.className='appt'; row.dataset.id=item.id;
-    const t = document.createElement('div'); t.className='appt-time'; t.textContent=item.time;
-    const meta = document.createElement('div'); meta.className='appt-meta';
-    const p1 = document.createElement('div'); p1.innerHTML=`<strong>${escapeHtml(item.client||'—')}</strong> — ${escapeHtml(item.purpose||'')}`;
-    const p2 = document.createElement('div'); p2.className='tiny'; p2.textContent=item.note||'';
+    const row=document.createElement('div'); row.className='appt'; row.dataset.id=item.id;
+    const t=document.createElement('div'); t.className='appt-time'; t.textContent=item.time;
+    const meta=document.createElement('div'); meta.className='appt-meta';
+    const p1=document.createElement('div'); p1.innerHTML=`<strong>${escapeHtml(item.client||'—')}</strong> — ${escapeHtml(item.purpose||'')}`;
+    const p2=document.createElement('div'); p2.className='tiny'; p2.textContent=item.note||'';
     meta.appendChild(p1); meta.appendChild(p2);
-    const actions = document.createElement('div'); actions.className='appt-actions';
+    const actions=document.createElement('div'); actions.className='appt-actions';
     const bEdit=document.createElement('button'); bEdit.className='btn-light'; bEdit.textContent='Bewerken';
-    const bDel =document.createElement('button'); bDel.className='btn-danger'; bDel.textContent='Verwijderen';
+    const bDel=document.createElement('button'); bDel.className='btn-danger'; bDel.textContent='Verwijderen';
     bEdit.addEventListener('click',()=> startEdit(item.id));
     bDel.addEventListener('click',()=> deleteAppt(item.id));
     actions.appendChild(bEdit); actions.appendChild(bDel);
@@ -480,7 +538,7 @@
     const row=document.createElement('div'); row.className='edit-row'; row.dataset.id=item.id;
     const t=document.createElement('input'); t.className='input'; t.type='time'; t.value=item.time;
     const client=document.createElement('input'); client.className='input'; client.type='text'; client.value=item.client||'';
-    const purpose=document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; purpose.value=item.purpose||'';
+    const purpose=document.createElement('input'); purpose.className='input'; purpose.type='text'; purpose.placeholder='Omschrijving'; value=item.purpose||'';
     const actions=document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
     const bSave=document.createElement('button'); bSave.className='btn'; bSave.textContent='Opslaan';
     const bCancel=document.createElement('button'); bCancel.className='btn-light'; bCancel.textContent='Annuleren';
@@ -491,28 +549,26 @@
     return row;
   }
   function renderAppointments(list){
-    const wrap = els.apptList;
-    wrap.innerHTML='';
-    const groups = groupByDate(list);
+    const wrap=els.apptList; wrap.innerHTML='';
+    const groups=groupByDate(list);
     if(!groups.length){ const e=document.createElement('div'); e.className='tiny'; e.textContent='Nog geen afspraken.'; wrap.appendChild(e); return; }
     groups.forEach(g=>{
       const w=document.createElement('div'); w.className='day-group';
       const h=document.createElement('div'); h.className='day-head'; h.textContent=formatDateLabel(g.date);
       w.appendChild(h);
-      g.items.forEach(item=>{ w.appendChild(item.__editing ? editRow(item) : viewRow(item)); });
+      g.items.forEach(item=> w.appendChild(item.__editing ? editRow(item) : viewRow(item)));
       wrap.appendChild(w);
     });
   }
   function startEdit(id){ const x=appts.find(a=>a.id===id); if(x){ x.__editing=true; renderAppointments(appts); } }
   function cancelEdit(id){ const x=appts.find(a=>a.id===id); if(x){ delete x.__editing; renderAppointments(appts); } }
-
   async function saveAppt(payload){
     try{
       await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'update', ...payload })});
-      const i = appts.findIndex(a=>a.id===payload.id);
+      const i=appts.findIndex(a=>a.id===payload.id);
       if(i>-1){ appts[i]={...appts[i],...payload}; delete appts[i].__editing; }
       renderAppointments(appts);
-    }catch(_){}
+    }catch{}
   }
   async function deleteAppt(id){
     if(!confirm('Deze afspraak verwijderen?')) return;
@@ -520,18 +576,16 @@
       await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'delete', id })});
       appts = appts.filter(a=>a.id!==id);
       renderAppointments(appts);
-    }catch(_){}
+    }catch{}
   }
   async function loadAppointments(){
     try{
-      const r = await fetch('/.netlify/functions/appointments?action=list');
-      const d = await r.json().catch(()=>[]);
-      appts = Array.isArray(d) ? d : [];
+      const r=await fetch('/.netlify/functions/appointments?action=list');
+      const d=await r.json().catch(()=>[]);
+      appts = Array.isArray(d)?d:[];
     }catch{ appts=[]; }
     renderAppointments(appts);
   }
-
-  // Slot publiceren
   document.getElementById('slot-form')?.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const date=document.getElementById('slot-date').value.trim();
@@ -541,15 +595,13 @@
     if(!date||!from||!to){ alert('Kies datum en uren.'); return; }
     try{
       await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'publish-slot', date, from, to, desc })});
-      e.target.reset();
-      loadAppointments();
-    }catch(_){}
+      e.target.reset(); loadAppointments();
+    }catch{}
   });
 
   // Start
   window.__supabase = await initSupabase();
   await ensureSession(window.__supabase);
-  // Als geen supabase: toch afspraken laden en UI afsluiten
   if(!window.__supabase){ loadAppointments(); }
 </script>
 </body>
