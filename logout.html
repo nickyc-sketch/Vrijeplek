@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Uitloggen…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<script>
+(function(){
+  try{
+    // Local/session storage leeg
+    try{ localStorage.clear(); }catch{}
+    try{ sessionStorage.clear(); }catch{}
+
+    // Cookies wissen (best effort)
+    try{
+      document.cookie.split(';').forEach(function(c){
+        var name = c.split('=')[0].trim();
+        if(name){
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        }
+      });
+    }catch{}
+
+    // Supabase signout proberen (optioneel, niet verplicht)
+    (async function(){
+      try{
+        if (window.env && window.env.SUPABASE_URL && window.env.SUPABASE_ANON_KEY) {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supa = createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, { auth:{ persistSession:true }});
+          await supa.auth.signOut().catch(()=>{});
+        }
+      }catch(e){}
+      // Hoe dan ook: weg van hier
+      location.replace('login.html');
+    })();
+  }catch(e){
+    location.href = 'login.html';
+  }
+})();
+</script>
+</body>
+</html>
