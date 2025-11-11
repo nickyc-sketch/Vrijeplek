@@ -4,128 +4,64 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard — Vrijeplek</title>
-
-  <!-- Fonts + globale stijl -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=smurf6" />
-
   <style>
-    /* Subtiele header-lijn */
-    .site-header::after {
-      content: ""; position: absolute; inset: auto 0 0 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); opacity: .6;
-    }
-
-    .wrap { max-width: 1200px; margin-inline: auto; padding: 24px 12px 64px; }
-    .welcome { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 16px; }
-    .welcome h1 { margin: 0; font-size: 22px; color: var(--blue-900); }
-    .subtitle { margin: 0; color: #1f2a44; }
-
-    /* Tabs */
-    .tabs { position: sticky; top: 64px; z-index: 10; margin: 10px 0 18px; }
-    .tabbar {
-      display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      padding: 8px; border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
-      border: 1px solid rgba(26,102,255,.22);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 8px 24px rgba(10,27,90,.08);
-    }
-    .tabbar-left { display:flex; gap:8px; flex-wrap: wrap; align-items:center; }
-    .tabbar button {
-      appearance: none; border: 1px solid transparent; background: transparent; color: #0a2a4a;
-      padding: 10px 14px; border-radius: 999px; font-weight: 700; letter-spacing: .2px; cursor: pointer;
-    }
-    .tabbar button[aria-selected="true"] {
-      background: linear-gradient(120deg, rgba(26,102,255,.18), rgba(0,86,255,.28));
-      border-color: rgba(26,102,255,.28); box-shadow: 0 6px 16px rgba(10,27,90,.12);
-    }
-    .logout-btn {
-      appearance:none; border:1px solid rgba(26,102,255,.28); background:#fff; color:#0a2a4a;
-      padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer;
-    }
-    .logout-btn:hover { border-color: rgba(26,102,255,.45); }
-
-    /* Panels */
-    [role="tabpanel"][hidden] { display: none !important; }
-
-    /* Cards / grids */
-    .card {
-      padding: 14px; border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
-      border: 1px solid rgba(26,102,255,.22);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 8px 30px rgba(10,27,90,.08);
-    }
-    .card-head {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 10px 12px; margin: -6px -6px 10px; border-radius: 12px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
-        linear-gradient(120deg, rgba(26,102,255,.18), rgba(0,86,255,.28));
-      border: 1px solid rgba(26,102,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
-    }
-    .card-head h3 { font-size: 15px; margin: 0; color: var(--blue-900); letter-spacing: .2px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 999px;
-      font-weight: 700; font-size: 12px; background: linear-gradient(180deg, #fff, #f5f9ff);
-      border: 1px solid rgba(26,102,255,.28); box-shadow: 0 4px 12px rgba(10,27,90,.10); color: var(--blue-900);
-    }
-    .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: conic-gradient(from 200deg, var(--blue-300), var(--blue-600)); box-shadow: 0 0 0 4px rgba(26,102,255,.12); }
-    .soft-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(26,102,255,.18), transparent); margin: 8px 0 2px; }
-    .tiny-note { font-size: 12px; color: #5b6b86; }
-
-    .grid { display: grid; gap: 14px; grid-template-columns: 2fr 1fr; }
-    .kpi-grid { display: grid; gap: 14px; grid-template-columns: repeat(2,1fr); }
-    .kpi { display:flex; align-items:baseline; gap:10px; }
-    .kpi .value { font-size: 30px; font-weight: 700; color: var(--blue-900); letter-spacing: .2px; }
-    .kpi .sub { font-size:12px; color:#5b6b86; }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; }
-    thead th { text-align: left; font-size: 12px; color: #3a4b6a; padding: 8px 10px; border-bottom: 1px solid rgba(26,102,255,.22); }
-    tbody td { padding: 10px; font-size: 14px; border-bottom: 1px dashed rgba(26,102,255,.16); }
-    tbody tr:last-child td { border-bottom: none; }
-
-    .row { display: flex; gap: 10px; }
-    .row > * { flex: 1; }
-    .submit-zone { display: flex; gap: 10px; align-items: center; }
-
-    .progress { height: 10px; border-radius: 999px; background: rgba(26,102,255,.12); overflow: hidden; }
-    .progress > i { display: block; height: 100%; background: linear-gradient(90deg, rgba(26,102,255,.6), rgba(0,86,255,.85)); width: 0%; transition: width .5s ease; }
-
-    /* Website builder */
-    .builder { display: grid; gap: 12px; }
-    .builder .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .builder .preview { border-radius: 12px; border: 1px solid rgba(26,102,255,.22); background: #fff; overflow: hidden; }
-    .builder iframe { width: 100%; height: 420px; border: 0; background: #fff; }
-    @keyframes sheen { from { background-position:-200% 0 } to { background-position:200% 0 } }
-    .sheen { background-image: linear-gradient(120deg,transparent,rgba(255,255,255,.6),transparent); background-size: 200% 100%; animation: sheen 2s linear infinite; }
-
-    @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
-    @media (max-width: 720px)  { .kpi-grid { grid-template-columns: 1fr; } .builder .two { grid-template-columns: 1fr; } }
+    .site-header::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);opacity:.6}
+    .wrap{max-width:1200px;margin-inline:auto;padding:24px 12px 64px}
+    .welcome{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 16px}
+    .welcome h1{margin:0;font-size:22px;color:var(--blue-900)}
+    .subtitle{margin:0;color:#1f2a44}
+    .tabs{position:sticky;top:64px;z-index:10;margin:10px 0 18px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:8px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 24px rgba(10,27,90,.08)}
+    .tabbar-left{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .tabbar button{appearance:none;border:1px solid transparent;background:transparent;color:#0a2a4a;padding:10px 14px;border-radius:999px;font-weight:700;letter-spacing:.2px;cursor:pointer}
+    .tabbar button[aria-selected="true"]{background:linear-gradient(120deg,rgba(26,102,255,.18),rgba(0,86,255,.28));border-color:rgba(26,102,255,.28);box-shadow:0 6px 16px rgba(10,27,90,.12)}
+    .logout-btn{appearance:none;border:1px solid rgba(26,102,255,.28);background:#fff;color:#0a2a4a;padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer}
+    .logout-btn:hover{border-color:rgba(26,102,255,.45)}
+    [role="tabpanel"][hidden]{display:none!important}
+    .card{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(10,27,90,.08)}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;margin:-6px -6px 10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.35)),linear-gradient(120deg,rgba(26,102,255,.18),rgba(0,86,255,.28));border:1px solid rgba(26,102,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+    .card-head h3{font-size:15px;margin:0;color:var(--blue-900)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;background:linear-gradient(180deg,#fff,#f5f9ff);border:1px solid rgba(26,102,255,.28);box-shadow:0 4px 12px rgba(10,27,90,.10);color:var(--blue-900)}
+    .badge-dot{width:8px;height:8px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue-300),var(--blue-600));box-shadow:0 0 0 4px rgba(26,102,255,.12)}
+    .soft-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(26,102,255,.18),transparent);margin:8px 0 2px}
+    .tiny-note{font-size:12px;color:#5b6b86}
+    .grid{display:grid;gap:14px;grid-template-columns:2fr 1fr}
+    .kpi-grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+    .kpi{display:flex;align-items:baseline;gap:10px}
+    .kpi .value{font-size:30px;font-weight:700;color:var(--blue-900)}
+    .kpi .sub{font-size:12px;color:#5b6b86}
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{text-align:left;font-size:12px;color:#3a4b6a;padding:8px 10px;border-bottom:1px solid rgba(26,102,255,.22)}
+    tbody td{padding:10px;font-size:14px;border-bottom:1px dashed rgba(26,102,255,.16)}
+    tbody tr:last-child td{border-bottom:none}
+    .row{display:flex;gap:10px}.row>*{flex:1}
+    .submit-zone{display:flex;gap:10px;align-items:center}
+    .progress{height:10px;border-radius:999px;background:rgba(26,102,255,.12);overflow:hidden}
+    .progress>i{display:block;height:100%;background:linear-gradient(90deg,rgba(26,102,255,.6),rgba(0,86,255,.85));width:0%;transition:width .5s ease}
+    .builder{display:grid;gap:12px}
+    .builder .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .builder .preview{border-radius:12px;border:1px solid rgba(26,102,255,.22);background:#fff;overflow:hidden}
+    .builder iframe{width:100%;height:420px;border:0;background:#fff}
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.kpi-grid{grid-template-columns:1fr}.builder .two{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="site">
-    <!-- HEADER -->
     <header class="site-header">
       <div class="header-inner">
         <a href="index.html" class="brand" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
           <img src="img/logo.png" alt="Vrijeplek logo" style="height:40px;" onerror="this.remove()">
-          <span class="brand-name">Vrijeplek</span>
-          <span class="brand-dot"></span>
+          <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
         </a>
-        <nav class="header-actions">
-          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-          <a class="nav-btn" href="hoe.html">Hoe werkt het?</a>
-          <a class="nav-btn" href="aanmelden.html">Word lid</a>
-          <a class="nav-btn" href="login.html">Login</a>
-        </nav>
       </div>
     </header>
 
-    <!-- MAIN -->
     <main class="wrap">
-      <!-- Welkom -->
       <div class="welcome">
         <div>
           <h1>Welkom, <span id="user-first">—</span> 👋</h1>
@@ -133,7 +69,6 @@
         </div>
       </div>
 
-      <!-- Tabs -->
       <div class="tabs" role="tablist" aria-label="Dashboard secties">
         <div class="tabbar">
           <div class="tabbar-left">
@@ -147,7 +82,7 @@
         </div>
       </div>
 
-      <!-- Panel: Vrije momenten -->
+      <!-- Vrije momenten -->
       <section id="panel-vrijemomenten" role="tabpanel" aria-labelledby="tab-vrijemomenten">
         <div class="kpi-grid">
           <div class="card">
@@ -193,7 +128,7 @@
           <aside>
             <div class="card">
               <div class="card-head"><h3>Profielstatus</h3><span class="badge">Checklist</span></div>
-              <ul style="margin:0; padding-left:18px;">
+              <ul style="margin:0;padding-left:18px;">
                 <li id="chk-email">E-mail bevestigd</li>
                 <li id="chk-btw">BTW-nummer geverifieerd</li>
                 <li id="chk-cat">Categorie ingevuld</li>
@@ -206,7 +141,7 @@
         </div>
       </section>
 
-      <!-- Panel: Reservaties -->
+      <!-- Reservaties -->
       <section id="panel-reservaties" role="tabpanel" aria-labelledby="tab-reservaties" hidden>
         <div class="card">
           <div class="card-head"><h3>Reservaties</h3><span class="badge">Overzicht</span></div>
@@ -217,10 +152,10 @@
         </div>
       </section>
 
-      <!-- Panel: Website -->
+      <!-- Website -->
       <section id="panel-website" role="tabpanel" aria-labelledby="tab-website" hidden>
         <div class="card">
-          <div class="card-head"><h3>Mini-website</h3><span class="badge sheen">Builder</span></div>
+          <div class="card-head"><h3>Mini-website</h3><span class="badge">Builder</span></div>
           <div class="builder">
             <div class="two">
               <div class="field"><label for="wb-title">Titel</label><input id="wb-title" type="text" class="input" placeholder="Naam van je zaak"></div>
@@ -229,7 +164,7 @@
             <div class="two">
               <div class="field">
                 <label for="wb-slug">Adres (slug)</label>
-                <input id="wb-slug" type="text" class="input" placeholder="bv. kapper-els" />
+                <input id="wb-slug" type="text" class="input" placeholder="bv. kapper-els"/>
                 <div class="hint tiny-note">Wordt: https://www.vrijeplek.be/websitevanklant/<b id="wb-slug-preview">—</b></div>
               </div>
               <div class="field">
@@ -264,7 +199,7 @@
         </div>
       </section>
 
-      <!-- Panel: Profiel -->
+      <!-- Profiel -->
       <section id="panel-profiel" role="tabpanel" aria-labelledby="tab-profiel" hidden>
         <div class="card">
           <div class="card-head"><h3>Mijn gegevens</h3><span class="badge">Account</span></div>
@@ -284,7 +219,7 @@
         </div>
       </section>
 
-      <!-- Panel: Abonnement -->
+      <!-- Abonnement -->
       <section id="panel-abonnement" role="tabpanel" aria-labelledby="tab-abonnement" hidden>
         <div class="card">
           <div class="card-head"><h3>Abonnement</h3><span class="badge">Plan</span></div>
@@ -297,51 +232,49 @@
       </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="footer-inner">
         <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
-        <nav class="footer-nav">
-          <a href="voorwaarden.html">Algemene voorwaarden</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#contact">Contact</a>
-        </nav>
       </div>
     </footer>
   </div>
 
-  <!-- Optioneel: /js/config.js met window.VRIJEPLEK = { SUPABASE_URL, SUPABASE_ANON_KEY } -->
   <script src="/js/config.js"></script>
-
-  <!-- Supabase + dashboard logic -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    // ================== Supabase init ==================
     const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || 'https://JOUW-PROJECT.supabase.co';
     const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || 'JOUW_PUBLIC_ANON_KEY';
+
+    // Altijd localStorage
     const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true }
+      auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
     });
 
-    // ================== Sessiescheck + naam ==================
-    const { data: { session } } = await supa.auth.getSession();
-    if (!session) {
-      window.location.href = '/login.html';
-      throw new Error('Geen sessie');
+    // Wacht op INITIAL_SESSION zodat we niet te vroeg redirecten
+    async function requireSession(){
+      let { data: { session } } = await supa.auth.getSession();
+      if (session) return session;
+      await new Promise((resolve)=>{
+        const { data: sub } = supa.auth.onAuthStateChange((event)=>{ if(event==='INITIAL_SESSION'){ sub.subscription.unsubscribe(); resolve(); } });
+      });
+      ({ data: { session } } = await supa.auth.getSession());
+      return session;
     }
 
+    const session = await requireSession();
+    if (!session) { window.location.href = '/login.html'; throw new Error('Geen sessie'); }
+
+    // Voornaam tonen
     const user = session.user;
     const email = user?.email || '';
     const fullname = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
     const first = (fullname || email.split('@')[0] || '').split(/[\s._-]/)[0] || 'gebruiker';
     document.getElementById('user-first').textContent = first.charAt(0).toUpperCase() + first.slice(1);
-
-    // Profiel velden vullen
     document.getElementById('pf-email').value = email;
     document.getElementById('pf-name').value = fullname || first;
 
-    // ================== Tabs ==================
+    // Tabs
     const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
     const panels = {
       vrijemomenten: document.getElementById('panel-vrijemomenten'),
@@ -350,39 +283,39 @@
       profiel: document.getElementById('panel-profiel'),
       abonnement: document.getElementById('panel-abonnement')
     };
-
-    function showTab(key) {
-      tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
-      Object.entries(panels).forEach(([k, el]) => el.hidden = (k !== key));
+    function showTab(key){
+      tabs.forEach(b=> b.setAttribute('aria-selected', String(b.dataset.tab===key)));
+      Object.entries(panels).forEach(([k,el])=> el.hidden = (k!==key));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => showTab(btn.dataset.tab));
-      btn.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-          const i = tabs.indexOf(btn);
-          const n = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+    tabs.forEach(btn=>{
+      btn.addEventListener('click', ()=> showTab(btn.dataset.tab));
+      btn.addEventListener('keydown', (e)=>{
+        if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+          const i=tabs.indexOf(btn), n=e.key==='ArrowRight'?(i+1)%tabs.length:(i-1+tabs.length)%tabs.length;
           tabs[n].focus();
         }
       });
     });
     showTab('vrijemomenten');
 
-    // ================== Vrije momenten demo handlers ==================
+    // Uitloggen (2 knoppen)
+    async function doLogout(){ try{ await supa.auth.signOut(); }catch{} window.location.href = '/login.html'; }
+    document.getElementById('btn-logout') .addEventListener('click', doLogout);
+    document.getElementById('btn-logout-2')?.addEventListener('click', doLogout);
+
+    // Demo handlers (vervang later door echte functions/DB)
     const apptBody = document.getElementById('appt-body');
-    function renderAppts(rows) {
+    function renderAppts(rows){
       apptBody.innerHTML = '';
-      if (!rows.length) {
-        apptBody.innerHTML = '<tr><td colspan="4" style="color:#5b6b86;">Nog geen afspraken…</td></tr>';
-        return;
-      }
-      rows.forEach(r => {
+      if(!rows.length){ apptBody.innerHTML = '<tr><td colspan="4" style="color:#5b6b86;">Nog geen afspraken…</td></tr>'; return; }
+      rows.forEach(r=>{
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${r.date||'-'}</td><td>${r.time||'-'}</td><td>${r.client||'-'}</td><td>${r.note||''}</td>`;
         apptBody.appendChild(tr);
       });
     }
-    renderAppts([]); // leeg
+    renderAppts([]);
 
     const slot = {
       date: document.getElementById('slot-date'),
@@ -396,30 +329,15 @@
     };
     slot.publish.addEventListener('click', async ()=>{
       slot.msg.textContent = 'Versturen…';
-      // TODO: POST naar eigen function (/.netlify/functions/slots_upsert)
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r=>setTimeout(r,500));
       slot.msg.textContent = 'Gepubliceerd ✅';
     });
     slot.clear.addEventListener('click', ()=>{
-      ['date','from','to','cap','note'].forEach(k => slot[k].value = (k==='cap' ? 1 : ''));
+      ['date','from','to','cap','note'].forEach(k=> slot[k].value = (k==='cap'?1:''));
       slot.msg.textContent = '';
     });
 
-    // ================== Profiel opslaan (placeholder) ==================
-    const pf = {
-      name: document.getElementById('pf-name'),
-      phone: document.getElementById('pf-phone'),
-      cat: document.getElementById('pf-cat'),
-      save: document.getElementById('pf-save'),
-      msg: document.getElementById('pf-msg')
-    };
-    pf.save.addEventListener('click', async ()=>{
-      pf.msg.textContent = 'Opslaan…';
-      await new Promise(r => setTimeout(r, 400));
-      pf.msg.textContent = 'Bewaard ✅';
-    });
-
-    // ================== Mini-website builder ==================
+    // Mini-website live preview + publish (zelfde als eerder)
     const $ = id => document.getElementById(id);
     const els = {
       wbTitle:$('wb-title'), wbTag:$('wb-tag'), wbSlug:$('wb-slug'), wbSlugPrev:$('wb-slug-preview'),
@@ -428,8 +346,7 @@
       wbGR:$('wb-gr-on'), wbPublic:$('wb-public'), wbSave:$('wb-save'),
       wbView:$('wb-view'), wbMsg:$('wb-msg'), wbIframe:$('wb-iframe')
     };
-    const slugify = s => (s||'').toLowerCase().trim()
-      .replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,64);
+    const slugify = s => (s||'').toLowerCase().trim().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,64);
     function updateSlugPreview(){ els.wbSlugPrev.textContent = slugify(els.wbSlug.value) || '—'; }
     function renderPreview(){
       const services = (els.wbServices.value||'').split(',').map(s=>s.trim()).filter(Boolean);
@@ -438,113 +355,44 @@
       const reviewHref = place.startsWith('http') ? place : `https://search.google.com/local/reviews?placeid=${encodeURIComponent(place)}`;
       const site = els.wbSite.value.trim();
       const safeSite = site && !/^https?:\/\//i.test(site) ? 'https://' + site : site;
-
-      const html = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${els.wbTitle.value||'Mijn zaak'} — Vrijeplek</title>
+      const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${els.wbTitle.value||'Mijn zaak'} — Vrijeplek</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-body{margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);font-family:Poppins,Arial,sans-serif;color:#0a2a4a}
-.wrap{max-width:900px;margin:32px auto;padding:0 12px}
-.card{padding:16px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.55));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(10,27,90,.08)}
-.h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-.badge{padding:4px 10px;border-radius:999px;background:#fff;border:1px solid rgba(26,102,255,.28);font-weight:700;font-size:12px;color:#0a2a4a}
-.btn{display:inline-block;padding:10px 18px;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;text-decoration:none;font-weight:700}
-ul{margin:8px 0 0 18px}.footer{margin-top:18px;font-size:12px;color:#5b6b86}
-</style></head><body>
-<div class="wrap"><div class="card">
-  <div class="h"><h1 style="margin:0;font-size:22px;">${els.wbTitle.value||'Mijn zaak'}</h1><span class="badge">Vrijeplek</span></div>
-  ${els.wbTag.value?`<p style="margin:0 0 8px;color:#1f2a44;">${els.wbTag.value}</p>`:''}
-  ${els.wbAbout.value?`<p style="margin:0 0 12px;color:#1f2a44;">${els.wbAbout.value.replace(/</g,'&lt;')}</p>`:''}
-  ${services.length?`<h3 style="margin:10px 0 6px;">Diensten</h3><ul>${services.map(s=>`<li>${s.replace(/</g,'&lt;')}</li>`).join('')}</ul>`:''}
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
-    ${els.wbPhone.value?`<a class="btn" href="tel:${els.wbPhone.value}">Bel ons</a>`:''}
-    ${safeSite?`<a class="btn" href="${safeSite}" target="_blank" rel="noopener">Website</a>`:''}
-    ${showGR?`<a class="btn" href="${reviewHref}" target="_blank" rel="noopener">Google reviews</a>`:''}
-  </div>
-  <div class="footer">Gemaakt met Vrijeplek — ${location.origin}/websitevanklant/${slugify(els.wbSlug.value)||'mijn-zaak'}</div>
-</div></div></body></html>`;
-
-      const blob = new Blob([html], {type:'text/html'});
-      els.wbIframe.src = URL.createObjectURL(blob);
+<style>body{margin:0;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);font-family:Poppins,Arial,sans-serif;color:#0a2a4a}.wrap{max-width:900px;margin:32px auto;padding:0 12px}.card{padding:16px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.55));border:1px solid rgba(26,102,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(10,27,90,.08)}.h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.badge{padding:4px 10px;border-radius:999px;background:#fff;border:1px solid rgba(26,102,255,.28);font-weight:700;font-size:12px;color:#0a2a4a}.btn{display:inline-block;padding:10px 18px;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);color:#fff;text-decoration:none;font-weight:700}ul{margin:8px 0 0 18px}.footer{margin-top:18px;font-size:12px;color:#5b6b86}</style></head><body>
+<div class="wrap"><div class="card"><div class="h"><h1 style="margin:0;font-size:22px;">${els.wbTitle.value||'Mijn zaak'}</h1><span class="badge">Vrijeplek</span></div>
+${els.wbTag.value?`<p style="margin:0 0 8px;color:#1f2a4a;">${els.wbTag.value}</p>`:''}
+${els.wbAbout.value?`<p style="margin:0 0 12px;color:#1f2a4a;">${els.wbAbout.value.replace(/</g,'&lt;')}</p>`:''}
+${services.length?`<h3 style="margin:10px 0 6px;">Diensten</h3><ul>${services.map(s=>`<li>${s.replace(/</g,'&lt;')}</li>`).join('')}</ul>`:''}
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+${els.wbPhone.value?`<a class="btn" href="tel:${els.wbPhone.value}">Bel ons</a>`:''}
+${safeSite?`<a class="btn" href="${safeSite}" target="_blank" rel="noopener">Website</a>`:''}
+${showGR?`<a class="btn" href="${reviewHref}" target="_blank" rel="noopener">Google reviews</a>`:''}
+</div><div class="footer">Gemaakt met Vrijeplek — ${location.origin}/websitevanklant/${slugify(els.wbSlug.value)||'mijn-zaak'}</div></div></div></body></html>`;
+      const blob = new Blob([html], {type:'text/html'}); els.wbIframe.src = URL.createObjectURL(blob);
     }
     ["input","change"].forEach(ev=>{
       [els.wbTitle,els.wbTag,els.wbAbout,els.wbServices,els.wbPhone,els.wbSite,els.wbPlace,els.wbGR,els.wbTheme,els.wbPublic].forEach(el=> el.addEventListener(ev,renderPreview));
-      els.wbSlug.addEventListener(ev,()=>{ els.wbSlug.value = slugify(els.wbSlug.value); updateSlugPreview(); renderPreview(); });
+      els.wbSlug.addEventListener(ev,()=>{ els.wbSlug.value = slugify(els.wbSlug.value); document.getElementById('wb-slug-preview').textContent = slugify(els.wbSlug.value)||'—'; renderPreview(); });
     });
-    updateSlugPreview(); renderPreview();
-
+    document.getElementById('wb-slug-preview').textContent = '—'; renderPreview();
     els.wbSave.addEventListener("click", async ()=>{
-      const slug = slugify(els.wbSlug.value);
-      if (!slug) { els.wbMsg.textContent = "Kies een adres (slug)."; return; }
-      els.wbMsg.textContent = "Opslaan…";
-
+      const slug = slugify(els.wbSlug.value); if(!slug){ document.getElementById('wb-msg').textContent="Kies een adres (slug)."; return; }
+      document.getElementById('wb-msg').textContent="Opslaan…";
       const payload = {
-        slug,
-        title: els.wbTitle.value.trim(),
-        tagline: els.wbTag.value.trim(),
-        about: els.wbAbout.value.trim(),
+        slug, title: els.wbTitle.value.trim(), tagline: els.wbTag.value.trim(), about: els.wbAbout.value.trim(),
         services: (els.wbServices.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-        phone: els.wbPhone.value.trim(),
-        website: els.wbSite.value.trim(),
-        theme: els.wbTheme.value,
-        show_google_reviews: !!els.wbGR.checked,
-        google_place: els.wbPlace.value.trim(),
-        is_public: !!els.wbPublic.checked
+        phone: els.wbPhone.value.trim(), website: els.wbSite.value.trim(), theme: els.wbTheme.value,
+        show_google_reviews: !!document.getElementById('wb-gr-on').checked,
+        google_place: els.wbPlace.value.trim(), is_public: !!document.getElementById('wb-public').checked
       };
-
-      // Bearer token meesturen zodat function user_id kan bepalen
       const { data: { session: s2 } } = await supa.auth.getSession();
       const access = s2?.access_token || '';
-
       try{
-        const r = await fetch('/.netlify/functions/save_site',{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization': `Bearer ${access}`
-          },
-          body: JSON.stringify(payload)
-        });
-        if (r.ok) {
-          els.wbMsg.textContent = "Gepubliceerd ✅";
-          els.wbView.href = `/websitevanklant/${slug}`;
-        } else {
-          els.wbMsg.textContent = (await r.text()) || "Mislukt";
-        }
-      } catch (e) {
-        console.error(e);
-        els.wbMsg.textContent = "Netwerkfout";
-      }
+        const r = await fetch('/.netlify/functions/save_site',{ method:'POST', headers:{ 'Content-Type':'application/json','Authorization':`Bearer ${access}` }, body: JSON.stringify(payload) });
+        if(r.ok){ document.getElementById('wb-msg').textContent="Gepubliceerd ✅"; document.getElementById('wb-view').href=`/websitevanklant/${slug}`; }
+        else{ document.getElementById('wb-msg').textContent=(await r.text())||'Mislukt'; }
+      }catch(e){ document.getElementById('wb-msg').textContent='Netwerkfout'; }
     });
-
-    // ================== Uitloggen (2 plekken) ==================
-    async function doLogout() {
-      try { await supa.auth.signOut(); } catch(e) { console.warn(e); }
-      window.location.href = '/login.html';
-    }
-    document.getElementById('btn-logout')  .addEventListener('click', doLogout);
-    document.getElementById('btn-logout-2').addEventListener('click', doLogout);
   </script>
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || 'https://xdmrikvxyeebeusnbzav.supabase.co';
-const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || 'PLAATS_HIER_JE_ECHTE_ANON_KEY';
-
-const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
-});
-
-// Belangrijk: wacht op INITIAL_SESSION zodat de sessie zeker geladen is
-const { data: { session } } = await supa.auth.getSession();
-if (!session) {
-  await new Promise((resolve) => {
-    const { data: sub } = supa.auth.onAuthStateChange((event, sess) => {
-      if (event === 'INITIAL_SESSION') { sub.subscription.unsubscribe(); resolve(); }
-    });
-  });
-}
-const { data: { session: s2 } } = await supa.auth.getSession();
-if (!s2) { window.location.href = '/login.html'; throw new Error('Geen sessie'); }
 </body>
 </html>
