@@ -218,3 +218,12 @@ input[type="date"][data-has-value="1"]::-webkit-datetime-edit{ color:inherit; }
   box-shadow:0 6px 18px rgba(16,185,129,.18);
 }
 .header-actions .nav-btn.btn-green:hover{ filter:brightness(1.07); }
+/* Sidebar & panel altijd gelijke hoogte, niet meeverkleinen */
+.settings{ display:grid; grid-template-columns:260px 1fr; gap:14px; align-items:stretch; }
+.sidenav{ min-height: 560px; }
+.panel-wrap{ min-height: 560px; }
+
+/* optioneel: vaste sticky zijbalk (mag je weglaten als je dat niet wilt) */
+@media(min-width:901px){
+  .sidenav{ position: sticky; top: 90px; }
+}
