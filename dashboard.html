@@ -133,40 +133,69 @@
     © 2025 Vrijeplek. Alle rechten voorbehouden.
   </footer>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    const supabase = createClient('https://xdmrikvxyeebeusnbzav.supabase.co','<YOUR-ANON-KEY>');
+ <script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const userNameEl = document.getElementById('user-firstname');
-    const profileEmailEl = document.getElementById('profile-email');
+  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+  const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true }
+  });
 
-    // Haal sessie op
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user){ location.href='login.html'; }
-    else {
-      const namePart = user.user_metadata?.name || user.email.split('@')[0];
-      const firstName = namePart.split(/[.\s_-]/)[0];
-      userNameEl.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-      profileEmailEl.textContent = user.email;
+  const els = {
+    userFirst: document.getElementById('user-firstname'),
+    profileEmail: document.getElementById('profile-email'),
+    logout: document.getElementById('btn-logout')
+  };
+
+  function setNameFromUser(user){
+    const raw = user.user_metadata?.name || user.email.split('@')[0] || '';
+    const first = (raw.split(/[.\s_-]/)[0] || '').trim();
+    const nice = first ? first[0].toUpperCase()+first.slice(1) : 'Gebruiker';
+    els.userFirst.textContent = nice;
+    if (els.profileEmail) els.profileEmail.textContent = user.email;
+  }
+
+  async function ensureSession(){
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (session?.user){
+      setNameFromUser(session.user);
+      return;
     }
 
-    // Tabs
-    const tabs = document.querySelectorAll('.tab-btn');
-    const sections = document.querySelectorAll('.tab-content');
-    tabs.forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        tabs.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const id = btn.dataset.tab;
-        sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
-      });
-    });
+    const fallback = setTimeout(() => {
+      // geen sessie binnen redelijke tijd → terug naar login
+      location.replace('login.html');
+    }, 1800); // kleine buffer voorkomt “flits” na inloggen
 
-    // Uitloggen
-    document.getElementById('btn-logout').addEventListener('click', async ()=>{
-      await supabase.auth.signOut();
-      location.href='login.html';
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      if (newSession?.user){
+        clearTimeout(fallback);
+        setNameFromUser(newSession.user);
+      }
     });
-  </script>
+  }
+
+  await ensureSession();
+
+  document.getElementById('btn-logout')?.addEventListener('click', async ()=>{
+    await supabase.auth.signOut();
+    location.replace('login.html');
+  });
+
+  // Tabs
+  const tabs = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('.tab-content');
+  tabs.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.tab;
+      sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
+    });
+  });
+</script>
+>
 </body>
 </html>
