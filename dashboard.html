@@ -526,5 +526,25 @@ ul{margin:8px 0 0 18px}.footer{margin-top:18px;font-size:12px;color:#5b6b86}
     document.getElementById('btn-logout')  .addEventListener('click', doLogout);
     document.getElementById('btn-logout-2').addEventListener('click', doLogout);
   </script>
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || 'https://xdmrikvxyeebeusnbzav.supabase.co';
+const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || 'PLAATS_HIER_JE_ECHTE_ANON_KEY';
+
+const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+});
+
+// Belangrijk: wacht op INITIAL_SESSION zodat de sessie zeker geladen is
+const { data: { session } } = await supa.auth.getSession();
+if (!session) {
+  await new Promise((resolve) => {
+    const { data: sub } = supa.auth.onAuthStateChange((event, sess) => {
+      if (event === 'INITIAL_SESSION') { sub.subscription.unsubscribe(); resolve(); }
+    });
+  });
+}
+const { data: { session: s2 } } = await supa.auth.getSession();
+if (!s2) { window.location.href = '/login.html'; throw new Error('Geen sessie'); }
 </body>
 </html>
