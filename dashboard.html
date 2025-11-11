@@ -234,23 +234,18 @@
 </div>
 
 <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-  // Gebruik je bestaande env of fallback (laat zoals je nu al hebt)
-  const SUPABASE_URL = window.env?.SUPABASE_URL || '';
-  const SUPABASE_ANON_KEY = window.env?.SUPABASE_ANON_KEY || '';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession:true, autoRefreshToken:true } });
-
+  // ---------- VEILIGE INIT (geen crashes) ----------
   const els = {
     welcomeWrap: document.getElementById('welcome-wrap'),
     userFirst: document.getElementById('user-firstname'),
-    apptList: document.getElementById('appointments-list'),
     payBanner: document.getElementById('pay-banner'),
     settingsDot: document.getElementById('settings-dot'),
+    tabSections: document.querySelectorAll('.tab-content'),
     sections: {
       open: document.getElementById('tab-open'),
       website: document.getElementById('tab-website')
     },
+    apptList: document.getElementById('appointments-list'),
     st: {
       name: document.getElementById('st-name'),
       company: document.getElementById('st-company'),
@@ -266,73 +261,91 @@
     }
   };
 
-  function firstNameFrom(user){
-    const meta = user.user_metadata?.display_name || user.user_metadata?.name || user.user_metadata?.full_name || '';
-    const metaFirst = (meta||'').split(/[.\s_-]/)[0]?.trim();
-    const mailFirst = (user.email||'').split('@')[0]?.trim();
-    const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
-    const c = (metaFirst && metaFirst.length>1 ? metaFirst : mailFirst) || '';
-    const lower = c.toLowerCase();
-    if(!c || blacklist.includes(lower) || lower.length<2) return '';
-    return c.charAt(0).toUpperCase()+c.slice(1);
+  // Tabs werken altijd
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.tab;
+      els.tabSections.forEach(sec=> sec.hidden = (sec.id !== 'tab-'+id));
+    });
+  });
+
+  // Logout werkt altijd
+  const safeRedirect = (url) => { try{ location.replace(url); }catch{ location.href=url; } };
+  const doLogout = async () => {
+    try {
+      if (window.__supabase) { await window.__supabase.auth.signOut(); }
+    } catch(_) {}
+    safeRedirect('login.html');
+  };
+  document.getElementById('btn-logout')?.addEventListener('click', doLogout);
+  document.getElementById('st-logout')?.addEventListener('click', doLogout);
+
+  // Supabase (defensief)
+  async function initSupabase(){
+    try{
+      const hasEnv = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
+      if(!hasEnv) return null;
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
+        auth: { persistSession:true, autoRefreshToken:true }
+      });
+    }catch(e){
+      console.warn('Supabase niet beschikbaar:', e);
+      return null;
+    }
   }
 
-  async function ensureSession(){
-    const { data:{ session } } = await supabase.auth.getSession();
-    if(session?.user){ applyUser(session.user); return; }
-    const to = setTimeout(()=>location.replace('login.html'), 1200);
-    supabase.auth.onAuthStateChange((_e, s)=>{ if(s?.user){ clearTimeout(to); applyUser(s.user); }});
+  function firstNameFrom(user){
+    try{
+      const meta = user?.user_metadata?.display_name || user?.user_metadata?.name || user?.user_metadata?.full_name || '';
+      const metaFirst = (meta||'').split(/[.\s_-]/)[0]?.trim();
+      const mailFirst = (user?.email||'').split('@')[0]?.trim();
+      const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
+      const c = (metaFirst && metaFirst.length>1 ? metaFirst : mailFirst) || '';
+      const lower = c.toLowerCase();
+      if(!c || blacklist.includes(lower) || lower.length<2) return '';
+      return c.charAt(0).toUpperCase()+c.slice(1);
+    }catch{ return ''; }
+  }
+
+  async function ensureSession(supabase){
+    // Zonder Supabase: toon lege naam en ga verder (pending status)
+    if(!supabase){
+      els.welcomeWrap.classList.add('hide');
+      window.__email = '';
+      await afterProfileLoaded(); // gate UI als pending
+      return;
+    }
+    try{
+      const { data:{ session } } = await supabase.auth.getSession();
+      if(session?.user){ applyUser(session.user); return; }
+      const to = setTimeout(()=>safeRedirect('login.html'), 1500);
+      supabase.auth.onAuthStateChange((_e, s)=>{ if(s?.user){ clearTimeout(to); applyUser(s.user); }});
+    }catch{
+      // als auth faalt: niet crashen
+      await afterProfileLoaded();
+    }
   }
 
   function applyUser(user){
     const f = firstNameFrom(user);
     if(f){ els.userFirst.textContent = f; els.welcomeWrap.classList.remove('hide'); }
     else { els.welcomeWrap.classList.add('hide'); }
-    els.st.email.value = user.email||'';
+    els.st.email.value = user?.email || '';
     if(!els.st.name.value) els.st.name.value = f || '';
-    loadProfile(user.email).then(()=> afterProfileLoaded());
+    window.__email = user?.email || '';
+    loadProfile(window.__email).then(()=> afterProfileLoaded());
     loadAppointments();
   }
 
-  async function signOut(){ try{ await supabase.auth.signOut(); }finally{ location.replace('login.html'); } }
-  document.getElementById('btn-logout')?.addEventListener('click', signOut);
-  document.getElementById('st-logout')?.addEventListener('click', signOut);
-
-  // Tabs
-  const tabs = document.querySelectorAll('.tab-btn');
-  const sections = document.querySelectorAll('.tab-content');
-  tabs.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      tabs.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      const id = btn.dataset.tab;
-      sections.forEach(sec=>sec.hidden = sec.id !== 'tab-'+id);
-    });
-  });
-
-  // Sidenav
-  const sideBtns = document.querySelectorAll('.side-item');
-  const sidePanels = {
-    persoonlijk: document.getElementById('panel-persoonlijk'),
-    privacy: document.getElementById('panel-privacy'),
-    zichtbaarheid: document.getElementById('panel-zichtbaarheid'),
-    account: document.getElementById('panel-account'),
-    notificaties: document.getElementById('panel-notificaties')
-  };
-  sideBtns.forEach(b=>{
-    b.addEventListener('click', ()=>{
-      sideBtns.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      const key = b.dataset.side;
-      Object.entries(sidePanels).forEach(([k,p])=> p.classList.toggle('hide', k!==key));
-    });
-  });
-
-  // -------- PROFILE API --------
+  // -------- PROFILE API (defensief) --------
   async function loadProfile(email){
     try{
-      const r = await fetch('/.netlify/functions/profile?email=' + encodeURIComponent(email));
-      if(!r.ok) return;
+      const u = '/.netlify/functions/profile' + (email ? ('?email=' + encodeURIComponent(email)) : '');
+      const r = await fetch(u);
+      if(!r.ok) throw new Error('profile not ok');
       const d = await r.json();
       els.st.company.value = d?.zaak || '';
       els.st.phone.value = d?.telefoon || '';
@@ -344,9 +357,14 @@
       els.st.bio.value = d?.bio || '';
       window.__plan = d?.plan || 'monthly';
       window.__status = d?.account_status || 'pending';
-    }catch(_){}
+    }catch(_){
+      // fallback: pending
+      window.__plan = 'monthly';
+      window.__status = 'pending';
+    }
   }
 
+  // Opslaan knoppen
   async function saveProfile(){
     els.st.msg.textContent = 'Opslaan...';
     const payload = {
@@ -367,29 +385,29 @@
       els.st.msg.textContent = r.ok ? 'Opgeslagen' : 'Mislukt';
     }catch(_){ els.st.msg.textContent = 'Netwerkfout'; }
   }
-
-  async function saveDisplayName(){
-    const name = els.st.name.value.trim();
-    if(!name) return;
-    try{ await supabase.auth.updateUser({ data: { display_name: name }}); }catch(_){}
-  }
-
-  document.getElementById('st-save-person')?.addEventListener('click', async ()=>{
-    await saveDisplayName(); await saveProfile();
-  });
+  document.getElementById('st-save-person')?.addEventListener('click', saveProfile);
   document.getElementById('st-save-privacy')?.addEventListener('click', async ()=>{
-    const body = { show_location: document.getElementById('st-show-location').checked, public_calendar: document.getElementById('st-public-calendar').checked };
-    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    const body = {
+      show_location: document.getElementById('st-show-location')?.checked || false,
+      public_calendar: document.getElementById('st-public-calendar')?.checked || false
+    };
+    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
     alert('Opgeslagen');
   });
   document.getElementById('st-save-vis')?.addEventListener('click', async ()=>{
-    const body = { show_reviews: document.getElementById('st-reviews').checked, place: document.getElementById('st-place').value.trim() };
-    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    const body = {
+      show_reviews: document.getElementById('st-reviews')?.checked || false,
+      place: document.getElementById('st-place')?.value?.trim() || ''
+    };
+    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
     alert('Opgeslagen');
   });
   document.getElementById('st-save-notify')?.addEventListener('click', async ()=>{
-    const body = { notify_mail: document.getElementById('st-notify-mail').checked, daily_mail: document.getElementById('st-daily-mail').checked };
-    try{ await fetch('/.netlify/functions/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); }catch(_){}
+    const body = {
+      notify_mail: document.getElementById('st-notify-mail')?.checked || false,
+      daily_mail: document.getElementById('st-daily-mail')?.checked || false
+    };
+    try{ await fetch('/.netlify/functions/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch{}
     alert('Opgeslagen');
   });
 
@@ -401,22 +419,27 @@
       els.payBanner.style.display = 'block';
       els.payBanner.innerHTML = 'Je account is nog <strong>niet actief</strong>. Even betalen om te starten…';
 
-      // Genereer betaallink
+      // Betaallink (defensief)
       fetch('/.netlify/functions/create-checkout', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email: els.st.email.value, plan: plan || 'monthly' })
+        body: JSON.stringify({ email: window.__email || els.st.email.value || '', plan: plan || 'monthly' })
       }).then(r=>r.json()).then(d=>{
         if(d?.url){
           els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. <a class="btn" href="${d.url}">Betaal & activeer</a>`;
+        } else {
+          els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. (Geen betaallink gevonden)`;
         }
-      }).catch(()=>{});
-      els.sections.open.classList.add('locked');
-      els.sections.website.classList.add('locked');
+      }).catch(()=>{
+        els.payBanner.innerHTML = `Je account is nog <strong>niet actief</strong>. (Betaallink niet beschikbaar)`;
+      });
+
+      els.sections.open?.classList.add('locked');
+      els.sections.website?.classList.add('locked');
     }else{
       els.settingsDot.style.display = 'none';
       els.payBanner.style.display = 'none';
-      els.sections.open.classList.remove('locked');
-      els.sections.website.classList.remove('locked');
+      els.sections.open?.classList.remove('locked');
+      els.sections.website?.classList.remove('locked');
     }
   }
 
@@ -468,7 +491,7 @@
     return row;
   }
   function renderAppointments(list){
-    const wrap = document.getElementById('appointments-list');
+    const wrap = els.apptList;
     wrap.innerHTML='';
     const groups = groupByDate(list);
     if(!groups.length){ const e=document.createElement('div'); e.className='tiny'; e.textContent='Nog geen afspraken.'; wrap.appendChild(e); return; }
@@ -508,7 +531,26 @@
     renderAppointments(appts);
   }
 
-  await ensureSession();
+  // Slot publiceren
+  document.getElementById('slot-form')?.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const date=document.getElementById('slot-date').value.trim();
+    const from=document.getElementById('slot-from').value.trim();
+    const to=document.getElementById('slot-to').value.trim();
+    const desc=document.getElementById('slot-desc').value.trim();
+    if(!date||!from||!to){ alert('Kies datum en uren.'); return; }
+    try{
+      await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'publish-slot', date, from, to, desc })});
+      e.target.reset();
+      loadAppointments();
+    }catch(_){}
+  });
+
+  // Start
+  window.__supabase = await initSupabase();
+  await ensureSession(window.__supabase);
+  // Als geen supabase: toch afspraken laden en UI afsluiten
+  if(!window.__supabase){ loadAppointments(); }
 </script>
 </body>
 </html>
