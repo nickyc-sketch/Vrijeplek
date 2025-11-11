@@ -190,5 +190,63 @@
       pass.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'){ form.requestSubmit(); }});
     })();
   </script>
+  <script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // ⬇️ VUL JE ECHTE GEGEVENS IN (zonder < >)
+  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
+  const SUPABASE_ANON_KEY = 'JOUW_PUBLIC_ANON_KEY_ZONDER_HAAKJES';
+
+  const form      = document.getElementById('login-form');
+  const emailEl   = document.getElementById('login-email');
+  const passEl    = document.getElementById('login-password');
+  const remember  = document.getElementById('remember');
+
+  // Klein statusvakje onder de knoppen
+  let msgEl = document.getElementById('login-msg');
+  if (!msgEl) {
+    msgEl = document.createElement('div');
+    msgEl.id = 'login-msg';
+    msgEl.className = 'tiny-note';
+    const submitZone = form.closest('.search-wrap').querySelector('.submit-zone');
+    submitZone.insertBefore(msgEl, submitZone.firstChild); // boven de links
+  }
+
+  async function doLogin(email, password){
+    msgEl.textContent = 'Aan het inloggen…';
+
+    // “Ingelogd blijven” = localStorage; anders sessionStorage
+    const storage = (remember?.checked) ? localStorage : sessionStorage;
+
+    const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, storage }
+    });
+
+    const { data, error } = await supa.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      // vaak: “Email not confirmed”
+      msgEl.textContent = error.message || 'Login mislukt.';
+      return;
+    }
+
+    // SUCCES → door naar dashboard
+    window.location.href = '/dashboard.html';
+  }
+
+  // Haak in op je bestaande event uit je eerste script
+  window.addEventListener('login:submit', (ev)=>{
+    const { email, password } = ev.detail || {};
+    doLogin(email, password);
+  });
+
+  // Als de gebruiker al ingelogd is, meteen doorsturen
+  (async ()=>{
+    const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: { session } } = await supa.auth.getSession();
+    if (session) window.location.href = '/dashboard.html';
+  })();
+</script>
+
 </body>
 </html>
