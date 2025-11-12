@@ -1,7 +1,611 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Websitebuilder — Vrijeplek</title>
 
----
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&family=Rubik:wght@400;600;800&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&family=Mulish:wght@400;700&family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
 
-### 🔹 DEEL 2 — Rest van de JS (events, inline edit, AI, ZIP, Supabase, Unsplash) + sluiten van de pagina
+  <!-- JS libs for ZIP & Supabase (optional) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+
+  <style>
+    :root{
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#5b6b86;
+      --bg:#001f66; --bg2:#00184f; --glass:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.18); --ok:#00d084; --err:#ff4d4f;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Poppins',sans-serif;background:radial-gradient(circle at 20% 0%, #0040ff 0%, #001f66 55%, #001241 100%);color:#fff}
+
+    .site{min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
+    header{position:sticky;top:0;z-index:40;backdrop-filter:saturate(1.1) blur(8px);background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.05));border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;gap:12px;padding:14px 18px}
+    .logo{height:34px}
+    .brand{font-weight:700;font-size:18px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+
+    .wrap{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px;height:calc(100dvh - 62px)}
+    .panel{background:var(--glass);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+    .panel h2{margin:0;padding:14px 16px;border-bottom:1px solid var(--line);font-size:16px}
+    .panel .body{padding:14px 16px;overflow:auto}
+
+    .group{margin-bottom:14px}
+    .group label{display:block;font-size:13px;margin-bottom:6px;color:#d8e3ff}
+    .group input[type="text"], .group input[type="url"], .group input[type="file"], .group input[type="color"], .group textarea, .group select, .group input[type="number"], .group input[type="range"]{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:14px
+    }
+    .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+
+    .chip{display:flex;gap:8px;flex-wrap:wrap}
+    .chip button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:999px;cursor:pointer;font-size:13px}
+    .chip button.active{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
+
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
+    .btn.ghost{background:transparent}
+
+    .status{font-size:13px;margin-top:8px;min-height:18px}
+    .status.ok{color:var(--ok)}
+    .status.err{color:var(--err)}
+
+    .preview{background:#0b1c3d;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-height:0}
+    .preview .toolbar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15)}
+    .preview .toolbar .spacer{flex:1}
+    .device{display:flex;gap:6px}
+    .device button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
+    iframe{width:100%;height:100%;border:0;background:white}
+
+    footer{padding:10px 16px;color:#c7d6ff;opacity:.75;text-align:center;border-top:1px solid var(--line)}
+  </style>
+</head>
+<body>
+  <div class="site">
+    <header>
+      <div class="header-inner">
+        <a class="brand" href="#"><img class="logo" src="img/logo.png" onerror="this.style.display='none'" alt="">Vrijeplek — AI Websitebuilder</a>
+        <span style="opacity:.7;font-size:13px">Ultieme vrijheid: stijlen, blokken, fonts, AI-teksten en ZIP</span>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <!-- Left control panel -->
+      <section class="panel" id="controls">
+        <h2>Instellingen & Stijl</h2>
+        <div class="body">
+          <div class="group">
+            <label>Bedrijfsnaam</label>
+            <input id="bizName" type="text" placeholder="Bistro Ocean">
+          </div>
+          <div class="group">
+            <label>Ondertitel / tagline</label>
+            <input id="tagline" type="text" placeholder="Last-minute tafels & snelle service">
+          </div>
+          <div class="group">
+            <label>Korte beschrijving</label>
+            <textarea id="about" rows="3" placeholder="Vertel kort wat je doet, in 2–3 zinnen."></textarea>
+          </div>
+          <div class="row">
+            <div class="group">
+              <label>Categorie</label>
+              <select id="industry">
+                <option value="algemeen">Algemeen</option>
+                <option value="horeca">Horeca</option>
+                <option value="wellness">Wellness</option>
+                <option value="zorg">Gezondheid</option>
+                <option value="events">Events</option>
+                <option value="poetsdiensten">Poetsdiensten</option>
+                <option value="ramenwasser">Ramenwasser</option>
+                <option value="dieren">Dieren</option>
+              </select>
+            </div>
+            <div class="group">
+              <label>Primair telefoonnummer</label>
+              <input id="phone" type="text" placeholder="+32 ...">
+            </div>
+          </div>
+          <div class="row">
+            <div class="group">
+              <label>Adres (optioneel)</label>
+              <input id="address" type="text" placeholder="Bergstraat 1, 3500 Hasselt">
+            </div>
+            <div class="group">
+              <label>Website / Reservatie-URL (optioneel)</label>
+              <input id="ctaUrl" type="url" placeholder="https://vrijeplek.be/jouwzaak">
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Template</label>
+            <div class="chip" id="tpl">
+              <button data-v="clean" class="active">Clean</button>
+              <button data-v="split">Split</button>
+              <button data-v="cards">Cards</button>
+              <button data-v="heroimg">Hero Image</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Lettertype</label>
+            <select id="font">
+              <option value="Poppins, sans-serif">Poppins</option>
+              <option value="Inter, system-ui, sans-serif">Inter</option>
+              <option value="'Playfair Display', serif">Playfair</option>
+              <option value="'Montserrat', sans-serif">Montserrat</option>
+              <option value="'Nunito', sans-serif">Nunito</option>
+              <option value="'Rubik', sans-serif">Rubik</option>
+              <option value="'Oswald', sans-serif">Oswald</option>
+              <option value="'Lato', sans-serif">Lato</option>
+              <option value="'Roboto Slab', serif">Roboto Slab</option>
+              <option value="'Mulish', sans-serif">Mulish</option>
+              <option value="'Merriweather', serif">Merriweather</option>
+              <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
+            </select>
+          </div>
+
+          <div class="group">
+            <label>Basisthema</label>
+            <div class="chip" id="theme">
+              <button data-v="ocean" class="active">Ocean</button>
+              <button data-v="emerald">Emerald</button>
+              <button data-v="ruby">Ruby</button>
+              <button data-v="sunset">Sunset</button>
+              <button data-v="charcoal">Charcoal</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Eigen kleuren (alles vrij instelbaar)</label>
+            <div class="row">
+              <div>
+                <label>Accent 1</label>
+                <input id="cA1" type="color" value="#1a66ff">
+              </div>
+              <div>
+                <label>Accent 2</label>
+                <input id="cA2" type="color" value="#0056ff">
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Tekstkleur</label>
+                <input id="cFg" type="color" value="#ffffff">
+              </div>
+              <div>
+                <label>Achtergrond</label>
+                <input id="cBg" type="color" value="#0b1c3d">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="group">
+              <label>Hoekradius</label>
+              <input id="radius" type="range" min="0" max="28" step="1" value="16">
+            </div>
+            <div class="group">
+              <label>Schaduwsterkte</label>
+              <input id="shadow" type="range" min="0" max="1" step="0.05" value="0.14">
+            </div>
+          </div>
+          <div class="row">
+            <div class="group">
+              <label>Tekst schaal (90%–120%)</label>
+              <input id="scale" type="range" min="0.9" max="1.2" step="0.01" value="1">
+            </div>
+            <div class="group">
+              <label>Sectie spacing</label>
+              <input id="spacing" type="range" min="24" max="96" step="4" value="48">
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Secties</label>
+            <div class="chip" id="sections">
+              <button data-v="hero" class="active">Hero</button>
+              <button data-v="about" class="active">Over ons</button>
+              <button data-v="services" class="active">Diensten</button>
+              <button data-v="pricing">Prijzen</button>
+              <button data-v="reviews">Reviews</button>
+              <button data-v="faq">FAQ</button>
+              <button data-v="gallery">Galerij</button>
+              <button data-v="contact" class="active">Contact</button>
+              <button data-v="cta">CTA</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Logo (PNG/SVG)</label>
+            <input id="logo" type="file" accept="image/*">
+          </div>
+          <div class="group">
+            <label>Hero-afbeelding (jpg/png)</label>
+            <input id="heroImg" type="file" accept="image/*">
+          </div>
+
+          <div class="group">
+            <label>AI-tekst & -stijl</label>
+            <div class="actions">
+              <button class="btn" id="aiGen">AI: Genereer teksten</button>
+              <button class="btn" id="aiStyle">AI: Kies stijl</button>
+              <button class="btn" id="aiShort">Korter</button>
+              <button class="btn" id="aiUform">Schrijf in ‘u’-vorm</button>
+              <button class="btn" id="unsplash">Zoek stockfoto</button>
+            </div>
+            <div class="status" id="aiStatus"></div>
+          </div>
+
+          <div class="group">
+            <label>Blokken</label>
+            <div class="actions">
+              <button class="btn" id="addText">+ Tekstblok</button>
+              <button class="btn" id="addImage">+ Afbeeldingblok</button>
+              <button class="btn" id="addFaq">+ FAQ-item</button>
+              <button class="btn" id="addCard">+ Dienstenkaart</button>
+            </div>
+            <div id="blockList" class="status"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="refresh">Voorbeeld verversen</button>
+            <button class="btn" id="save">Opslaan in Vrijeplek</button>
+            <button class="btn primary" id="download">Download ZIP</button>
+          </div>
+          <div class="status" id="status"></div>
+        </div>
+      </section>
+
+      <!-- Right live preview -->
+      <section class="preview">
+        <div class="toolbar">
+          <strong>Live preview (dubbelklik tekst om te bewerken)</strong>
+          <div class="spacer"></div>
+          <div class="device">
+            <button data-w="375">Mobiel</button>
+            <button data-w="768">Tablet</button>
+            <button data-w="100%" class="active">Desktop</button>
+          </div>
+        </div>
+        <iframe id="frame" title="preview"></iframe>
+      </section>
+    </div>
+
+    <footer>© 2025 Vrijeplek — AI Websitebuilder</footer>
+  </div>
+
+  <script>
+    /* ===== Utility helpers ===== */
+    const $ = (s, p=document) => p.querySelector(s);
+    const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
+
+    function bindChips(id, on){
+      const el = document.getElementById(id);
+      el.addEventListener('click', e=>{
+        if(e.target.tagName!=='BUTTON') return;
+        if(id==='sections'){
+          e.target.classList.toggle('active');
+        }else{
+          $$('#'+id+' button').forEach(b=>b.classList.remove('active'));
+          e.target.classList.add('active');
+        }
+        on(e.target.dataset.v);
+      });
+    }
+
+    function fileToDataURL(file){
+      return new Promise((res, rej)=>{
+        if(!file) return res('');
+        const r = new FileReader();
+        r.onload = ()=>res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+
+    /* ===== Theme presets ===== */
+    const THEMES = {
+      ocean:    {bg:'#0b1c3d', fg:'#ffffff', ink:'#0a2a4a', a1:'#1a66ff', a2:'#0056ff'},
+      emerald:  {bg:'#052d26', fg:'#eafff6', ink:'#093c33', a1:'#00b37d', a2:'#009b6a'},
+      ruby:     {bg:'#2a0610', fg:'#ffe8ee', ink:'#3c0a17', a1:'#ff2e63', a2:'#c2185b'},
+      sunset:   {bg:'#2a1606', fg:'#fff1e6', ink:'#3c220a', a1:'#ff7e5f', a2:'#feb47b'},
+      charcoal: {bg:'#0d1117', fg:'#e6edf3', ink:'#30363d', a1:'#3ea6ff', a2:'#1f6feb'}
+    };
+
+    /* ===== State ===== */
+    const state = {
+      template:'clean', theme:'ocean', font:'Poppins, sans-serif',
+      sections:['hero','about','services','contact'],
+      name:'', tagline:'', about:'', industry:'algemeen', phone:'', address:'', ctaUrl:'',
+      logoDataURL:'', heroDataURL:'',
+      colors:{ a1:'#1a66ff', a2:'#0056ff', fg:'#ffffff', bg:'#0b1c3d' },
+      radius:16, shadow:0.14, scale:1.0, spacing:48,
+      faq:[], gallery:[], customBlocks:[], serviceCards:[]
+    };
+
+    /* ===== Generator: HTML ===== */
+    async function buildSiteHTML(s){
+      const base = THEMES[s.theme]||THEMES.ocean;
+      const t = {
+        a1: s.colors?.a1 || base.a1,
+        a2: s.colors?.a2 || base.a2,
+        fg: s.colors?.fg || base.fg,
+        bg: s.colors?.bg || base.bg,
+        ink: base.ink
+      };
+      const font = s.font || 'Poppins, sans-serif';
+      const heroStyle = s.template==='heroimg' && s.heroDataURL
+        ? `background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url(${s.heroDataURL}) center/cover no-repeat;`
+        : `background:linear-gradient(120deg, ${t.a1}, ${t.a2});`;
+      const logoImg = s.logoDataURL ? `<img src="${s.logoDataURL}" alt="${esc(s.name)}" style="height:34px">` : `<strong>${esc(s.name||'Uw zaak')}</strong>`;
+
+      const sections = [];
+
+      if(s.sections.includes('hero')){
+        sections.push(`
+          <section class="hero" style="${heroStyle}">
+            <div class="inner">
+              <h1 data-edit="hero.title">${esc(s.name||'Uw zaak')}</h1>
+              <p class="tag" data-edit="hero.tagline">${esc(s.tagline||'Professionele service, zonder wachten')}</p>
+              ${s.ctaUrl?`<a class="btn" data-edit="hero.cta" href="${esc(s.ctaUrl)}" target="_blank" rel="nofollow noopener">Maak afspraak</a>`:''}
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('about')){
+        sections.push(`
+          <section class="about">
+            <div class="inner">
+              <h2 data-edit="about.title">Over ons</h2>
+              <p data-edit="about.text">${esc(s.about|| 'Wij helpen klanten snel en vriendelijk. Boek eenvoudig online of bel ons rechtstreeks.')}</p>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('services')){
+        const def = s.serviceCards?.length ? s.serviceCards : sampleServices(s.industry);
+        sections.push(`
+          <section class="services">
+            <div class="inner">
+              <h2 data-edit="services.title">Diensten</h2>
+              <div class="grid">
+                ${def.map((sv,idx)=>`<div class="card"><h3 data-edit="services.${idx}.title">${esc(sv.title)}</h3><p data-edit="services.${idx}.desc">${esc(sv.desc)}</p></div>`).join('')}
+              </div>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('pricing')){
+        sections.push(`
+          <section class="pricing">
+            <div class="inner">
+              <h2 data-edit="pricing.title">Prijzen</h2>
+              <div class="grid">
+                ${[1,2,3].map(i=>`<div class="card"><h3 data-edit="pricing.${i}.title">Pakket ${i}</h3><p data-edit="pricing.${i}.desc">Korte omschrijving van pakket ${i}.</p><div class="price" data-edit="pricing.${i}.price">€${i*49},95</div></div>`).join('')}
+              </div>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('reviews')){
+        sections.push(`
+          <section class="reviews">
+            <div class="inner">
+              <h2 data-edit="reviews.title">Reviews</h2>
+              <div class="grid">
+                ${['Topservice!','Snel geholpen.','Aanrader.'].map((r,i)=>`<div class="card"><p data-edit="reviews.${i}.text">“${r}”</p><div class="who" data-edit="reviews.${i}.who">★ ★ ★ ★ ★ — Klant ${i+1}</div></div>`).join('')}
+              </div>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('faq')){
+        sections.push(`
+          <section class="faq">
+            <div class="inner">
+              <h2 data-edit="faq.title">FAQ</h2>
+              <div class="faq-list">
+                ${(s.faq.length?s.faq:[{q:'Hoe snel kan ik boeken?',a:'Vaak dezelfde dag.'}]).map((f,i)=>`<details><summary data-edit="faq.${i}.q">${esc(f.q)}</summary><p data-edit="faq.${i}.a">${esc(f.a)}</p></details>`).join('')}
+              </div>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('gallery')){
+        const pics = s.gallery.length?s.gallery:[
+          'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1080&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?q=80&w=1080&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1080&auto=format&fit=crop'
+        ];
+        sections.push(`
+          <section class="gallery">
+            <div class="inner">
+              <h2 data-edit="gallery.title">Galerij</h2>
+              <div class="grid gallery-grid">
+                ${pics.map(src=>`<figure class="card"><img src="${src}" alt=""/></figure>`).join('')}
+              </div>
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('cta')){
+        sections.push(`
+          <section class="cta">
+            <div class="inner">
+              <h2 data-edit="cta.title">Boek nu je afspraak</h2>
+              <p data-edit="cta.text">Wacht niet langer: kies je moment en we bevestigen snel.</p>
+              ${s.ctaUrl?`<a class="btn" data-edit="cta.button" href="${esc(s.ctaUrl)}" target="_blank">Reserveren</a>`:''}
+            </div>
+          </section>
+        `);
+      }
+
+      if(s.sections.includes('contact')){
+        sections.push(`
+          <section class="contact">
+            <div class="inner">
+              <h2 data-edit="contact.title">Contact</h2>
+              <ul class="list">
+                ${s.phone?`<li data-edit="contact.phone">☎ ${esc(s.phone)}</li>`:''}
+                ${s.address?`<li data-edit="contact.address">📍 ${esc(s.address)}</li>`:''}
+                ${s.ctaUrl?`<li>🌐 <a href="${esc(s.ctaUrl)}" target="_blank" rel="nofollow noopener">Website / Reservatie</a></li>`:''}
+              </ul>
+            </div>
+          </section>
+        `);
+      }
+
+      for(const [i,blk] of (s.customBlocks||[]).entries()){
+        if(blk.type==='text'){
+          sections.push(`<section class="custom"><div class="inner"><h2 data-edit="custom.${i}.title">${esc(blk.title||'Titel')}</h2><p data-edit="custom.${i}.text">${esc(blk.text||'Vrije tekst')}</p></div></section>`);
+        }else if(blk.type==='image'){
+          sections.push(`<section class="custom"><div class="inner"><img src="${esc(blk.src||'')}" alt="" style="max-width:100%;border-radius:${s.radius}px"></div></section>`);
+        }
+      }
+
+      const css = genSiteCSS(t, font, s.template, !!s.heroDataURL, s);
+      const editScript = `<script>
+(function(){
+  function enableInline(){
+    document.body.addEventListener('dblclick', (e)=>{
+      const el = e.target.closest('[data-edit]');
+      if(!el) return;
+      e.preventDefault();
+      el.setAttribute('contenteditable','true');
+      el.focus();
+      const sel = window.getSelection();
+      sel.selectAllChildren(el);
+    });
+    document.body.addEventListener('blur', (e)=>{
+      const el = e.target.closest('[data-edit]');
+      if(!el) return;
+      el.removeAttribute('contenteditable');
+      parent.postMessage({type:'inline-edit', key:el.getAttribute('data-edit'), value:el.innerText}, '*');
+    }, true);
+  }
+  enableInline();
+})();
+<\/script>`;
+
+      return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${esc(s.name||'Uw zaak')} — Minisite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&family=Rubik:wght@400;600;800&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&family=Mulish:wght@400;700&family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
+<style>${css}</style>
+</head>
+<body>
+  <header>
+    <div class="inner">
+      <div class="brand">${logoImg}</div>
+      ${s.ctaUrl?`<a class="btn small" href="${esc(s.ctaUrl)}" target="_blank">Afspraak maken</a>`:''}
+    </div>
+  </header>
+  ${sections.join('\n')}
+  <footer>
+    <div class="inner">© ${new Date().getFullYear()} ${esc(s.name||'Uw zaak')} — Gemaakt met Vrijeplek</div>
+  </footer>
+  ${editScript}
+</body>
+</html>`;
+    }
+
+    function esc(s){return (s||'').replace(/[&<>\"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+    function sampleServices(ind){
+      const map = {
+        horeca:[
+          {title:'Dagmenu',desc:'Verse gerechten en snelle bediening.'},
+          {title:'Reserveren',desc:'Online boeken binnen 10 seconden.'},
+          {title:'Groepsformules',desc:'Menu’s voor familie of team.'}
+        ],
+        wellness:[
+          {title:'Massage',desc:'Ontspanning of sportmassage op afspraak.'},
+          {title:'Gelaatsverzorging',desc:'Glow-up met top producten.'},
+          {title:'Arrangementen',desc:'Koppel- of vriendinnenmoment.'}
+        ],
+        zorg:[
+          {title:'Consult',desc:'Vlotte intake, duidelijke opvolging.'},
+          {title:'Spoedplekjes',desc:'Last-minute afspraken.'},
+          {title:'Herhaalrecept',desc:'Snel en veilig geregeld.'}
+        ],
+        events:[
+          {title:'Verhuur',desc:'Materiaal & foodpakketten.'},
+          {title:'Catering',desc:'Van snacks tot volledige service.'},
+          {title:'Planning',desc:'We ontzorgen van A tot Z.'}
+        ],
+        poetsdiensten:[
+          {title:'Woningen',desc:'Grondige schoonmaak met vaste planner.'},
+          {title:'Kantoren',desc:'Na kantooruren mogelijk.'},
+          {title:'Ramen',desc:'Streeploos resultaat.'}
+        ],
+        ramenwasser:[
+          {title:'Particulier',desc:'Binnen en buiten, inclusief raamprofielen.'},
+          {title:'Bedrijven',desc:'Snelle interventie, periodiek schema.'},
+          {title:'Hogere ramen',desc:'Telescoop tot 12 m.'}
+        ],
+        dieren:[
+          {title:'Trimsalon',desc:'Volledige vachtverzorging.'},
+          {title:'Dierenarts',desc:'Consult en vaccinaties.'},
+          {title:'Dagopvang',desc:'Speels en veilig.'}
+        ]
+      };
+      return map[ind] || [
+        {title:'Dienst 1',desc:'Korte omschrijving van je dienst.'},
+        {title:'Dienst 2',desc:'Nog een dienst die je aanbiedt.'},
+        {title:'Dienst 3',desc:'Voeg gerust later meer toe.'}
+      ];
+    }
+
+    function genSiteCSS(t, font, template, hasHeroImg, s){
+      const rad = (s?.radius ?? 16) + 'px';
+      const sh = s?.shadow ?? 0.14;
+      const sc = s?.scale ?? 1.0;
+      const sp = s?.spacing ?? 48;
+      return `:root{--a1:${t.a1};--a2:${t.a2};--ink:${t.ink};--fg:${t.fg};--bg:${t.bg};--rad:${rad};--sh:${sh}}
+      *{box-sizing:border-box}
+      body{margin:0;font-family:${font};color:var(--fg);background:${t.bg};font-size:${sc}rem}
+      .inner{max-width:1080px;margin:0 auto;padding:0 18px}
+      header{border-bottom:1px solid rgba(255,255,255,.15);backdrop-filter:saturate(1.1) blur(8px);position:sticky;top:0;background:rgba(0,0,0,.2)}
+      header .inner{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+      .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff}
+      .btn{display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(120deg,var(--a1),var(--a2));color:#fff;text-decoration:none;font-weight:700}
+      .btn.small{padding:8px 12px;font-size:14px}
+      h1,h2,h3{margin:0 0 8px}
+      p{margin:0 0 10px;opacity:.9}
+      section{padding:${sp}px 0}
+      .hero{${template==='heroimg' && hasHeroImg ? '' : 'background:linear-gradient(120deg,var(--a1),var(--a2));'} color:#fff}
+      .hero .inner{padding:64px 18px;display:grid;gap:8px}
+      .hero .tag{opacity:.95;font-size:18px}
+      .about,.pricing,.services,.reviews,.contact,.faq,.gallery,.custom,.cta{background:${t.bg};}
+      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,calc(var(--sh)*1));border-radius:var(--rad);padding:16px;box-shadow:0 8px 18px rgba(0,0,0,calc(var(--sh)*1.6))}
+      .gallery-grid figure{margin:0}
+      .gallery-grid img{width:100%;height:240px;object-fit:cover;border-radius:var(--rad)}
+      .price{margin-top:8px;font-size:22px;font-weight:700}
+      .list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+      details{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,calc(var(--sh)*1));border-radius:var(--rad);padding:12px}
+      footer{border-top:1px solid rgba(255,255,255,.15);padding:18px 0;background:rgba(0,0,0,.2);color:#cfe0ff}
+      @media(max-width:900px){.grid{grid-template-columns:1fr}}`;
+    }
+
 ```html
     /* ===== Preview render ===== */
     async function refreshPreview(){
