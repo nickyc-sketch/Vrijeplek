@@ -422,7 +422,8 @@
 
     function genSiteCSS(t, font, template, hasHeroImg){
       return `:root{--a1:${t.a1};--a2:${t.a2};--ink:${t.ink};--fg:${t.fg};--bg:${t.bg}}
-      *{box-sizing:border-box}body{margin:0;font-family:${font};color:var(--fg);background:${t.bg)}
+      *{box-sizing:border-box}
+      body{margin:0;font-family:${font};color:var(--fg);background:${t.bg}}
       .inner{max-width:1080px;margin:0 auto;padding:0 18px}
       header{border-bottom:1px solid rgba(255,255,255,.15);backdrop-filter:saturate(1.1) blur(8px);position:sticky;top:0;background:rgba(0,0,0,.2)}
       header .inner{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
