@@ -1,468 +1,54 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Websitebuilder — Vrijeplek</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+---
 
-  <!-- JS libs for ZIP & Supabase (optional) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-
-  <style>
-    :root{
-      /* Ocean-style palette */
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#5b6b86;
-      --bg:#001f66; --bg2:#00184f; --glass:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.18); --ok:#00d084; --err:#ff4d4f;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:'Poppins',sans-serif;background:radial-gradient(circle at 20% 0%, #0040ff 0%, #001f66 55%, #001241 100%);color:#fff}
-
-    .site{min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
-    header{
-      position:sticky;top:0;z-index:40;backdrop-filter:saturate(1.1) blur(8px);
-      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.05));
-      border-bottom:1px solid var(--line);
-    }
-    .header-inner{display:flex;align-items:center;gap:12px;padding:14px 18px}
-    .logo{height:34px}
-    .brand{font-weight:700;font-size:18px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
-
-    .wrap{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:16px;height:calc(100dvh - 62px)}
-    .panel{background:var(--glass);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-    .panel h2{margin:0;padding:14px 16px;border-bottom:1px solid var(--line);font-size:16px}
-    .panel .body{padding:14px 16px;overflow:auto}
-
-    .group{margin-bottom:14px}
-    .group label{display:block;font-size:13px;margin-bottom:6px;color:#d8e3ff}
-    .group input[type="text"], .group input[type="url"], .group input[type="file"], .group textarea, .group select{
-      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:14px
-    }
-    .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-
-    .chip{display:inline-flex;gap:8px;flex-wrap:wrap}
-    .chip button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:999px;cursor:pointer;font-size:13px}
-    .chip button.active{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
-
-    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
-    .btn.primary{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
-    .btn.ghost{background:transparent}
-
-    .status{font-size:13px;margin-top:8px;min-height:18px}
-    .status.ok{color:var(--ok)}
-    .status.err{color:var(--err)}
-
-    .preview{background:#0b1c3d;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-height:0}
-    .preview .toolbar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15)}
-    .preview .toolbar .spacer{flex:1}
-    .device{display:flex;gap:6px}
-    .device button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
-    iframe{width:100%;height:100%;border:0;background:white}
-
-    footer{padding:10px 16px;color:#c7d6ff;opacity:.75;text-align:center;border-top:1px solid var(--line)}
-
-    /* Tiny generated-site presets used inside the preview */
-  </style>
-</head>
-<body>
-  <div class="site">
-    <header>
-      <div class="header-inner">
-        <a class="brand" href="#"><img class="logo" src="img/logo.png" onerror="this.style.display='none'" alt="">Vrijeplek — AI Websitebuilder</a>
-        <span style="opacity:.7;font-size:13px">Maak in minuten een minisite of landingspagina voor je zaak</span>
-      </div>
-    </header>
-
-    <div class="wrap">
-      <!-- Left control panel -->
-      <section class="panel" id="controls">
-        <h2>Instellingen</h2>
-        <div class="body">
-          <div class="group">
-            <label>Bedrijfsnaam</label>
-            <input id="bizName" type="text" placeholder="Bistro Ocean">
-          </div>
-          <div class="group">
-            <label>Ondertitel / tagline</label>
-            <input id="tagline" type="text" placeholder="Last-minute tafels & snelle service">
-          </div>
-          <div class="group">
-            <label>Korte beschrijving</label>
-            <textarea id="about" rows="3" placeholder="Vertel kort wat je doet, in 2–3 zinnen."></textarea>
-          </div>
-          <div class="row">
-            <div class="group">
-              <label>Categorie</label>
-              <select id="industry">
-                <option value="algemeen">Algemeen</option>
-                <option value="horeca">Horeca</option>
-                <option value="wellness">Wellness</option>
-                <option value="zorg">Gezondheid</option>
-                <option value="events">Events</option>
-                <option value="poetsdiensten">Poetsdiensten</option>
-                <option value="ramenwasser">Ramenwasser</option>
-                <option value="dieren">Dieren</option>
-              </select>
-            </div>
-            <div class="group">
-              <label>Primair telefoonnummer</label>
-              <input id="phone" type="text" placeholder="+32 ...">
-            </div>
-          </div>
-          <div class="row">
-            <div class="group">
-              <label>Adres (optioneel)</label>
-              <input id="address" type="text" placeholder="Bergstraat 1, 3500 Hasselt">
-            </div>
-            <div class="group">
-              <label>Website / Reservatie-URL (optioneel)</label>
-              <input id="ctaUrl" type="url" placeholder="https://vrijeplek.be/jouwzaak">
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Template</label>
-            <div class="chip" id="tpl">
-              <button data-v="clean" class="active">Clean</button>
-              <button data-v="split">Split</button>
-              <button data-v="cards">Cards</button>
-              <button data-v="heroimg">Hero Image</button>
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Kleuren</label>
-            <div class="chip" id="theme">
-              <button data-v="ocean" class="active">Ocean</button>
-              <button data-v="emerald">Emerald</button>
-              <button data-v="ruby">Ruby</button>
-              <button data-v="sunset">Sunset</button>
-              <button data-v="charcoal">Charcoal</button>
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Lettertype</label>
-            <select id="font">
-              <option value="Poppins, sans-serif">Poppins</option>
-              <option value="Inter, system-ui, sans-serif">Inter</option>
-              <option value="'Playfair Display', serif">Playfair</option>
-              <option value="'Montserrat', sans-serif">Montserrat</option>
-              <option value="'Nunito', sans-serif">Nunito</option>
-            </select>
-          </div>
-
-          <div class="group">
-            <label>Secties</label>
-            <div class="chip" id="sections">
-              <button data-v="hero" class="active">Hero</button>
-              <button data-v="about" class="active">Over ons</button>
-              <button data-v="services" class="active">Diensten</button>
-              <button data-v="pricing">Prijzen</button>
-              <button data-v="reviews">Reviews</button>
-              <button data-v="contact" class="active">Contact</button>
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Logo (PNG/SVG)</label>
-            <input id="logo" type="file" accept="image/*">
-          </div>
-          <div class="group">
-            <label>Hero-afbeelding (jpg/png)</label>
-            <input id="heroImg" type="file" accept="image/*">
-          </div>
-
-          <div class="group">
-            <label>AI-tekst (optioneel)</label>
-            <div class="actions">
-              <button class="btn" id="aiGen">Genereer tekst</button>
-              <button class="btn" id="aiShort">Korter</button>
-              <button class="btn" id="aiUform">Schrijf in ‘u’-vorm</button>
-            </div>
-            <div class="status" id="aiStatus"></div>
-          </div>
-
-          <div class="actions">
-            <button class="btn" id="refresh">Voorbeeld verversen</button>
-            <button class="btn" id="save">Opslaan in Vrijeplek</button>
-            <button class="btn primary" id="download">Download ZIP</button>
-          </div>
-          <div class="status" id="status"></div>
-        </div>
-      </section>
-
-      <!-- Right live preview -->
-      <section class="preview">
-        <div class="toolbar">
-          <strong>Live preview</strong>
-          <div class="spacer"></div>
-          <div class="device">
-            <button data-w="375">Mobiel</button>
-            <button data-w="768">Tablet</button>
-            <button data-w="100%" class="active">Desktop</button>
-          </div>
-        </div>
-        <iframe id="frame" title="preview"></iframe>
-      </section>
-    </div>
-
-    <footer>© 2025 Vrijeplek — AI Websitebuilder</footer>
-  </div>
-
-  <script>
-    // ===== Utility helpers =====
-    const $ = (s, p=document) => p.querySelector(s);
-    const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
-
-    function bindChips(id, on){
-      const el = document.getElementById(id);
-      el.addEventListener('click', e=>{
-        if(e.target.tagName!=='BUTTON') return;
-        if(id==='sections'){
-          e.target.classList.toggle('active');
-        }else{
-          $$('#'+id+' button').forEach(b=>b.classList.remove('active'));
-          e.target.classList.add('active');
-        }
-        on(e.target.dataset.v);
-      });
-    }
-
-    function fileToDataURL(file){
-      return new Promise((res, rej)=>{
-        if(!file) return res('');
-        const r = new FileReader();
-        r.onload = ()=>res(r.result);
-        r.onerror = rej;
-        r.readAsDataURL(file);
-      });
-    }
-
-    // ===== Theme presets for generated site =====
-    const THEMES = {
-      ocean: {bg:'#0b1c3d', fg:'#ffffff', ink:'#0a2a4a', a1:'#1a66ff', a2:'#0056ff'},
-      emerald: {bg:'#052d26', fg:'#eafff6', ink:'#093c33', a1:'#00b37d', a2:'#009b6a'},
-      ruby: {bg:'#2a0610', fg:'#ffe8ee', ink:'#3c0a17', a1:'#ff2e63', a2:'#c2185b'},
-      sunset: {bg:'#2a1606', fg:'#fff1e6', ink:'#3c220a', a1:'#ff7e5f', a2:'#feb47b'},
-      charcoal: {bg:'#0d1117', fg:'#e6edf3', ink:'#30363d', a1:'#3ea6ff', a2:'#1f6feb'}
-    };
-
-    // ===== Generate site HTML (returns string) =====
-    async function buildSiteHTML(state){
-      const t = THEMES[state.theme]||THEMES.ocean;
-      const font = state.font || 'Poppins, sans-serif';
-      const heroStyle = state.template==='heroimg' && state.heroDataURL ? `background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url(${state.heroDataURL}) center/cover no-repeat;` : `background:linear-gradient(120deg, ${t.a1}, ${t.a2});`;
-
-      const logoImg = state.logoDataURL ? `<img src="${state.logoDataURL}" alt="${state.name}" style="height:34px">` : `<strong>${state.name||'Uw zaak'}</strong>`;
-
-      const sections = [];
-
-      if(state.sections.includes('hero')){
-        sections.push(`
-          <section class="hero">
-            <div class="inner">
-              <h1>${esc(state.name||'Uw zaak')}</h1>
-              <p class="tag">${esc(state.tagline||'Professionele service, zonder wachten')}</p>
-              ${state.ctaUrl?`<a class="btn" href="${esc(state.ctaUrl)}" target="_blank" rel="nofollow noopener">Maak afspraak</a>`:''}
-            </div>
-          </section>
-        `);
-      }
-
-      if(state.sections.includes('about')){
-        sections.push(`
-          <section class="about">
-            <div class="inner">
-              <h2>Over ons</h2>
-              <p>${esc(state.about|| 'Wij helpen klanten snel en vriendelijk. Boek eenvoudig online of bel ons rechtstreeks.')}</p>
-            </div>
-          </section>
-        `);
-      }
-
-      if(state.sections.includes('services')){
-        const def = sampleServices(state.industry);
-        sections.push(`
-          <section class="services">
-            <div class="inner">
-              <h2>Diensten</h2>
-              <div class="grid">
-                ${def.map(s=>`<div class="card"><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(state.sections.includes('pricing')){
-        sections.push(`
-          <section class="pricing">
-            <div class="inner">
-              <h2>Prijzen</h2>
-              <div class="grid">
-                ${[1,2,3].map(i=>`<div class="card"><h3>Pakket ${i}</h3><p>Korte omschrijving van pakket ${i}.</p><div class="price">€${i*49},95</div></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(state.sections.includes('reviews')){
-        sections.push(`
-          <section class="reviews">
-            <div class="inner">
-              <h2>Reviews</h2>
-              <div class="grid">
-                ${['Topservice!','Snel geholpen.','Aanrader.'].map((r,i)=>`<div class="card"><p>“${r}”</p><div class="who">★ ★ ★ ★ ★ — Klant ${i+1}</div></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(state.sections.includes('contact')){
-        sections.push(`
-          <section class="contact">
-            <div class="inner">
-              <h2>Contact</h2>
-              <ul class="list">
-                ${state.phone?`<li>☎ ${esc(state.phone)}</li>`:''}
-                ${state.address?`<li>📍 ${esc(state.address)}</li>`:''}
-                ${state.ctaUrl?`<li>🌐 <a href="${esc(state.ctaUrl)}" target="_blank" rel="nofollow noopener">Website / Reservatie</a></li>`:''}
-              </ul>
-            </div>
-          </section>
-        `);
-      }
-
-      const css = genSiteCSS(t, font, state.template, !!state.heroDataURL);
-
-      return `<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${esc(state.name||'Uw zaak')} — Minisite</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
-<style>${css}</style>
-</head>
-<body>
-  <header>
-    <div class="inner">
-      <div class="brand">${logoImg}</div>
-      ${state.ctaUrl?`<a class="btn small" href="${esc(state.ctaUrl)}" target="_blank">Afspraak maken</a>`:''}
-    </div>
-  </header>
-  ${sections.join('\n')}
-  <footer>
-    <div class="inner">© ${new Date().getFullYear()} ${esc(state.name||'Uw zaak')} — Gemaakt met Vrijeplek</div>
-  </footer>
-</body>
-</html>`;
-    }
-
-    function esc(s){return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-
-    function sampleServices(ind){
-      const map = {
-        horeca:[
-          {title:'Dagmenu',desc:'Verse gerechten en snelle bediening.'},
-          {title:'Reserveren',desc:'Online boeken binnen 10 seconden.'},
-          {title:'Groepsformules',desc:'Menu’s voor familie of team.'}
-        ],
-        wellness:[
-          {title:'Massage',desc:'Ontspanning of sportmassage op afspraak.'},
-          {title:'Gelaatsverzorging',desc:'Glow-up met top producten.'},
-          {title:'Arrangementen',desc:'Koppel- of vriendinnenmoment.'}
-        ],
-        zorg:[
-          {title:'Consult',desc:'Vlotte intake, duidelijke opvolging.'},
-          {title:'Spoedplekjes',desc:'Last-minute afspraken.'},
-          {title:'Herhaalrecept',desc:'Snel en veilig geregeld.'}
-        ],
-        events:[
-          {title:'Verhuur',desc:'Materiaal & foodpakketten.'},
-          {title:'Catering',desc:'Van snacks tot volledige service.'},
-          {title:'Planning',desc:'We ontzorgen van A tot Z.'}
-        ],
-        poetsdiensten:[
-          {title:'Woningen',desc:'Grondige schoonmaak met vaste planner.'},
-          {title:'Kantoren',desc:'Na kantooruren mogelijk.'},
-          {title:'Ramen',desc:'Streeploos resultaat.'}
-        ],
-        ramenwasser:[
-          {title:'Particulier',desc:'Binnen en buiten, inclusief raamprofielen.'},
-          {title:'Bedrijven',desc:'Snelle interventie, periodiek schema.'},
-          {title:'Hogere ramen',desc:'Telescoop tot 12 m.'}
-        ],
-        dieren:[
-          {title:'Trimsalon',desc:'Volledige vachtverzorging.'},
-          {title:'Dierenarts',desc:'Consult en vaccinaties.'},
-          {title:'Dagopvang',desc:'Speels en veilig.'}
-        ]
-      };
-      return map[ind] || [
-        {title:'Dienst 1',desc:'Korte omschrijving van je dienst.'},
-        {title:'Dienst 2',desc:'Nog een dienst die je aanbiedt.'},
-        {title:'Dienst 3',desc:'Voeg gerust later meer toe.'}
-      ];
-    }
-
-    function genSiteCSS(t, font, template, hasHeroImg){
-      return `:root{--a1:${t.a1};--a2:${t.a2};--ink:${t.ink};--fg:${t.fg};--bg:${t.bg}}
-      *{box-sizing:border-box}
-      body{margin:0;font-family:${font};color:var(--fg);background:${t.bg}}
-      .inner{max-width:1080px;margin:0 auto;padding:0 18px}
-      header{border-bottom:1px solid rgba(255,255,255,.15);backdrop-filter:saturate(1.1) blur(8px);position:sticky;top:0;background:rgba(0,0,0,.2)}
-      header .inner{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
-      .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff}
-      .btn{display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(120deg,var(--a1),var(--a2));color:#fff;text-decoration:none;font-weight:700}
-      .btn.small{padding:8px 12px;font-size:14px}
-      h1,h2,h3{margin:0 0 8px}
-      p{margin:0 0 10px;opacity:.9}
-      section{padding:48px 0}
-      .hero{${template==='heroimg' && hasHeroImg ? '' : 'background:linear-gradient(120deg,var(--a1),var(--a2));'} color:#fff}
-      .hero .inner{padding:64px 18px;display:grid;gap:8px}
-      .hero .tag{opacity:.95;font-size:18px}
-      .about,.pricing,.services,.reviews,.contact{background:${t.bg};}
-      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-      .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px}
-      .price{margin-top:8px;font-size:22px;font-weight:700}
-      .list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-      footer{border-top:1px solid rgba(255,255,255,.15);padding:18px 0;background:rgba(0,0,0,.2);color:#cfe0ff}
-      @media(max-width:900px){.grid{grid-template-columns:1fr}}
-      `;
-    }
-
-    // ===== State & preview =====
-    const state = {
-      template:'clean', theme:'ocean', font:'Poppins, sans-serif',
-      sections:['hero','about','services','contact'],
-      name:'', tagline:'', about:'', industry:'algemeen', phone:'', address:'', ctaUrl:'',
-      logoDataURL:'', heroDataURL:''
-    };
-
+### 🔹 DEEL 2 — Rest van de JS (events, inline edit, AI, ZIP, Supabase, Unsplash) + sluiten van de pagina
+```html
+    /* ===== Preview render ===== */
     async function refreshPreview(){
       const html = await buildSiteHTML(state);
       const frame = document.getElementById('frame');
       frame.srcdoc = html;
     }
 
-    // ===== Event wiring =====
+    /* ===== Inline edit terugschrijven ===== */
+    window.addEventListener('message', (e)=>{
+      if(e?.data?.type==='inline-edit'){
+        applyInlineEdit(e.data.key, e.data.value);
+      }
+    });
+
+    function applyInlineEdit(key, value){
+      try{
+        const path = key.split('.');
+        if(path[0]==='hero' && path[1]==='title'){ state.name = value; }
+        else if(path[0]==='hero' && path[1]==='tagline'){ state.tagline = value; }
+        else if(path[0]==='about' && path[1]==='text'){ state.about = value; }
+        else if(path[0]==='services'){
+          const idx = +path[1];
+          const field = path[2];
+          if(!state.serviceCards[idx]) state.serviceCards[idx] = {title:'',desc:''};
+          state.serviceCards[idx][field] = value;
+        }else if(path[0]==='faq'){
+          const idx = +path[1];
+          const field = path[2];
+          if(!state.faq[idx]) state.faq[idx] = {q:'',a:''};
+          state.faq[idx][field] = value;
+        }else if(path[0]==='contact'){
+          if(path[1]==='phone') state.phone = value;
+          if(path[1]==='address') state.address = value;
+        }else if(path[0]==='custom'){
+          const idx = +path[1];
+          const field = path[2];
+          if(!state.customBlocks[idx]) state.customBlocks[idx] = {type:'text'};
+          state.customBlocks[idx][field] = value;
+        }
+        refreshPreview();
+      }catch(err){console.warn('inline-edit fail', err)}
+    }
+
+    /* ===== UI wiring ===== */
     window.addEventListener('DOMContentLoaded', () => {
-      // Inputs
+      // Tekst inputs
       ['bizName','tagline','about','phone','address','ctaUrl'].forEach(id=>{
         const el = document.getElementById(id);
         el.addEventListener('input', ()=>{state[
@@ -474,6 +60,16 @@
       bindChips('tpl', v=>{state.template=v; refreshPreview()});
       bindChips('theme', v=>{state.theme=v; refreshPreview()});
       bindChips('sections', ()=>{state.sections = $$('#sections button.active').map(b=>b.dataset.v); refreshPreview()});
+
+      // Stijl sliders/kleuren
+      ['cA1','cA2','cFg','cBg'].forEach(id=>{
+        const el = document.getElementById(id);
+        el.addEventListener('input', ()=>{ state.colors[id.slice(1).toLowerCase()] = el.value; refreshPreview(); });
+      });
+      ['radius','shadow','scale','spacing'].forEach(id=>{
+        const el = document.getElementById(id);
+        el.addEventListener('input', ()=>{ state[id] = +el.value; refreshPreview(); });
+      });
 
       // Files
       document.getElementById('logo').addEventListener('change', async e=>{state.logoDataURL = await fileToDataURL(e.target.files[0]); refreshPreview()});
@@ -487,35 +83,101 @@
         $('#frame').style.width = w === '100%' ? '100%' : (w+'px');
       }));
 
-      // Actions
+      // Acties
       document.getElementById('refresh').addEventListener('click', refreshPreview);
       document.getElementById('download').addEventListener('click', downloadZip);
       document.getElementById('save').addEventListener('click', saveToSupabase);
 
-      // AI stubs (uses Netlify function if available)
+      // AI / Unsplash
       document.getElementById('aiGen').addEventListener('click', ()=>aiAction('gen'));
       document.getElementById('aiShort').addEventListener('click', ()=>aiAction('shorten'));
       document.getElementById('aiUform').addEventListener('click', ()=>aiAction('uform'));
+      document.getElementById('aiStyle').addEventListener('click', ()=>aiAction('style'));
+      document.getElementById('unsplash').addEventListener('click', pickUnsplash);
 
+      // Blokken
+      document.getElementById('addText').addEventListener('click', ()=>{ state.customBlocks.push({type:'text', title:'Nieuwe sectietitel', text:'Schrijf hier je tekst.'}); renderBlocks(); refreshPreview(); });
+      document.getElementById('addImage').addEventListener('click', async ()=>{ state.customBlocks.push({type:'image', src:''}); renderBlocks(); refreshPreview(); });
+      document.getElementById('addFaq').addEventListener('click', ()=>{ state.faq.push({q:'Nieuwe vraag?', a:'Nieuw antwoord.'}); renderBlocks(); refreshPreview(); });
+      document.getElementById('addCard').addEventListener('click', ()=>{ state.serviceCards.push({title:'Nieuwe dienst', desc:'Korte beschrijving'}); renderBlocks(); refreshPreview(); });
+
+      renderBlocks();
       refreshPreview();
     });
 
-    // ===== AI actions via Netlify Function (optional) =====
+    function renderBlocks(){
+      const wrap = document.getElementById('blockList');
+      const items = [];
+      state.customBlocks.forEach((b,i)=>{
+        if(b.type==='text'){
+          items.push(`<div>📝 Tekstblok #${i+1} — <a href="#" data-act="edit-text" data-i="${i}">bewerken</a> · <a href="#" data-act="del" data-i="${i}">verwijderen</a></div>`);
+        }else if(b.type==='image'){
+          items.push(`<div>🖼️ Afbeeldingblok #${i+1} — <a href="#" data-act="upload" data-i="${i}">upload</a> · <a href="#" data-act="del" data-i="${i}">verwijderen</a></div>`);
+        }
+      });
+      state.faq.forEach((f,i)=>{
+        items.push(`<div>❓ FAQ #${i+1} — <a href="#" data-act="edit-faq" data-i="${i}">bewerken</a> · <a href="#" data-act="del-faq" data-i="${i}">verwijderen</a></div>`);
+      });
+      state.serviceCards.forEach((c,i)=>{
+        items.push(`<div>🧩 Dienstenkaart #${i+1} — <a href="#" data-act="edit-card" data-i="${i}">bewerken</a> · <a href="#" data-act="del-card" data-i="${i}">verwijderen</a></div>`);
+      });
+      wrap.innerHTML = items.join('') || 'Nog geen extra blokken toegevoegd.';
+      wrap.onclick = async (e)=>{
+        const a = e.target.closest('a'); if(!a) return;
+        e.preventDefault();
+        const i = +a.dataset.i;
+        const act = a.dataset.act;
+        if(act==='del'){ state.customBlocks.splice(i,1); }
+        if(act==='del-faq'){ state.faq.splice(i,1); }
+        if(act==='del-card'){ state.serviceCards.splice(i,1); }
+        if(act==='edit-text'){
+          const title = prompt('Titel', state.customBlocks[i].title||'');
+          const text  = prompt('Tekst', state.customBlocks[i].text||'');
+          state.customBlocks[i].title = title; state.customBlocks[i].text = text;
+        }
+        if(act==='upload'){
+          const input = document.createElement('input'); input.type='file'; input.accept='image/*';
+          input.onchange = async ()=>{ state.customBlocks[i].src = await fileToDataURL(input.files[0]); refreshPreview(); };
+          input.click();
+        }
+        if(act==='edit-faq'){
+          const q = prompt('Vraag', state.faq[i].q||'');
+          const a2 = prompt('Antwoord', state.faq[i].a||'');
+          state.faq[i].q=q; state.faq[i].a=a2;
+        }
+        if(act==='edit-card'){
+          const t = prompt('Titel', state.serviceCards[i].title||'');
+          const d = prompt('Beschrijving', state.serviceCards[i].desc||'');
+          state.serviceCards[i].title=t; state.serviceCards[i].desc=d;
+        }
+        renderBlocks(); refreshPreview();
+      };
+    }
+
+    /* ===== AI actions via Netlify Function ===== */
     async function aiAction(mode){
       const s = document.getElementById('aiStatus');
       s.className = 'status'; s.textContent = 'AI bezig…';
       try{
+        if(mode==='style'){
+          const keys = Object.keys(THEMES);
+          const baseKey = keys[Math.floor(Math.random()*keys.length)];
+          state.theme = baseKey;
+          const base = THEMES[baseKey];
+          state.colors.a1 = base.a1;
+          state.colors.a2 = base.a2;
+          state.colors.fg = base.fg;
+          state.colors.bg = base.bg;
+          s.className='status ok'; s.textContent='AI-stijl toegepast.';
+          refreshPreview();
+          return;
+        }
         const prompt = buildAIPrompt(mode);
         const r = await fetch('/.netlify/functions/ai-generate', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({prompt})});
         if(!r.ok){throw new Error('AI-endpoint niet bereikbaar');}
         const data = await r.json();
-        // Verwacht: { about, tagline, services:[{title,desc}], ... }
         if(data.about) { state.about = data.about; document.getElementById('about').value = data.about; }
         if(data.tagline){ state.tagline = data.tagline; document.getElementById('tagline').value = data.tagline; }
-        if(Array.isArray(data.services)){
-          // vervang services paragraaf door samenvatting
-          state.industry = state.industry; // no-op, maar refresht layout
-        }
         await refreshPreview();
         s.className = 'status ok'; s.textContent = 'AI-tekst bijgewerkt.';
       }catch(err){
@@ -529,10 +191,20 @@
       const ind = state.industry;
       const tone = mode==='uform' ? 'schrijf in u-vorm, professioneel, helder' : 'vriendelijk, actief, overtuigend';
       const extra = mode==='shorten' ? 'maak tekst 30% korter' : 'maak aansprekend en duidelijk';
-      return `Je bent copywriter. Schrijf NL teksten voor een minisite. Bedrijfsnaam: ${name}. Sector: ${ind}. ${tone}. ${extra}. Lever JSON met keys: about, tagline.`
+      return `Je bent copywriter. Schrijf NL teksten voor een minisite. Bedrijfsnaam: ${name}. Sector: ${ind}. ${tone}. ${extra}. Lever JSON met keys: about, tagline.`;
     }
 
-    // ===== Download ZIP (index.html inside) =====
+    function shade(hex, amt){
+      try{
+        let c = hex.replace('#','');
+        if(c.length===3) c = c.split('').map(x=>x+x).join('');
+        let [r,g,b] = [parseInt(c.slice(0,2),16), parseInt(c.slice(2,4),16), parseInt(c.slice(4,6),16)];
+        r = Math.max(0, Math.min(255, r+amt)); g = Math.max(0, Math.min(255, g+amt)); b = Math.max(0, Math.min(255, b+amt));
+        return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+      }catch{return hex}
+    }
+
+    /* ===== Download ZIP ===== */
     async function downloadZip(){
       const html = await buildSiteHTML(state);
       const zip = new JSZip();
@@ -541,18 +213,27 @@
       saveAs(blob, (state.name||'vrijeplek-site') + '.zip');
     }
 
-    // ===== Save to Supabase (sites table) =====
+    /* ===== Save to Supabase ===== */
     async function saveToSupabase(){
       const status = document.getElementById('status');
       status.className='status'; status.textContent='Opslaan…';
       try{
-        if(!window.VRIJEPLEK){throw new Error('Geen Supabase-config')} 
+        if(!window.VRIJEPLEK){throw new Error('Geen Supabase-config')}
         const { createClient } = window.supabase || {}; if(!createClient) throw new Error('Supabase niet geladen');
         const supa = createClient(window.VRIJEPLEK.SUPABASE_URL, window.VRIJEPLEK.SUPABASE_ANON_KEY);
         const { data:session } = await supa.auth.getSession();
         const user = session?.session?.user; if(!user) throw new Error('Je bent niet ingelogd');
         const html = await buildSiteHTML(state);
-        const payload = { user_id: user.id, site_name: state.name || 'Vrijeplek-site', html, theme: JSON.stringify({template:state.template,theme:state.theme,font:state.font,sections:state.sections}) };
+        const payload = {
+          user_id: user.id,
+          site_name: state.name || 'Vrijeplek-site',
+          html,
+          theme: JSON.stringify({
+            template:state.template, theme:state.theme, font:state.font, sections:state.sections,
+            colors:state.colors, radius:state.radius, shadow:state.shadow, scale:state.scale, spacing:state.spacing,
+            faq:state.faq, gallery:state.gallery, custom:state.customBlocks
+          })
+        };
         const { error } = await supa.from('sites').insert(payload);
         if(error) throw error;
         status.className='status ok'; status.textContent='Opgeslagen in Vrijeplek.';
@@ -561,50 +242,14 @@
         status.className='status err'; status.textContent= 'Opslaan mislukt: ' + err.message;
       }
     }
+
+    /* ===== Unsplash quick pick ===== */
+    async function pickUnsplash(){
+      const q = prompt('Welk thema/zoekwoord? (bv. food, spa, dentist)', 'food')||'food';
+      state.heroDataURL = `https://source.unsplash.com/1080x600/?${encodeURIComponent(q)}`;
+      state.template='heroimg';
+      refreshPreview();
+    }
   </script>
 </body>
 </html>
-
-<!--
-============================
-Netlify Function: /.netlify/functions/ai-generate
-============================
-// Bestandsnaam: netlify/functions/ai-generate.js
-// Doel: eenvoudige AI-tekstgenerator voor about/tagline via OpenAI
-// Vereist env: OPENAI_API_KEY
-
-export default async (req, context) => {
-  try{
-    const { prompt } = await req.json();
-    if(!prompt) return new Response(JSON.stringify({error:'no prompt'}), {status:400});
-
-    // Bel OpenAI (Node 18 runtime op Netlify). Vervang door officiële SDK indien gewenst.
-    const r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${process.env.OPENAI_API_KEY}`},
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {role:'system', content:'Je bent een NL copywriter. Antwoord enkel in JSON met keys: about, tagline.'},
-          {role:'user', content: prompt}
-        ],
-        temperature: 0.7
-      })
-    });
-    if(!r.ok){
-      const t = await r.text();
-      return new Response(JSON.stringify({error:'openai_fail', detail:t}), {status:500});
-    }
-    const j = await r.json();
-    const text = j.choices?.[0]?.message?.content || '{}';
-    return new Response(text, {status:200, headers:{'Content-Type':'application/json'}});
-  }catch(err){
-    return new Response(JSON.stringify({error:err.message}), {status:500});
-  }
-}
-
-// Netlify toml (voeg toe aan root):
-// [functions]
-//   node_bundler = "esbuild"
-//   external_node_modules = []
--->
