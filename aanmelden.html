@@ -157,29 +157,31 @@
   </main>
 
   <footer>© 2025 Vrijeplek. Alle rechten voorbehouden.</footer>
-<!-- Supabase + config in juiste volgorde -->
+<!-- 1) Supabase UMD -->
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+
+<!-- 2) Juiste config (zonder <script>-tags) -->
 <script defer src="js/config.js"></script>
 
-<!-- ÉÉN enkele signup-handler -->
+<!-- 3) Één enkele signup-handler -->
 <script defer>
   window.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signup-form');
     const msg  = document.getElementById('msg');
     if (!form || !msg) return;
 
-    const cfg = window.VRIJEPLEK || {};
+    const { SUPABASE_URL, SUPABASE_ANON_KEY } = window.VRIJEPLEK || {};
     const { createClient } = window.supabase || {};
-    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || !createClient) {
-      console.error('Supabase/config niet geladen'); 
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !createClient) {
+      console.error('Supabase/config niet geladen');
       return;
     }
 
-    const client = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // <— voorkomt herladen
-      msg.className='tiny'; 
+      e.preventDefault();
+      msg.className='tiny';
       msg.textContent='Even geduld…';
 
       const name  = document.getElementById('name').value.trim();
@@ -187,10 +189,10 @@
       const pass  = document.getElementById('password').value.trim();
       const pass2 = document.getElementById('password2').value.trim();
 
-      if (pass !== pass2) { msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return; }
-      if (!document.getElementById('terms').checked) { msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return; }
+      if (pass !== pass2){ msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return; }
+      if (!document.getElementById('terms').checked){ msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return; }
 
-      try {
+      try{
         const { error } = await client.auth.signUp({
           email, password: pass,
           options:{
@@ -217,8 +219,8 @@
 
         msg.className='ok';
         msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
-        // form.reset(); // desgewenst inschakelen
-      } catch (err) {
+        // form.reset(); // indien je direct wil leegmaken
+      } catch(err){
         console.error(err);
         msg.className='error';
         msg.textContent='Netwerkfout. Probeer opnieuw.';
@@ -226,6 +228,7 @@
     });
   });
 </script>
+
 
 
 
