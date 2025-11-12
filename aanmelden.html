@@ -159,58 +159,73 @@
   <footer>© 2025 Vrijeplek. Alle rechten voorbehouden.</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
 <script>
-  const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Gebruik de globale config
+  const { SUPABASE_URL, SUPABASE_ANON_KEY } = window.VRIJEPLEK;
+  const { createClient } = supabase;
+  const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const form = document.getElementById('signup-form');
   const msg = document.getElementById('msg');
 
-  form.addEventListener('submit', async (e)=>{
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    msg.className='tiny'; msg.textContent='Even geduld…';
+    msg.className = 'tiny';
+    msg.textContent = 'Even geduld…';
 
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim().toLowerCase();
     const pass = document.getElementById('password').value.trim();
     const pass2 = document.getElementById('password2').value.trim();
 
-    if(pass !== pass2){ msg.className='error'; msg.textContent='Wachtwoorden komen niet overeen.'; return; }
-    if(!document.getElementById('terms').checked){ msg.className='error'; msg.textContent='Je moet akkoord gaan met de voorwaarden.'; return; }
+    if (pass !== pass2) {
+      msg.className = 'error';
+      msg.textContent = 'Wachtwoorden komen niet overeen.';
+      return;
+    }
+    if (!document.getElementById('terms').checked) {
+      msg.className = 'error';
+      msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
+      return;
+    }
 
-    try{
-      const { error } = await supabase.auth.signUp({
-        email, password: pass,
-        options:{
-          data:{
+    try {
+      const { error } = await client.auth.signUp({
+        email,
+        password: pass,
+        options: {
+          data: {
             display_name: name,
             bedrijf: document.getElementById('company').value.trim(),
             telefoon: document.getElementById('phone').value.trim(),
             btw: document.getElementById('btw').value.trim(),
             cat: document.getElementById('cat').value,
             straat: document.getElementById('straat').value.trim(),
-            postcode: document.getElementById('postcode').value.trim()
+            postcode: document.getElementById('postcode').value.trim(),
           },
-          emailRedirectTo: window.location.origin + '/dashboard.html'
-        }
+          emailRedirectTo: window.location.origin + '/dashboard.html',
+        },
       });
-      if(error){
-        msg.className='error';
+
+      if (error) {
+        msg.className = 'error';
         msg.textContent = error.message.includes('already')
           ? 'Er bestaat al een account met dit e-mailadres.'
           : 'Registratie mislukt: ' + error.message;
         return;
       }
-      msg.className='ok';
-      msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spamfolder.';
+
+      msg.className = 'ok';
+      msg.textContent = 'Bevestigingsmail verstuurd. Controleer je inbox of spamfolder.';
       form.reset();
-    }catch(err){
-      msg.className='error';
-      msg.textContent='Netwerkfout. Probeer opnieuw.';
+    } catch (err) {
+      msg.className = 'error';
+      msg.textContent = 'Netwerkfout. Probeer opnieuw.';
     }
   });
 </script>
+
 
 </body>
 </html>
