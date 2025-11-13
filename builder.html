@@ -3,857 +3,2361 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Websitebuilder — Vrijeplek</title>
-
-  <!-- Fonts -->
+  <title>Vrijeplek Websitebuilder PRO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&family=Rubik:wght@400;600;800&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&family=Mulish:wght@400;700&family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
-
-  <!-- JS libs for ZIP & Supabase (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#5b6b86;
-      --bg:#001f66; --bg2:#00184f; --glass:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.18); --ok:#00d084; --err:#ff4d4f;
+      --bg:#0b1120; --panel:#0f172a; --line:rgba(255,255,255,.12); --fg:#e2e8f0; --muted:#9db2cf;
+      --a1:#2563eb; --a2:#00d4ff; --ok:#22c55e; --err:#ef4444;
+      --rad:18px; --pad:14px; --shadow:0 12px 40px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:'Poppins',sans-serif;background:radial-gradient(circle at 20% 0%, #0040ff 0%, #001f66 55%, #001241 100%);color:#fff}
-
-    .site{min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
-    header{position:sticky;top:0;z-index:40;backdrop-filter:saturate(1.1) blur(8px);background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.05));border-bottom:1px solid var(--line)}
-    .header-inner{display:flex;align-items:center;gap:12px;padding:14px 18px}
-    .logo{height:34px}
-    .brand{font-weight:700;font-size:18px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
-
-    .wrap{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px;height:calc(100dvh - 62px)}
-    .panel{background:var(--glass);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-    .panel h2{margin:0;padding:14px 16px;border-bottom:1px solid var(--line);font-size:16px}
-    .panel .body{padding:14px 16px;overflow:auto}
-
-    .group{margin-bottom:14px}
-    .group label{display:block;font-size:13px;margin-bottom:6px;color:#d8e3ff}
-    .group input[type="text"], .group input[type="url"], .group input[type="file"], .group input[type="color"], .group textarea, .group select, .group input[type="number"], .group input[type="range"]{
-      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:14px
-    }
-    .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-
-    .chip{display:flex;gap:8px;flex-wrap:wrap}
-    .chip button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:999px;cursor:pointer;font-size:13px}
-    .chip button.active{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
-
-    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
-    .btn.primary{background:linear-gradient(120deg,var(--o1),var(--o2));border-color:transparent}
+    body{margin:0;background:radial-gradient(1200px 800px at 10% -10%,#1e3a8a33,transparent),
+                         radial-gradient(1400px 900px at 110% -20%,#00d4ff22,transparent),var(--bg);color:var(--fg);
+         font-family:Inter,system-ui,sans-serif}
+    .site{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+    header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,#0b1228ee,#0b1228aa);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;gap:12px;padding:12px 16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+    .logo{height:34px;border-radius:8px}
+    .toolbar{display:flex;gap:8px;margin-left:auto}
+    .btn{border:1px solid var(--line);background:#0b142b;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--a1),var(--a2));border-color:transparent}
     .btn.ghost{background:transparent}
 
-    .status{font-size:13px;margin-top:8px;min-height:18px}
-    .status.ok{color:var(--ok)}
-    .status.err{color:var(--err)}
+    .wrap{display:grid;grid-template-columns:360px 1fr 320px;gap:16px;padding:16px;height:calc(100dvh - 60px)}
+    .panel{background:linear-gradient(180deg,#0f172aee,#0f172acc);border:1px solid var(--line);border-radius:var(--rad);box-shadow:var(--shadow);min-height:0;display:flex;flex-direction:column}
+    .panel h2{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:#c8d5ee}
+    .panel .body{padding:12px 14px;overflow:auto}
+    .group{margin-bottom:12px}
+    label{display:block;font-size:12px;color:#c8d5ee;margin:6px 0}
+    input[type="text"], input[type="url"], input[type="color"], textarea, select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0d1733;color:#fff}
+    textarea{min-height:64px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-    .preview{background:#0b1c3d;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-height:0}
-    .preview .toolbar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15)}
-    .preview .toolbar .spacer{flex:1}
-    .device{display:flex;gap:6px}
-    .device button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
-    iframe{width:100%;height:100%;border:0;background:white}
+    .canvas{position:relative;border-left:1px dashed var(--line);border-right:1px dashed var(--line)}
+    .stage{height:100%;overflow:auto;background:#020617;border-radius:var(--rad)}
+    .stage iframe{width:100%;height:100%;border:0;background:#fff;border-radius:var(--rad)}
 
-    footer{padding:10px 16px;color:#c7d6ff;opacity:.75;text-align:center;border-top:1px solid var(--line)}
+    .right .component{display:flex;align-items:center;gap:8px;padding:8px;border:1px dashed var(--line);border-radius:10px;margin-bottom:8px;background:#0b142b;cursor:grab}
+    .right .component .tag{font-size:12px;color:#9db2cf;margin-left:auto}
+    .right .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+    .section-list .item{display:flex;align-items:center;gap:8px;background:#0b142b;border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:8px}
+    .drag{cursor:grab;background:#0f1b3a;border:1px solid var(--line);width:28px;height:28px;border-radius:8px;display:grid;place-items:center}
+    .item .title{flex:1;font-weight:600}
+    .tiny{font-size:12px;color:#9db2cf}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+
+    footer{border-top:1px solid var(--line);padding:10px;text-align:center;color:#9db2cf}
   </style>
 </head>
 <body>
   <div class="site">
     <header>
       <div class="header-inner">
-        <a class="brand" href="#"><img class="logo" src="img/logo.png" onerror="this.style.display='none'" alt="">Vrijeplek — AI Websitebuilder</a>
-        <span style="opacity:.7;font-size:13px">Ultieme vrijheid: stijlen, blokken, fonts, AI-teksten en ZIP</span>
+        <div class="brand"><img class="logo" src="img/logo.png" onerror="this.style.display='none'" alt="">Vrijeplek Builder <span style="opacity:.6;font-weight:600">PRO</span></div>
+        <div class="toolbar">
+          <button class="btn" id="newProject">Nieuw</button>
+          <button class="btn" id="importProject">Importeer</button>
+          <button class="btn" id="saveProject">Opslaan</button>
+          <button class="btn primary" id="exportZip">Download ZIP</button>
+        </div>
       </div>
     </header>
 
     <div class="wrap">
-      <!-- Left control panel -->
-      <section class="panel" id="controls">
-        <h2>Instellingen & Stijl</h2>
+      <!-- LEFT: Global settings -->
+      <section class="panel left">
+        <h2>Site & Thema</h2>
         <div class="body">
-          <div class="group">
-            <label>Bedrijfsnaam</label>
-            <input id="bizName" type="text" placeholder="Bistro Ocean">
-          </div>
-          <div class="group">
-            <label>Ondertitel / tagline</label>
-            <input id="tagline" type="text" placeholder="Last-minute tafels & snelle service">
-          </div>
-          <div class="group">
-            <label>Korte beschrijving</label>
-            <textarea id="about" rows="3" placeholder="Vertel kort wat je doet, in 2–3 zinnen."></textarea>
-          </div>
+          <div class="group"><label>Naam</label><input id="siteName" type="text" placeholder="Ocean Bistro"></div>
+          <div class="group"><label>Tagline</label><input id="siteTag" type="text" placeholder="Last-minute tafels & snelle service"></div>
+          <div class="group"><label>Korte intro</label><textarea id="siteIntro" placeholder="1-2 zinnen over de zaak"></textarea></div>
+
           <div class="row">
-            <div class="group">
-              <label>Categorie</label>
-              <select id="industry">
-                <option value="algemeen">Algemeen</option>
-                <option value="horeca">Horeca</option>
-                <option value="wellness">Wellness</option>
-                <option value="zorg">Gezondheid</option>
-                <option value="events">Events</option>
-                <option value="poetsdiensten">Poetsdiensten</option>
-                <option value="ramenwasser">Ramenwasser</option>
-                <option value="dieren">Dieren</option>
+            <div class="group"><label>Lettertype</label>
+              <select id="font">
+                <option value="Inter, system-ui, sans-serif">Inter</option>
+                <option value="Poppins, system-ui, sans-serif">Poppins</option>
+                <option value="'Playfair Display', serif">Playfair</option>
               </select>
             </div>
-            <div class="group">
-              <label>Primair telefoonnummer</label>
-              <input id="phone" type="text" placeholder="+32 ...">
-            </div>
-          </div>
-          <div class="row">
-            <div class="group">
-              <label>Adres (optioneel)</label>
-              <input id="address" type="text" placeholder="Bergstraat 1, 3500 Hasselt">
-            </div>
-            <div class="group">
-              <label>Website / Reservatie-URL (optioneel)</label>
-              <input id="ctaUrl" type="url" placeholder="https://vrijeplek.be/jouwzaak">
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Template</label>
-            <div class="chip" id="tpl">
-              <button data-v="clean" class="active">Clean</button>
-              <button data-v="split">Split</button>
-              <button data-v="cards">Cards</button>
-              <button data-v="heroimg">Hero Image</button>
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Lettertype</label>
-            <select id="font">
-              <option value="Poppins, sans-serif">Poppins</option>
-              <option value="Inter, system-ui, sans-serif">Inter</option>
-              <option value="'Playfair Display', serif">Playfair</option>
-              <option value="'Montserrat', sans-serif">Montserrat</option>
-              <option value="'Nunito', sans-serif">Nunito</option>
-              <option value="'Rubik', sans-serif">Rubik</option>
-              <option value="'Oswald', sans-serif">Oswald</option>
-              <option value="'Lato', sans-serif">Lato</option>
-              <option value="'Roboto Slab', serif">Roboto Slab</option>
-              <option value="'Mulish', sans-serif">Mulish</option>
-              <option value="'Merriweather', serif">Merriweather</option>
-              <option value="'Source Sans 3', sans-serif">Source Sans 3</option>
-            </select>
-          </div>
-
-          <div class="group">
-            <label>Basisthema</label>
-            <div class="chip" id="theme">
-              <button data-v="ocean" class="active">Ocean</button>
-              <button data-v="emerald">Emerald</button>
-              <button data-v="ruby">Ruby</button>
-              <button data-v="sunset">Sunset</button>
-              <button data-v="charcoal">Charcoal</button>
-            </div>
-          </div>
-
-          <div class="group">
-            <label>Eigen kleuren (alles vrij instelbaar)</label>
-            <div class="row">
-              <div>
-                <label>Accent 1</label>
-                <input id="cA1" type="color" value="#1a66ff">
-              </div>
-              <div>
-                <label>Accent 2</label>
-                <input id="cA2" type="color" value="#0056ff">
-              </div>
-            </div>
-            <div class="row">
-              <div>
-                <label>Tekstkleur</label>
-                <input id="cFg" type="color" value="#ffffff">
-              </div>
-              <div>
-                <label>Achtergrond</label>
-                <input id="cBg" type="color" value="#0b1c3d">
-              </div>
+            <div class="group"><label>Basis layout</label>
+              <select id="baseLayout">
+                <option value="classic">Classic</option>
+                <option value="split">Split</option>
+                <option value="cards">Cards</option>
+                <option value="heroimg">Hero Image</option>
+              </select>
             </div>
           </div>
 
           <div class="row">
-            <div class="group">
-              <label>Hoekradius</label>
-              <input id="radius" type="range" min="0" max="28" step="1" value="16">
-            </div>
-            <div class="group">
-              <label>Schaduwsterkte</label>
-              <input id="shadow" type="range" min="0" max="1" step="0.05" value="0.14">
-            </div>
+            <div class="group"><label>Accent 1</label><input id="cA1" type="color" value="#2563eb"></div>
+            <div class="group"><label>Accent 2</label><input id="cA2" type="color" value="#00d4ff"></div>
           </div>
           <div class="row">
-            <div class="group">
-              <label>Tekst schaal (90%–120%)</label>
-              <input id="scale" type="range" min="0.9" max="1.2" step="0.01" value="1">
-            </div>
-            <div class="group">
-              <label>Sectie spacing</label>
-              <input id="spacing" type="range" min="24" max="96" step="4" value="48">
-            </div>
+            <div class="group"><label>Tekst</label><input id="cFg" type="color" value="#0b1228"></div>
+            <div class="group"><label>Achtergrond</label><input id="cBg" type="color" value="#ffffff"></div>
           </div>
 
-          <div class="group">
-            <label>Secties</label>
-            <div class="chip" id="sections">
-              <button data-v="hero" class="active">Hero</button>
-              <button data-v="about" class="active">Over ons</button>
-              <button data-v="services" class="active">Diensten</button>
-              <button data-v="pricing">Prijzen</button>
-              <button data-v="reviews">Reviews</button>
-              <button data-v="faq">FAQ</button>
-              <button data-v="gallery">Galerij</button>
-              <button data-v="contact" class="active">Contact</button>
-              <button data-v="cta">CTA</button>
-            </div>
+          <div class="row">
+            <div class="group"><label>Hoekradius</label><input id="radius" type="range" min="0" max="28" value="18"></div>
+            <div class="group"><label>Spacing</label><input id="spacing" type="range" min="20" max="120" value="56"></div>
           </div>
 
-          <div class="group">
-            <label>Logo (PNG/SVG)</label>
-            <input id="logo" type="file" accept="image/*">
-          </div>
-          <div class="group">
-            <label>Hero-afbeelding (jpg/png)</label>
-            <input id="heroImg" type="file" accept="image/*">
-          </div>
-
-          <div class="group">
-            <label>AI-tekst & -stijl</label>
-            <div class="actions">
-              <button class="btn" id="aiGen">AI: Genereer teksten</button>
-              <button class="btn" id="aiStyle">AI: Kies stijl</button>
-              <button class="btn" id="aiShort">Korter</button>
-              <button class="btn" id="aiUform">Schrijf in ‘u’-vorm</button>
-              <button class="btn" id="unsplash">Zoek stockfoto</button>
-            </div>
-            <div class="status" id="aiStatus"></div>
-          </div>
-
-          <div class="group">
-            <label>Blokken</label>
-            <div class="actions">
-              <button class="btn" id="addText">+ Tekstblok</button>
-              <button class="btn" id="addImage">+ Afbeeldingblok</button>
-              <button class="btn" id="addFaq">+ FAQ-item</button>
-              <button class="btn" id="addCard">+ Dienstenkaart</button>
-            </div>
-            <div id="blockList" class="status"></div>
-          </div>
-
+          <h2>Secties</h2>
+          <div class="section-list" id="sectionList"></div>
           <div class="actions">
-            <button class="btn" id="refresh">Voorbeeld verversen</button>
-            <button class="btn" id="save">Opslaan in Vrijeplek</button>
-            <button class="btn primary" id="download">Download ZIP</button>
+            <button class="btn" id="addSection">+ Sectie</button>
+            <button class="btn" id="aiLayout">AI-layout</button>
           </div>
-          <div class="status" id="status"></div>
+          <div class="tiny">Sleep om te herschikken • Klik op sectietitel voor opties</div>
         </div>
       </section>
 
-      <!-- Right live preview -->
-      <section class="preview">
-        <div class="toolbar">
-          <strong>Live preview (dubbelklik tekst om te bewerken)</strong>
-          <div class="spacer"></div>
-          <div class="device">
-            <button data-w="375">Mobiel</button>
-            <button data-w="768">Tablet</button>
-            <button data-w="100%" class="active">Desktop</button>
+      <!-- CENTER: Live canvas -->
+      <section class="panel canvas">
+        <h2>Live Preview</h2>
+        <div class="stage"><iframe id="frame" title="preview"></iframe></div>
+      </section>
+
+      <!-- RIGHT: Blocks & components -->
+      <section class="panel right">
+        <h2>Blokbibliotheek</h2>
+        <div class="body">
+          <div class="grid">
+            <div class="component" draggable="true" data-type="hero">
+              <span>✨ Hero</span><span class="tag">banner</span>
+            </div>
+            <div class="component" draggable="true" data-type="featureGrid">
+              <span>🧩 Feature grid</span><span class="tag">3-6 kol.</span>
+            </div>
+            <div class="component" draggable="true" data-type="pricing">
+              <span>💶 Pricing</span><span class="tag">3 kaarten</span>
+            </div>
+            <div class="component" draggable="true" data-type="testimonials">
+              <span>⭐ Testimonials</span><span class="tag">reviews</span>
+            </div>
+            <div class="component" draggable="true" data-type="gallery">
+              <span>🖼️ Galerij</span><span class="tag">grid</span>
+            </div>
+            <div class="component" draggable="true" data-type="faq">
+              <span>❓ FAQ</span><span class="tag">accordeon</span>
+            </div>
+            <div class="component" draggable="true" data-type="cta">
+              <span>📣 CTA</span><span class="tag">knop</span>
+            </div>
+            <div class="component" draggable="true" data-type="contact">
+              <span>☎ Contact</span><span class="tag">gegevens</span>
+            </div>
           </div>
+
+          <h2>AI</h2>
+          <div class="group"><label>AI Prompt (content/layout)</label>
+            <textarea id="aiPrompt" placeholder="Schrijf hero met stoere toon voor ramenwasser in Genk"></textarea>
+          </div>
+          <div class="row">
+            <button class="btn" id="aiContent">AI Tekst</button>
+            <button class="btn" id="aiImage">AI Afbeelding</button>
+          </div>
+          <div id="status" class="tiny"></div>
         </div>
-        <iframe id="frame" title="preview"></iframe>
       </section>
     </div>
 
-    <footer>© 2025 Vrijeplek — AI Websitebuilder</footer>
+    <footer>© 2025 Vrijeplek — Websitebuilder PRO</footer>
   </div>
 
   <script>
-    /* ===== Utility helpers ===== */
-    const $ = (s, p=document) => p.querySelector(s);
-    const $$ = (s, p=document) => Array.from(p.querySelectorAll(s));
-
-    function bindChips(id, on){
-      const el = document.getElementById(id);
-      el.addEventListener('click', e=>{
-        if(e.target.tagName!=='BUTTON') return;
-        if(id==='sections'){
-          e.target.classList.toggle('active');
-        }else{
-          $$('#'+id+' button').forEach(b=>b.classList.remove('active'));
-          e.target.classList.add('active');
-        }
-        on(e.target.dataset.v);
-      });
-    }
-
-    function fileToDataURL(file){
-      return new Promise((res, rej)=>{
-        if(!file) return res('');
-        const r = new FileReader();
-        r.onload = ()=>res(r.result);
-        r.onerror = rej;
-        r.readAsDataURL(file);
-      });
-    }
-
-    /* ===== Theme presets ===== */
-    const THEMES = {
-      ocean:    {bg:'#0b1c3d', fg:'#ffffff', ink:'#0a2a4a', a1:'#1a66ff', a2:'#0056ff'},
-      emerald:  {bg:'#052d26', fg:'#eafff6', ink:'#093c33', a1:'#00b37d', a2:'#009b6a'},
-      ruby:     {bg:'#2a0610', fg:'#ffe8ee', ink:'#3c0a17', a1:'#ff2e63', a2:'#c2185b'},
-      sunset:   {bg:'#2a1606', fg:'#fff1e6', ink:'#3c220a', a1:'#ff7e5f', a2:'#feb47b'},
-      charcoal: {bg:'#0d1117', fg:'#e6edf3', ink:'#30363d', a1:'#3ea6ff', a2:'#1f6feb'}
-    };
-
-    /* ===== State ===== */
+    // ===== State & helpers =====
     const state = {
-      template:'clean', theme:'ocean', font:'Poppins, sans-serif',
-      sections:['hero','about','services','contact'],
-      name:'', tagline:'', about:'', industry:'algemeen', phone:'', address:'', ctaUrl:'',
-      logoDataURL:'', heroDataURL:'',
-      colors:{ a1:'#1a66ff', a2:'#0056ff', fg:'#ffffff', bg:'#0b1c3d' },
-      radius:16, shadow:0.14, scale:1.0, spacing:48,
-      faq:[], gallery:[], customBlocks:[], serviceCards:[]
+      meta:{ name:'Ocean Bistro', tag:'Last-minute tafels & snelle service', intro:'Snel reserveren, heerlijk genieten.' },
+      design:{ font:"Inter, system-ui, sans-serif", a1:'#2563eb', a2:'#00d4ff', fg:'#0b1228', bg:'#ffffff', radius:18, spacing:56, base:'classic' },
+      sections:[ // default starter
+        { id: uid(), type:'hero', data:{ title:'Ocean Bistro', subtitle:'Last-minute tafels, elke dag', cta:{label:'Reserveer nu', href:'#'} } },
+        { id: uid(), type:'featureGrid', data:{ cols:3, items:[
+          {title:'Snel boeken', text:'Binnen 10 seconden geregeld.'},
+          {title:'Verse keuken', text:'Seizoensgebonden menu’s.'},
+          {title:'Vriendelijke service', text:'Team met glimlach.'}
+        ]}},
+        { id: uid(), type:'cta', data:{ title:'Klaar om te reserveren?', text:'Kies je tijdstip — wij doen de rest.', button:{label:'Boek nu', href:'#'}}}
+      ]
     };
 
-    /* ===== Generator: HTML ===== */
-    async function buildSiteHTML(s){
-      const base = THEMES[s.theme]||THEMES.ocean;
-      const t = {
-        a1: s.colors?.a1 || base.a1,
-        a2: s.colors?.a2 || base.a2,
-        fg: s.colors?.fg || base.fg,
-        bg: s.colors?.bg || base.bg,
-        ink: base.ink
-      };
-      const font = s.font || 'Poppins, sans-serif';
-      const heroStyle = s.template==='heroimg' && s.heroDataURL
-        ? `background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)), url(${s.heroDataURL}) center/cover no-repeat;`
-        : `background:linear-gradient(120deg, ${t.a1}, ${t.a2});`;
-      const logoImg = s.logoDataURL ? `<img src="${s.logoDataURL}" alt="${esc(s.name)}" style="height:34px">` : `<strong>${esc(s.name||'Uw zaak')}</strong>`;
+    const $ = (s,p=document)=>p.querySelector(s);
+    const $$ = (s,p=document)=>Array.from(p.querySelectorAll(s));
+    const byId = id => state.sections.find(x=>x.id===id);
+    function uid(){ return Math.random().toString(36).slice(2,9) }
 
-      const sections = [];
+    // ===== Section List (left panel) =====
+    const list = document.getElementById('sectionList');
+    function renderSectionList(){
+      list.innerHTML = state.sections.map((s,i)=>`
+        <div class="item" data-id="${s.id}" draggable="true">
+          <div class="drag" title="Sleep">⋮⋮</div>
+          <div class="title">${i+1}. ${labelOf(s.type)}</div>
+          <button class="btn ghost" data-act="edit">Bewerk</button>
+          <button class="btn ghost" data-act="dup">Dupliceer</button>
+          <button class="btn ghost" data-act="del">Verwijder</button>
+        </div>
+      `).join('');
+    }
 
-      if(s.sections.includes('hero')){
-        sections.push(`
-          <section class="hero" style="${heroStyle}">
-            <div class="inner">
-              <h1 data-edit="hero.title">${esc(s.name||'Uw zaak')}</h1>
-              <p class="tag" data-edit="hero.tagline">${esc(s.tagline||'Professionele service, zonder wachten')}</p>
-              ${s.ctaUrl?`<a class="btn" data-edit="hero.cta" href="${esc(s.ctaUrl)}" target="_blank" rel="nofollow noopener">Maak afspraak</a>`:''}
-            </div>
-          </section>
-        `);
-      }
+    function labelOf(type){
+      return ({hero:'Hero',featureGrid:'Feature grid',pricing:'Pricing',testimonials:'Testimonials',gallery:'Galerij',faq:'FAQ',cta:'CTA',contact:'Contact'})[type]||type;
+    }
 
-      if(s.sections.includes('about')){
-        sections.push(`
-          <section class="about">
-            <div class="inner">
-              <h2 data-edit="about.title">Over ons</h2>
-              <p data-edit="about.text">${esc(s.about|| 'Wij helpen klanten snel en vriendelijk. Boek eenvoudig online of bel ons rechtstreeks.')}</p>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('services')){
-        const def = s.serviceCards?.length ? s.serviceCards : sampleServices(s.industry);
-        sections.push(`
-          <section class="services">
-            <div class="inner">
-              <h2 data-edit="services.title">Diensten</h2>
-              <div class="grid">
-                ${def.map((sv,idx)=>`<div class="card"><h3 data-edit="services.${idx}.title">${esc(sv.title)}</h3><p data-edit="services.${idx}.desc">${esc(sv.desc)}</p></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('pricing')){
-        sections.push(`
-          <section class="pricing">
-            <div class="inner">
-              <h2 data-edit="pricing.title">Prijzen</h2>
-              <div class="grid">
-                ${[1,2,3].map(i=>`<div class="card"><h3 data-edit="pricing.${i}.title">Pakket ${i}</h3><p data-edit="pricing.${i}.desc">Korte omschrijving van pakket ${i}.</p><div class="price" data-edit="pricing.${i}.price">€${i*49},95</div></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('reviews')){
-        sections.push(`
-          <section class="reviews">
-            <div class="inner">
-              <h2 data-edit="reviews.title">Reviews</h2>
-              <div class="grid">
-                ${['Topservice!','Snel geholpen.','Aanrader.'].map((r,i)=>`<div class="card"><p data-edit="reviews.${i}.text">“${r}”</p><div class="who" data-edit="reviews.${i}.who">★ ★ ★ ★ ★ — Klant ${i+1}</div></div>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('faq')){
-        sections.push(`
-          <section class="faq">
-            <div class="inner">
-              <h2 data-edit="faq.title">FAQ</h2>
-              <div class="faq-list">
-                ${(s.faq.length?s.faq:[{q:'Hoe snel kan ik boeken?',a:'Vaak dezelfde dag.'}]).map((f,i)=>`<details><summary data-edit="faq.${i}.q">${esc(f.q)}</summary><p data-edit="faq.${i}.a">${esc(f.a)}</p></details>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('gallery')){
-        const pics = s.gallery.length?s.gallery:[
-          'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1080&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?q=80&w=1080&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1080&auto=format&fit=crop'
-        ];
-        sections.push(`
-          <section class="gallery">
-            <div class="inner">
-              <h2 data-edit="gallery.title">Galerij</h2>
-              <div class="grid gallery-grid">
-                ${pics.map(src=>`<figure class="card"><img src="${src}" alt=""/></figure>`).join('')}
-              </div>
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('cta')){
-        sections.push(`
-          <section class="cta">
-            <div class="inner">
-              <h2 data-edit="cta.title">Boek nu je afspraak</h2>
-              <p data-edit="cta.text">Wacht niet langer: kies je moment en we bevestigen snel.</p>
-              ${s.ctaUrl?`<a class="btn" data-edit="cta.button" href="${esc(s.ctaUrl)}" target="_blank">Reserveren</a>`:''}
-            </div>
-          </section>
-        `);
-      }
-
-      if(s.sections.includes('contact')){
-        sections.push(`
-          <section class="contact">
-            <div class="inner">
-              <h2 data-edit="contact.title">Contact</h2>
-              <ul class="list">
-                ${s.phone?`<li data-edit="contact.phone">☎ ${esc(s.phone)}</li>`:''}
-                ${s.address?`<li data-edit="contact.address">📍 ${esc(s.address)}</li>`:''}
-                ${s.ctaUrl?`<li>🌐 <a href="${esc(s.ctaUrl)}" target="_blank" rel="nofollow noopener">Website / Reservatie</a></li>`:''}
-              </ul>
-            </div>
-          </section>
-        `);
-      }
-
-      for(const [i,blk] of (s.customBlocks||[]).entries()){
-        if(blk.type==='text'){
-          sections.push(`<section class="custom"><div class="inner"><h2 data-edit="custom.${i}.title">${esc(blk.title||'Titel')}</h2><p data-edit="custom.${i}.text">${esc(blk.text||'Vrije tekst')}</p></div></section>`);
-        }else if(blk.type==='image'){
-          sections.push(`<section class="custom"><div class="inner"><img src="${esc(blk.src||'')}" alt="" style="max-width:100%;border-radius:${s.radius}px"></div></section>`);
-        }
-      }
-
-      const css = genSiteCSS(t, font, s.template, !!s.heroDataURL, s);
-      const editScript = `<script>
-(function(){
-  function enableInline(){
-    document.body.addEventListener('dblclick', (e)=>{
-      const el = e.target.closest('[data-edit]');
-      if(!el) return;
-      e.preventDefault();
-      el.setAttribute('contenteditable','true');
-      el.focus();
-      const sel = window.getSelection();
-      sel.selectAllChildren(el);
+    // Drag-reorder in list
+    let dragId=null;
+    list.addEventListener('dragstart', e=>{
+      const it = e.target.closest('.item'); if(!it) return;
+      dragId = it.dataset.id; e.dataTransfer.effectAllowed='move';
     });
-    document.body.addEventListener('blur', (e)=>{
-      const el = e.target.closest('[data-edit]');
-      if(!el) return;
-      el.removeAttribute('contenteditable');
-      parent.postMessage({type:'inline-edit', key:el.getAttribute('data-edit'), value:el.innerText}, '*');
-    }, true);
-  }
-  enableInline();
-})();
-<\/script>`;
+    list.addEventListener('dragover', e=>{ e.preventDefault(); });
+    list.addEventListener('drop', e=>{
+      const it = e.target.closest('.item'); if(!it || !dragId) return;
+      const targetId = it.dataset.id;
+      const from = state.sections.findIndex(s=>s.id===dragId);
+      const to = state.sections.findIndex(s=>s.id===targetId);
+      const [moved] = state.sections.splice(from,1);
+      state.sections.splice(to,0,moved);
+      dragId=null; renderSectionList(); refresh();
+    });
 
-      return `<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${esc(s.name||'Uw zaak')} — Minisite</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@500;700&family=Rubik:wght@400;600;800&family=Oswald:wght@400;600&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&family=Mulish:wght@400;700&family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
-<style>${css}</style>
-</head>
-<body>
-  <header>
-    <div class="inner">
-      <div class="brand">${logoImg}</div>
-      ${s.ctaUrl?`<a class="btn small" href="${esc(s.ctaUrl)}" target="_blank">Afspraak maken</a>`:''}
-    </div>
-  </header>
-  ${sections.join('\n')}
-  <footer>
-    <div class="inner">© ${new Date().getFullYear()} ${esc(s.name||'Uw zaak')} — Gemaakt met Vrijeplek</div>
-  </footer>
-  ${editScript}
-</body>
-</html>`;
+    // item actions
+    list.addEventListener('click', e=>{
+      const it = e.target.closest('.item'); if(!it) return;
+      const id = it.dataset.id;
+      if(e.target.dataset.act==='del'){ state.sections = state.sections.filter(s=>s.id!==id); renderSectionList(); refresh(); }
+      if(e.target.dataset.act==='dup'){ const src = structuredClone(byId(id)); src.id=uid(); state.sections.splice(state.sections.findIndex(s=>s.id===id)+1,0,src); renderSectionList(); refresh(); }
+      if(e.target.dataset.act==='edit'){ openEditor(byId(id)); }
+    });
+
+    // Add via right palette drag
+    $$('.component').forEach(c=>{
+      c.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', c.dataset.type); });
+    });
+    list.addEventListener('dragenter', e=> e.preventDefault());
+    list.addEventListener('drop', e=>{
+      const type = e.dataTransfer.getData('text/plain');
+      if(!type) return;
+      state.sections.push(makeBlock(type)); renderSectionList(); refresh();
+    });
+
+    function makeBlock(type){
+      const id=uid();
+      switch(type){
+        case 'hero': return {id,type,data:{title:'Jouw kop',subtitle:'Korte zin',cta:{label:'Start',href:'#'}}};
+        case 'featureGrid': return {id,type,data:{cols:3,items:[{title:'Troef 1',text:'…'},{title:'Troef 2',text:'…'},{title:'Troef 3',text:'…'}]}};
+        case 'pricing': return {id,type,data:{plans:[{name:'Basic',price:'€29',features:['…','…']},{name:'Pro',price:'€59',features:['…','…']},{name:'VIP',price:'€99',features:['…','…']} ]}};
+        case 'testimonials': return {id,type,data:{items:[{quote:'Topservice!',who:'Klant A'},{quote:'Snel geholpen',who:'Klant B'}]}};
+        case 'gallery': return {id,type,data:{images:[{src:'https://source.unsplash.com/800x600/?business'}]}};
+        case 'faq': return {id,type,data:{items:[{q:'Hoe werkt het?',a:'Zo dus.'}]}};
+        case 'cta': return {id,type,data:{title:'Klaar?',text:'Boek je afspraak',button:{label:'Boek',href:'#'}}};
+        case 'contact': return {id,type,data:{phone:'+32 …',address:'Straat 1, 3500 Hasselt',email:'info@voorbeeld.be'}};
+        default: return {id,type,data:{}};
+      }
     }
 
-    function esc(s){return (s||'').replace(/[&<>\"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+    // ===== Editors =====
+    function openEditor(section){
+      const modal = document.createElement('div');
+      Object.assign(modal.style,{position:'fixed',inset:'0',background:'rgba(0,0,0,.6)',display:'grid',placeItems:'center',zIndex:9999});
+      modal.innerHTML = `
+        <div style="background:#0f172a;border:1px solid var(--line);border-radius:14px;min-width:520px;max-width:90vw;box-shadow:var(--shadow);">
+          <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)">
+            <strong>Bewerken: ${labelOf(section.type)}</strong>
+            <div style="margin-left:auto"></div>
+            <button id="mClose" class="btn">Sluiten</button>
+          </div>
+          <div id="mBody" style="padding:12px 14px;max-height:70vh;overflow:auto"></div>
+        </div>`;
+      document.body.appendChild(modal);
+      $('#mClose',modal).onclick=()=>modal.remove();
 
-    function sampleServices(ind){
-      const map = {
-        horeca:[
-          {title:'Dagmenu',desc:'Verse gerechten en snelle bediening.'},
-          {title:'Reserveren',desc:'Online boeken binnen 10 seconden.'},
-          {title:'Groepsformules',desc:'Menu’s voor familie of team.'}
-        ],
-        wellness:[
-          {title:'Massage',desc:'Ontspanning of sportmassage op afspraak.'},
-          {title:'Gelaatsverzorging',desc:'Glow-up met top producten.'},
-          {title:'Arrangementen',desc:'Koppel- of vriendinnenmoment.'}
-        ],
-        zorg:[
-          {title:'Consult',desc:'Vlotte intake, duidelijke opvolging.'},
-          {title:'Spoedplekjes',desc:'Last-minute afspraken.'},
-          {title:'Herhaalrecept',desc:'Snel en veilig geregeld.'}
-        ],
-        events:[
-          {title:'Verhuur',desc:'Materiaal & foodpakketten.'},
-          {title:'Catering',desc:'Van snacks tot volledige service.'},
-          {title:'Planning',desc:'We ontzorgen van A tot Z.'}
-        ],
-        poetsdiensten:[
-          {title:'Woningen',desc:'Grondige schoonmaak met vaste planner.'},
-          {title:'Kantoren',desc:'Na kantooruren mogelijk.'},
-          {title:'Ramen',desc:'Streeploos resultaat.'}
-        ],
-        ramenwasser:[
-          {title:'Particulier',desc:'Binnen en buiten, inclusief raamprofielen.'},
-          {title:'Bedrijven',desc:'Snelle interventie, periodiek schema.'},
-          {title:'Hogere ramen',desc:'Telescoop tot 12 m.'}
-        ],
-        dieren:[
-          {title:'Trimsalon',desc:'Volledige vachtverzorging.'},
-          {title:'Dierenarts',desc:'Consult en vaccinaties.'},
-          {title:'Dagopvang',desc:'Speels en veilig.'}
-        ]
-      };
-      return map[ind] || [
-        {title:'Dienst 1',desc:'Korte omschrijving van je dienst.'},
-        {title:'Dienst 2',desc:'Nog een dienst die je aanbiedt.'},
-        {title:'Dienst 3',desc:'Voeg gerust later meer toe.'}
-      ];
+      const b = $('#mBody',modal);
+      // generate form per block type
+      if(section.type==='hero'){
+        b.innerHTML=`
+          <label>Titel</label><input id="t" type="text" value="${esc(section.data.title)}">
+          <label>Subtitel</label><input id="s" type="text" value="${esc(section.data.subtitle||'')}">
+          <div class="row"><div><label>CTA Label</label><input id="cl" type="text" value="${esc(section.data.cta?.label||'')}"></div>
+          <div><label>CTA Link</label><input id="ch" type="url" value="${esc(section.data.cta?.href||'#')}"></div></div>
+          <div class="row"><div><label>Uitlijning</label>
+            <select id="align"><option value="left">Links</option><option value="center">Midden</option><option value="right">Rechts</option></select></div>
+            <div><label>Hero-beeld</label><input id="heroPick" type="text" placeholder="unsplash: food | url | dataURI"></div></div>
+          <div class="row"><div><label>Hoogte (vh)</label><input id="vh" type="number" min="40" max="100" value="72"></div>
+          <div><label>Overlay (0-0.8)</label><input id="ov" type="number" step=".05" min="0" max="0.8" value="0.35"></div></div>
+          <button class="btn" id="imgAI">AI-beeld genereren</button>
+        `;
+        $('#t',b).oninput=e=>{section.data.title=e.target.value; refresh();}
+        $('#s',b).oninput=e=>{section.data.subtitle=e.target.value; refresh();}
+        $('#cl',b).oninput=e=>{section.data.cta=section.data.cta||{}; section.data.cta.label=e.target.value; refresh();}
+        $('#ch',b).oninput=e=>{section.data.cta=section.data.cta||{}; section.data.cta.href=e.target.value; refresh();}
+        $('#align',b).onchange=e=>{section.data.align=e.target.value; refresh();}
+        $('#vh',b).oninput=e=>{section.data.vh=+e.target.value; refresh();}
+        $('#ov',b).oninput=e=>{section.data.ov=+e.target.value; refresh();}
+        $('#heroPick',b).onchange=e=>{section.data.bg=e.target.value; refresh();}
+        $('#imgAI',b).onclick=()=>aiImageInto(section.id,'Hero met ${state.meta.name} in ${state.meta.city||'België'}');
+      }
+      if(section.type==='featureGrid'){
+        b.innerHTML=`<label>Kolommen</label><input id="cols" type="number" min="2" max="6" value="${section.data.cols||3}">`+
+        section.data.items.map((it,i)=>`
+          <fieldset style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
+            <legend class="tiny">Item ${i+1}</legend>
+            <label>Titel</label><input data-i="${i}" class="it-title" type="text" value="${esc(it.title)}">
+            <label>Tekst</label><input data-i="${i}" class="it-text" type="text" value="${esc(it.text||'')}">
+          </fieldset>`).join('')+
+          `<div class="actions"><button class="btn" id="addIt">+ Item</button></div>`;
+        $('#cols',b).oninput=e=>{section.data.cols=+e.target.value; refresh();}
+        $$('.it-title',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].title=e.target.value; refresh();});
+        $$('.it-text',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].text=e.target.value; refresh();});
+        $('#addIt',b).onclick=()=>{section.data.items.push({title:'Nieuw',text:'…'}); openEditor(section); refresh();}
+      }
+      if(section.type==='pricing'){
+        b.innerHTML = section.data.plans.map((p,i)=>`
+          <fieldset style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
+            <legend class="tiny">Plan ${i+1}</legend>
+            <label>Naam</label><input data-i="${i}" class="p-name" type="text" value="${esc(p.name)}">
+            <label>Prijs</label><input data-i="${i}" class="p-price" type="text" value="${esc(p.price)}">
+            <label>Features (komma-gescheiden)</label><input data-i="${i}" class="p-feat" type="text" value="${esc(p.features.join(', '))}">
+          </fieldset>`).join('')+
+          `<div class="actions"><button class="btn" id="addPlan">+ Plan</button></div>`;
+        $$('.p-name',b).forEach(x=>x.oninput=e=>{section.data.plans[e.target.dataset.i].name=e.target.value; refresh();});
+        $$('.p-price',b).forEach(x=>x.oninput=e=>{section.data.plans[e.target.dataset.i].price=e.target.value; refresh();});
+        $$('.p-feat',b).forEach(x=>x.oninput=e=>{section.data.plans[e.target.dataset.i].features=e.target.value.split(',').map(s=>s.trim()); refresh();});
+        $('#addPlan',b).onclick=()=>{section.data.plans.push({name:'Nieuw',price:'€0',features:['…']}); openEditor(section); refresh();}
+      }
+      if(section.type==='testimonials'){
+        b.innerHTML = section.data.items.map((t,i)=>`
+          <fieldset style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
+            <legend class="tiny">Review ${i+1}</legend>
+            <label>Quote</label><input data-i="${i}" class="r-q" type="text" value="${esc(t.quote)}">
+            <label>Naam</label><input data-i="${i}" class="r-w" type="text" value="${esc(t.who)}">
+          </fieldset>`).join('')+
+          `<div class="actions"><button class="btn" id="addRev">+ Review</button></div>`;
+        $$('.r-q',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].quote=e.target.value; refresh();});
+        $$('.r-w',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].who=e.target.value; refresh();});
+        $('#addRev',b).onclick=()=>{section.data.items.push({quote:'Nieuw',who:'Klant'}); openEditor(section); refresh();}
+      }
+      if(section.type==='gallery'){
+        b.innerHTML = `<div class="actions"><button class="btn" id="addImg">+ Afbeelding</button><button class="btn" id="aiFill">AI vul galerij</button></div>`+
+          (section.data.images||[]).map((g,i)=>`<div class="row"><input data-i="${i}" class="g-src" type="text" value="${esc(g.src)}"><button class="btn" data-i="${i}" data-act="pick">Kies</button></div>`).join('');
+        $('#addImg',b).onclick=()=>{section.data.images=section.data.images||[]; section.data.images.push({src:''}); openEditor(section);};
+        $('#aiFill',b).onclick=()=>aiGalleryInto(section.id, state.meta.tag+" "+(state.meta.city||''));
+        $$('.g-src',b).forEach(x=>x.onchange=e=>{section.data.images[e.target.dataset.i].src=e.target.value; refresh();});
+        $$('.btn[data-act="pick"]',b).forEach(x=>x.onclick=()=>pickImage().then(url=>{ if(!url) return; section.data.images[x.dataset.i].src=url; refresh(); }));
+      }
+      if(section.type==='faq'){
+        b.innerHTML = section.data.items.map((f,i)=>`
+          <fieldset style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
+            <legend class="tiny">FAQ ${i+1}</legend>
+            <label>Vraag</label><input data-i="${i}" class="f-q" type="text" value="${esc(f.q)}">
+            <label>Antwoord</label><input data-i="${i}" class="f-a" type="text" value="${esc(f.a)}">
+          </fieldset>`).join('')+
+          `<div class="actions"><button class="btn" id="addFaq">+ Vraag</button></div>`;
+        $$('.f-q',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].q=e.target.value; refresh();});
+        $$('.f-a',b).forEach(x=>x.oninput=e=>{section.data.items[e.target.dataset.i].a=e.target.value; refresh();});
+        $('#addFaq',b).onclick=()=>{section.data.items.push({q:'Nieuwe vraag',a:'Nieuw antwoord'}); openEditor(section); refresh();}
+      }
+      if(section.type==='cta'){
+        b.innerHTML = `
+          <label>Titel</label><input id="ct" type="text" value="${esc(section.data.title)}">
+          <label>Tekst</label><input id="cx" type="text" value="${esc(section.data.text)}">
+          <div class="row"><div><label>Knop label</label><input id="bl" type="text" value="${esc(section.data.button?.label||'')}"/></div>
+          <div><label>Knop link</label><input id="bh" type="url" value="${esc(section.data.button?.href||'#')}"/></div></div>`;
+        $('#ct',b).oninput=e=>{section.data.title=e.target.value; refresh();}
+        $('#cx',b).oninput=e=>{section.data.text=e.target.value; refresh();}
+        $('#bl',b).oninput=e=>{section.data.button=section.data.button||{}; section.data.button.label=e.target.value; refresh();}
+        $('#bh',b).oninput=e=>{section.data.button=section.data.button||{}; section.data.button.href=e.target.value; refresh();}
+      }
+      if(section.type==='contact'){
+        b.innerHTML = `
+          <label>Telefoon</label><input id="ph" type="text" value="${esc(section.data.phone||'')}">
+          <label>Adres</label><input id="ad" type="text" value="${esc(section.data.address||'')}">
+          <label>E-mail</label><input id="em" type="text" value="${esc(section.data.email||'')}">`;
+        $('#ph',b).oninput=e=>{section.data.phone=e.target.value; refresh();}
+        $('#ad',b).oninput=e=>{section.data.address=e.target.value; refresh();}
+        $('#em',b).oninput=e=>{section.data.email=e.target.value; refresh();}
+      }
     }
 
-    function genSiteCSS(t, font, template, hasHeroImg, s){
-      const rad = (s?.radius ?? 16) + 'px';
-      const sh = s?.shadow ?? 0.14;
-      const sc = s?.scale ?? 1.0;
-      const sp = s?.spacing ?? 48;
-      return `:root{--a1:${t.a1};--a2:${t.a2};--ink:${t.ink};--fg:${t.fg};--bg:${t.bg};--rad:${rad};--sh:${sh}}
-      *{box-sizing:border-box}
-      body{margin:0;font-family:${font};color:var(--fg);background:${t.bg};font-size:${sc}rem}
+    // ===== Preview build & render =====
+    function cssVars(){
+      const d=state.design; return `:root{--a1:${d.a1};--a2:${d.a2};--fg:${d.fg};--bg:${d.bg};--rad:${d.radius}px;--sp:${d.spacing}px}`;
+    }
+
+    function buildHTML(){
+      const d=state.design, m=state.meta; const sections=state.sections.map(renderSection).join('\n');
+      const css = genCSS(d);
+      return `<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>${css}</style><title>${esc(m.name)} — Minisite</title></head><body>
+        <header class="site-h"><div class="inner"><div class="logo">${esc(m.name)}</div><a class="btn small" href="#contact">Contact</a></div></header>
+        ${sections}
+        <footer class="site-f"><div class="inner">© ${new Date().getFullYear()} ${esc(m.name)} — Gemaakt met Vrijeplek</div></footer>
+      </body></html>`;
+    }
+
+    function genCSS(d){
+      return `${cssVars()}
+      body{margin:0;background:var(--bg);color:var(--fg);font-family:${d.font}}
       .inner{max-width:1080px;margin:0 auto;padding:0 18px}
-      header{border-bottom:1px solid rgba(255,255,255,.15);backdrop-filter:saturate(1.1) blur(8px);position:sticky;top:0;background:rgba(0,0,0,.2)}
-      header .inner{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
-      .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff}
-      .btn{display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(120deg,var(--a1),var(--a2));color:#fff;text-decoration:none;font-weight:700}
-      .btn.small{padding:8px 12px;font-size:14px}
-      h1,h2,h3{margin:0 0 8px}
+      .site-h{position:sticky;top:0;background:linear-gradient(90deg,var(--a1),var(--a2));color:#fff}
+      .site-h .inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+      .btn{display:inline-block;padding:12px 16px;border-radius:999px;background:linear-gradient(90deg,var(--a1),var(--a2));color:#fff;text-decoration:none;font-weight:700}
+      .btn.small{padding:8px 12px}
+      section{padding:var(--sp) 0}
+      .hero{color:#fff;background:linear-gradient(120deg,var(--a1),var(--a2))}
+      .hero .inner{padding:64px 18px}
+      h1,h2,h3{margin:0 0 10px}
       p{margin:0 0 10px;opacity:.9}
-      section{padding:${sp}px 0}
-      .hero{${template==='heroimg' && hasHeroImg ? '' : 'background:linear-gradient(120deg,var(--a1),var(--a2));'} color:#fff}
-      .hero .inner{padding:64px 18px;display:grid;gap:8px}
-      .hero .tag{opacity:.95;font-size:18px}
-      .about,.pricing,.services,.reviews,.contact,.faq,.gallery,.custom,.cta{background:${t.bg};}
-      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-      .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,calc(var(--sh)*1));border-radius:var(--rad);padding:16px;box-shadow:0 8px 18px rgba(0,0,0,calc(var(--sh)*1.6))}
-      .gallery-grid figure{margin:0}
-      .gallery-grid img{width:100%;height:240px;object-fit:cover;border-radius:var(--rad)}
-      .price{margin-top:8px;font-size:22px;font-weight:700}
-      .list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-      details{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,calc(var(--sh)*1));border-radius:var(--rad);padding:12px}
-      footer{border-top:1px solid rgba(255,255,255,.15);padding:18px 0;background:rgba(0,0,0,.2);color:#cfe0ff}
-      @media(max-width:900px){.grid{grid-template-columns:1fr}}`;
+      .grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+      .card{background:#ffffff10;border:1px solid #ffffff22;border-radius:var(--rad);padding:16px}
+      .pricing .price{font-size:26px;font-weight:800}
+      details{background:#ffffff0f;border:1px solid #ffffff22;border-radius:var(--rad);padding:12px}
+      .gallery img{width:100%;height:220px;object-fit:cover;border-radius:var(--rad)}
+      .site-f{border-top:1px solid #ffffff22;color:#cbd5e1;background:#020617}
+      @media(max-width:900px){.grid{grid-template-columns:1fr}}
+      `;
     }
 
-```html
-    /* ===== Preview render ===== */
-    async function refreshPreview(){
-      const html = await buildSiteHTML(state);
-      const frame = document.getElementById('frame');
-      frame.srcdoc = html;
-    }
-
-    /* ===== Inline edit terugschrijven ===== */
-    window.addEventListener('message', (e)=>{
-      if(e?.data?.type==='inline-edit'){
-        applyInlineEdit(e.data.key, e.data.value);
+    function renderSection(s){
+      const d=s.data;
+      if(s.type==='hero'){
+        const style = d.bg ? (d.bg.startsWith('unsplash:')?`background:url(https://source.unsplash.com/1600x900/?${encodeURIComponent(d.bg.split(':')[1])}) center/cover` : (d.bg.startsWith('http')?`background:url(${d.bg}) center/cover` : '')) : '';
+        const overlay = d.ov?`background:linear-gradient(0deg,rgba(0,0,0,${d.ov}),rgba(0,0,0,${d.ov})), var(--hero-bg);` : '';
+        const height = d.vh?`min-height:${d.vh}vh;`:'min-height:72vh;';
+        const align = d.align||'left'; const ta = align==='center'?'center':align==='right'?'right':'left';
+        return `<section class="hero" style="${height}${style?`;--hero-bg:url(${style.match(/url\((.*)\)/)?.[1]||''});${overlay}`:''}"><div class="inner" style="text-align:${ta}"><h1>${esc(d.title||'Titel')}</h1><p>${esc(d.subtitle||'Subtitel')}</p>${d.cta?`<a class="btn" href="${esc(d.cta.href||'#')}">${esc(d.cta.label||'Doen')}</a>`:''}</div></section>`;
       }
-    });
-
-    function applyInlineEdit(key, value){
-      try{
-        const path = key.split('.');
-        if(path[0]==='hero' && path[1]==='title'){ state.name = value; }
-        else if(path[0]==='hero' && path[1]==='tagline'){ state.tagline = value; }
-        else if(path[0]==='about' && path[1]==='text'){ state.about = value; }
-        else if(path[0]==='services'){
-          const idx = +path[1];
-          const field = path[2];
-          if(!state.serviceCards[idx]) state.serviceCards[idx] = {title:'',desc:''};
-          state.serviceCards[idx][field] = value;
-        }else if(path[0]==='faq'){
-          const idx = +path[1];
-          const field = path[2];
-          if(!state.faq[idx]) state.faq[idx] = {q:'',a:''};
-          state.faq[idx][field] = value;
-        }else if(path[0]==='contact'){
-          if(path[1]==='phone') state.phone = value;
-          if(path[1]==='address') state.address = value;
-        }else if(path[0]==='custom'){
-          const idx = +path[1];
-          const field = path[2];
-          if(!state.customBlocks[idx]) state.customBlocks[idx] = {type:'text'};
-          state.customBlocks[idx][field] = value;
-        }
-        refreshPreview();
-      }catch(err){console.warn('inline-edit fail', err)}
-    }
-
-    /* ===== UI wiring ===== */
-    window.addEventListener('DOMContentLoaded', () => {
-      // Tekst inputs
-      ['bizName','tagline','about','phone','address','ctaUrl'].forEach(id=>{
-        const el = document.getElementById(id);
-        el.addEventListener('input', ()=>{state[
-          id==='bizName'?'name':id
-        ] = el.value; refreshPreview();});
-      });
-      document.getElementById('industry').addEventListener('change', e=>{state.industry=e.target.value; refreshPreview()});
-      document.getElementById('font').addEventListener('change', e=>{state.font=e.target.value; refreshPreview()});
-      bindChips('tpl', v=>{state.template=v; refreshPreview()});
-      bindChips('theme', v=>{state.theme=v; refreshPreview()});
-      bindChips('sections', ()=>{state.sections = $$('#sections button.active').map(b=>b.dataset.v); refreshPreview()});
-
-      // Stijl sliders/kleuren
-      ['cA1','cA2','cFg','cBg'].forEach(id=>{
-        const el = document.getElementById(id);
-        el.addEventListener('input', ()=>{ state.colors[id.slice(1).toLowerCase()] = el.value; refreshPreview(); });
-      });
-      ['radius','shadow','scale','spacing'].forEach(id=>{
-        const el = document.getElementById(id);
-        el.addEventListener('input', ()=>{ state[id] = +el.value; refreshPreview(); });
-      });
-
-      // Files
-      document.getElementById('logo').addEventListener('change', async e=>{state.logoDataURL = await fileToDataURL(e.target.files[0]); refreshPreview()});
-      document.getElementById('heroImg').addEventListener('change', async e=>{state.heroDataURL = await fileToDataURL(e.target.files[0]); state.template='heroimg'; $('#tpl button.active')?.classList.remove('active'); $$('#tpl button').find(b=>b.dataset.v==='heroimg')?.classList.add('active'); refreshPreview()});
-
-      // Device width
-      $$('.device button').forEach(b=>b.addEventListener('click',()=>{
-        $$('.device button').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-        const w = b.dataset.w;
-        $('#frame').style.width = w === '100%' ? '100%' : (w+'px');
-      }));
-
-      // Acties
-      document.getElementById('refresh').addEventListener('click', refreshPreview);
-      document.getElementById('download').addEventListener('click', downloadZip);
-      document.getElementById('save').addEventListener('click', saveToSupabase);
-
-      // AI / Unsplash
-      document.getElementById('aiGen').addEventListener('click', ()=>aiAction('gen'));
-      document.getElementById('aiShort').addEventListener('click', ()=>aiAction('shorten'));
-      document.getElementById('aiUform').addEventListener('click', ()=>aiAction('uform'));
-      document.getElementById('aiStyle').addEventListener('click', ()=>aiAction('style'));
-      document.getElementById('unsplash').addEventListener('click', pickUnsplash);
-
-      // Blokken
-      document.getElementById('addText').addEventListener('click', ()=>{ state.customBlocks.push({type:'text', title:'Nieuwe sectietitel', text:'Schrijf hier je tekst.'}); renderBlocks(); refreshPreview(); });
-      document.getElementById('addImage').addEventListener('click', async ()=>{ state.customBlocks.push({type:'image', src:''}); renderBlocks(); refreshPreview(); });
-      document.getElementById('addFaq').addEventListener('click', ()=>{ state.faq.push({q:'Nieuwe vraag?', a:'Nieuw antwoord.'}); renderBlocks(); refreshPreview(); });
-      document.getElementById('addCard').addEventListener('click', ()=>{ state.serviceCards.push({title:'Nieuwe dienst', desc:'Korte beschrijving'}); renderBlocks(); refreshPreview(); });
-
-      renderBlocks();
-      refreshPreview();
-    });
-
-    function renderBlocks(){
-      const wrap = document.getElementById('blockList');
-      const items = [];
-      state.customBlocks.forEach((b,i)=>{
-        if(b.type==='text'){
-          items.push(`<div>📝 Tekstblok #${i+1} — <a href="#" data-act="edit-text" data-i="${i}">bewerken</a> · <a href="#" data-act="del" data-i="${i}">verwijderen</a></div>`);
-        }else if(b.type==='image'){
-          items.push(`<div>🖼️ Afbeeldingblok #${i+1} — <a href="#" data-act="upload" data-i="${i}">upload</a> · <a href="#" data-act="del" data-i="${i}">verwijderen</a></div>`);
-        }
-      });
-      state.faq.forEach((f,i)=>{
-        items.push(`<div>❓ FAQ #${i+1} — <a href="#" data-act="edit-faq" data-i="${i}">bewerken</a> · <a href="#" data-act="del-faq" data-i="${i}">verwijderen</a></div>`);
-      });
-      state.serviceCards.forEach((c,i)=>{
-        items.push(`<div>🧩 Dienstenkaart #${i+1} — <a href="#" data-act="edit-card" data-i="${i}">bewerken</a> · <a href="#" data-act="del-card" data-i="${i}">verwijderen</a></div>`);
-      });
-      wrap.innerHTML = items.join('') || 'Nog geen extra blokken toegevoegd.';
-      wrap.onclick = async (e)=>{
-        const a = e.target.closest('a'); if(!a) return;
-        e.preventDefault();
-        const i = +a.dataset.i;
-        const act = a.dataset.act;
-        if(act==='del'){ state.customBlocks.splice(i,1); }
-        if(act==='del-faq'){ state.faq.splice(i,1); }
-        if(act==='del-card'){ state.serviceCards.splice(i,1); }
-        if(act==='edit-text'){
-          const title = prompt('Titel', state.customBlocks[i].title||'');
-          const text  = prompt('Tekst', state.customBlocks[i].text||'');
-          state.customBlocks[i].title = title; state.customBlocks[i].text = text;
-        }
-        if(act==='upload'){
-          const input = document.createElement('input'); input.type='file'; input.accept='image/*';
-          input.onchange = async ()=>{ state.customBlocks[i].src = await fileToDataURL(input.files[0]); refreshPreview(); };
-          input.click();
-        }
-        if(act==='edit-faq'){
-          const q = prompt('Vraag', state.faq[i].q||'');
-          const a2 = prompt('Antwoord', state.faq[i].a||'');
-          state.faq[i].q=q; state.faq[i].a=a2;
-        }
-        if(act==='edit-card'){
-          const t = prompt('Titel', state.serviceCards[i].title||'');
-          const d = prompt('Beschrijving', state.serviceCards[i].desc||'');
-          state.serviceCards[i].title=t; state.serviceCards[i].desc=d;
-        }
-        renderBlocks(); refreshPreview();
-      };
-    }
-
-    /* ===== AI actions via Netlify Function ===== */
-    async function aiAction(mode){
-      const s = document.getElementById('aiStatus');
-      s.className = 'status'; s.textContent = 'AI bezig…';
-      try{
-        if(mode==='style'){
-          const keys = Object.keys(THEMES);
-          const baseKey = keys[Math.floor(Math.random()*keys.length)];
-          state.theme = baseKey;
-          const base = THEMES[baseKey];
-          state.colors.a1 = base.a1;
-          state.colors.a2 = base.a2;
-          state.colors.fg = base.fg;
-          state.colors.bg = base.bg;
-          s.className='status ok'; s.textContent='AI-stijl toegepast.';
-          refreshPreview();
-          return;
-        }
-        const prompt = buildAIPrompt(mode);
-        const r = await fetch('/.netlify/functions/ai-generate', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({prompt})});
-        if(!r.ok){throw new Error('AI-endpoint niet bereikbaar');}
-        const data = await r.json();
-        if(data.about) { state.about = data.about; document.getElementById('about').value = data.about; }
-        if(data.tagline){ state.tagline = data.tagline; document.getElementById('tagline').value = data.tagline; }
-        await refreshPreview();
-        s.className = 'status ok'; s.textContent = 'AI-tekst bijgewerkt.';
-      }catch(err){
-        console.error(err);
-        s.className = 'status err'; s.textContent = 'AI kon niet genereren. Configureer het function-endpoint.';
+      if(s.type==='featureGrid'){
+        const cols = Math.min(Math.max(+d.cols||3,2),6);
+        return `<section class="features"><div class="inner"><h2>Onze troeven</h2><div class="grid" style="grid-template-columns:repeat(${cols},1fr)">${(d.items||[]).map(it=>`<div class="card"><h3>${esc(it.title)}</h3><p>${esc(it.text||'')}</p></div>`).join('')}</div></div></section>`;
       }
+      if(s.type==='pricing'){
+        return `<section class="pricing"><div class="inner"><h2>Prijzen</h2><div class="grid">${(d.plans||[]).map(p=>`<div class="card"><h3>${esc(p.name)}</h3><div class="price">${esc(p.price)}</div><ul>${p.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul><a class="btn" href="#">Kies</a></div>`).join('')}</div></div></section>`;
+      }
+      if(s.type==='testimonials'){
+        return `<section class="testimonials"><div class="inner"><h2>Wat klanten zeggen</h2><div class="grid">${(d.items||[]).map(t=>`<div class="card"><p>“${esc(t.quote)}”</p><div>— ${esc(t.who)}</div></div>`).join('')}</div></div></section>`;
+      }
+      if(s.type==='gallery'){
+        return `<section class="gallery"><div class="inner"><h2>Galerij</h2><div class="grid">${(d.images||[]).map(g=>`<figure class="card"><img src="${esc(g.src)}" alt=""></figure>`).join('')}</div></div></section>`;
+      }
+      if(s.type==='faq'){
+        return `<section class="faq"><div class="inner"><h2>FAQ</h2>${(d.items||[]).map(f=>`<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}</div></section>`;
+      }
+      if(s.type==='cta'){
+        return `<section class="cta"><div class="inner" style="text-align:center"><h2>${esc(d.title||'Klaar?')}</h2><p>${esc(d.text||'Maak nu je afspraak')}</p>${d.button?`<a class="btn" href="${esc(d.button.href||'#')}">${esc(d.button.label||'Start')}</a>`:''}</div></section>`;
+      }
+      if(s.type==='contact'){
+        return `<section id="contact" class="contact"><div class="inner"><h2>Contact</h2><ul><li>☎ ${esc(d.phone||'')}</li><li>📍 ${esc(d.address||'')}</li><li>✉ ${esc(d.email||'')}</li></ul></div></section>`;
+      }
+      return '';
     }
 
-    function buildAIPrompt(mode){
-      const name = state.name || 'Uw zaak';
-      const ind = state.industry;
-      const tone = mode==='uform' ? 'schrijf in u-vorm, professioneel, helder' : 'vriendelijk, actief, overtuigend';
-      const extra = mode==='shorten' ? 'maak tekst 30% korter' : 'maak aansprekend en duidelijk';
-      return `Je bent copywriter. Schrijf NL teksten voor een minisite. Bedrijfsnaam: ${name}. Sector: ${ind}. ${tone}. ${extra}. Lever JSON met keys: about, tagline.`;
-    }
+    function esc(s){return (s||'').toString().replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
-    function shade(hex, amt){
-      try{
-        let c = hex.replace('#','');
-        if(c.length===3) c = c.split('').map(x=>x+x).join('');
-        let [r,g,b] = [parseInt(c.slice(0,2),16), parseInt(c.slice(2,4),16), parseInt(c.slice(4,6),16)];
-        r = Math.max(0, Math.min(255, r+amt)); g = Math.max(0, Math.min(255, g+amt)); b = Math.max(0, Math.min(255, b+amt));
-        return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
-      }catch{return hex}
-    }
+    // ===== Refresh preview =====
+    function refresh(){ $('#frame').srcdoc = buildHTML(); }
 
-    /* ===== Download ZIP ===== */
+    // ===== Bind globals =====
+    $('#siteName').oninput=e=>{state.meta.name=e.target.value; refresh()};
+    $('#siteTag').oninput=e=>{state.meta.tag=e.target.value; refresh()};
+    $('#siteIntro').oninput=e=>{state.meta.intro=e.target.value; refresh()};
+    $('#font').onchange=e=>{state.design.font=e.target.value; refresh()};
+    $('#baseLayout').onchange=e=>{state.design.base=e.target.value; refresh()};
+    $('#cA1').oninput=e=>{state.design.a1=e.target.value; refresh()};
+    $('#cA2').oninput=e=>{state.design.a2=e.target.value; refresh()};
+    $('#cFg').oninput=e=>{state.design.fg=e.target.value; refresh()};
+    $('#cBg').oninput=e=>{state.design.bg=e.target.value; refresh()};
+    $('#radius').oninput=e=>{state.design.radius=+e.target.value; refresh()};
+    $('#spacing').oninput=e=>{state.design.spacing=+e.target.value; refresh()};
+
+    // Add section quick
+    $('#addSection').onclick=()=>{ state.sections.push(makeBlock('featureGrid')); renderSectionList(); refresh(); };
+
+    // AI buttons (wired later):
+    $('#aiLayout').onclick=()=>aiLayout();
+    $('#aiContent').onclick=()=>aiText();
+    $('#aiImage').onclick=()=>aiImageInto(state.sections[0].id, $('#aiPrompt').value||'hero background');
+
+    // Export / save
+    $('#exportZip').onclick=downloadZip;
+    $('#saveProject').onclick=saveProject;
+    $('#importProject').onclick=importProject;
+    $('#newProject').onclick=()=>{localStorage.removeItem('vp_builder_pro'); location.reload()};
+
+    // ===== ZIP export =====
     async function downloadZip(){
-      const html = await buildSiteHTML(state);
+      const html = buildHTML();
       const zip = new JSZip();
       zip.file('index.html', html);
       const blob = await zip.generateAsync({type:'blob'});
-      saveAs(blob, (state.name||'vrijeplek-site') + '.zip');
+      saveAs(blob, (state.meta.name||'vrijeplek-site')+'.zip');
     }
 
-    /* ===== Save to Supabase ===== */
-    async function saveToSupabase(){
-      const status = document.getElementById('status');
-      status.className='status'; status.textContent='Opslaan…';
+    // ===== Local save/import =====
+    function saveProject(){ localStorage.setItem('vp_builder_pro', JSON.stringify(state)); flash('Opgeslagen'); }
+    function importProject(){
+      const raw = prompt('Plak JSON van project:');
+      try{ const j = JSON.parse(raw); Object.assign(state, j); renderSectionList(); refresh(); flash('Geïmporteerd'); }catch{ flash('JSON ongeldig', true) }
+    }
+
+    function flash(t, isErr=false){ const s=$('#status'); s.textContent=t; s.style.color=isErr?'var(--err)':'var(--ok)'; setTimeout(()=>s.textContent='',1800); }
+
+    // ===== AI stubs (Netlify Functions) =====
+    async function aiText(){
+      const prompt = $('#aiPrompt').value || `Schrijf NL hero copy voor ${state.meta.name} — sector: algemeen.`;
       try{
-        if(!window.VRIJEPLEK){throw new Error('Geen Supabase-config')}
-        const { createClient } = window.supabase || {}; if(!createClient) throw new Error('Supabase niet geladen');
-        const supa = createClient(window.VRIJEPLEK.SUPABASE_URL, window.VRIJEPLEK.SUPABASE_ANON_KEY);
-        const { data:session } = await supa.auth.getSession();
-        const user = session?.session?.user; if(!user) throw new Error('Je bent niet ingelogd');
-        const html = await buildSiteHTML(state);
-        const payload = {
-          user_id: user.id,
-          site_name: state.name || 'Vrijeplek-site',
-          html,
-          theme: JSON.stringify({
-            template:state.template, theme:state.theme, font:state.font, sections:state.sections,
-            colors:state.colors, radius:state.radius, shadow:state.shadow, scale:state.scale, spacing:state.spacing,
-            faq:state.faq, gallery:state.gallery, custom:state.customBlocks
-          })
-        };
-        const { error } = await supa.from('sites').insert(payload);
-        if(error) throw error;
-        status.className='status ok'; status.textContent='Opgeslagen in Vrijeplek.';
-      }catch(err){
-        console.error(err);
-        status.className='status err'; status.textContent= 'Opslaan mislukt: ' + err.message;
-      }
+        const r = await fetch('/.netlify/functions/ai-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+        const data = await r.json();
+        const hero = state.sections.find(x=>x.type==='hero');
+        if(hero){ hero.data.title = data.title || hero.data.title; hero.data.subtitle = data.subtitle || hero.data.subtitle; refresh(); }
+        flash('AI-tekst toegepast');
+      }catch(e){ flash('AI mislukt', true); }
     }
 
-    /* ===== Unsplash quick pick ===== */
-    async function pickUnsplash(){
-      const q = prompt('Welk thema/zoekwoord? (bv. food, spa, dentist)', 'food')||'food';
-      state.heroDataURL = `https://source.unsplash.com/1080x600/?${encodeURIComponent(q)}`;
-      state.template='heroimg';
-      refreshPreview();
+    async function aiLayout(){
+      // simpele heuristische layout-suggestie
+      const seg = ['hero','featureGrid','pricing','testimonials','gallery','faq','cta','contact'];
+      const pick = () => seg.sort(()=>Math.random()-0.5).slice(0,4+Math.floor(Math.random()*3));
+      const types = ['hero', ...pick(), 'cta'];
+      state.sections = types.map(t=> makeBlock(t)); renderSectionList(); refresh(); flash('AI-layout voorgesteld');
     }
+
+    async function aiImageInto(sectionId, idea){
+      try{
+        // Verwacht dat /.netlify/functions/ai-image {url:"..."} teruggeeft
+        const r = await fetch('/.netlify/functions/ai-image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt: idea})});
+        const {url} = await r.json();
+        const s = byId(sectionId); if(!s) return;
+        if(s.type==='hero'){ s.data.bg = url; refresh(); }
+        else if(s.type==='gallery'){ s.data.images = (s.data.images||[]).concat([{src:url}]); refresh(); }
+        flash('AI-beeld toegevoegd');
+      }catch(e){ flash('AI-beeld mislukt', true); }
+    }
+
+    async function aiGalleryInto(sectionId, theme){
+      const s = byId(sectionId); if(!s) return;
+      // keyless Unsplash demo
+      const tags = ['restaurant','chef','table','food','kitchen','menu'];
+      s.data.images = Array.from({length:6}).map((_,i)=>({src:`https://source.unsplash.com/900x700/?${encodeURIComponent(theme||tags[i%tags.length])}`}));
+      refresh(); flash('Galerij gevuld');
+    }
+
+    async function pickImage(){
+      const q = prompt('Zoekwoord voor foto (Unsplash)', 'business'); if(!q) return '';
+      return `https://source.unsplash.com/1200x800/?${encodeURIComponent(q)}`;
+    }
+
+    // ===== init =====
+    renderSectionList(); refresh();
   </script>
 </body>
 </html>
+<!-- Deel 2: Voeg dit ONDER Deel 1 in dezelfde builder.html of hou als referentiebestand. -->
+<script>
+  /* =====================
+     COMPONENTENSET PRO
+     ===================== */
+  function makeNavbar(opts={}){
+    const o = Object.assign({logo: state.meta.name || 'Jouw Merk', items:[{label:'Home',href:'#'},{label:'Diensten',href:'#'},{label:'Prijzen',href:'#'},{label:'Contact',href:'#contact'}]}, opts);
+    return { id: uid(), type:'navbar', data:o };
+  }
+  function makeSteps(opts={}){
+    const o = Object.assign({title:'Zo werkt het', items:[{t:'Kies een moment',d:'Selecteer je gewenste tijd'},{t:'Bevestig',d:'Wij sturen bevestiging'},{t:'Geniet',d:'Je afspraak staat klaar'}]}, opts);
+    return { id: uid(), type:'steps', data:o };
+  }
+  function makeStats(opts={}){
+    const o = Object.assign({title:'Cijfers', items:[{k:'1.2k+',v:'Boekingen/m'},{k:'98%',v:'Tevredenheid'},{k:'24u',v:'Support'}]}, opts);
+    return { id: uid(), type:'stats', data:o };
+  }
+  function makeLogoWall(opts={}){
+    const o = Object.assign({title:'Vertrouwd door', logos:[
+      'https://dummyimage.com/140x40/ddd/000.png&text=Logo+1',
+      'https://dummyimage.com/140x40/ddd/000.png&text=Logo+2',
+      'https://dummyimage.com/140x40/ddd/000.png&text=Logo+3',
+      'https://dummyimage.com/140x40/ddd/000.png&text=Logo+4']}, opts);
+    return { id: uid(), type:'logowall', data:o };
+  }
+  function makeTeam(opts={}){
+    const o = Object.assign({title:'Ons team', members:[
+      {name:'Nicky',role:'Zaakvoerder',img:'https://source.unsplash.com/200x200/?portrait'},
+      {name:'Bart',role:'Projectleider',img:'https://source.unsplash.com/201x201/?portrait'},
+      {name:'Laura',role:'Klantgeluk',img:'https://source.unsplash.com/202x202/?portrait'}
+    ]}, opts);
+    return { id: uid(), type:'team', data:o };
+  }
+  function makeBlog(opts={}){
+    const o = Object.assign({title:'Nieuws', items:[
+      {title:'Tips voor sneller boeken', excerpt:'Zo maak je klanten blij…', href:'#'},
+      {title:'Onze nieuwe planner', excerpt:'Efficiënter afspraken beheer', href:'#'},
+      {title:'Case: lokale kapper', excerpt:'Van leegte naar vol schema', href:'#'}
+    ]}, opts);
+    return { id: uid(), type:'blog', data:o };
+  }
+  function makeFooter(opts={}){
+    const o = Object.assign({
+      cols:[
+        {h:'Vrijeplek',items:['Snelle afspraken','Lokale zichtbaarheid']},
+        {h:'Links',items:['Over ons','Diensten','Prijzen','Contact']},
+        {h:'Contact',items:['info@voorbeeld.be','+32 …','3500 Hasselt']}
+      ],
+      copyright:`© ${new Date().getFullYear()} ${state.meta.name||'Uw zaak'}`
+    }, opts);
+    return { id: uid(), type:'footer', data:o };
+  }
+
+  // Registreer extra types bij renderSection
+  const _renderSectionOrig = renderSection;
+  renderSection = function(s){
+    const d=s.data;
+    if(s.type==='navbar'){
+      return `<nav class="navbar"><div class="inner"><div class="logo">${esc(d.logo)}</div><ul>${(d.items||[]).map(i=>`<li><a href="${esc(i.href)}">${esc(i.label)}</a></li>`).join('')}</ul></div></nav>`;
+    }
+    if(s.type==='steps'){
+      return `<section class="steps"><div class="inner"><h2>${esc(d.title||'Zo werkt het')}</h2><ol class="step-list">${(d.items||[]).map(it=>`<li><strong>${esc(it.t)}</strong><span>${esc(it.d||'')}</span></li>`).join('')}</ol></div></section>`;
+    }
+    if(s.type==='stats'){
+      return `<section class="stats"><div class="inner"><h2>${esc(d.title||'Cijfers')}</h2><div class="grid">${(d.items||[]).map(it=>`<div class="card stat"><div class="k">${esc(it.k)}</div><div class="v">${esc(it.v)}</div></div>`).join('')}</div></div></section>`;
+    }
+    if(s.type==='logowall'){
+      return `<section class="logowall"><div class="inner"><h2>${esc(d.title||'Vertrouwd door')}</h2><div class="logo-grid">${(d.logos||[]).map(src=>`<img src="${esc(src)}" alt="logo">`).join('')}</div></div></section>`;
+    }
+    if(s.type==='team'){
+      return `<section class="team"><div class="inner"><h2>${esc(d.title||'Team')}</h2><div class="grid">${(d.members||[]).map(m=>`<div class="card team-m"><img src="${esc(m.img)}" alt=""><h3>${esc(m.name)}</h3><p>${esc(m.role||'')}</p></div>`).join('')}</div></div></section>`;
+    }
+    if(s.type==='blog'){
+      return `<section class="blog"><div class="inner"><h2>${esc(d.title||'Blog')}</h2><div class="grid">${(d.items||[]).map(b=>`<article class="card"><h3>${esc(b.title)}</h3><p>${esc(b.excerpt||'')}</p><a class="btn" href="${esc(b.href||'#')}">Lees</a></article>`).join('')}</div></div></section>`;
+    }
+    if(s.type==='footer'){
+      return `<footer class="site-f pro"><div class="inner footer-grid">${(d.cols||[]).map(c=>`<div><h4>${esc(c.h)}</h4><ul>${c.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div><div class="inner copy">${esc(d.copyright||'©')}</div></footer>`;
+    }
+    return _renderSectionOrig(s);
+  }
+
+  // Extra CSS voor PRO-secties
+  const _genCSSOrig = genCSS;
+  genCSS = function(d){
+    return _genCSSOrig(d) + `
+      .navbar{background:#020617;color:#fff;border-bottom:1px solid #ffffff22}
+      .navbar .inner{display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+      .navbar ul{display:flex;gap:16px;list-style:none;margin:0;padding:0}
+      .navbar a{color:#fff;text-decoration:none}
+      .steps .step-list{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);list-style:none;padding:0;margin:0}
+      .steps li{background:#ffffff10;border:1px solid #ffffff22;border-radius:var(--rad);padding:14px}
+      .stats .stat .k{font-size:28px;font-weight:800}
+      .stats .stat .v{opacity:.85}
+      .logowall .logo-grid{display:grid;gap:10px;grid-template-columns:repeat(4,1fr);align-items:center;opacity:.9}
+      .team .team-m img{width:100%;height:180px;object-fit:cover;border-radius:var(--rad)}
+      .footer-grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+      .site-f.pro{background:#020617}
+      .site-f.pro h4{margin:0 0 8px}
+      .site-f.pro ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+      .site-f.pro .copy{border-top:1px solid #ffffff22;padding:8px 0;color:#cbd5e1}
+      @media(max-width:900px){.steps .step-list,.logowall .logo-grid,.footer-grid{grid-template-columns:1fr}}
+    `;
+  }
+
+  /* =====================
+     LAYOUT-PRESETS (12 stuks)
+     ===================== */
+  const PRESETS = {
+    landing_clean(){
+      return [ makeNavbar(), makeHero('Alles voor je afspraak'), makeLogoWall(), makeFeature(), makeStats(), makePricing(), makeTestimonials(), makeFAQ(), makeCTA(), makeFooter() ];
+    },
+    restaurant(){
+      return [ makeNavbar({items:[{label:'Menu',href:'#menu'},{label:'Reserveren',href:'#'}]}), makeHero('Heerlijk eten, direct te boeken',{bg:'unsplash:restaurant'}), makeFeature({items:[{title:'Dagmenu',text:'Seizoensgebonden'},{title:'Groepsformules',text:'Voor 10-30 pers'},{title:'Take-away',text:'Snel & warm'}]}), makeGallery('restaurant'), makePricing(), makeCTA(), makeFooter() ];
+    },
+    wellness(){
+      return [ makeNavbar(), makeHero('Ontspan direct',{bg:'unsplash:spa'}), makeFeature({items:[{title:'Massage',text:'Ontspanning'},{title:'Gelaatsverzorging',text:'Glow-up'},{title:'Arrangement',text:'Voor twee'}]}), makePricing(), makeTestimonials(), makeCTA(), makeFooter() ];
+    },
+    dokter(){
+      return [ makeNavbar(), makeHero('Snelle consults',{bg:'unsplash:doctor'}), makeFeature({items:[{title:'Intake',text:'Duidelijke uitleg'},{title:'Spoedplek',text:'Last-minute'},{title:'Herhaalrecept',text:'Snel geregeld'}]}), makeFAQ(), makeCTA(), makeFooter() ];
+    },
+    poets(){
+      return [ makeNavbar(), makeHero('Streeploos schoon',{bg:'unsplash:cleaning'}), makeFeature({items:[{title:'Woningen',text:'Grondig'},{title:'Kantoren',text:'Na uren'},{title:'Ramen',text:'Telescoop'}]}), makePricing(), makeCTA(), makeFooter() ];
+    },
+    ramenwasser(){
+      return [ makeNavbar(), makeHero('Blinkende ramen',{bg:'unsplash:window cleaning'}), makeFeature({items:[{title:'Particulier',text:'Binnen & buiten'},{title:'Zakelijk',text:'Flex schema'},{title:'Hoog',text:'Tot 12m'}]}), makePricing(), makeCTA(), makeFooter() ];
+    },
+    dieren(){
+      return [ makeNavbar(), makeHero('Voor blije viervoeters',{bg:'unsplash:pet grooming'}), makeFeature({items:[{title:'Trimsalon',text:'Volledige vacht'},{title:'Dierenarts',text:'Consult'},{title:'Dagopvang',text:'Speels & veilig'}]}), makeGallery('pets'), makeCTA(), makeFooter() ];
+    },
+    events(){
+      return [ makeNavbar(), makeHero('Feest zonder zorgen',{bg:'unsplash:event'}), makeFeature({items:[{title:'Verhuur',text:'Materiaal'},{title:'Catering',text:'Snacks → full'},{title:'Planning',text:'A-Z'}]}), makePricing(), makeTestimonials(), makeCTA(), makeFooter() ];
+    },
+    portfolio(){
+      return [ makeNavbar(), makeHero('Projecten die spreken',{bg:'unsplash:portfolio'}), makeGallery('construction'), makeBlog(), makeCTA(), makeFooter() ];
+    },
+    kapper(){
+      return [ makeNavbar(), makeHero('Nieuwe look, nu',{bg:'unsplash:hair salon'}), makeFeature({items:[{title:'Knippen',text:'Dames & Heren'},{title:'Kleuren',text:'Trendy'},{title:'Styling',text:'Event-proof'}]}), makePricing(), makeCTA(), makeFooter() ];
+    },
+    kapper_booking(){
+      return [ makeNavbar({items:[{label:'Boek',href:'#'}]}), makeHero('Vandaag nog mooi',{bg:'unsplash:barber'}), makeSteps(), makePricing(), makeFAQ(), makeCTA(), makeFooter() ];
+    },
+    tandarts(){
+      return [ makeNavbar(), makeHero('Stralende glimlach',{bg:'unsplash:dental'}), makeFeature({items:[{title:'Controle',text:'Preventief'},{title:'Witmaken',text:'Cosmetisch'},{title:'Spoed',text:'Snel geholpen'}]}), makeFAQ(), makeCTA(), makeFooter() ];
+    }
+  };
+
+  // Helpers voor presets
+  function makeHero(title, extra={}){ return {id:uid(),type:'hero',data:Object.assign({title,subtitle:state.meta.tag||'',cta:{label:'Boek nu',href:'#'}, vh:72, ov:.35, align:'center'}, extra)} }
+  function makeFeature(extra={}){ return {id:uid(),type:'featureGrid',data:Object.assign({cols:3,items:[{title:'Snel',text:'Binnen 10s klaar'},{title:'Zichtbaar',text:'Meer klanten'},{title:'Makkelijk',text:'Geen gedoe'}]}, extra)} }
+  function makePricing(){ return {id:uid(),type:'pricing',data:{plans:[{name:'Basic',price:'€19,95',features:['Vaste minisite','Eenvoudig beheer']},{name:'Pro',price:'€39',features:['Meer secties','Eigen domein']},{name:'Plus',price:'€79',features:['Alles van Pro','Prioriteit support']}]}} }
+  function makeTestimonials(){ return {id:uid(),type:'testimonials',data:{items:[{quote:'Topservice!',who:'Klant A'},{quote:'Direct afspraak gevonden.',who:'Klant B'}]}} }
+  function makeFAQ(){ return {id:uid(),type:'faq',data:{items:[{q:'Hoe boek ik?',a:'Klik op de knop en kies tijd'},{q:'Annuleren?',a:'Tot 24u vooraf gratis'}]}} }
+  function makeCTA(){ return {id:uid(),type:'cta',data:{title:'Klaar om te starten?',text:'Maak je minisite of boek klanten',button:{label:'Begin nu',href:'#'}}} }
+  function makeGallery(keyword){ return {id:uid(),type:'gallery',data:{images:Array.from({length:6}).map((_,i)=>({src:`https://source.unsplash.com/1000x800/?${encodeURIComponent(keyword)}&sig=${i}`}))}} }
+  function makeBlog(){ return makeBlog({}) }
+
+  // Quick UI: voeg presetkiezer toe aan linkerpaneel
+  (function addPresetUI(){
+    const left = document.querySelector('.left .body');
+    const wrap = document.createElement('div');
+    wrap.className='group';
+    wrap.innerHTML = `<label>Lay-out preset</label><div class="actions" id="presetBtns"></div>`;
+    left.prepend(wrap);
+    const p = document.getElementById('presetBtns');
+    const keys = Object.keys(PRESETS);
+    keys.forEach(k=>{
+      const b = document.createElement('button'); b.className='btn'; b.textContent = k.replace('_',' ');
+      b.onclick = ()=>{ state.sections = PRESETS[k](); renderSectionList(); refresh(); };
+      p.appendChild(b);
+    });
+  })();
+
+  /* =====================
+     THEMA‑ENGINE PRO
+     ===================== */
+  const THEME_MODES = ['flat','glass','skeuo'];
+  function applyMode(mode){ state.design.mode = mode; refresh(); }
+
+  // Kleurpalet generatoren
+  function paletteFromSeed(hex){
+    // simpele generator: triade
+    const c = toRGB(hex||'#2563eb');
+    const tri = [c, rotateHue(c,120), rotateHue(c,240)];
+    return {
+      a1: toHex(tri[0]),
+      a2: toHex(mix(tri[1], {r:255,g:255,b:255}, 0.2)),
+      bg: '#0b1228',
+      fg: '#e5ecff'
+    };
+  }
+  function toRGB(h){ h=h.replace('#',''); if(h.length===3){h=h.split('').map(x=>x+x).join('')} return {r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16)} }
+  function toHex({r,g,b}){ return '#'+[r,g,b].map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('') }
+  function rotateHue({r,g,b},deg){ // via approximate RGB → HSL → rotate → RGB
+    const hsl = rgbToHsl(r,g,b); hsl.h=(hsl.h+deg)%360; const rgb = hslToRgb(hsl.h,hsl.s,hsl.l); return {r:rgb[0],g:rgb[1],b:rgb[2]};
+  }
+  function rgbToHsl(r,g,b){ r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){h=s=0}else{const d=max-min; s=l>0.5? d/(2-max-min):d/(max+min); switch(max){case r: h=(g-b)/d+(g<b?6:0); break; case g: h=(b-r)/d+2; break; case b: h=(r-g)/d+4; break;} h/=6;} return {h:h*360,s,l} }
+  function hslToRgb(h,s,l){ let r,g,b; h/=360; if(s===0){r=g=b=l}else{const hue2rgb=(p,q,t)=>{ if(t<0)t+=1; if(t>1)t-=1; if(t<1/6)return p+(q-p)*6*t; if(t<1/2)return q; if(t<2/3)return p+(q-p)*(2/3-t)*6; return p; }; const q=l<0.5? l*(1+s): l+s-l*s; const p=2*l-q; r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);} return [Math.round(r*255),Math.round(g*255),Math.round(b*255)] }
+  function mix(a,b,t){ return { r:a.r+(b.r-a.r)*t, g:a.g+(b.g-a.g)*t, b:a.b+(b.b-a.b)*t } }
+
+  // UI voor thema‑engine
+  (function addThemeUI(){
+    const left = document.querySelector('.left .body');
+    const group = document.createElement('div'); group.className='group';
+    group.innerHTML = `<label>Thema‑engine</label>
+      <div class="actions">
+        <button class="btn" id="autoPalette">Auto‑palet</button>
+        <button class="btn" id="modeFlat">Flat</button>
+        <button class="btn" id="modeGlass">Glass</button>
+        <button class="btn" id="modeSkeuo">Skeuo</button>
+      </div>`;
+    left.appendChild(group);
+    document.getElementById('autoPalette').onclick=()=>{ const p=paletteFromSeed(state.design.a1); Object.assign(state.design,p); refresh(); };
+    document.getElementById('modeFlat').onclick=()=>applyMode('flat');
+    document.getElementById('modeGlass').onclick=()=>applyMode('glass');
+    document.getElementById('modeSkeuo').onclick=()=>applyMode('skeuo');
+  })();
+
+  // Mode-stijlen toevoegen aan CSS
+  const _cssVarsOrig = cssVars;
+  cssVars = function(){
+    const base = _cssVarsOrig();
+    const m = state.design.mode||'flat';
+    let extra = '';
+    if(m==='glass'){
+      extra = `.card{background:rgba(255,255,255,.10);backdrop-filter:blur(8px);border:1px solid #ffffff30}`;
+    } else if(m==='skeuo'){
+      extra = `.card{background:linear-gradient(#ffffff, #e8eef9); border:1px solid #b7c5de; box-shadow:inset 0 2px 0 #fff, 0 8px 24px rgba(0,0,0,.15); color:#0b1228}`;
+    } else {
+      extra = `.card{background:#ffffff10;border:1px solid #ffffff22}`;
+    }
+    return base + extra;
+  }
+</script>
+<!--
+DEEL 3 — AI-functions (Netlify), Viewer, Supabase schema & policies, Autosave/Undo/Redo, Media Manager, Storage upload
+Plaats elk bestand in je projectstructuur zoals aangegeven bij het pad.
+-->
+
+<!-- ========================================= -->
+<!-- 1) /.netlify/functions/ai-generate.js     -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="netlify/functions/ai-generate.js">
+export const config = { path: "/.netlify/functions/ai-generate" };
+
+export default async (req) => {
+  try{
+    if(req.method !== 'POST') return new Response('Method not allowed', {status:405});
+    const { prompt } = await req.json();
+    const apiKey = process.env.OPENAI_API_KEY;
+    if(!apiKey) return new Response(JSON.stringify({error:'Missing OPENAI_API_KEY'}),{status:500});
+
+    const sys = 'Je bent een Nederlandse marketing copywriter. Geef compacte, krachtige webteksten terug als JSON met keys: title (optioneel), subtitle (optioneel), about (optioneel), tagline (optioneel).';
+    const user = prompt || 'Schrijf NL hero + tagline voor een lokale dienstverlener.';
+
+    const r = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{ 'Authorization':`Bearer ${apiKey}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages:[{role:'system',content:sys},{role:'user',content:user}],
+        temperature:0.8,
+        response_format:{ type:'json_object' }
+      })
+    });
+    if(!r.ok){
+      const txt = await r.text();
+      return new Response(JSON.stringify({error:'OpenAI error', detail:txt}), {status:500});
+    }
+    const data = await r.json();
+    const text = data.choices?.[0]?.message?.content?.trim() || '{}';
+    return new Response(text, {headers:{'Content-Type':'application/json'}});
+  }catch(err){
+    return new Response(JSON.stringify({error:String(err)}),{status:500});
+  }
+}
+</script>
+
+<!-- ========================================= -->
+<!-- 2) /.netlify/functions/ai-image.js        -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="netlify/functions/ai-image.js">
+export const config = { path: "/.netlify/functions/ai-image" };
+
+export default async (req) => {
+  try{
+    if(req.method !== 'POST') return new Response('Method not allowed', {status:405});
+    const { prompt } = await req.json();
+    const apiKey = process.env.OPENAI_API_KEY;
+    if(!apiKey) return new Response(JSON.stringify({error:'Missing OPENAI_API_KEY'}),{status:500});
+
+    // Gebruik OpenAI Images (fallback naar Unsplash random)
+    try{
+      const r = await fetch('https://api.openai.com/v1/images/generations',{
+        method:'POST', headers:{ 'Authorization':`Bearer ${apiKey}`, 'Content-Type':'application/json' },
+        body: JSON.stringify({ model:'gpt-image-1', prompt: prompt || 'clean gradient background', size:'1024x1024' })
+      });
+      if(!r.ok) throw new Error(await r.text());
+      const j = await r.json();
+      const b64 = j.data?.[0]?.b64_json;
+      if(!b64) throw new Error('No image returned');
+      const url = `data:image/png;base64,${b64}`;
+      return new Response(JSON.stringify({url}), {headers:{'Content-Type':'application/json'}});
+    }catch(inner){
+      const fallback = `https://source.unsplash.com/1200x800/?${encodeURIComponent(prompt||'business')}`;
+      return new Response(JSON.stringify({url:fallback, note:'fallback_unsplash'}), {headers:{'Content-Type':'application/json'}});
+    }
+  }catch(err){
+    return new Response(JSON.stringify({error:String(err)}),{status:500});
+  }
+}
+</script>
+
+<!-- ========================================= -->
+<!-- 3) Viewer: /site.html?id=<uuid>           -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="site.html">
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Site — Vrijeplek</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+  <script>/* laad je config */</script>
+  <style>html,body{height:100%;margin:0}</style>
+</head>
+<body>
+  <main id="app">Laden…</main>
+  <script>
+    (async function(){
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      const cfg = window.VRIJEPLEK || {};
+      const { createClient } = window.supabase;
+      const supa = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+      const { data, error } = await supa.from('sites').select('html,is_public').eq('id', id).single();
+      if(error || !data){ document.getElementById('app').textContent = 'Site niet gevonden'; return; }
+      if(!data.is_public){ document.getElementById('app').textContent = 'Site is privé'; return; }
+      document.open(); document.write(data.html); document.close();
+    })();
+  </script>
+</body>
+</html>
+</script>
+
+<!-- ========================================= -->
+<!-- 4) Supabase schema & policies (SQL)       -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="supabase_schema.sql">
+-- Tabel voor opgeslagen sites
+create table if not exists public.sites (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade,
+  site_name text,
+  html text,
+  theme jsonb,
+  is_public boolean default true,
+  created_at timestamp with time zone default now()
+);
+
+alter table public.sites enable row level security;
+
+-- Authenticated users mogen hun eigen records beheren
+create policy "insert_own" on public.sites for insert
+  with check ( auth.uid() = user_id );
+
+create policy "select_public_or_own" on public.sites for select
+  using ( is_public = true or auth.uid() = user_id );
+
+create policy "update_own" on public.sites for update
+  using ( auth.uid() = user_id );
+
+create policy "delete_own" on public.sites for delete
+  using ( auth.uid() = user_id );
+
+-- Optionele bucket voor assets
+-- In Supabase Storage maak bucket: site-assets (public)
+-- Zet public access aan of gebruik signed URLs.
+</script>
+
+<!-- ========================================= -->
+<!-- 5) Builder-extensies: Autosave / Undo     -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="builder-extensions-autosave.js">
+// Voeg ONDERAAN builder.html toe, na Deel 1/2 scripts
+(function(){
+  const KEY = 'vp_builder_pro';
+  const HISTORY = [];
+  let cursor = -1, lock=false;
+
+  function snapshot(){
+    if(lock) return; lock=true;
+    const snap = JSON.stringify(state);
+    // dedup
+    if(HISTORY[cursor] !== snap){
+      HISTORY.splice(cursor+1); // drop future
+      HISTORY.push(snap); cursor = HISTORY.length-1;
+      localStorage.setItem(KEY, snap);
+    }
+    setTimeout(()=>lock=false, 50);
+  }
+
+  // autosave on changes (patch refresh)
+  const _refresh = window.refresh;
+  window.refresh = function(){ _refresh(); snapshot(); }
+
+  // load last
+  try{ const raw = localStorage.getItem(KEY); if(raw){ Object.assign(state, JSON.parse(raw)); renderSectionList(); refresh(); } }catch{}
+
+  // undo/redo
+  function undo(){ if(cursor>0){ cursor--; Object.assign(state, JSON.parse(HISTORY[cursor])); renderSectionList(); _refresh(); }}
+  function redo(){ if(cursor<HISTORY.length-1){ cursor++; Object.assign(state, JSON.parse(HISTORY[cursor])); renderSectionList(); _refresh(); }}
+
+  // keyboard shortcuts
+  window.addEventListener('keydown', (e)=>{
+    const mod = e.ctrlKey || e.metaKey;
+    if(mod && e.key.toLowerCase()==='s'){ e.preventDefault(); localStorage.setItem(KEY, JSON.stringify(state)); flash('Opgeslagen'); }
+    if(mod && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
+    if(mod && (e.key.toLowerCase()==='y' || (e.shiftKey && e.key.toLowerCase()==='z'))){ e.preventDefault(); redo(); }
+  });
+})();
+</script>
+
+<!-- ========================================= -->
+<!-- 6) Media Manager (uploads + gallery)      -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="builder-extensions-media.js">
+// Media manager met Supabase Storage (bucket: site-assets, public)
+(function(){
+  const cfg = window.VRIJEPLEK || {};
+  const { createClient } = window.supabase || {};
+  let supa = null; if(createClient && cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY){ supa = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY); }
+
+  function ui(){
+    const right = document.querySelector('.right .body');
+    const box = document.createElement('div'); box.className='group';
+    box.innerHTML = `<label>Media Manager</label>
+      <div class="actions">
+        <button class="btn" id="mmUpload">Upload</button>
+        <button class="btn" id="mmList">Lijst</button>
+      </div>
+      <div id="mmStatus" class="tiny"></div>
+      <div id="mmGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px"></div>`;
+    right.appendChild(box);
+
+    document.getElementById('mmUpload').onclick=async()=>{
+      const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+      inp.onchange = async ()=>{
+        const file = inp.files[0]; if(!file) return;
+        if(!supa){ return msg('Supabase niet geconfigureerd'); }
+        const path = `${Date.now()}_${file.name.replace(/[^a-z0-9._-]/gi,'_')}`;
+        const { error } = await supa.storage.from('site-assets').upload(path, file, { upsert:false, cacheControl:'3600' });
+        if(error) return msg('Upload mislukt');
+        const { data } = await supa.storage.from('site-assets').getPublicUrl(path);
+        addToGallery(data.publicUrl);
+        msg('Geüpload');
+      };
+      inp.click();
+    };
+
+    document.getElementById('mmList').onclick=async()=>{
+      if(!supa) return msg('Supabase niet geconfigureerd');
+      const { data, error } = await supa.storage.from('site-assets').list('', { limit: 24, sortBy:{column:'created_at', order:'desc'} });
+      if(error) return msg('Kon lijst niet ophalen');
+      const grid = document.getElementById('mmGrid');
+      grid.innerHTML = '';
+      for(const f of (data||[])){
+        const { data:pub } = await supa.storage.from('site-assets').getPublicUrl(f.name);
+        const card = document.createElement('div');
+        card.className='card';
+        card.innerHTML = `<img src="${pub.publicUrl}" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:10px"><button class="btn" data-url="${pub.publicUrl}">Gebruik</button>`;
+        grid.appendChild(card);
+      }
+      grid.onclick = (e)=>{
+        const b = e.target.closest('button[data-url]'); if(!b) return;
+        addToGallery(b.dataset.url);
+      };
+    };
+
+    function addToGallery(url){
+      // Voeg beeld toe aan eerste gallery sectie, of hero als geen gallery is
+      const g = state.sections.find(s=>s.type==='gallery');
+      if(g){ g.data.images = g.data.images || []; g.data.images.push({src:url}); refresh(); flash('Toegevoegd aan galerij'); return; }
+      const h = state.sections.find(s=>s.type==='hero');
+      if(h){ h.data.bg = url; refresh(); flash('Hero-achtergrond ingesteld'); return; }
+      flash('Geen geschikte sectie gevonden', true);
+    }
+
+    function msg(t){ const s=document.getElementById('mmStatus'); s.textContent=t; }
+  }
+
+  window.addEventListener('DOMContentLoaded', ui);
+})();
+</script>
+
+<!-- ========================================= -->
+<!-- 7) Tips voor Netlify/ENV                  -->
+<!-- ========================================= -->
+<script type="text/plain" data-filename="README-deel3.txt">
+Netlify ENV (Site settings → Build & deploy → Environment):
+- OPENAI_API_KEY = <jouw key>
+
+Supabase
+- Maak bucket "site-assets" (Public) in Storage.
+- Voer supabase_schema.sql uit in SQL editor (policies aan).
+
+Viewer
+- Publiceer site.html mee. Gebruik: https://<jouw domein>/site.html?id=<uuid>
+
+Builder integratie
+- Voeg builder-extensions-autosave.js en builder-extensions-media.js onderaan builder.html toe NA Deel 1/2 scripts.
+- Zorg dat window.VRIJEPLEK.{SUPABASE_URL,SUPABASE_ANON_KEY} geladen is op builder.html en site.html.
+
+AI
+- /.netlify/functions/ai-generate en ai-image worden automatisch gedeployed door Netlify Functions.
+- Test lokaal met `netlify dev`.
+</script>
+<!--
+DEEL 4 — SEO-helper, sitemap/robots, Form‑builder + mailer (Netlify), Publish‑flow, Color pairing wizard, Accessibility checks, Analytics stub
+Plaats elk bestand in je projectstructuur zoals aangegeven bij het pad.
+-->
+
+<!-- ================================================== -->
+<!-- A) Builder‑extensie: SEO Helper + Color Pair Wizard -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-seo-colors.js">
+(function(){
+  const left = document.querySelector('.left .body');
+  // SEO box
+  const seo = document.createElement('div'); seo.className='group';
+  seo.innerHTML = `<label>SEO Helper</label>
+    <div class="actions">
+      <button class="btn" id="seoMeta">Genereer meta tags</button>
+      <button class="btn" id="seoOG">OpenGraph + JSON-LD</button>
+      <button class="btn" id="seoAudit">SEO Audit</button>
+    </div>
+    <div id="seoOut" class="tiny"></div>`;
+  left.appendChild(seo);
+
+  // Color Pairing Wizard
+  const col = document.createElement('div'); col.className='group';
+  col.innerHTML = `<label>Color Pairing Wizard</label>
+    <div class="actions">
+      <button class="btn" id="pairTriad">Triade</button>
+      <button class="btn" id="pairAnalog">Analoog</button>
+      <button class="btn" id="pairCompl">Complementair</button>
+      <button class="btn" id="pairWCAG">WCAG boost</button>
+    </div>`;
+  left.appendChild(col);
+
+  // Handlers
+  document.getElementById('seoMeta').onclick = ()=>{
+    const meta = buildMeta();
+    $('#seoOut').textContent = meta; copy(meta);
+    flash('Meta gekopieerd');
+  };
+  document.getElementById('seoOG').onclick = ()=>{
+    const og = buildOG();
+    $('#seoOut').textContent = og; copy(og);
+    flash('OG/JSON‑LD gekopieerd');
+  };
+  document.getElementById('seoAudit').onclick = ()=>{
+    const rep = seoAudit();
+    $('#seoOut').textContent = rep; copy(rep);
+    flash('SEO audit klaar');
+  };
+
+  document.getElementById('pairTriad').onclick = ()=>{ applyPalette(paletteFrom('triad', state.design.a1)); };
+  document.getElementById('pairAnalog').onclick = ()=>{ applyPalette(paletteFrom('analog', state.design.a1)); };
+  document.getElementById('pairCompl').onclick = ()=>{ applyPalette(paletteFrom('compl', state.design.a1)); };
+  document.getElementById('pairWCAG').onclick = ()=>{ bumpContrast(); };
+
+  function buildMeta(){
+    const t = `${state.meta.name} — ${state.meta.tag || 'Snelle afspraken'}`.trim();
+    const d = (state.meta.intro || 'Boek sneller, groei sneller.').slice(0, 160);
+    return `<meta name="title" content="${esc(t)}">\n<meta name="description" content="${esc(d)}">\n<link rel="canonical" href="${location.origin}/">`;
+  }
+  function buildOG(){
+    const t = `${state.meta.name} — ${state.meta.tag || ''}`.trim();
+    const d = (state.meta.intro || '').slice(0, 200);
+    const img = findHeroImage() || 'https://vrijeplek.be/img/og-default.jpg';
+    const ld = {
+      '@context':'https://schema.org',
+      '@type':'LocalBusiness',
+      name: state.meta.name,
+      description: d,
+      url: location.origin,
+      image: img
+    };
+    return [
+      `<meta property="og:title" content="${esc(t)}">`,
+      `<meta property="og:description" content="${esc(d)}">`,
+      `<meta property="og:image" content="${esc(img)}">`,
+      `<meta name="twitter:card" content="summary_large_image">`,
+      `<script type="application/ld+json">${JSON.stringify(ld)}</script>`
+    ].join('\n');
+  }
+  function seoAudit(){
+    const issues=[];
+    if(!state.meta.name) issues.push('• Geen sitenaam');
+    if(!state.sections.find(s=>s.type==='hero')) issues.push('• Geen hero sectie');
+    if(!state.sections.find(s=>s.type==='contact')) issues.push('• Geen contact sectie');
+    // simpele contrast check
+    const score = contrastScore(state.design.bg, state.design.fg);
+    if(score < 4.5) issues.push(`• Contrast ratio laag (${score.toFixed(2)}:1) — overweeg WCAG boost`);
+    return issues.length? issues.join('\n') : 'Geen kritieke SEO issues gevonden.';
+  }
+
+  function findHeroImage(){
+    const h = state.sections.find(s=>s.type==='hero');
+    return h?.data?.bg || '';
+  }
+
+  // COLOR MATH
+  function hexToRgb(hex){ hex=hex.replace('#',''); if(hex.length===3) hex=hex.split('').map(x=>x+x).join(''); return {r:parseInt(hex.substr(0,2),16), g:parseInt(hex.substr(2,2),16), b:parseInt(hex.substr(4,2),16)} }
+  function rgbToHex({r,g,b}){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
+  function luminance({r,g,b}){
+    const a=[r,g,b].map(v=>{v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4)});
+    return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+  }
+  function contrastScore(bg, fg){
+    const L1=luminance(hexToRgb(bg)), L2=luminance(hexToRgb(fg));
+    const ratio = (Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05); return ratio;
+  }
+  function rotateHueRGB({r,g,b},deg){
+    const hsl = rgbToHsl(r,g,b); hsl.h=(hsl.h+deg)%360; const [R,G,B]=hslToRgb(hsl.h,hsl.s,hsl.l); return {r:R,g:G,b:B};
+  }
+  function rgbToHsl(r,g,b){ r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){h=s=0}else{const d=max-min; s=l>0.5? d/(2-max-min):d/(max+min); switch(max){case r: h=(g-b)/d+(g<b?6:0); break; case g: h=(b-r)/d+2; break; case b: h=(r-g)/d+4; break;} h/=6;} return {h:h*360,s,l} }
+  function hslToRgb(h,s,l){ let r,g,b; h/=360; if(s===0){r=g=b=l}else{const hue2rgb=(p,q,t)=>{ if(t<0)t+=1; if(t>1)t-=1; if(t<1/6)return p+(q-p)*6*t; if(t<1/2)return q; if(t<2/3)return p+(q-p)*(2/3-t)*6; return p; }; const q=l<0.5? l*(1+s): l+s-l*s; const p=2*l-q; r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);} return [Math.round(r*255),Math.round(g*255),Math.round(b*255)] }
+
+  function paletteFrom(mode, seed){
+    const rgb = hexToRgb(seed||'#2563eb');
+    if(mode==='triad'){
+      const a1=rgb, a2=rotateHueRGB(rgb,120), a3=rotateHueRGB(rgb,240);
+      return {a1: rgbToHex(a1), a2: rgbToHex(a2), bg:'#0b1228', fg:'#e5ecff'};
+    }
+    if(mode==='analog'){
+      const a1=rgb, a2=rotateHueRGB(rgb,20);
+      return {a1: rgbToHex(a1), a2: rgbToHex(a2), bg:'#0d132a', fg:'#e9f0ff'};
+    }
+    if(mode==='compl'){
+      const a1=rgb, a2=rotateHueRGB(rgb,180);
+      return {a1: rgbToHex(a1), a2: rgbToHex(a2), bg:'#0b1120', fg:'#e6eeff'};
+    }
+    return {a1:'#2563eb',a2:'#00d4ff',bg:'#0b1120',fg:'#e6eeff'};
+  }
+  function applyPalette(p){ Object.assign(state.design, p); refresh(); }
+  function bumpContrast(){
+    let tries=0; while(contrastScore(state.design.bg, state.design.fg)<4.5 && tries<20){
+      // verduister achtergrond, verlicht tekst
+      const b=hexToRgb(state.design.bg), f=hexToRgb(state.design.fg);
+      state.design.bg = rgbToHex({r:Math.max(0,b.r-8), g:Math.max(0,b.g-8), b:Math.max(0,b.b-8)});
+      state.design.fg = rgbToHex({r:Math.min(255,f.r+8), g:Math.min(255,f.g+8), b:Math.min(255,f.b+8)});
+      tries++;
+    }
+    refresh();
+  }
+
+  function copy(t){ navigator.clipboard?.writeText(t).catch(()=>{}); }
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- B) Builder‑extensie: Accessibility Checker   -->
+<!-- ============================================ -->
+<script type="text/plain" data-filename="builder-extensions-a11y.js">
+(function(){
+  const right = document.querySelector('.right .body');
+  const box = document.createElement('div'); box.className='group';
+  box.innerHTML = `<label>Toegankelijkheid</label>
+    <div class="actions">
+      <button class="btn" id="a11yRun">A11y‑check</button>
+    </div>
+    <div id="a11yOut" class="tiny"></div>`;
+  right.appendChild(box);
+
+  document.getElementById('a11yRun').onclick=()=>{
+    const out = document.getElementById('a11yOut');
+    const issues = [];
+    // 1) Contrast
+    const ratio = contrastScore(state.design.bg, state.design.fg);
+    if(ratio<4.5) issues.push(`• Contrast laag (${ratio.toFixed(2)}:1)`);
+    // 2) Knoppen zonder link
+    state.sections.forEach((s,i)=>{
+      if(s.type==='cta' && (!s.data.button || !s.data.button.href || s.data.button.href==="#")){
+        issues.push(`• CTA #${i+1} heeft geen geldige link`);
+      }
+    });
+    // 3) Afbeeldingen zonder alt (in gallery)
+    state.sections.filter(s=>s.type==='gallery').forEach((g,i)=>{
+      (g.data.images||[]).forEach((im,j)=>{ if(!im.alt) issues.push(`• Galerij #${i+1} beeld #${j+1} mist alt`); })
+    });
+
+    out.textContent = issues.length? issues.join('\n') : 'Geen A11y problemen gevonden.';
+  };
+
+  function contrastScore(bg, fg){
+    const L = luminance(hexToRgb(bg)), S = luminance(hexToRgb(fg));
+    const ratio = (Math.max(L,S)+0.05)/(Math.min(L,S)+0.05); return ratio;
+  }
+  function hexToRgb(hex){ hex=hex.replace('#',''); if(hex.length===3) hex=hex.split('').map(x=>x+x).join(''); return {r:parseInt(hex.substr(0,2),16), g:parseInt(hex.substr(2,2),16), b:parseInt(hex.substr(4,2),16)} }
+  function luminance({r,g,b}){ const a=[r,g,b].map(v=>{v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4)}); return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2]; }
+})();
+</script>
+
+<!-- ============================================ -->
+<!-- C) Form‑builder + Netlify mailer function  -->
+<!-- ============================================ -->
+<script type="text/plain" data-filename="builder-extensions-forms.js">
+(function(){
+  // Voeg een ContactForm sectie toe in de componentenbibliotheek
+  const lib = document.querySelector('.right .grid');
+  const comp = document.createElement('div'); comp.className='component'; comp.draggable=true; comp.dataset.type='contactForm';
+  comp.innerHTML = '<span>✉ Contactformulier</span><span class="tag">mail</span>';
+  lib.appendChild(comp);
+
+  const _makeBlock = window.makeBlock;
+  window.makeBlock = function(type){ if(type==='contactForm'){ return {id:uid(), type:'contactForm', data:{title:'Stuur ons een bericht', to:'info@voorbeeld.be', fields:[{n:'Naam',k:'name',t:'text',r:true},{n:'E‑mail',k:'email',t:'email',r:true},{n:'Bericht',k:'message',t:'textarea',r:true}], success:'Bedankt! We reageren snel.'}}; } return _makeBlock(type); }
+
+  // Renderer uitbreiden
+  const _render = window.renderSection;
+  window.renderSection = function(s){ if(s.type==='contactForm'){ return renderForm(s); } return _render(s); }
+
+  function renderForm(s){
+    const d=s.data;
+    const fields = (d.fields||[]).map(f=>{
+      if(f.t==='textarea') return `<label>${esc(f.n)}${f.r?' *':''}</label><textarea name="${esc(f.k)}" required></textarea>`;
+      return `<label>${esc(f.n)}${f.r?' *':''}</label><input type="${esc(f.t||'text')}" name="${esc(f.k)}" ${f.r?'required':''}/>`;
+    }).join('');
+    return `<section class="contact form"><div class="inner"><h2>${esc(d.title||'Contact')}</h2>
+      <form method="POST" action="/.netlify/functions/send-mail">
+        <input type="hidden" name="to" value="${esc(d.to||'')}">
+        ${fields}
+        <button class="btn" type="submit">Versturen</button>
+      </form>
+    </div></section>`;
+  }
+})();
+</script>
+
+<script type="text/plain" data-filename="netlify/functions/send-mail.js">
+export const config = { path: '/.netlify/functions/send-mail' };
+
+export default async (req) => {
+  try{
+    if(req.method!=='POST') return new Response('Method not allowed',{status:405});
+    const form = await req.formData();
+    const to = form.get('to');
+    const fields = []; form.forEach((v,k)=>{ if(k!=='to') fields.push({k,v}); });
+
+    // Kies provider: RESEND of MAILGUN (via ENV)
+    const RESEND = process.env.RESEND_API_KEY;
+    const MAILGUN_KEY = process.env.MAILGUN_API_KEY;
+    const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
+
+    const subject = `Nieuw bericht via minisite`;
+    const html = `<div style="font-family:system-ui,sans-serif">${fields.map(f=>`<p><b>${f.k}:</b> ${escapeHtml(String(f.v))}</p>`).join('')}</div>`;
+
+    if(RESEND){
+      const r = await fetch('https://api.resend.com/emails',{
+        method:'POST', headers:{'Authorization':`Bearer ${RESEND}`,'Content-Type':'application/json'},
+        body: JSON.stringify({from:`Vrijeplek <no-reply@${(MAILGUN_DOMAIN||'vrijplek.local')}>`, to:[to], subject, html})
+      });
+      if(!r.ok) return new Response(JSON.stringify({error:'Resend failed', detail: await r.text()}),{status:500});
+      return new Response(JSON.stringify({ok:true}));
+    }
+
+    if(MAILGUN_KEY && MAILGUN_DOMAIN){
+      const r = await fetch(`https://api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`,{
+        method:'POST', headers:{'Authorization':'Basic '+btoa('api:'+MAILGUN_KEY)},
+        body: new URLSearchParams({from:`Vrijeplek <no-reply@${MAILGUN_DOMAIN}>`, to, subject, html})
+      });
+      if(!r.ok) return new Response(JSON.stringify({error:'Mailgun failed', detail: await r.text()}),{status:500});
+      return new Response(JSON.stringify({ok:true}));
+    }
+
+    return new Response(JSON.stringify({error:'No mail provider configured'}),{status:500});
+  }catch(err){
+    return new Response(JSON.stringify({error:String(err)}),{status:500});
+  }
+}
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+</script>
+
+<!-- ================================================== -->
+<!-- D) Publish‑flow: pretty URL + redirects    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="netlify/functions/publish-site.js">
+// Slaat site op in Supabase en geeft mooie URL /s/<slug> terug (via _redirects)
+export const config = { path:'/\.netlify/functions/publish-site' };
+export default async (req)=>{
+  try{
+    if(req.method!=='POST') return new Response('Method not allowed',{status:405});
+    const { html, name, theme, slug } = await req.json();
+    const supaUrl = process.env.SUPABASE_URL;
+    const supaKey = process.env.SUPABASE_SERVICE_ROLE;
+    if(!supaUrl || !supaKey) return new Response(JSON.stringify({error:'Missing Supabase env'}),{status:500});
+
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm');
+    const supa = createClient(supaUrl, supaKey);
+
+    const user = null; // optioneel: JWT parsing uit Authorization header
+    const payload = { user_id: user?.id || null, site_name: name||'Vrijeplek‑site', html, theme: theme||{}, is_public:true };
+    const { data, error } = await supa.from('sites').insert(payload).select('id').single();
+    if(error) return new Response(JSON.stringify({error:error.message}),{status:500});
+
+    const id = data.id; const s = (slug||slugify(name||'site')).toLowerCase();
+    // Pretty link via path param: /s/:id → site.html?id=:id (redirects in build)
+    return new Response(JSON.stringify({url:`/s/${id}`, id}),{headers:{'Content-Type':'application/json'}});
+  }catch(err){
+    return new Response(JSON.stringify({error:String(err)}),{status:500});
+  }
+}
+function slugify(x){return (x||'site').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')}
+</script>
+
+<script type="text/plain" data-filename="_redirects">
+# Pretty URLs voor viewer
+/s/:id   /site.html?id=:id   200
+</script>
+
+<!-- ================================================== -->
+<!-- E) Sitemap & robots (Netlify Functions)    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="netlify/functions/sitemap.js">
+export const config = { path:'/sitemap.xml' };
+export default async ()=>{
+  try{
+    const supaUrl = process.env.SUPABASE_URL; const supaKey = process.env.SUPABASE_SERVICE_ROLE;
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm');
+    const supa = createClient(supaUrl, supaKey);
+    const { data } = await supa.from('sites').select('id, created_at').eq('is_public', true).order('created_at', {ascending:false}).limit(5000);
+    const base = process.env.PUBLIC_BASE_URL || 'https://vrijeplek.be';
+    const urls = (data||[]).map(r=>`  <url><loc>${base}/s/${r.id}</loc><lastmod>${new Date(r.created_at).toISOString()}</lastmod></url>`).join('\n');
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
+    return new Response(xml, {headers:{'Content-Type':'application/xml'}});
+  }catch(err){
+    return new Response('');
+  }
+}
+</script>
+
+<script type="text/plain" data-filename="netlify/functions/robots.js">
+export const config = { path:'/robots.txt' };
+export default async ()=>{
+  const base = process.env.PUBLIC_BASE_URL || 'https://vrijeplek.be';
+  const txt = `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`;
+  return new Response(txt, {headers:{'Content-Type':'text/plain'}});
+}
+</script>
+
+<!-- ================================================== -->
+<!-- F) Builder UI: Publish knop + Analytics     -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-publish-analytics.js">
+(function(){
+  const hdr = document.querySelector('.toolbar');
+  const btn = document.createElement('button'); btn.className='btn'; btn.id='publishSite'; btn.textContent='Publiceer';
+  hdr.appendChild(btn);
+
+  btn.onclick = async ()=>{
+    try{
+      btn.disabled=true; btn.textContent='Publiceren…';
+      const html = buildHTML();
+      const res = await fetch('/.netlify/functions/publish-site',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ html, name: state.meta.name, theme: state.design, slug: state.meta.name })});
+      const data = await res.json(); if(!res.ok) throw new Error(data.error||'Publish mislukt');
+      flash('Gepubliceerd: '+data.url);
+      setTimeout(()=>{ window.open(data.url,'_blank'); btn.disabled=false; btn.textContent='Publiceer'; }, 300);
+    }catch(err){ flash(err.message||'Publish error', true); btn.disabled=false; btn.textContent='Publiceer'; }
+  };
+
+  // Analytics stub — events naar Supabase (optioneel)
+  window.vpTrack = async function(event, meta){
+    try{
+      const cfg = window.VRIJEPLEK || {}; if(!cfg.SUPABASE_URL) return;
+      const { createClient } = window.supabase || {}; if(!createClient) return;
+      const supa = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+      await supa.from('analytics').insert({ event, meta });
+    }catch{}
+  }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- G) Supabase extra: analytics tabel (SQL)    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="supabase_analytics.sql">
+create table if not exists public.analytics (
+  id uuid primary key default gen_random_uuid(),
+  event text,
+  meta jsonb,
+  created_at timestamp with time zone default now()
+);
+alter table public.analytics enable row level security;
+create policy "insert_all" on public.analytics for insert with check (true);
+</script>
+
+<!-- ================================================== -->
+<!-- H) Extra layout snippets (cards + timeline) -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-extras.js">
+(function(){
+  // Extra block-types
+  const _make = window.makeBlock;
+  window.makeBlock = function(type){
+    if(type==='timeline') return {id:uid(),type:'timeline',data:{title:'Stappenplan', items:[{h:'Stap 1',t:'Kennismaking'},{h:'Stap 2',t:'Planning'},{h:'Stap 3',t:'Uitvoering'}]}};
+    if(type==='cardRow') return {id:uid(),type:'cardRow',data:{title:'Waarom kiezen voor ons?', items:[{h:'Snel',t:'Binnen 10s geregeld'},{h:'Lokaal',t:'Jouw buurt'},{h:'Simpel',t:'Geen gedoe'}]}};
+    return _make(type);
+  }
+  const _render = window.renderSection;
+  window.renderSection = function(s){
+    if(s.type==='timeline'){
+      const d=s.data; return `<section class="timeline"><div class="inner"><h2>${esc(d.title)}</h2><ul>${(d.items||[]).map(i=>`<li><b>${esc(i.h)}</b><span>${esc(i.t)}</span></li>`).join('')}</ul></div></section>`;
+    }
+    if(s.type==='cardRow'){
+      const d=s.data; return `<section class="cards"><div class="inner"><h2>${esc(d.title)}</h2><div class="grid">${(d.items||[]).map(i=>`<div class="card"><h3>${esc(i.h)}</h3><p>${esc(i.t)}</p></div>`).join('')}</div></div></section>`;
+    }
+    return _render(s);
+  }
+  const _css = window.genCSS;
+  window.genCSS = function(d){
+    return _css(d)+`
+      .timeline ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+      .timeline li{background:#ffffff10;border:1px solid #ffffff22;border-radius:var(--rad);padding:12px}
+      .cards .grid{grid-template-columns:repeat(3,1fr)}
+      @media(max-width:900px){.cards .grid{grid-template-columns:1fr}}
+    `;
+  }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- I) README (korte stappen)                    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="README-deel4.txt">
+1) Voeg deze bestanden toe:
+   - builder-extensions-seo-colors.js
+   - builder-extensions-a11y.js
+   - builder-extensions-forms.js
+   - builder-extensions-publish-analytics.js
+   - builder-extensions-extras.js
+   - netlify/functions/send-mail.js
+   - netlify/functions/publish-site.js
+   - netlify/functions/sitemap.js
+   - netlify/functions/robots.js
+   - _redirects (root)
+   - supabase_analytics.sql (voer uit in SQL editor)
+
+2) Netlify ENV
+   - OPENAI_API_KEY = <key>
+   - RESEND_API_KEY = <key> (of MAILGUN_API_KEY + MAILGUN_DOMAIN)
+   - SUPABASE_URL = <project url>
+   - SUPABASE_SERVICE_ROLE = <service role key>  ← alleen op server (Netlify), NIET in client!
+   - PUBLIC_BASE_URL = https://vrijeplek.be
+
+3) In builder.html
+   - Include Deel 1 + Deel 2 scripts
+   - Daarna onderaan deze extensies includen in volgorde: autosave, media, seo-colors, a11y, forms, extras, publish-analytics
+
+4) Viewer pretty URLs
+   - _redirects bevat: /s/:id  /site.html?id=:id  200
+
+5) Test lokaal
+   - `netlify dev`
+   - Publiceer → check console/logs → open returned URL
+
+6) Mails
+   - Gebruik Resend of Mailgun: zet de juiste ENV keys. Test een contactformulier op de minisite.
+</script>
+<!--
+DEEL 5 — Per‑sectie stijlen, Live Theme Switcher, A/B‑testen, Sector‑wizard (AI), animaties & responsive toggles
+Bestanden hieronder toevoegen NA Deel 1‑4 en includen onderaan je builder.html (in die volgorde is prima).
+-->
+
+<!-- ================================================== -->
+<!-- 1) Styles per blok: borders, shadows, bg, spacing  -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-styles.js">
+(function(){
+  // voeg een Style‑paneel toe in de linker kolom om de actief geselecteerde sectie te stylen
+  let activeId = null;
+  const left = document.querySelector('.left .body');
+  const box = document.createElement('div'); box.className='group';
+  box.innerHTML = `<label>Stijl per sectie</label>
+    <div class="tiny">Klik in de linker lijst op “Bewerk” om deze sectie actief te maken.</div>
+    <div class="row">
+      <div><label>Bg type</label>
+        <select id="stBgType">
+          <option value="none">None</option>
+          <option value="color">Kleur</option>
+          <option value="gradient">Gradient</option>
+          <option value="image">Afbeelding</option>
+        </select>
+      </div>
+      <div><label>Padding (px)</label><input id="stPad" type="number" min="0" max="200" value="56"></div>
+    </div>
+    <div class="row">
+      <div><label>Bg kleur</label><input id="stBg" type="color" value="#ffffff"></div>
+      <div><label>Bg kleur 2</label><input id="stBg2" type="color" value="#e9efff"></div>
+    </div>
+    <div class="row">
+      <div><label>Bg beeld/URL</label><input id="stImg" type="text" placeholder="https://… of unsplash: keyword"></div>
+      <div><label>Overlay (0‑.8)</label><input id="stOv" type="number" step=".05" min="0" max="0.8" value="0"></div>
+    </div>
+    <div class="row">
+      <div><label>Border (px)</label><input id="stBord" type="number" min="0" max="8" value="1"></div>
+      <div><label>Radius (px)</label><input id="stRad" type="number" min="0" max="60" value="18"></div>
+    </div>
+    <div class="row">
+      <div><label>Shadow</label>
+        <select id="stShadow">
+          <option value="none">Geen</option>
+          <option value="soft">Soft</option>
+          <option value="deep">Diep</option>
+          <option value="inner">Inner</option>
+        </select>
+      </div>
+      <div><label>Animatie</label>
+        <select id="stAnim">
+          <option value="none">Geen</option>
+          <option value="fadeUp">Fade Up</option>
+          <option value="slideIn">Slide In</option>
+          <option value="zoomIn">Zoom In</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div><label>Desktop zichtbaar</label>
+        <select id="stVisD"><option value="yes">Ja</option><option value="no">Nee</option></select>
+      </div>
+      <div><label>Mobiel zichtbaar</label>
+        <select id="stVisM"><option value="yes">Ja</option><option value="no">Nee</option></select>
+      </div>
+    </div>`;
+  left.appendChild(box);
+
+  // haak in op openEditor() om activeId te onthouden
+  const _openEditor = window.openEditor;
+  window.openEditor = function(section){ activeId = section?.id || null; return _openEditor(section); }
+
+  // helpers
+  function cur(){ return activeId ? state.sections.find(s=>s.id===activeId) : null; }
+  function ensureStyle(s){ s.style = s.style || { bgType:'none', bg:'#ffffff', bg2:'#e9efff', img:'', ov:0, pad:56, border:1, rad:18, shadow:'none', anim:'none', visD:'yes', visM:'yes' }; return s.style; }
+
+  // bind
+  ['stBgType','stPad','stBg','stBg2','stImg','stOv','stBord','stRad','stShadow','stAnim','stVisD','stVisM']
+    .forEach(id=> document.getElementById(id).addEventListener('input', apply));
+
+  function apply(){ const s = cur(); if(!s) return; const st = ensureStyle(s);
+    st.bgType=$('#stBgType').value; st.pad=+$('#stPad').value; st.bg=$('#stBg').value; st.bg2=$('#stBg2').value; st.img=$('#stImg').value; st.ov=+$('#stOv').value; st.border=+$('#stBord').value; st.rad=+$('#stRad').value; st.shadow=$('#stShadow').value; st.anim=$('#stAnim').value; st.visD=$('#stVisD').value; st.visM=$('#stVisM').value; refresh(); }
+
+  // extend renderSection met wrapper die styles toepast
+  const _render = window.renderSection;
+  window.renderSection = function(s){
+    const html = _render(s); const st = ensureStyle(s);
+    let bgCss='';
+    if(st.bgType==='color') bgCss += `background:${st.bg};`;
+    if(st.bgType==='gradient') bgCss += `background:linear-gradient(120deg, ${st.bg}, ${st.bg2});`;
+    if(st.bgType==='image') {
+      const src = st.img?.startsWith('unsplash:') ? `https://source.unsplash.com/1600x900/?${encodeURIComponent(st.img.split(':')[1])}` : (st.img||'');
+      if(src) bgCss += `background:url(${src}) center/cover;`;
+      if(st.ov>0) bgCss = `background:linear-gradient(0deg,rgba(0,0,0,${st.ov}),rgba(0,0,0,${st.ov})),` + (bgCss.replace('background:',''));
+    }
+    const shadow = st.shadow==='soft' ? '0 10px 30px rgba(0,0,0,.12)' : st.shadow==='deep' ? '0 20px 60px rgba(0,0,0,.22)' : st.shadow==='inner' ? 'inset 0 1px 0 rgba(255,255,255,.5), inset 0 -10px 30px rgba(0,0,0,.08)' : 'none';
+    const pad = `padding:${Math.max(0,st.pad)}px 0;`;
+    const rad = `border-radius:${Math.max(0,st.rad)}px;`;
+    const bord = st.border?`border:${st.border}px solid #ffffff22;`:'';
+    const animClass = st.anim!=='none' ? ` anim-${st.anim}` : '';
+    const visClass = `${st.visD==='no'?' hide-desktop':''}${st.visM==='no'?' hide-mobile':''}`;
+    return html.replace('<section', `<section class="sty${animClass}${visClass}" style="${bgCss}${pad}${bord}${rad};box-shadow:${shadow}"`);
+  }
+
+  // CSS injectie voor animaties en responsive visibility
+  const _css = window.genCSS;
+  window.genCSS = function(d){
+    return _css(d) + `
+      .anim-fadeUp{animation:fadeUp .7s ease .1s both}
+      .anim-slideIn{animation:slideIn .6s ease .1s both}
+      .anim-zoomIn{animation:zoomIn .5s ease .1s both}
+      @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+      @keyframes slideIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+      @keyframes zoomIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+      @media(min-width:901px){.hide-desktop{display:none!important}}
+      @media(max-width:900px){.hide-mobile{display:none!important}}
+    `;
+  }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 2) Live Theme Switcher (preset sets)             -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-theme-switcher.js">
+(function(){
+  const THEMES = {
+    ocean:{a1:'#2563eb',a2:'#00d4ff',bg:'#ffffff',fg:'#0b1228'},
+    forest:{a1:'#16a34a',a2:'#06b6d4',bg:'#ffffff',fg:'#052e1b'},
+    dusk:{a1:'#7c3aed',a2:'#f43f5e',bg:'#0b1228',fg:'#e5ecff'},
+    gold:{a1:'#eab308',a2:'#f59e0b',bg:'#0b1120',fg:'#fff2cc'}
+  };
+  const hdr = document.querySelector('.toolbar');
+  const sel = document.createElement('select'); sel.className='btn'; sel.style.padding='10px'; sel.id='liveTheme';
+  sel.innerHTML = `<option value="custom">Live theme…</option>` + Object.keys(THEMES).map(k=>`<option value="${k}">${k}</option>`).join('');
+  hdr.insertBefore(sel, hdr.firstChild);
+  sel.onchange = ()=>{ const k=sel.value; if(k==='custom') return; Object.assign(state.design, THEMES[k]); refresh(); flash('Thema: '+k); };
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 3) A/B testmodus (varianten, preview, tracking)   -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-abtest.js">
+(function(){
+  // eenvoudige A/B: duplikeer je huidige state → variants.A en variants.B; preview switcher in header
+  state.variants = state.variants || { A: null, B: null, active:'A' };
+  const hdr = document.querySelector('.toolbar');
+  const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.gap='6px';
+  wrap.innerHTML = `<button class="btn" id="mkA">Set A</button><button class="btn" id="mkB">Set B</button><select class="btn" id="abMode"><option value="A">Preview A</option><option value="B">Preview B</option></select>`;
+  hdr.appendChild(wrap);
+
+  document.getElementById('mkA').onclick=()=>{ state.variants.A = JSON.parse(JSON.stringify(state)); flash('Variant A vastgelegd'); };
+  document.getElementById('mkB').onclick=()=>{ state.variants.B = JSON.parse(JSON.stringify(state)); flash('Variant B vastgelegd'); };
+  document.getElementById('abMode').onchange=(e)=>{
+    const m=e.target.value; state.variants.active=m;
+    const snap = state.variants[m]; if(snap){ Object.assign(state, JSON.parse(JSON.stringify(snap))); renderSectionList(); refresh(); }
+  };
+
+  // tracking‑hook bij gepubliceerde minisite (gebruik vpTrack uit Deel 4)
+  window.addEventListener('message',(e)=>{
+    if(e?.data?.event==='cta_click' && typeof window.vpTrack==='function'){
+      window.vpTrack('cta_click',{variant: state.variants?.active || 'A'});
+    }
+  });
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 4) Sector‑wizard (AI): stapsgewijs setup        -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-sector-wizard.js">
+(function(){
+  // dialoog + AI calls naar /.netlify/functions/ai-generate voor copy en /.netlify/functions/ai-image voor hero
+  const hdr = document.querySelector('.toolbar');
+  const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Sector‑wizard'; hdr.appendChild(btn);
+  btn.onclick = async ()=>{
+    const sector = prompt('Sector? (bv. ramenwasser, kapper, tandarts, wellness, restaurant)'); if(!sector) return;
+    // 1) Preset
+    const map = {ramenwasser:'ramenwasser', kapper:'kapper', tandarts:'tandarts', wellness:'wellness', restaurant:'restaurant'};
+    const preset = map[sector.toLowerCase()] || 'landing_clean';
+    const { state:st } = window; state.sections = PRESETS[preset](); renderSectionList(); refresh();
+
+    // 2) AI‑copy
+    try{
+      const p = `Schrijf NL hero title + subtitle + tagline voor een ${sector} in ${state.meta.city||'België'}. Terug als JSON {title, subtitle, tagline}.`;
+      const r = await fetch('/.netlify/functions/ai-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:p})});
+      const j = await r.json();
+      const hero = state.sections.find(x=>x.type==='hero');
+      if(hero){ hero.data.title = j.title || hero.data.title; hero.data.subtitle = j.subtitle || hero.data.subtitle; state.meta.tag = j.tagline || state.meta.tag; refresh(); }
+    }catch{}
+
+    // 3) AI‑beeld
+    try{
+      const r = await fetch('/.netlify/functions/ai-image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Hero foto voor ${sector}`})});
+      const j = await r.json();
+      const hero = state.sections.find(x=>x.type==='hero'); if(hero){ hero.data.bg = j.url; refresh(); }
+    }catch{}
+
+    flash('Sector preset toegepast');
+  };
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 5) README Deel 5                                  -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="README-deel5.txt">
+Include onderaan je builder.html na Deel 4:
+  <script src="builder-extensions-styles.js"></script>
+  <script src="builder-extensions-theme-switcher.js"></script>
+  <script src="builder-extensions-abtest.js"></script>
+  <script src="builder-extensions-sector-wizard.js"></script>
+
+Wat is nieuw?
+- Stijl per sectie: achtergrond (kleur/gradient/beeld + overlay), spacing, border, radius, schaduw, animatie, zichtbaarheid desktop/mobiel.
+- Live Theme Switcher met kant‑en‑klare pallets (ocean/forest/dusk/gold).
+- Eenvoudige A/B‑modus: leg A/B vast, wissel preview, CTA‑clicks worden getrackt via vpTrack (Deel 4).
+- Sector‑wizard: kies sector → preset + AI‑copy + AI‑beeld.
+
+Tip: Wil je varianten ook server‑side meten? Voeg in Supabase een kolom `variant text` toe aan `analytics` en stuur die mee in `vpTrack`.
+</script>
+<!--
+DEEL 6 — Multi‑page minisites met navigatie, Blog/News CRUD (Supabase), Imagizer (crop/ratio/compress), Component‑varianten, en Router‑viewer
+Plaats de bestanden onderaan je project en include de *.js extensies NA Deel 1‑5.
+-->
+
+<!-- ================================================== -->
+<!-- 1) Multipage Model + UI (builder)                 -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-multipage.js">
+(function(){
+  // State: pages [{id, slug, title, sections:[...]}]
+  state.pages = state.pages || [ { id: uid(), slug:'home', title:'Home', sections: state.sections } ];
+  state.currentPage = state.currentPage || state.pages[0].id;
+
+  // Toolbar UI
+  const hdr = document.querySelector('.toolbar');
+  const wrap = document.createElement('div'); wrap.style.display='flex'; wrap.style.gap='6px';
+  wrap.innerHTML = `
+    <select class="btn" id="pgSelect"></select>
+    <button class="btn" id="pgAdd">+ Pagina</button>
+    <button class="btn" id="pgDel">Verwijder</button>
+    <button class="btn" id="pgDup">Dupliceer</button>`;
+  hdr.insertBefore(wrap, hdr.firstChild);
+
+  function renderPgSelect(){
+    const sel = document.getElementById('pgSelect');
+    sel.innerHTML = state.pages.map(p=>`<option value="${p.id}" ${p.id===state.currentPage?'selected':''}>${esc(p.title)} (${esc(p.slug)})</option>`).join('');
+  }
+
+  function syncSectionsToState(){
+    const pg = state.pages.find(p=>p.id===state.currentPage); if(pg){ pg.sections = state.sections; }
+  }
+  function loadSectionsFromState(){
+    const pg = state.pages.find(p=>p.id===state.currentPage); if(pg){ state.sections = pg.sections || []; renderSectionList(); refresh(); }
+  }
+
+  document.getElementById('pgSelect').onchange = (e)=>{ syncSectionsToState(); state.currentPage = e.target.value; loadSectionsFromState(); };
+  document.getElementById('pgAdd').onclick = ()=>{
+    syncSectionsToState();
+    const slug = prompt('Slug (bv. diensten)'); if(!slug) return;
+    const title = prompt('Titel (menu label)', slug.charAt(0).toUpperCase()+slug.slice(1));
+    const pg = { id:uid(), slug:slugify(slug), title, sections:[ makeBlock('hero'), makeBlock('featureGrid') ] };
+    state.pages.push(pg); state.currentPage = pg.id; renderPgSelect(); loadSectionsFromState(); flash('Pagina toegevoegd');
+  };
+  document.getElementById('pgDel').onclick = ()=>{
+    if(state.pages.length<=1) return alert('Minstens 1 pagina nodig');
+    if(!confirm('Deze pagina verwijderen?')) return;
+    state.pages = state.pages.filter(p=>p.id!==state.currentPage); state.currentPage = state.pages[0].id; renderPgSelect(); loadSectionsFromState();
+  };
+  document.getElementById('pgDup').onclick = ()=>{
+    syncSectionsToState();
+    const pg = state.pages.find(p=>p.id===state.currentPage); if(!pg) return;
+    const copy = JSON.parse(JSON.stringify(pg)); copy.id=uid(); copy.slug = slugify(pg.slug+'-copy'); copy.title = pg.title+' (kopie)';
+    state.pages.push(copy); state.currentPage = copy.id; renderPgSelect(); loadSectionsFromState();
+  };
+
+  // Inject NAVBAR items automatisch vanuit pages
+  const _renderSection = window.renderSection;
+  window.renderSection = function(s){
+    if(s.type==='navbar'){
+      const items = state.pages.map(p=>({label:p.title, href:`/${p.slug}`}));
+      s.data = Object.assign({}, s.data, { items });
+    }
+    return _renderSection(s);
+  }
+
+  // Hook buildHTML om multipage te genereren
+  const _buildHTML = window.buildHTML;
+  window.buildHTML = function(){
+    if(!(state.pages?.length>1)) return _buildHTML();
+    // multi: maak nav op basis van pages, en render huidige pagina
+    const d=state.design, m=state.meta; const sections=state.sections.map(renderSection).join('\n');
+    const css = genCSS(d);
+    const nav = `<nav class="navbar"><div class="inner"><div class="logo">${esc(m.name)}</div><ul>${state.pages.map(p=>`<li><a href="/${esc(p.slug)}">${esc(p.title)}</a></li>`).join('')}</ul></div></nav>`;
+    return `<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">\n<style>${css}</style><title>${esc(m.name)} — ${activePage().title}</title></head><body>${nav}${sections}<footer class="site-f"><div class="inner">© ${new Date().getFullYear()} ${esc(m.name)}</div></footer></body></html>`;
+  }
+
+  function activePage(){ return state.pages.find(p=>p.id===state.currentPage) }
+  function slugify(x){return (x||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')}
+  function esc(s){return (s||'').toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+  // init
+  renderPgSelect();
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 2) Viewer Router: /:slug → laad juiste pagina    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="router.html">
+<!DOCTYPE html><html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Router — Vrijeplek</title>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<script>/* laad window.VRIJEPLEK config */</script>
+<style>html,body{height:100%;margin:0}</style></head>
+<body><main id="app">Laden…</main>
+<script>
+(async function(){
+  // Verwacht query: ?site=<id>&page=<slug>; of pretty URL via _redirects
+  const params = new URLSearchParams(location.search);
+  const site = params.get('site');
+  const slug = params.get('page') || (location.pathname.split('/').filter(Boolean).pop() || 'home');
+  const cfg = window.VRIJEPLEK || {}; const { createClient } = window.supabase; const supa = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const { data, error } = await supa.from('sites').select('html, theme, pages').eq('id', site).single();
+  if(error||!data) return document.getElementById('app').textContent='Site niet gevonden';
+  const html = pickPageHTML(data.html, slug) || data.html; // fallback naar single‑page
+  document.open(); document.write(html); document.close();
+
+  function pickPageHTML(html, slug){
+    // eenvoudige marker‑based split (optioneel — of render server‑side per pagina)
+    // Als je bij export per pagina bestanden maakt, kun je die rechtstreeks serveren. Dit is fallback.
+    return null;
+  }
+})();
+</script></body></html>
+</script>
+
+<script type="text/plain" data-filename="_redirects">
+# Multipage pretty URL router
+/s/:id/*    /router.html?site=:id&page=:splat   200
+</script>
+
+<!-- ================================================== -->
+<!-- 3) Blog/News CRUD (Supabase) in builder           -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-blog.js">
+(function(){
+  // Supabase client
+  const cfg = window.VRIJEPLEK || {}; const { createClient } = window.supabase || {}; if(!createClient) return;
+  const supa = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+  // UI rechts
+  const right = document.querySelector('.right .body');
+  const box = document.createElement('div'); box.className='group';
+  box.innerHTML = `<label>Blog / Nieuws</label>
+    <div class="actions">
+      <button class="btn" id="blogList">Laden</button>
+      <button class="btn" id="blogNew">Nieuw</button>
+    </div>
+    <div id="blogOut" class="tiny"></div>`;
+  right.appendChild(box);
+
+  document.getElementById('blogList').onclick = loadPosts;
+  document.getElementById('blogNew').onclick = async ()=>{
+    const title = prompt('Titel'); if(!title) return;
+    const slug = slugify(title);
+    const { data, error } = await supa.from('posts').insert({ title, slug, body:'# '+title, status:'draft' }).select('id');
+    if(error) return out('Fout: '+error.message); out('Aangemaakt #'+data[0].id);
+  };
+
+  async function loadPosts(){
+    const { data, error } = await supa.from('posts').select('id,title,slug,status,updated_at').order('updated_at',{ascending:false}).limit(20);
+    if(error) return out('Fout: '+error.message);
+    const list = (data||[]).map(p=>`<div class="card" data-id="${p.id}"><b>${esc(p.title)}</b> <span class="tiny">/${esc(p.slug)} — ${esc(p.status)}</span> <div class="actions"><button class="btn" data-act="edit">Bewerken</button><button class="btn" data-act="pub">Publiceer</button><button class="btn" data-act="del">Verwijder</button></div></div>`).join('');
+    const el = document.getElementById('blogOut'); el.innerHTML = list || 'Geen posts';
+    el.onclick = async (e)=>{
+      const card = e.target.closest('.card'); if(!card) return; const id = card.dataset.id;
+      if(e.target.dataset.act==='edit') return editPost(id);
+      if(e.target.dataset.act==='pub') return setStatus(id,'published');
+      if(e.target.dataset.act==='del') return del(id);
+    };
+  }
+
+  async function editPost(id){
+    const { data, error } = await supa.from('posts').select('*').eq('id',id).single(); if(error) return out('Fout: '+error.message);
+    const modal = document.createElement('div'); Object.assign(modal.style,{position:'fixed',inset:'0',background:'rgba(0,0,0,.6)',display:'grid',placeItems:'center',zIndex:9999});
+    modal.innerHTML = `<div style="background:#0f172a;border:1px solid #ffffff22;border-radius:12px;min-width:740px;max-width:90vw;">
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid #ffffff22">
+        <strong>Edit: ${esc(data.title)}</strong><div style="margin-left:auto"></div><button class="btn" id="close">Sluiten</button>
+      </div>
+      <div style="padding:12px">
+        <label>Titel</label><input id="pTitle" type="text" value="${esc(data.title)}"/>
+        <label>Slug</label><input id="pSlug" type="text" value="${esc(data.slug)}"/>
+        <label>Body (Markdown)</label><textarea id="pBody" style="min-height:260px">${esc(data.body||'')}</textarea>
+        <div class="actions"><button class="btn" id="save">Opslaan</button></div>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#close').onclick=()=>modal.remove();
+    modal.querySelector('#save').onclick=async()=>{
+      const upd = { title: $('#pTitle',modal).value, slug: $('#pSlug',modal).value, body: $('#pBody',modal).value };
+      const { error } = await supa.from('posts').update(upd).eq('id', id);
+      if(error) alert('Fout: '+error.message); else { alert('Opgeslagen'); modal.remove(); loadPosts(); }
+    }
+  }
+
+  async function setStatus(id, status){ const { error } = await supa.from('posts').update({ status }).eq('id', id); if(error) out('Fout: '+error.message); else { out('Status: '+status); loadPosts(); } }
+  async function del(id){ if(!confirm('Verwijderen?')) return; const { error } = await supa.from('posts').delete().eq('id', id); if(error) out('Fout: '+error.message); else { out('Verwijderd'); loadPosts(); } }
+
+  function out(t){ document.getElementById('blogOut').textContent=t; }
+  function slugify(x){return (x||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')}
+  function esc(s){return (s||'').toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+})();
+</script>
+
+<!-- Supabase SQL voor posts -->
+<script type="text/plain" data-filename="supabase_blog.sql">
+create table if not exists public.posts (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text unique not null,
+  body text,
+  status text default 'draft',
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+create or replace function public.touch_posts_updated()
+returns trigger language plpgsql as $$ begin new.updated_at = now(); return new; end $$;
+create trigger t_posts_upd before update on public.posts for each row execute procedure public.touch_posts_updated();
+alter table public.posts enable row level security;
+create policy "read_published" on public.posts for select using (status='published');
+create policy "manage_all" on public.posts for all using (auth.role() = 'authenticated');
+</script>
+
+<!-- Blog viewer sectie (renderSection) uitbreiding -->
+<script type="text/plain" data-filename="builder-extensions-blog-render.js">
+(function(){
+  const _make = window.makeBlock; window.makeBlock = function(type){ if(type==='blogFeed') return {id:uid(),type:'blogFeed',data:{title:'Nieuws', count:6}}; return _make(type) };
+  const lib = document.querySelector('.right .grid'); const comp=document.createElement('div'); comp.className='component'; comp.draggable=true; comp.dataset.type='blogFeed'; comp.innerHTML='<span>📰 Blog Feed</span><span class="tag">Supabase</span>'; lib.appendChild(comp);
+  const _render = window.renderSection; window.renderSection = function(s){ if(s.type==='blogFeed'){ return `<section class="blogFeed"><div class="inner"><h2>${esc(s.data.title||'Nieuws')}</h2><div class="grid" id="feed-${s.id}">Laden…</div></div></section>` } return _render(s); }
+  const _build = window.buildHTML; window.buildHTML = function(){ const html = _build(); if(!html.includes('/* BLOG FEED LOADER */')){ return html.replace('</body>','<script>/* BLOG FEED LOADER */(function(){const cfg=window.VRIJEPLEK||{};const s=document.querySelectorAll("[id^=feed-");if(!s.length)return;const c=window.supabase?.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);if(!c)return;fetchPosts();async function fetchPosts(){const {data,error}=await c.from("posts").select("title,slug,updated_at").eq("status","published").order("updated_at",{ascending:false}).limit(12);for(const feed of s){feed.innerHTML=(data||[]).map(p=>`<article class=\"card\"><h3>${'+'}p.title${'+'}</h3><p class=\"tiny\">${'+'}new Date(p.updated_at).toLocaleDateString('nl-BE'){'+'}</p><a class=\"btn\" href=\"/blog/${'+'}p.slug${'+'}\">Lees</a></article>`).join('')||'Geen posts';}})();</script></body>'); } return html; }
+  function esc(s){return (s||'').toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 4) Imagizer (client): crop/ratio/quality         -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-imagizer.js">
+(function(){
+  const right = document.querySelector('.right .body');
+  const box = document.createElement('div'); box.className='group';
+  box.innerHTML = `<label>Imagizer</label>
+    <div class="row"><div><label>Breedte</label><input id="imW" type="number" value="1600"></div>
+    <div><label>Hoogte</label><input id="imH" type="number" value="900"></div></div>
+    <div class="row"><div><label>Kwaliteit (0.5‑1)</label><input id="imQ" type="number" step=".05" min="0.5" max="1" value="0.85"></div>
+    <div><label>JPEG/PNG</label><select id="imFmt"><option>image/jpeg</option><option>image/png</option></select></div></div>
+    <div class="actions"><button class="btn" id="imPick">Kies beeld</button></div>
+    <div id="imOut" class="tiny"></div>`;
+  right.appendChild(box);
+
+  document.getElementById('imPick').onclick=async()=>{
+    const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+    inp.onchange=()=>{
+      const file=inp.files[0]; if(!file) return;
+      const w=+document.getElementById('imW').value||1600; const h=+document.getElementById('imH').value||900; const q=+document.getElementById('imQ').value||0.85; const fmt=document.getElementById('imFmt').value;
+      const fr=new FileReader(); fr.onload=()=>{
+        const img=new Image(); img.onload=()=>{
+          const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
+          // cover‑fit crop
+          const r=Math.max(w/img.width, h/img.height); const nw=img.width*r, nh=img.height*r; const dx=(w-nw)/2, dy=(h-nh)/2; ctx.drawImage(img, dx, dy, nw, nh);
+          c.toBlob(b=>{
+            const url=URL.createObjectURL(b); document.getElementById('imOut').innerHTML=`<a class="btn" href="${url}" download="image.jpg">Download</a>`; 
+          }, fmt, q);
+        }; img.src=fr.result;
+      }; fr.readAsDataURL(file);
+    };
+    inp.click();
+  };
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 5) Component‑varianten presets per type          -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-variants.js">
+(function(){
+  const VARS = {
+    hero:[
+      {name:'Minimal', apply:(d)=>Object.assign(d,{align:'center',subtitle:'',cta:null})},
+      {name:'Left CTA', apply:(d)=>Object.assign(d,{align:'left',cta:{label:'Boek nu',href:'#'}})},
+      {name:'Big Title', apply:(d)=>Object.assign(d,{vh:84, subtitle:d.subtitle || ' '})}
+    ],
+    featureGrid:[
+      {name:'2 kolommen', apply:(d)=>Object.assign(d,{cols:2})},
+      {name:'4 kolommen', apply:(d)=>Object.assign(d,{cols:4})}
+    ],
+    pricing:[
+      {name:'2 plannen', apply:(d)=>Object.assign(d,{plans:d.plans.slice(0,2)})},
+      {name:'Highlight midden', apply:(d)=>{ d.plans[1]&&(d.plans[1].highlight=true); return d; }}
+    ]
+  };
+
+  // UI in linker panel onder Secties
+  const left = document.querySelector('.left .body');
+  const box = document.createElement('div'); box.className='group'; box.innerHTML = `<label>Variant presets</label><div id="varBtns" class="actions"></div>`; left.appendChild(box);
+
+  function active(){ const it=document.querySelector('.item[data-active]'); if(!it) return null; const id=it.dataset.id; return state.sections.find(s=>s.id===id); }
+
+  // mark active bij openEditor
+  const _open = window.openEditor; window.openEditor = function(s){ document.querySelectorAll('.item').forEach(el=>el.removeAttribute('data-active')); const it=[...document.querySelectorAll('.item')].find(x=>x.dataset.id===s.id); it?.setAttribute('data-active',''); renderVarBtns(s); return _open(s); }
+
+  function renderVarBtns(s){ const v=VARS[s.type]; const root=document.getElementById('varBtns'); root.innerHTML=''; if(!v) return root.textContent='Geen varianten'; v.forEach(vp=>{ const b=document.createElement('button'); b.className='btn'; b.textContent=vp.name; b.onclick=()=>{ vp.apply(s.data); refresh(); }; root.appendChild(b); }); }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 6) README Deel 6                                  -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="README-deel6.txt">
+1) Voeg toe aan je project:
+   - builder-extensions-multipage.js
+   - builder-extensions-blog.js
+   - builder-extensions-blog-render.js
+   - builder-extensions-imagizer.js
+   - builder-extensions-variants.js
+   - router.html
+   - _redirects: voeg regel toe voor /s/:id/* → router.html
+   - supabase_blog.sql (voer uit)
+
+2) Multipage
+   - Pagina’s beheren via toolbar-kiezer (Home/Diensten/Contact/…)
+   - Navbar wordt automatisch met pagina’s gevuld.
+   - Publiceer zoals in Deel 4; pretty URL routeert naar router.html.
+
+3) Blog
+   - Supabase tabel `posts` + policies uit SQL uitvoeren.
+   - In builder (rechts) → Blog/Nieuws → Laden/Nieuw → Bewerk/Publish.
+   - Voeg “📰 Blog Feed” blok toe op eender welke pagina.
+
+4) Imagizer
+   - Client‑side resize/crop/compress voor snelle hero’s/galerijen.
+
+5) Variants
+   - Per component snelle varianten toepassen (hero/feature/pricing). Breid simpel uit in `VARS`.
+
+6) Tips
+   - Voor volledige multipage export als aparte html‑bestanden: loop over `state.pages` en maak `index.html`, `diensten.html`, … in je ZIP (pas Deel 1: downloadZip aan). 
+   - Wil je blog detailpagina’s? Voeg een Netlify Function toe die `posts` per slug rendert naar HTML, of gebruik de router met `?post=<slug>`.
+</script>
+<!--
+DEEL 7 — E‑commerce light (producten + winkelmandje + Stripe Checkout), i18n meertaligheid, Custom Code per blok
+Voeg de bestanden toe NA Deel 1‑6 en include de *.js extensies onderaan je builder.html.
+-->
+
+<!-- ================================================== -->
+<!-- 1) E‑commerce light: Productcards + Cart UI       -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-shop.js">
+(function(){
+  // Shop state
+  state.shop = state.shop || { currency:'EUR', cart:[] };
+
+  // Component: product grid
+  const lib = document.querySelector('.right .grid');
+  const comp=document.createElement('div'); comp.className='component'; comp.draggable=true; comp.dataset.type='productGrid';
+  comp.innerHTML = '<span>🛒 Producten</span><span class="tag">shop</span>';
+  lib.appendChild(comp);
+
+  const _make = window.makeBlock;
+  window.makeBlock = function(type){
+    if(type==='productGrid') return {id:uid(), type:'productGrid', data:{title:'Onze producten', cols:3, items:[
+      {id: uid(), name:'Basispakket', price:1995, img:'https://source.unsplash.com/800x600/?box', desc:'Alles om te starten'},
+      {id: uid(), name:'Pro pakket', price:3995, img:'https://source.unsplash.com/801x601/?package', desc:'Uitgebreide set'},
+      {id: uid(), name:'Plus pakket', price:7995, img:'https://source.unsplash.com/802x602/?premium', desc:'Maximale power'}
+    ]}};
+    return _make(type);
+  }
+
+  // Render
+  const _render = window.renderSection;
+  window.renderSection = function(s){
+    if(s.type==='productGrid'){
+      const d=s.data, cur=state.shop.currency;
+      return `<section class="shop"><div class="inner"><h2>${esc(d.title||'Producten')}</h2>
+        <div class="grid cols-${d.cols||3}">
+          ${(d.items||[]).map(p=>`<article class="card prod">
+            <img src="${esc(p.img)}" alt=""/>
+            <h3>${esc(p.name)}</h3>
+            <p>${esc(p.desc||'')}</p>
+            <div class="row">
+              <b>${fmt(p.price, cur)}</b>
+              <button class="btn" data-add="${p.id}">Toevoegen</button>
+            </div>
+          </article>`).join('')}
+        </div>
+      </div></section>`;
+    }
+    return _render(s);
+  }
+
+  // CSS
+  const _css = window.genCSS;
+  window.genCSS = function(d){ return _css(d)+`
+    .shop .grid{grid-template-columns:repeat(3,1fr)}
+    .shop .prod img{width:100%;height:180px;object-fit:cover;border-radius:var(--rad)}
+    .shop .prod .row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+    @media(max-width:900px){.shop .grid{grid-template-columns:1fr}}
+  `; }
+
+  // Cart drawer UI in builder (preview)
+  (function cartUI(){
+    const hdr = document.querySelector('.toolbar');
+    const btn = document.createElement('button'); btn.className='btn'; btn.id='cartToggle'; btn.textContent='Winkelmand'; hdr.appendChild(btn);
+    const drawer = document.createElement('div'); drawer.id='cartDrawer'; Object.assign(drawer.style,{position:'fixed',right:'12px',bottom:'12px',width:'320px',background:'#0f172a',border:'1px solid #ffffff22',borderRadius:'12px',padding:'10px',boxShadow:'0 10px 30px rgba(0,0,0,.3)',display:'none',zIndex:9999});
+    drawer.innerHTML = `<div style="display:flex;align-items:center;gap:6px"><strong>Mandje</strong><div style="margin-left:auto"></div><button class="btn" id="cartClose">×</button></div><div id="cartList" class="tiny" style="max-height:40vh;overflow:auto;margin-top:8px"></div><div style="display:flex;justify-content:space-between;margin-top:8px"><b id="cartTotal">€0,00</b><button class="btn" id="cartCheckout">Afrekenen</button></div>`;
+    document.body.appendChild(drawer);
+    btn.onclick=()=>{ drawer.style.display= drawer.style.display==='none'?'block':'none'; renderCart(); };
+    drawer.querySelector('#cartClose').onclick=()=>drawer.style.display='none';
+    drawer.querySelector('#cartCheckout').onclick=()=>checkout();
+  })();
+
+  // Event delegation voor Add to cart
+  document.addEventListener('click',(e)=>{
+    const b = e.target.closest('button[data-add]'); if(!b) return;
+    const id = b.dataset.add; const sec = state.sections.find(s=>s.type==='productGrid');
+    const p = sec?.data.items.find(x=>x.id===id); if(!p) return;
+    const line = state.shop.cart.find(x=>x.id===id); if(line) line.qty++; else state.shop.cart.push({id, name:p.name, price:p.price, qty:1});
+    flash('Toegevoegd aan mandje'); renderCart();
+  });
+
+  function renderCart(){
+    const list = document.getElementById('cartList'); if(!list) return;
+    list.innerHTML = state.shop.cart.map(i=>`<div class="card" style="display:flex;justify-content:space-between;align-items:center"><span>${esc(i.name)} × ${i.qty}</span><div><button class="btn" data-dec="${i.id}">−</button> <button class="btn" data-inc="${i.id}">+</button> <button class="btn" data-del="${i.id}">×</button></div></div>`).join('')||'Leeg.';
+    const total = state.shop.cart.reduce((s,i)=>s+i.price*i.qty,0); const cur=state.shop.currency; $('#cartTotal').textContent = fmt(total, cur);
+  }
+  document.addEventListener('click',(e)=>{
+    const id = e.target.dataset.dec || e.target.dataset.inc || e.target.dataset.del; if(!id) return;
+    const line = state.shop.cart.find(x=>x.id===id); if(!line) return;
+    if(e.target.dataset.dec){ line.qty=Math.max(0,line.qty-1); if(!line.qty) state.shop.cart=state.shop.cart.filter(x=>x.id!==id); }
+    if(e.target.dataset.inc){ line.qty++; }
+    if(e.target.dataset.del){ state.shop.cart=state.shop.cart.filter(x=>x.id!==id); }
+    renderCart();
+  });
+
+  async function checkout(){
+    try{
+      const res = await fetch('/.netlify/functions/stripe-checkout',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ currency: state.shop.currency, lines: state.shop.cart })});
+      const j = await res.json(); if(!res.ok) throw new Error(j.error||'Checkout mislukt');
+      location.href = j.url; // Stripe Checkout URL
+    }catch(err){ alert(err.message||'Fout bij afrekenen'); }
+  }
+
+  function fmt(cents, cur){
+    return new Intl.NumberFormat('nl-BE',{style:'currency',currency:cur}).format((cents||0)/100);
+  }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 2) Stripe Checkout Netlify Function               -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="netlify/functions/stripe-checkout.js">
+export const config = { path: '/.netlify/functions/stripe-checkout' };
+
+export default async (req) => {
+  try{
+    if(req.method!=='POST') return new Response('Method not allowed',{status:405});
+    const { lines=[], currency='EUR' } = await req.json();
+    const sk = process.env.STRIPE_SECRET_KEY; if(!sk) return new Response(JSON.stringify({error:'Missing STRIPE_SECRET_KEY'}),{status:500});
+
+    // Stripe lite client via fetch
+    async function stripe(path, body){
+      const r = await fetch('https://api.stripe.com/v1'+path,{
+        method:'POST', headers:{'Authorization':'Bearer '+sk,'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(body)
+      });
+      const txt = await r.text(); if(!r.ok) throw new Error(txt); return JSON.parse(txt);
+    }
+
+    // Maak Price objects on-the-fly (optioneel) of gebruik vaste PRICE_IDs
+    const sessionLines = [];
+    for(const l of lines){
+      const price = await stripe('/prices', { unit_amount: String(l.price), currency: currency.toLowerCase(), product_data[name]: l.name });
+      sessionLines.push({ price: price.id, quantity: l.qty||1 });
+    }
+
+    const origin = process.env.PUBLIC_BASE_URL || (req.headers.get('origin') || 'https://vrijeplek.be');
+    const sess = await stripe('/checkout/sessions', {
+      mode:'payment',
+      success_url: origin + '/bedankt.html?status=ok',
+      cancel_url: origin + '/winkelmand.html?status=cancel',
+      'line_items[0][price]': sessionLines[0]?.price, 'line_items[0][quantity]': String(sessionLines[0]?.quantity||1),
+      ...(sessionLines[1]? {'line_items[1][price]': sessionLines[1].price, 'line_items[1][quantity]': String(sessionLines[1].quantity)} : {}),
+      ...(sessionLines[2]? {'line_items[2][price]': sessionLines[2].price, 'line_items[2][quantity]': String(sessionLines[2].quantity)} : {})
+    });
+
+    return new Response(JSON.stringify({url:sess.url}),{headers:{'Content-Type':'application/json'}});
+  }catch(err){
+    return new Response(JSON.stringify({error:String(err)}),{status:500});
+  }
+}
+</script>
+
+<!-- ================================================== -->
+<!-- 3) Orders opslaan (optioneel)                    -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="supabase_shop.sql">
+create table if not exists public.orders (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamp with time zone default now(),
+  email text,
+  amount integer,
+  currency text,
+  status text default 'created',
+  meta jsonb
+);
+alter table public.orders enable row level security;
+create policy "insert_all" on public.orders for insert with check (true);
+create policy "select_all" on public.orders for select using (true);
+</script>
+
+<!-- ================================================== -->
+<!-- 4) i18n: meertaligheid + switcher                -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-i18n.js">
+(function(){
+  state.i18n = state.i18n || { lang:'nl', strings:{ nl:{cta:'Boek nu', more:'Meer info'}, fr:{cta:'Réserver', more:'Plus d\'infos'}, en:{cta:'Book now', more:'Learn more'} } };
+
+  const hdr = document.querySelector('.toolbar');
+  const sel = document.createElement('select'); sel.className='btn'; sel.id='langSelect'; sel.innerHTML='<option value="nl">NL</option><option value="fr">FR</option><option value="en">EN</option>';
+  hdr.appendChild(sel);
+  sel.value = state.i18n.lang; sel.onchange=()=>{ state.i18n.lang = sel.value; refresh(); }
+
+  // Helper t(key)
+  window.t = function(key){ const l = state.i18n.lang; return (state.i18n.strings?.[l]?.[key]) || key; }
+
+  // Voorbeeld: vervang CTA labels tijdens render
+  const _render = window.renderSection; window.renderSection = function(s){ if(s.type==='cta'){ s.data.button = s.data.button || {}; s.data.button.label = s.data.button.label || t('cta'); }
+    return _render(s); };
+
+  // Exporteer language als html lang attr
+  const _build = window.buildHTML; window.buildHTML = function(){ const html = _build(); return html.replace('<html', `<html lang=\"${state.i18n.lang}\"`); }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 5) Custom Code per blok (HTML/CSS/JS sandbox)     -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="builder-extensions-customcode.js">
+(function(){
+  // UI in sectie‑editor: knop "Custom code"
+  const _open = window.openEditor;
+  window.openEditor = function(section){
+    const res = _open(section);
+    const panel = document.querySelector('.editor .body'); if(!panel) return res;
+    let btn = panel.querySelector('#ccBtn'); if(btn) return res;
+    btn = document.createElement('button'); btn.id='ccBtn'; btn.className='btn'; btn.textContent='Custom code'; panel.appendChild(btn);
+    btn.onclick = ()=> openCC(section);
+    return res;
+  }
+
+  function openCC(s){
+    s.cc = s.cc || { html:'', css:'', js:'' };
+    const modal = document.createElement('div'); Object.assign(modal.style,{position:'fixed',inset:'0',display:'grid',placeItems:'center',background:'rgba(0,0,0,.6)',zIndex:9999});
+    modal.innerHTML = `<div style="background:#0f172a;border:1px solid #ffffff22;border-radius:12px;min-width:900px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column">
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid #ffffff22">
+        <strong>Custom code</strong><div style="margin-left:auto"></div><button class="btn" id="close">Sluiten</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px;overflow:auto">
+        <div><label>HTML</label><textarea id="ccHtml" style="min-height:300px">${esc(s.cc.html)}</textarea></div>
+        <div><label>CSS</label><textarea id="ccCss" style="min-height:300px">${esc(s.cc.css)}</textarea></div>
+        <div><label>JS (in sandbox)</label><textarea id="ccJs" style="min-height:300px">${esc(s.cc.js)}</textarea></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:10px">
+        <button class="btn" id="save">Opslaan</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#close').onclick=()=>modal.remove();
+    modal.querySelector('#save').onclick=()=>{ s.cc.html=$('#ccHtml',modal).value; s.cc.css=$('#ccCss',modal).value; s.cc.js=$('#ccJs',modal).value; modal.remove(); refresh(); };
+  }
+
+  // Inject sandboxed iframe tijdens render
+  const _render = window.renderSection;
+  window.renderSection = function(s){
+    const base = _render(s);
+    if(!s.cc || (!s.cc.html && !s.cc.css && !s.cc.js)) return base;
+    const blob = new Blob([`<!DOCTYPE html><html><head><meta charset=\"utf-8\"><style>${s.cc.css||''}</style></head><body>${s.cc.html||''}<script>(function(){try{${s.cc.js||''}}catch(e){}})()<\/script></body></html>`],{type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const iframe = `<iframe src="${url}" sandbox="allow-scripts allow-forms" style="width:100%;height:360px;border:1px solid #ffffff22;border-radius:12px"></iframe>`;
+    return base.replace('</section>', `<div class="cc-wrap">${iframe}</div></section>`);
+  }
+})();
+</script>
+
+<!-- ================================================== -->
+<!-- 6) README Deel 7                                  -->
+<!-- ================================================== -->
+<script type="text/plain" data-filename="README-deel7.txt">
+1) Voeg toe aan project:
+   - builder-extensions-shop.js
+   - netlify/functions/stripe-checkout.js
+   - supabase_shop.sql (uitvoeren)
+   - builder-extensions-i18n.js
+   - builder-extensions-customcode.js
+
+2) Netlify ENV
+   - STRIPE_SECRET_KEY = sk_live_… of sk_test_…
+   - PUBLIC_BASE_URL = https://vrijeplek.be (gebruikt voor success/cancel)
+
+3) Werking shop
+   - Plaats een “🛒 Producten” blok → Add to cart → Winkelmand (toolbar) → Afrekenen → Stripe Checkout.
+   - Voor real‑life: gebruik vaste prijs-IDs i.p.v. on-the-fly prices (pas function aan) en Stripe Webhooks om orders te bevestigen.
+
+4) i18n
+   - Taal switchen via dropdown in toolbar (NL/FR/EN). Voeg meer vertalingen in `state.i18n.strings`.
+
+5) Custom code
+   - In sectie-editor → “Custom code” → voeg HTML/CSS/JS toe. Wordt in sandboxed iframe gerenderd (geen toegang tot parent DOM).
+
+6) Veiligheid
+   - Service Role keys blijven ALLEEN in Netlify Functions; nooit in client.
+   - Overweeg RLS policies voor `orders` als je gebruikers koppelt.
+</script>
