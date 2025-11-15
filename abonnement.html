@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vrijeplek — Abonnement kiezen</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      background: #f5f9ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero-wrap {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 40px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+      border: 1px solid rgba(26,102,255,0.15);
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #1a66ff, #0056ff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .plan-box {
+      margin-top: 35px;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    }
+
+    .price {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1a66ff;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 16px 28px;
+      background: linear-gradient(90deg, #1a66ff, #0056ff);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: .2s;
+    }
+
+    button:hover {
+      opacity: .93;
+      transform: translateY(-2px);
+    }
+
+    .nav-logo {
+      position: absolute;
+      top: 22px;
+      left: 26px;
+      height: 36px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="vrijeplek-ocean-logo-word-integrated.svg" class="nav-logo" alt="Vrijeplek">
+
+  <div class="hero-wrap">
+    <h1>Kies je abonnement</h1>
+    <p>Activeer direct jouw Vrijeplek account en krijg toegang tot het volledige dashboard.</p>
+
+    <div class="plan-box">
+      <h2>Vrijeplek Abonnement</h2>
+      <div class="price">€19,95<span style="font-size:16px; color:#4b5b7e;">/maand</span></div>
+
+      <ul style="margin: 20px 0 0 0; padding-left: 20px; line-height: 1.8; color:#344563;">
+        <li>Direct zichtbaar in het platform</li>
+        <li>Eigen dashboard</li>
+        <li>Afspraken, last-minute aanbiedingen, reacties</li>
+        <li>Onbeperkt gebruik</li>
+      </ul>
+
+      <button onclick="startPayment()">Start mijn abonnement</button>
+    </div>
+  </div>
+
+  <script>
+    function startPayment() {
+      window.location.href = "https://checkout.stripe.com/c/PLAATS-HIER-JOUW-STRIPE-LINK";
+    }
+  </script>
+
+</body>
+</html>
