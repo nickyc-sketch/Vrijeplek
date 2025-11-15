@@ -545,36 +545,47 @@
   els.btnActivate.addEventListener('click', payNow);
 
     // ---------- Gating ----------
-  function gateUI(status, plan){
-    const active = (status === 'active');
+function gateUI(status, plan){
+  const active = (status === 'active');
 
-    // NIET-actief → onmiddellijk naar abonnement-pagina sturen
-    if (!active) {
-      try {
-        window.location.href = 'abonnement.html';
-      } catch (e) {
-        location.href = 'abonnement.html';
-      }
-      return;
+  // NIET-actief → onmiddellijk naar abonnement-pagina sturen
+  if (!active) {
+    try {
+      window.location.href = 'abonnement.html';
+    } catch (e) {
+      location.href = 'abonnement.html';
     }
+    return;
+  }
 
-    // Actief account: geen waarschuwingen, alles open
-    els.settingsDot.style.display = 'none';
-    els.payBanner.style.display = 'none';
-    if (els.accountDot?.style) els.accountDot.style.display = 'none';
+  // === ACCOUNT IS ACTIEF ===
 
-   if (active) {
+  // Status: mooi groen "Actief"
   els.accStatus.innerHTML = `Status: <strong style="color:#0fa958;">Actief</strong> — plan: <strong>${plan || '—'}</strong>`;
-} else {
-  els.accStatus.innerHTML = `Status: <strong style="color:#e23b3b;">Niet actief</strong> — plan: <strong>${plan || '—'}</strong>`;
+
+  // Verberg waarschuwingen
+  els.settingsDot.style.display = 'none';
+  els.payBanner.style.display = 'none';
+  if (els.accountDot?.style) els.accountDot.style.display = 'none';
+
+  // Tabs vrijgeven
+  els.sections.open?.classList.remove('locked');
+  els.sections.website?.classList.remove('locked');
+
+  // --- KNOP OMWISSEN NAAR "GEABONNEERD" ---
+  els.btnActivate.disabled = true;
+  els.btnActivate.style.opacity = "0.6";
+  els.btnActivate.style.cursor = "default";
+  els.btnActivate.style.background = "#0fa958";  // groen
+  els.btnActivate.textContent = "Geabonneerd ✔";
+
+  // Laatste checkout link verbergen
+  els.lastCheckout.style.display = 'none';
+
+  // Plan highlighten
+  selectPlan(plan || 'monthly');
 }
 
-    selectPlan(plan || 'monthly');
-
-    // Tabs volledig vrij voor actieve accounts
-    els.sections.open?.classList.remove('locked');
-    els.sections.website?.classList.remove('locked');
-  }
 
 
   // ---------- Agenda dummy ----------
