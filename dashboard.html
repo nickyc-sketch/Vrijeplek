@@ -563,7 +563,12 @@
     els.payBanner.style.display = 'none';
     if (els.accountDot?.style) els.accountDot.style.display = 'none';
 
-    els.accStatus.innerHTML = `Status: <strong>actief</strong> — plan: <strong>${plan || '—'}</strong>`;
+   if (active) {
+  els.accStatus.innerHTML = `Status: <strong style="color:#0fa958;">Actief</strong> — plan: <strong>${plan || '—'}</strong>`;
+} else {
+  els.accStatus.innerHTML = `Status: <strong style="color:#e23b3b;">Niet actief</strong> — plan: <strong>${plan || '—'}</strong>`;
+}
+
     selectPlan(plan || 'monthly');
 
     // Tabs volledig vrij voor actieve accounts
