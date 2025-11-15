@@ -544,26 +544,33 @@
   }
   els.btnActivate.addEventListener('click', payNow);
 
-  // ---------- Gating ----------
+    // ---------- Gating ----------
   function gateUI(status, plan){
     const active = (status === 'active');
-    if(!active){
-      els.settingsDot.style.display = 'inline-block';
-      els.payBanner.style.display = 'block';
-      els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Activeer om alles te gebruiken.';
-      els.accountDot?.style && (els.accountDot.style.display = 'inline-block');
-    }else{
-      els.settingsDot.style.display = 'none';
-      els.payBanner.style.display = 'none';
-      els.accountDot?.style && (els.accountDot.style.display = 'none');
+
+    // NIET-actief → onmiddellijk naar abonnement-pagina sturen
+    if (!active) {
+      try {
+        window.location.href = 'abonnement.html';
+      } catch (e) {
+        location.href = 'abonnement.html';
+      }
+      return;
     }
-    els.accStatus.innerHTML = `Status: <strong>${active ? 'actief' : 'niet actief'}</strong> — plan: <strong>${plan || '—'}</strong>`;
+
+    // Actief account: geen waarschuwingen, alles open
+    els.settingsDot.style.display = 'none';
+    els.payBanner.style.display = 'none';
+    if (els.accountDot?.style) els.accountDot.style.display = 'none';
+
+    els.accStatus.innerHTML = `Status: <strong>actief</strong> — plan: <strong>${plan || '—'}</strong>`;
     selectPlan(plan || 'monthly');
 
-    if(!active){ els.sections.open?.classList.add('locked'); els.sections.website?.classList.add('locked'); }
-    else{ els.sections.open?.classList.remove('locked'); els.sections.website?.classList.remove('locked'); }
+    // Tabs volledig vrij voor actieve accounts
+    els.sections.open?.classList.remove('locked');
+    els.sections.website?.classList.remove('locked');
   }
-  async function afterProfileLoaded(){ gateUI(window.__status || 'pending', window.__plan || 'monthly'); }
+
 
   // ---------- Agenda dummy ----------
   function groupByDate(items){ const map={}; items.forEach(x=>{ (map[x.date] ||= []).push(x); }); Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time))); return Object.keys(map).sort().map(d=>({ date:d, items: map[d] })); }
