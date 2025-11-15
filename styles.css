@@ -227,3 +227,161 @@ input[type="date"][data-has-value="1"]::-webkit-datetime-edit{ color:inherit; }
 @media(min-width:901px){
   .sidenav{ position: sticky; top: 90px; }
 }
+/* =========================================
+   MOBIEL LAYOUT FIX (≤ 768px)
+   ========================================= */
+@media (max-width: 768px){
+
+  html, body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+    font-size:14px;
+  }
+
+  /* Header compacter + overzichtelijk */
+  .site-header .header-inner{
+    padding:8px 10px;
+    gap:8px;
+  }
+
+  .header-actions{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:6px;
+  }
+  .header-actions::-webkit-scrollbar{display:none;}
+  .header-actions .nav-btn{
+    font-size:11px;
+    padding:6px 10px;
+    white-space:nowrap;
+  }
+
+  /* Algemeen container-gedrag */
+  .container,
+  .wrap{
+    padding-inline:12px;
+  }
+
+  /* HERO / INDEX (zoekkaart) */
+  .hero{
+    padding:26px 0 24px;
+  }
+  .hero-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    text-align:center;
+    gap:18px;
+  }
+
+  .hero-inner h1{
+    font-size:22px;
+    line-height:1.2;
+  }
+
+  .hero-inner p{
+    font-size:13px;
+  }
+
+  /* Zoekkaart mooi full-width op mobiel */
+  .search-wrap{
+    margin:14px auto 0;
+    max-width:100%;
+    width:100%;
+    padding:14px;
+  }
+
+  .search-wrap .search-row,
+  .search-wrap form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .search-wrap .field,
+  .search-wrap .field-group{
+    width:100%;
+  }
+
+  .search-wrap .btn{
+    width:100%;
+    justify-content:center;
+  }
+
+  /* Kleur-categorie chips / knoppen onder de hero (index) */
+  .cat-strip{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
+  }
+  .cat-chip{
+    flex:0 1 calc(50% - 8px);
+    text-align:center;
+  }
+
+  /* WAAROM-PAGINA */
+  .flow-row{
+    grid-template-columns:1fr;
+  }
+
+  .value-grid{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    padding:14px;
+  }
+
+  /* AANMELDEN (signup) */
+  .signup-grid{
+    grid-template-columns:1fr;
+  }
+
+  .signup-card{
+    margin-top:10px;
+  }
+
+  .signup-card form{
+    gap:10px;
+  }
+
+  .signup-card .two{
+    grid-template-columns:1fr;
+  }
+
+  /* LOGIN-PAGINA */
+  .login-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .login-card{
+    margin-top:6px;
+  }
+
+  /* Forms algemeen (alle pagina’s) */
+  .field input,
+  .field select,
+  .field .input{
+    font-size:13px;
+    padding:9px 11px;
+  }
+
+  .btn{
+    width:100%;
+    padding:11px 14px;
+    font-size:14px;
+  }
+
+  /* Footer altijd netjes onderaan en luchtiger */
+  .site-footer .footer-inner{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    padding-inline:12px;
+    text-align:left;
+  }
+}
