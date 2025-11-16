@@ -13,45 +13,277 @@
 
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --line:rgba(26,102,255,.25);
+      --o1:#1a66ff;
+      --o2:#0056ff;
+      --ink:#0a2a4a;
+      --line:rgba(26,102,255,.25);
+      --glass-b:rgba(26,102,255,.18);
+      --glass:rgba(255,255,255,.78);
     }
     html,body{height:100%}
-    body{margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:linear-gradient(180deg,#e9f2ff,#f6f9ff);}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);
+    }
     .site{min-height:100svh; display:flex; flex-direction:column;}
     main{flex:1}
 
-    .site-header{position:sticky; top:0; z-index:50; background:linear-gradient(120deg,var(--o1),var(--o2)); color:#fff;}
-    .site-header .inner{max-width:1200px; margin:0 auto; padding:14px 12px; display:flex; align-items:center; gap:16px;}
-    .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; font-weight:700; font-size:20px; margin-right:auto;}
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;
+    }
+    .site-header .inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:14px 12px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:#fff;
+      font-weight:700;
+      font-size:20px;
+      margin-right:auto;
+    }
     .brand img{height:38px}
+    .brand-name{font-weight:800;}
+    .brand-dot{width:7px;height:7px;border-radius:999px;background:#fff;}
 
     .header-actions{display:flex; align-items:center; gap:10px; margin-left:auto;}
-    .nav-btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; text-decoration:none; font-weight:600; border:1px solid rgba(255,255,255,.35); color:#fff; background:rgba(255,255,255,.12);}
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:600;
+      border:1px solid rgba(255,255,255,.35);
+      color:#fff;
+      background:rgba(255,255,255,.12);
+      font-size:13px;
+    }
     .nav-btn:hover{background:rgba(255,255,255,.2)}
-    .btn-green{background:linear-gradient(120deg,#16a34a,#0e9f6e); border:1px solid rgba(16,185,129,.25); color:#fff!important; box-shadow:0 6px 18px rgba(16,185,129,.18);}
+    .btn-green{
+      background:linear-gradient(120deg,#16a34a,#0e9f6e);
+      border:1px solid rgba(16,185,129,.25);
+      color:#fff!important;
+      box-shadow:0 6px 18px rgba(16,185,129,.18);
+    }
 
     .container{max-width:1200px; margin:0 auto; padding:0 12px;}
-    .hero{padding:36px 0 8px;}
-    .hero-inner{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;}
-    .hero h1{margin:0; font-size:32px;}
 
-    .search-wrap{width:100%; max-width:920px; margin:10px auto 28px; padding:14px; border-radius:16px; background:rgba(255,255,255,.7); border:1px solid var(--line); box-shadow:0 8px 30px rgba(10,27,90,.08);}
-    .search{display:grid; grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto; gap:10px;}
+    .hero{padding:32px 0 8px;}
+    .hero-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap:14px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:32px;
+    }
+
+    .search-wrap{
+      width:100%;
+      max-width:920px;
+      margin:10px auto 28px;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.7);
+      border:1px solid var(--line);
+      box-shadow:0 8px 30px rgba(10,27,90,.08);
+    }
+    .search{
+      display:grid;
+      grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto;
+      gap:10px;
+    }
     .search .field{display:flex; flex-direction:column; gap:6px; text-align:left;}
-    .search label{font-size:12px; font-weight:700; color:#223655;}
-    .search input,.search select{padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff;}
-    .btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 18px; border-radius:999px; border:0; background:linear-gradient(120deg,var(--o1),var(--o2)); color:#fff; font-weight:700; cursor:pointer;}
-    @media(max-width:1024px){ .search{grid-template-columns:1fr 1fr 1fr; } }
-    @media(max-width:720px){ .search{grid-template-columns:1fr; } }
+    .search label{
+      font-size:12px;
+      font-weight:700;
+      color:#223655;
+    }
+    .search input,
+    .search select{
+      padding:10px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:#fff;
+      font-size:13px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 18px;
+      border-radius:999px;
+      border:0;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
+      box-shadow:0 8px 22px rgba(37,99,235,.3);
+    }
+    @media(max-width:1024px){
+      .search{grid-template-columns:1fr 1fr 1fr;}
+    }
+    @media(max-width:720px){
+      .search{grid-template-columns:1fr;}
+    }
 
     .cat-dots{padding:18px 0 0;}
-    .cat-dots-row{display:flex; flex-wrap:wrap; gap:12px; list-style:none; padding:0; margin:0; justify-content:center;}
-    .catdot{display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; color:var(--ink);}
-    .catdot img{width:86px; height:86px; object-fit:cover; border-radius:999px; border:1px solid var(--line); box-shadow:0 8px 24px rgba(10,27,90,.08); background:#fff;}
+    .cat-dots-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      list-style:none;
+      padding:0;
+      margin:0;
+      justify-content:center;
+    }
+    .catdot{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--ink);
+    }
+    .catdot img{
+      width:86px;
+      height:86px;
+      object-fit:cover;
+      border-radius:999px;
+      border:1px solid var(--line);
+      box-shadow:0 8px 24px rgba(10,27,90,.08);
+      background:#fff;
+    }
     .catdot span{font-weight:700; font-size:13px;}
 
-    .site-footer{border-top:1px solid var(--line); background:rgba(255,255,255,.8);}
-    .footer-inner{max-width:1200px; margin:0 auto; padding:16px 12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+    /* Resultatenblok */
+    .results{
+      padding:0 0 40px;
+    }
+    .results-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 12px;
+    }
+    .results-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .results-head h2{
+      margin:0;
+      font-size:20px;
+    }
+    .results-meta{
+      font-size:13px;
+      color:#5b6b86;
+    }
+    .results-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .result-card{
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:14px;
+      box-shadow:0 6px 22px rgba(10,27,90,.06);
+      padding:14px 16px 12px;
+      text-align:left;
+    }
+    .result-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:6px;
+    }
+    .result-title{
+      font-size:16px;
+      font-weight:700;
+      margin:0;
+    }
+    .result-cat{
+      font-size:11px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(26,102,255,.25);
+      background:#fff;
+      text-transform:capitalize;
+    }
+    .result-body{
+      font-size:13px;
+      color:#374151;
+      margin-bottom:8px;
+    }
+    .result-body .line{
+      margin:2px 0;
+    }
+    .slots-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:4px 0 0;
+      padding:0;
+      list-style:none;
+      font-size:12px;
+    }
+    .slot-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(26,102,255,.18);
+      box-shadow:0 2px 6px rgba(15,23,42,.12);
+      white-space:nowrap;
+    }
+    .slot-pill span.date{
+      font-weight:600;
+    }
+    .slot-pill span.time{
+      font-size:11px;
+      color:#4b5563;
+    }
+
+    .site-footer{
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.8);
+    }
+    .footer-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:16px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+      font-size:12px;
+      color:#4b5563;
+    }
     .footer-nav{display:flex; gap:12px;}
     .footer-nav a{text-decoration:none; color:#244; font-weight:600;}
   </style>
@@ -61,17 +293,20 @@
   <div class="site">
 
     <header class="site-header">
-  <div class="header-inner">
-    <a href="index.html" class="brand"><img src="img/logo.png" alt=""> <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span></a>
-    <nav class="header-actions">
-      <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-      <a class="nav-btn" href="aanmelden.html">Word lid</a>
-      <a id="nav-login" class="nav-btn" href="login.html">Login</a>
-      <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
-    </nav>
-  </div>
-</header>
-
+      <div class="header-inner">
+        <a href="index.html" class="brand">
+          <img src="img/logo.png" alt="">
+          <span class="brand-name">Vrijeplek</span>
+          <span class="brand-dot"></span>
+        </a>
+        <nav class="header-actions">
+          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="aanmelden.html">Word lid</a>
+          <a id="nav-login" class="nav-btn" href="login.html">Login</a>
+          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+        </nav>
+      </div>
+    </header>
 
     <main>
       <section class="cat-dots">
@@ -92,14 +327,14 @@
         <div class="container hero-inner">
           <h1>Last minute? Zoek een afspraak!</h1>
           <div class="search-wrap">
-            <form id="zoeken" class="search" action="zoeken" method="get" role="search" aria-label="Zoeken">
+            <form id="zoeken" class="search" role="search" aria-label="Zoeken">
               <div class="field">
                 <label for="q">Welk bedrijf zoek je?</label>
                 <input id="q" name="q" type="search" required>
               </div>
               <div class="field">
                 <label for="loc">Locatie</label>
-                <input id="loc" name="loc" type="text" required>
+                <input id="loc" name="loc" type="text" required placeholder="Postcode of gemeente">
               </div>
               <div class="field">
                 <label for="from">Van</label>
@@ -125,6 +360,17 @@
               <button class="btn" type="submit">Zoek</button>
             </form>
           </div>
+        </div>
+      </section>
+
+      <!-- Resultaten op dezelfde pagina -->
+      <section id="results" class="results" hidden>
+        <div class="results-inner">
+          <div class="results-head">
+            <h2 id="results-title">Vrije plekken</h2>
+            <span id="results-meta" class="results-meta"></span>
+          </div>
+          <div id="results-list" class="results-list"></div>
         </div>
       </section>
     </main>
@@ -166,9 +412,13 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
     const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>'; // zelf invullen
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth:{ persistSession:true, autoRefreshToken:true }
+    });
 
     const btnLogin = document.getElementById('nav-login');
     const btnMijn  = document.getElementById('nav-mijn');
@@ -181,12 +431,115 @@
         btnMijn.style.display  = 'inline-flex';
       }else{
         btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display  = 'inline-flex';
         btnMijn.style.display  = 'none';
       }
     }
     await toggleNav();
     supabase.auth.onAuthStateChange(()=>toggleNav());
+
+    // ---------- Zoeken op dezelfde pagina ----------
+    const form   = document.getElementById('zoeken');
+    const qEl    = document.getElementById('q');
+    const locEl  = document.getElementById('loc');
+    const fromEl = document.getElementById('from');
+    const toEl   = document.getElementById('to');
+    const catEl  = document.getElementById('cat');
+
+    const resultsSection = document.getElementById('results');
+    const resultsList    = document.getElementById('results-list');
+    const resultsTitle   = document.getElementById('results-title');
+    const resultsMeta    = document.getElementById('results-meta');
+
+    function escapeHtml(str){
+      return (str || '').replace(/[&<>"']/g, m=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+
+    function formatDateNL(iso){
+      try{
+        return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
+          weekday:'short', day:'2-digit', month:'short'
+        });
+      }catch{
+        return iso;
+      }
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      const q   = qEl.value.trim();
+      const loc = locEl.value.trim();
+      const from = fromEl.value || '';
+      const to   = toEl.value || '';
+      const cat  = catEl.value || '';
+
+      resultsSection.hidden = false;
+      resultsTitle.textContent = 'Vrije plekken';
+      resultsMeta.textContent  = 'Zoeken…';
+      resultsList.innerHTML    = '';
+
+      try{
+        const r = await fetch('/.netlify/functions/search', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ q, loc, from, to, cat })
+        });
+        const data = await r.json().catch(()=>[]);
+
+        if(!Array.isArray(data) || !data.length){
+          resultsMeta.textContent = 'Geen vrije plekken gevonden met deze filters.';
+          resultsList.innerHTML = '';
+          return;
+        }
+
+        resultsMeta.textContent = `${data.length} zaak/zak(en) met vrije momenten gevonden`;
+
+        resultsList.innerHTML = '';
+        data.forEach(item=>{
+          const card = document.createElement('article');
+          card.className = 'result-card';
+
+          const title = escapeHtml(item.zaak || item.email || 'Onbekend');
+          const catLabel = item.cat ? escapeHtml(item.cat) : 'Onbekend';
+
+          const addrParts = [];
+          if(item.straat) addrParts.push(escapeHtml(item.straat));
+          if(item.postcode) addrParts.push(escapeHtml(item.postcode));
+          const addr = addrParts.join(' • ');
+
+          const bio = item.bio ? escapeHtml(item.bio) : '';
+
+          const slots = (item.slots || []).slice(0,12); // max 12 pills
+
+          const slotsHtml = slots.map(s=>{
+            const d = formatDateNL(s.date);
+            const t = `${s.from || ''} – ${s.to || ''}`;
+            return `<li class="slot-pill"><span class="date">${escapeHtml(d)}</span><span class="time">${escapeHtml(t)}</span></li>`;
+          }).join('');
+
+          card.innerHTML = `
+            <div class="result-head">
+              <h3 class="result-title">${title}</h3>
+              <span class="result-cat">${catLabel}</span>
+            </div>
+            <div class="result-body">
+              ${addr ? `<div class="line">${addr}</div>` : ``}
+              ${bio ? `<div class="line">${bio}</div>` : ``}
+            </div>
+            <ul class="slots-list">
+              ${slotsHtml || `<li class="slot-pill"><span class="time">Geen vrije momenten in deze periode.</span></li>`}
+            </ul>
+          `;
+          resultsList.appendChild(card);
+        });
+      }catch(err){
+        resultsMeta.textContent = 'Zoeken mislukt (server).';
+        resultsList.innerHTML = '';
+        console.error(err);
+      }
+    });
   </script>
 </body>
 </html>
