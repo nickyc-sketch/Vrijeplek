@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b3a;
       --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
       --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
@@ -99,7 +99,7 @@
     .btn-light{
       padding:10px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:var(--ink);font-weight:600;cursor:pointer
+      color:#ink;font-weight:600;cursor:pointer
     }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
@@ -540,7 +540,6 @@
   let __origEmail = '';
 
   async function ensureSession(){
-    // Geen Supabase → geen redirect, anders krijg je een loop
     if(!window.__supabase){
       els.welcomeWrap.classList.add('hide');
       window.__email = '';
@@ -554,7 +553,6 @@
         applyUser(session.user);
         return;
       }
-      // Geen session → éénmalig naar login
       hardGo('login.html');
     }catch{
       hardGo('login.html');
@@ -691,6 +689,35 @@
     if(raw){ e.preventDefault(); e.returnValue = ''; }
   });
 
+  // ---------- Status normaliseren ----------
+  function normalizeStatus(profile){
+    const raw =
+      (profile?.account_status ??
+       profile?.status ??
+       '').toString().toLowerCase().trim();
+
+    const flagActive =
+      profile?.is_active === true ||
+      profile?.active === true ||
+      profile?.betaald === true ||
+      profile?.paid === true;
+
+    const activeWords = ['active','actief','paid','betaald','ok','oké','okay'];
+    const blockedWords = ['blocked','geblokkeerd','cancelled','canceled','opgezegd','stopped'];
+
+    if(flagActive) return 'active';
+    if(activeWords.includes(raw)) return 'active';
+    if(blockedWords.includes(raw)) return 'blocked';
+    if(!raw) return 'pending';
+    return raw; // iets anders: bv "pending"
+  }
+
+  function normalizePlan(profile){
+    const p = (profile?.plan || '').toString().toLowerCase().trim();
+    if(['year','yearly','annual','jaar','180'].includes(p)) return 'yearly';
+    return 'monthly';
+  }
+
   // ---------- Profile GET ----------
   async function loadProfile(email){
     try{
@@ -698,6 +725,7 @@
       if(!r.ok) throw new Error('profile not ok');
       const d = await r.json();
       window.__profile = d || {};
+
       els.st.company.value ||= d?.zaak || '';
       els.st.phone.value   ||= d?.telefoon || '';
       els.st.btw.value     ||= d?.btw || '';
@@ -707,8 +735,8 @@
       els.st.website.value ||= d?.website || '';
       els.st.bio.value     ||= d?.bio || '';
 
-      window.__plan   = d?.plan || 'monthly';
-      window.__status = d?.account_status || d?.status || 'pending';
+      window.__plan   = normalizePlan(d);
+      window.__status = normalizeStatus(d);
     }catch{
       window.__plan = 'monthly';
       window.__status = 'pending';
@@ -755,7 +783,8 @@
 
   // ---------- Gating ----------
   function gateUI(status, plan){
-    const active = (status === 'active');
+    const normalized = (status || '').toString().toLowerCase();
+    const active = (normalized === 'active');
     const currentPlan = plan || 'monthly';
 
     els.accStatus.innerHTML =
