@@ -1,105 +1,146 @@
 // netlify/functions/slots.js
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-const headers = {
-  'Content-Type': 'application/json; charset=utf-8',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
-};
-
-function client() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // server-side
-  if (!url || !key) throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
-  return createClient(url, key, { auth: { persistSession: false } });
-}
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function handler(event) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: "Method not allowed",
+    };
+  }
+
+  let payload;
   try {
-    if (event.httpMethod === 'OPTIONS') {
-      return { statusCode: 204, headers, body: '' };
-    }
+    payload = JSON.parse(event.body || "{}");
+  } catch {
+    return { statusCode: 400, body: "Bad JSON" };
+  }
 
-    const supa = client();
+  const action = payload.action || "create";
 
-    // LIST
-    if (event.httpMethod === 'GET') {
-      const qs = new URLSearchParams(event.rawQuery || '');
-      const email = (qs.get('email') || '').trim().toLowerCase();
-      const date  = (qs.get('date')  || '').trim();
-
-      let q = supa
-        .from('slots')
-        .select('*')
-        .order('date', { ascending: true })
-        .order('from', { ascending: true });
-
-      if (email) q = q.eq('email', email);
-      if (date)  q = q.eq('date', date);
-
-      const { data, error } = await q;
-      if (error) {
-        return {
-          statusCode: 500,
-          headers,
-          body: JSON.stringify({ error: 'db_select_failed', details: error.message })
-        };
-      }
-
-      return { statusCode: 200, headers, body: JSON.stringify(data || []) };
-    }
-
-    // CREATE
-    if (event.httpMethod === 'POST') {
-      const payload = JSON.parse(event.body || '{}');
-
-      const email = (payload.email || '').trim().toLowerCase();
-      const date  = (payload.date  || '').trim();
-      const from  = (payload.from  || '').trim();
-      const to    = (payload.to    || '').trim();
-      const desc  = (payload.desc  || '').trim();
+  try {
+    // --------------------------------------------------
+    // 1) Dashboard: nieuw tijdslot publiceren
+    // --------------------------------------------------
+    if (action === "create") {
+      const email = (payload.email || "").trim().toLowerCase();
+      const date = payload.date;
+      const from = payload.from;
+      const to = payload.to;
+      const desc = (payload.desc || "").trim();
 
       if (!email || !date || !from || !to) {
         return {
           statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: 'missing_fields' })
+          body: "Missing fields",
         };
       }
 
-      const row = {
-        email,
-        date,    // bv. "2025-11-16"
-        from,    // bv. "14:00"
-        to,      // bv. "15:00"
-        desc,
-        created_at: new Date().toISOString()
-      };
-
-      const { data, error } = await supa
-        .from('slots')
-        .insert(row)
-        .select()
-        .single();
+      const { error } = await supabase.from("slots").insert([
+        {
+          email,
+          date,
+          from,
+          to,
+          desc,
+          created_at: new Date().toISOString(),
+          booked_at: null,
+        },
+      ]);
 
       if (error) {
+        console.error("slots.create error:", error);
         return {
           statusCode: 500,
-          headers,
-          body: JSON.stringify({ error: 'db_insert_failed', details: error.message })
+          body: "DB error (create)",
         };
       }
 
-      return { statusCode: 200, headers, body: JSON.stringify(data) };
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true }),
+      };
     }
 
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+    // --------------------------------------------------
+    // 2) Publieke site: tijdslot boeken
+    // --------------------------------------------------
+    if (action === "book") {
+      const id = payload.id;
+      if (!id) {
+        return { statusCode: 400, body: "Missing slot id" };
+      }
+
+      // markeer enkel als nog niet geboekt
+      const { data, error } = await supabase
+        .from("slots")
+        .update({ booked_at: new Date().toISOString() })
+        .eq("id", id)
+        .is("booked_at", null)
+        .select("id")
+        .maybeSingle();
+
+      if (error) {
+        console.error("slots.book error:", error);
+        return { statusCode: 500, body: "DB error (book)" };
+      }
+
+      if (!data) {
+        // ofwel bestaat niet, ofwel al geboekt
+        return {
+          statusCode: 409,
+          body: "Slot not available",
+        };
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true }),
+      };
+    }
+
+    // --------------------------------------------------
+    // 3) Optioneel: lijst slots per email (voor debug)
+    // --------------------------------------------------
+    if (action === "list") {
+      const email = (payload.email || "").trim().toLowerCase();
+      if (!email) {
+        return { statusCode: 400, body: "Missing email" };
+      }
+
+      const { data, error } = await supabase
+        .from("slots")
+        .select("id,email,date,from,to,desc,booked_at,created_at")
+        .eq("email", email)
+        .order("date", { ascending: true })
+        .order("from", { ascending: true });
+
+      if (error) {
+        console.error("slots.list error:", error);
+        return { statusCode: 500, body: "DB error (list)" };
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data || []),
+      };
+    }
+
+    // onbekende actie
+    return {
+      statusCode: 400,
+      body: "Unknown action",
+    };
   } catch (e) {
+    console.error("slots handler crash:", e);
     return {
       statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'server_error', message: String(e?.message || e) })
+      body: "Server error",
     };
   }
 }
