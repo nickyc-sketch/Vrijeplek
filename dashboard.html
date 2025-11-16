@@ -540,10 +540,12 @@
   let __origEmail = '';
 
   async function ensureSession(){
-    // Zonder Supabase: altijd naar login
+    // Geen Supabase → geen redirect, anders krijg je een loop
     if(!window.__supabase){
+      els.welcomeWrap.classList.add('hide');
       window.__email = '';
-      hardGo('login.html');
+      window.__status = window.__status || 'pending';
+      await afterProfileLoaded();
       return;
     }
     try{
@@ -552,13 +554,8 @@
         applyUser(session.user);
         return;
       }
-      const to = setTimeout(()=>hardGo('login.html'), 800);
-      window.__supabase.auth.onAuthStateChange((_e, s)=>{
-        if(s?.user){
-          clearTimeout(to);
-          applyUser(s.user);
-        }
-      });
+      // Geen session → éénmalig naar login
+      hardGo('login.html');
     }catch{
       hardGo('login.html');
     }
