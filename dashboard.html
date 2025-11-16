@@ -1647,6 +1647,14 @@
          LOGIN CHECK
          ============================================================ */
       async function ensureSession(){
+  // LOOP-FIX:
+  // Als er een redirect zit te loopen, verbreek de lus
+  const url = new URL(location.href);
+  if(url.searchParams.has("email")){
+    // testmodus uitschakelen → email param negeren
+    url.searchParams.delete("email");
+    history.replaceState(null, "", url.toString());
+  }
         if(window.__supabase){
           try{
             const { data:{ session } } = await window.__supabase.auth.getSession();
@@ -1656,7 +1664,8 @@
             }
           }catch{}
         }
-        location.href="login.html";
+        location.href = "login.html#force";
+
       }
 
 
