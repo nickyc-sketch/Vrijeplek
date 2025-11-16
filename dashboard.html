@@ -17,72 +17,201 @@
       --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
     html,body{height:100%}
-    body{font-family:'Poppins',sans-serif;margin:0;min-height:100svh;display:flex;flex-direction:column;background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink)}
+    body{
+      font-family:'Poppins',sans-serif;
+      margin:0;min-height:100svh;display:flex;flex-direction:column;
+      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);color:var(--ink)
+    }
     .site{display:flex;flex-direction:column;min-height:100svh}
     main{flex:1}
 
-    .site-header{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50}
-    .site-header .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-    .site-header a.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:20px}
+    .site-header{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50
+    }
+    .site-header .inner{
+      max-width:1200px;margin:0 auto;display:flex;
+      align-items:center;justify-content:space-between
+    }
+    .site-header a.brand{
+      display:flex;align-items:center;gap:10px;
+      text-decoration:none;color:#fff;font-weight:700;font-size:20px
+    }
     .site-header img{height:38px}
-    .btn-ghost{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
 
-    .tabs-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-    .tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:flex-start;padding:10px 12px}
-    .tab-btn{border:none;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s}
-    .tab-btn.active{background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)}
+    .header-right{
+      display:flex;align-items:center;gap:16px;
+    }
+
+    .save-state{font-size:12px;color:#e1ecff}
+
+    .user-menu{position:relative}
+    .user-trigger{
+      display:flex;align-items:center;gap:8px;
+      border:none;background:rgba(255,255,255,.18);
+      border-radius:999px;padding:6px 14px;
+      color:#e6ffe9;font-weight:600;cursor:pointer;font-size:14px;
+    }
+    .user-trigger .caret{font-size:11px;opacity:.9}
+    .user-dropdown{
+      position:absolute;right:0;top:calc(100% + 6px);
+      background:#fff;border-radius:12px;
+      box-shadow:0 8px 26px rgba(10,27,90,.18);
+      padding:6px 0;min-width:170px;display:none;z-index:70;
+    }
+    .user-dropdown.open{display:block}
+    .user-dropdown button{
+      width:100%;padding:8px 16px;border:none;background:none;
+      text-align:left;font-size:14px;color:var(--ink);cursor:pointer;
+    }
+    .user-dropdown button:hover{background:#f2f5ff}
+
+    .tabs-bar{
+      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(8px);border-bottom:1px solid var(--line)
+    }
+    .tabs-inner{
+      max-width:1200px;margin:0 auto;display:flex;gap:16px;
+      align-items:center;justify-content:flex-start;padding:10px 12px
+    }
+    .tab-btn{
+      border:none;background:none;padding:10px 18px;border-radius:999px;
+      font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s
+    }
+    .tab-btn.active{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)
+    }
 
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
     h1.section-title{font-size:26px;margin:0 0 18px}
 
-    .card{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);padding:20px;margin-bottom:18px}
-    .btn{padding:10px 18px;border:none;border-radius:999px;background:linear-gradient(120deg,var(--o1),var(--o2));color:#fff;font-weight:700;cursor:pointer}
-    .btn-light{padding:10px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:600;cursor:pointer}
+    .card{
+      background:var(--glass);border:1px solid var(--glass-b);
+      border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);
+      padding:20px;margin-bottom:18px
+    }
+    .btn{
+      padding:10px 18px;border:none;border-radius:999px;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;font-weight:700;cursor:pointer
+    }
+    .btn-light{
+      padding:10px 14px;border-radius:999px;
+      background:#fff;border:1px solid var(--line);
+      color:var(--ink);font-weight:600;cursor:pointer
+    }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
 
     .field{display:flex;flex-direction:column;margin-bottom:10px}
     .field label{font-weight:600;margin-bottom:4px}
-    .input{padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+    .input{
+      padding:10px;border:1px solid var(--line);
+      border-radius:8px;background:#fff
+    }
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
     /* Afspraken */
     .day-group{margin:8px 0 14px}
-    .day-head{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-weight:700;color:var(--ink)}
-    .appt{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:8px}
+    .day-head{
+      display:flex;align-items:center;gap:10px;
+      margin:0 0 8px;font-weight:700;color:var(--ink)
+    }
+    .appt{
+      display:grid;grid-template-columns:110px 1fr auto;gap:12px;
+      align-items:center;padding:10px;border:1px solid var(--line);
+      border-radius:12px;background:#fff;margin-bottom:8px
+    }
     .appt-time{font-weight:700}
     .appt-meta{display:flex;flex-direction:column;gap:3px}
     .appt-actions{display:flex;gap:8px}
-    .edit-row{display:grid;grid-template-columns:110px 1fr 1fr auto;gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);border-radius:12px;background:#fcfdff;margin-bottom:8px}
+    .edit-row{
+      display:grid;grid-template-columns:110px 1fr 1fr auto;
+      gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);
+      border-radius:12px;background:#fcfdff;margin-bottom:8px
+    }
 
     /* Instellingen */
-    .settings{display:grid;grid-template-columns:260px 1fr;gap:14px;align-items:stretch}
+    .settings{
+      display:grid;grid-template-columns:260px 1fr;
+      gap:14px;align-items:stretch
+    }
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
-    .sidenav{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:8px;min-height:560px}
-    .side-item{display:flex;align-items:center;gap:10px;width:100%;border:1px solid transparent;background:transparent;color:var(--ink);font-weight:600;border-radius:12px;padding:12px;cursor:pointer;justify-content:space-between}
+    .sidenav{
+      background:var(--glass);border:1px solid var(--glass-b);
+      border-radius:14px;padding:8px;min-height:560px
+    }
+    .side-item{
+      display:flex;align-items:center;gap:10px;width:100%;
+      border:1px solid transparent;background:transparent;
+      color:var(--ink);font-weight:600;border-radius:12px;
+      padding:12px;cursor:pointer;justify-content:space-between
+    }
     .side-item .label{display:flex;align-items:center;gap:10px}
-    .side-item.active{background:linear-gradient(180deg,#fff,#f3f7ff);border-color:var(--glass-b);box-shadow:0 6px 18px rgba(10,27,90,.06)}
+    .side-item.active{
+      background:linear-gradient(180deg,#fff,#f3f7ff);
+      border-color:var(--glass-b);
+      box-shadow:0 6px 18px rgba(10,27,90,.06)
+    }
     .panel-wrap{min-height:560px}
-    .panel{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;padding:18px}
+    .panel{
+      background:var(--glass);border:1px solid var(--glass-b);
+      border-radius:14px;padding:18px
+    }
     .panel h3{margin:0 0 10px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
 
     /* Indicatoren / gating */
-    .dot{display:none;width:10px;height:10px;border-radius:50%;background:#e23b3b;box-shadow:0 0 0 4px rgba(226,59,59,.15)}
-    .dot-green{display:inline-block;width:10px;height:10px;border-radius:50%;background:#0fa958;box-shadow:0 0 0 4px rgba(15,169,88,.15)}
-    .banner{display:none;background:#fff4f4;border:1px solid #ffd1d1;color:#8b1f1f;border-radius:12px;padding:12px 14px;margin:0 0 14px;font-weight:600}
-    .locked{opacity:.55;pointer-events:none;position:relative}
-    .locked:after{content:"🔒 Betaal je abonnement om dit te gebruiken";position:absolute;inset:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.75);border:1px dashed #e1e7ff;border-radius:12px;font-weight:700}
+    .dot{
+      display:none;width:10px;height:10px;border-radius:50%;
+      background:#e23b3b;box-shadow:0 0 0 4px rgba(226,59,59,.15)
+    }
+    .dot-green{
+      display:inline-block;width:10px;height:10px;border-radius:50%;
+      background:#0fa958;box-shadow:0 0 0 4px rgba(15,169,88,.15)
+    }
+    .dot-green.small-dot{
+      width:8px;height:8px;box-shadow:0 0 0 3px rgba(15,169,88,.3)
+    }
+    .banner{
+      display:none;background:#fff4f4;border:1px solid #ffd1d1;
+      color:#8b1f1f;border-radius:12px;padding:12px 14px;
+      margin:0 0 14px;font-weight:600
+    }
+    .locked{
+      opacity:.55;pointer-events:none;position:relative
+    }
+    .locked:after{
+      content:"🔒 Betaal je abonnement om dit te gebruiken";
+      position:absolute;inset:12px;display:flex;align-items:center;
+      justify-content:center;background:rgba(255,255,255,.75);
+      border:1px dashed #e1e7ff;border-radius:12px;font-weight:700
+    }
 
-    .site-footer{margin-top:auto;text-align:center;padding:20px 0;color:#5b6b86;font-size:13px}
+    .site-footer{
+      margin-top:auto;text-align:center;padding:20px 0;
+      color:#5b6b86;font-size:13px
+    }
     .hide{display:none!important}
     .sep{height:1px;background:var(--line);margin:12px 0}
     .plan{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:600;cursor:pointer}
-    .pill.active{border-color:var(--o1);box-shadow:0 0 0 3px rgba(26,102,255,.12)}
-    .save-state{font-size:12px;color:#5b6b86;margin-left:8px}
+    .pill{
+      display:inline-block;padding:6px 10px;border:1px solid var(--line);
+      border-radius:999px;background:#fff;font-weight:600;cursor:pointer
+    }
+    .pill.active{
+      border-color:var(--o1);
+      box-shadow:0 0 0 3px rgba(26,102,255,.12)
+    }
+    .pill.subscribed{
+      border-color:#0fa958;
+      background:rgba(15,169,88,.06);
+      color:#0a3c23;
+      box-shadow:0 0 0 3px rgba(15,169,88,.18);
+    }
   </style>
 </head>
 
@@ -91,10 +220,21 @@
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand"><img src="img/logo.png" alt="">Vrijeplek</a>
-      <div>
-        <span id="save-state" class="save-state"></span>
-        <a href="logout.html" id="btn-logout" class="btn-ghost">Uitloggen</a>
 
+      <div class="header-right">
+        <span id="save-state" class="save-state"></span>
+
+        <div class="user-menu">
+          <button id="user-menu-trigger" class="user-trigger" type="button">
+            <span class="dot-green small-dot"></span>
+            <span>Mijn Vrijeplek</span>
+            <span class="caret">▾</span>
+          </button>
+          <div id="user-menu-dropdown" class="user-dropdown">
+            <button type="button" id="menu-dashboard">Dashboard</button>
+            <button type="button" id="menu-logout">Uitloggen</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -160,8 +300,7 @@
             <span class="label"><i class="dot-green"></i><span>Zichtbaarheid</span></span>
           </button>
           <button class="side-item" data-side="account" id="nav-account">
-            <span class="label"><span>Account</span></span>
-            <i id="account-dot" class="dot"></i>
+            <span class="label"><i class="dot-green"></i><span>Account</span></span>
           </button>
           <button class="side-item" data-side="notificaties">
             <span class="label"><i class="dot-green"></i><span>Notificaties</span></span>
@@ -275,7 +414,9 @@
       const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
       if(!ok) return null;
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
+        auth:{ persistSession:true, autoRefreshToken:true }
+      });
     }catch{ return null; }
   }
   window.__supabase = await initSupabase();
@@ -287,7 +428,6 @@
     userFirst: $('#user-firstname'),
     payBanner: $('#pay-banner'),
     settingsDot: $('#settings-dot'),
-    accountDot: $('#account-dot'),
     sections: { open: $('#tab-open'), website: $('#tab-website') },
     apptList: $('#appointments-list'),
     planPills: document.querySelectorAll('#plan-wrap .pill'),
@@ -315,7 +455,13 @@
 
   // ---------- Sidenav ----------
   const sideBtns = document.querySelectorAll('.side-item');
-  const sidePanels = { persoonlijk: $('#panel-persoonlijk'), privacy: $('#panel-privacy'), zichtbaarheid: $('#panel-zichtbaarheid'), account: $('#panel-account'), notificaties: $('#panel-notificaties') };
+  const sidePanels = {
+    persoonlijk: $('#panel-persoonlijk'),
+    privacy: $('#panel-privacy'),
+    zichtbaarheid: $('#panel-zichtbaarheid'),
+    account: $('#panel-account'),
+    notificaties: $('#panel-notificaties')
+  };
   sideBtns.forEach(b=>{
     b.addEventListener('click', ()=>{
       sideBtns.forEach(x=>x.classList.remove('active'));
@@ -325,19 +471,45 @@
     });
   });
 
-  // ---------- Logout die ALTIJD werkt ----------
+  // ---------- Logout + header menu ----------
   const hardGo = (url)=>{ try{ location.replace(url) }catch{ location.href=url } };
   async function logoutAlways(){
     try{ await window.__supabase?.auth?.signOut(); }catch{}
     try{ sessionStorage.clear(); localStorage.removeItem('vp.profile.draft'); }catch{}
     hardGo('login.html');
   }
-  document.getElementById('btn-logout')?.addEventListener('click', logoutAlways);
+
+  const userTrigger   = document.getElementById('user-menu-trigger');
+  const userDropdown  = document.getElementById('user-menu-dropdown');
+  const menuLogout    = document.getElementById('menu-logout');
+  const menuDashboard = document.getElementById('menu-dashboard');
+
+  userTrigger?.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    userDropdown?.classList.toggle('open');
+  });
+
+  menuDashboard?.addEventListener('click', ()=>{
+    userDropdown?.classList.remove('open');
+    // je zit al op dashboard; eventueel later: navigatie naar andere view
+  });
+
+  menuLogout?.addEventListener('click', ()=>{
+    userDropdown?.classList.remove('open');
+    logoutAlways();
+  });
+
+  document.addEventListener('click', ()=>{
+    userDropdown?.classList.remove('open');
+  });
 
   // ---------- Session + user ----------
   function firstNameFrom(user){
     try{
-      const meta = user?.user_metadata?.display_name || user?.user_metadata?.name || user?.user_metadata?.full_name || '';
+      const meta = user?.user_metadata?.display_name
+        || user?.user_metadata?.name
+        || user?.user_metadata?.full_name
+        || '';
       const metaFirst = (meta||'').split(/[.\s_-]/)[0]?.trim();
       const mailFirst = (user?.email||'').split('@')[0]?.trim();
       const blacklist = ['info','contact','admin','hello','hallo','sales','support'];
@@ -359,9 +531,10 @@
     try{
       const { data:{ session } } = await window.__supabase.auth.getSession();
       if(session?.user){ applyUser(session.user); return; }
-      // wacht max 1.2s op state change, anders naar login
       const to = setTimeout(()=>hardGo('login.html'), 1200);
-      window.__supabase.auth.onAuthStateChange((_e, s)=>{ if(s?.user){ clearTimeout(to); applyUser(s.user); }});
+      window.__supabase.auth.onAuthStateChange((_e, s)=>{
+        if(s?.user){ clearTimeout(to); applyUser(s.user); }
+      });
     }catch{ await afterProfileLoaded(); }
   }
 
@@ -374,12 +547,15 @@
     if(!els.st.name.value) els.st.name.value = f || '';
     window.__email = user?.email || '';
 
-    restoreDraft();          // 1) zet lokale backup terug (voelt direct snappy)
-    loadProfile(window.__email).then(()=> { fillDraftGaps(); afterProfileLoaded(); }); // 2) vul aan met serverdata
+    restoreDraft();
+    loadProfile(window.__email).then(()=> {
+      fillDraftGaps();
+      afterProfileLoaded();
+    });
     loadAppointments();
   }
 
-  // ---------- Profile persistence (LIVE + backup) ----------
+  // ---------- Profile persistence ----------
   const DRAFT_KEY = 'vp.profile.draft';
 
   function getPayload(){
@@ -422,7 +598,6 @@
   }
 
   function fillDraftGaps(){
-    // Serverdata overschrijft enkel lege velden (zodat wat je net typte niet verdwijnt)
     const fields = [
       ['company','zaak'], ['phone','telefoon'], ['btw','btw'], ['cat','cat'],
       ['straat','straat'], ['postcode','postcode'], ['website','website'], ['bio','bio']
@@ -451,20 +626,19 @@
 
   async function saveProfileLive(){
     setSaveState('Opslaan…');
-    const emailRes = await saveEmailIfChanged(); // triggert bevestigingsmail indien gewijzigd
+    const emailRes = await saveEmailIfChanged();
     const payload = getPayload();
 
     try{
       const r = await fetch('/.netlify/functions/profile', {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
       });
       const ok = r.ok;
       if(ok){
-        // server heeft het: lokale draft mag weg
         try{ localStorage.removeItem(DRAFT_KEY); }catch{}
         setSaveState('Opgeslagen ✔');
       }else{
-        // server niet ok: laat lokale backup staan
         const t = await r.text().catch(()=>r.status);
         setSaveState('Niet opgeslagen (server) — lokaal bewaard');
         console.warn('Profile save failed:', t);
@@ -476,7 +650,6 @@
 
   const autoSave = debounce(()=>{ saveDraft(); saveProfileLive(); }, 900);
 
-  // Hook op alle inputvelden (live autosave)
   [
     els.st.name, els.st.company, els.st.phone, els.st.email, els.st.btw, els.st.cat,
     els.st.straat, els.st.postcode, els.st.website, els.st.bio
@@ -485,10 +658,10 @@
     inp?.addEventListener('change', autoSave);
   });
 
-  // Handmatige “Opslaan” knop blijft bestaan
-  document.getElementById('st-save-person')?.addEventListener('click', ()=>{ saveDraft(); saveProfileLive(); });
+  document.getElementById('st-save-person')?.addEventListener('click', ()=>{
+    saveDraft(); saveProfileLive();
+  });
 
-  // Waarschuw bij navigeren als er een draft is die nog niet server-bevestigd is
   window.addEventListener('beforeunload', (e)=>{
     const raw = localStorage.getItem(DRAFT_KEY);
     if(raw){ e.preventDefault(); e.returnValue = ''; }
@@ -524,12 +697,20 @@
     els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
   }
   els.planPills.forEach(p=> p.addEventListener('click', ()=> selectPlan(p.dataset.plan)));
+
   async function payNow(){
     try{
       els.btnActivate.disabled = true;
       els.btnActivate.textContent = 'Link maken...';
-      const body = { email: (els.st.email.value||'').trim(), plan: window.__plan || 'monthly' };
-      const r = await fetch('/.netlify/functions/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      const body = {
+        email: (els.st.email.value||'').trim(),
+        plan: window.__plan || 'monthly'
+      };
+      const r = await fetch('/.netlify/functions/create-checkout', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
       const d = await r.json().catch(()=>null);
       const url = d?.url;
       if(url){
@@ -539,65 +720,96 @@
       }else{
         alert('Betaallink niet beschikbaar.');
       }
-    }catch{ alert('Kon betaallink niet ophalen.'); }
-    finally{ els.btnActivate.disabled = false; els.btnActivate.textContent = 'Activeer abonnement'; }
+    }catch{
+      alert('Kon betaallink niet ophalen.');
+    }finally{
+      els.btnActivate.disabled = false;
+      els.btnActivate.textContent = 'Activeer abonnement';
+    }
   }
   els.btnActivate.addEventListener('click', payNow);
 
-    // ---------- Gating ----------
-function gateUI(status, plan){
-  const active = (status === 'active');
+  // ---------- Gating ----------
+  function gateUI(status, plan){
+    const active = (status === 'active');
+    const currentPlan = plan || 'monthly';
 
-  // NIET-actief → onmiddellijk naar abonnement-pagina sturen
-  if (!active) {
-    try {
-      window.location.href = 'abonnement.html';
-    } catch (e) {
-      location.href = 'abonnement.html';
+    // Status-label groen / rood
+    els.accStatus.innerHTML =
+      `Status: <strong style="color:${active ? '#0fa958' : '#e23b3b'};">` +
+      `${active ? 'Actief' : 'Niet actief'}</strong> — plan: <strong>${currentPlan}</strong>`;
+
+    if(!active){
+      // Niet actief → toon banner, lock bepaalde tabs
+      els.settingsDot.style.display = 'inline-block';
+      els.payBanner.style.display = 'block';
+      els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Activeer om alles te gebruiken.';
+
+      els.sections.open?.classList.add('locked');
+      els.sections.website?.classList.add('locked');
+
+      els.btnActivate.disabled = false;
+      els.btnActivate.style.opacity = '';
+      els.btnActivate.style.cursor = 'pointer';
+      els.btnActivate.style.background = 'linear-gradient(120deg,var(--o1),var(--o2))';
+      els.btnActivate.textContent = 'Activeer abonnement';
+      els.lastCheckout.style.display = 'inline';
+    }else{
+      // Actief → alles open, groene knop, geen banner
+      els.settingsDot.style.display = 'none';
+      els.payBanner.style.display = 'none';
+
+      els.sections.open?.classList.remove('locked');
+      els.sections.website?.classList.remove('locked');
+
+      els.btnActivate.disabled = true;
+      els.btnActivate.style.opacity = '0.6';
+      els.btnActivate.style.cursor = 'default';
+      els.btnActivate.style.background = '#0fa958';
+      els.btnActivate.textContent = 'Geabonneerd ✔';
+      els.lastCheckout.style.display = 'none';
     }
-    return;
+
+    // Plan-pillen stylen
+    selectPlan(currentPlan);
+    els.planPills.forEach(p=>{
+      const isCurrent = p.dataset.plan === currentPlan;
+      p.classList.toggle('subscribed', active && isCurrent);
+      p.disabled = active;                        // bij actief abonnement geen klik meer
+      p.style.cursor = active ? 'default' : 'pointer';
+    });
   }
 
-  // === ACCOUNT IS ACTIEF ===
-
-  // Status: mooi groen "Actief"
-  els.accStatus.innerHTML = `Status: <strong style="color:#0fa958;">Actief</strong> — plan: <strong>${plan || '—'}</strong>`;
-
-  // Verberg waarschuwingen
-  els.settingsDot.style.display = 'none';
-  els.payBanner.style.display = 'none';
-  if (els.accountDot?.style) els.accountDot.style.display = 'none';
-
-  // Tabs vrijgeven
-  els.sections.open?.classList.remove('locked');
-  els.sections.website?.classList.remove('locked');
-
-  // --- KNOP OMWISSEN NAAR "GEABONNEERD" ---
-  els.btnActivate.disabled = true;
-  els.btnActivate.style.opacity = "0.6";
-  els.btnActivate.style.cursor = "default";
-  els.btnActivate.style.background = "#0fa958";  // groen
-  els.btnActivate.textContent = "Geabonneerd ✔";
-
-  // Laatste checkout link verbergen
-  els.lastCheckout.style.display = 'none';
-
-  // Plan highlighten
-  selectPlan(plan || 'monthly');
-}
-
-
+  async function afterProfileLoaded(){
+    gateUI(window.__status || 'pending', window.__plan || 'monthly');
+  }
 
   // ---------- Agenda dummy ----------
-  function groupByDate(items){ const map={}; items.forEach(x=>{ (map[x.date] ||= []).push(x); }); Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time))); return Object.keys(map).sort().map(d=>({ date:d, items: map[d] })); }
-  function formatDateLabel(iso){ try{ return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{weekday:'long',day:'2-digit',month:'long'}) }catch{ return iso } }
-  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+  function groupByDate(items){
+    const map={};
+    items.forEach(x=>{ (map[x.date] ||= []).push(x); });
+    Object.values(map).forEach(arr=> arr.sort((a,b)=> a.time.localeCompare(b.time)));
+    return Object.keys(map).sort().map(d=>({ date:d, items: map[d] }));
+  }
+  function formatDateLabel(iso){
+    try{
+      return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
+        weekday:'long',day:'2-digit',month:'long'
+      })
+    }catch{ return iso }
+  }
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, m=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
   let appts = [];
   function viewRow(item){
     const row=document.createElement('div'); row.className='appt'; row.dataset.id=item.id;
     const t=document.createElement('div'); t.className='appt-time'; t.textContent=item.time;
     const meta=document.createElement('div'); meta.className='appt-meta';
-    const p1=document.createElement('div'); p1.innerHTML=`<strong>${escapeHtml(item.client||'—')}</strong> — ${escapeHtml(item.purpose||'')}`;
+    const p1=document.createElement('div');
+    p1.innerHTML=`<strong>${escapeHtml(item.client||'—')}</strong> — ${escapeHtml(item.purpose||'')}`;
     const p2=document.createElement('div'); p2.className='tiny'; p2.textContent=item.note||'';
     meta.appendChild(p1); meta.appendChild(p2);
     const actions=document.createElement('div'); actions.className='appt-actions';
@@ -617,7 +829,11 @@ function gateUI(status, plan){
     const actions=document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
     const bSave=document.createElement('button'); bSave.className='btn'; bSave.textContent='Opslaan';
     const bCancel=document.createElement('button'); bCancel.className='btn-light'; bCancel.textContent='Annuleren';
-    bSave.addEventListener('click',()=> saveAppt({ id:item.id, date:item.date, time:t.value, client:client.value.trim(), purpose:purpose.value.trim(), note:item.note||'' }));
+    bSave.addEventListener('click',()=> saveAppt({
+      id:item.id, date:item.date, time:t.value,
+      client:client.value.trim(), purpose:purpose.value.trim(),
+      note:item.note||''
+    }));
     bCancel.addEventListener('click',()=> cancelEdit(item.id));
     row.appendChild(t); row.appendChild(client); row.appendChild(purpose); row.appendChild(actions);
     actions.appendChild(bSave); actions.appendChild(bCancel);
@@ -626,7 +842,10 @@ function gateUI(status, plan){
   function renderAppointments(list){
     const wrap=els.apptList; wrap.innerHTML='';
     const groups=groupByDate(list);
-    if(!groups.length){ const e=document.createElement('div'); e.className='tiny'; e.textContent='Nog geen afspraken.'; wrap.appendChild(e); return; }
+    if(!groups.length){
+      const e=document.createElement('div'); e.className='tiny'; e.textContent='Nog geen afspraken.';
+      wrap.appendChild(e); return;
+    }
     groups.forEach(g=>{
       const w=document.createElement('div'); w.className='day-group';
       const h=document.createElement('div'); h.className='day-head'; h.textContent=formatDateLabel(g.date);
@@ -635,11 +854,18 @@ function gateUI(status, plan){
       wrap.appendChild(w);
     });
   }
-  function startEdit(id){ const x=appts.find(a=>a.id===id); if(x){ x.__editing=true; renderAppointments(appts); } }
-  function cancelEdit(id){ const x=appts.find(a=>a.id===id); if(x){ delete x.__editing; renderAppointments(appts); } }
+  function startEdit(id){
+    const x=appts.find(a=>a.id===id); if(x){ x.__editing=true; renderAppointments(appts); }
+  }
+  function cancelEdit(id){
+    const x=appts.find(a=>a.id===id); if(x){ delete x.__editing; renderAppointments(appts); }
+  }
   async function saveAppt(payload){
     try{
-      await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'update', ...payload })});
+      await fetch('/.netlify/functions/appointments',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ action:'update', ...payload })
+      });
       const i=appts.findIndex(a=>a.id===payload.id);
       if(i>-1){ appts[i]={...appts[i],...payload}; delete appts[i].__editing; }
       renderAppointments(appts);
@@ -648,7 +874,10 @@ function gateUI(status, plan){
   async function deleteAppt(id){
     if(!confirm('Deze afspraak verwijderen?')) return;
     try{
-      await fetch('/.netlify/functions/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ action:'delete', id })});
+      await fetch('/.netlify/functions/appointments',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ action:'delete', id })
+      });
       appts = appts.filter(a=>a.id!==id);
       renderAppointments(appts);
     }catch{}
