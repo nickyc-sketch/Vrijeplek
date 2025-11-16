@@ -24,8 +24,8 @@ export async function handler(event) {
     const supa = client();
 
     if (event.httpMethod === 'GET') {
-      const qs = new URLSearchParams(event.rawQuery || '');
-      const email = (qs.get('email') || '').trim().toLowerCase();
+      // BELANGRIJK: email uit query halen via queryStringParameters
+      const email = (event.queryStringParameters?.email || '').trim().toLowerCase();
 
       if (!email) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'email_required' }) };
@@ -38,10 +38,13 @@ export async function handler(event) {
         .maybeSingle();
 
       if (error) {
-        return { statusCode: 500, headers, body: JSON.stringify({ error: 'db_select_failed', details: error.message }) };
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'db_select_failed', details: error.message })
+        };
       }
 
-      // Als nog niet bestaat: geef defaults terug
       const row = data || {
         email,
         zaak: '',
@@ -62,13 +65,11 @@ export async function handler(event) {
     if (event.httpMethod === 'POST') {
       const payload = JSON.parse(event.body || '{}');
 
-      // Minimale validatie
       const email = (payload.email || '').trim().toLowerCase();
       if (!email) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'email_required' }) };
       }
 
-      // Alleen de velden die we toelaten
       const up = {
         email,
         zaak: (payload.zaak || '').trim(),
@@ -81,7 +82,6 @@ export async function handler(event) {
         bio: (payload.bio || '').trim()
       };
 
-      // Optioneel: plan/status mogen mee binnenkomen (bv. via webhook)
       if (payload.plan) up.plan = String(payload.plan);
       if (payload.account_status) up.account_status = String(payload.account_status);
 
@@ -92,7 +92,11 @@ export async function handler(event) {
         .single();
 
       if (error) {
-        return { statusCode: 500, headers, body: JSON.stringify({ error: 'db_upsert_failed', details: error.message }) };
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'db_upsert_failed', details: error.message })
+        };
       }
 
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, profile: data }) };
@@ -100,6 +104,10 @@ export async function handler(event) {
 
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   } catch (e) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'server_error', message: String(e?.message || e) }) };
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'server_error', message: String(e?.message || e) })
+    };
   }
 }
