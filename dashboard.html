@@ -213,6 +213,7 @@
       box-shadow:0 0 0 3px rgba(15,169,88,.18);
     }
 
+    /* nette switch-lijst, geen overlappende klikzones meer */
     .switch-list{
       display:flex;
       flex-direction:column;
@@ -220,6 +221,7 @@
       margin-bottom:8px;
     }
     .switch-row{
+      position:relative;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -272,9 +274,9 @@
     }
     .switch-input{
       position:absolute;
-      opacity:0;
       inset:0;
       margin:0;
+      opacity:0;
       cursor:pointer;
     }
     .switch-input:checked + .switch-shell{
@@ -284,6 +286,7 @@
     .switch-input:checked + .switch-shell::after{
       transform:translateX(16px);
     }
+
     .error-text{
       color:var(--danger);
       font-weight:600;
@@ -425,7 +428,7 @@
             <h3>Privacy, zichtbaarheid & betalingen</h3>
 
             <div class="switch-list">
-              <label class="switch-row" for="st-show-location">
+              <label class="switch-row">
                 <div class="switch-text">
                   <div class="switch-title">Locatie tonen op publieke pagina</div>
                   <div class="switch-sub">Toon postcode en gemeente in de zoekresultaten.</div>
@@ -434,7 +437,7 @@
                 <span class="switch-shell"></span>
               </label>
 
-              <label class="switch-row" for="st-public-calendar">
+              <label class="switch-row">
                 <div class="switch-text">
                   <div class="switch-title">Kalender publiek zichtbaar</div>
                   <div class="switch-sub">Laat bezoekers je vrije momenten zien zonder eerst te boeken.</div>
@@ -454,7 +457,7 @@
             </div>
 
             <div class="switch-list">
-              <label class="switch-row" for="st-deposit-enabled">
+              <label class="switch-row">
                 <div class="switch-text">
                   <div class="switch-title">Voorschot vragen bij boeking</div>
                   <div class="switch-sub">Laat klanten een voorschot betalen wanneer ze een tijdslot boeken.</div>
@@ -528,14 +531,18 @@
   <footer class="site-footer">© 2025 Vrijeplek. Alle rechten voorbehouden.</footer>
 </div>
 
+<!-- Supabase config -->
+<script src="/js/config.js"></script>
+
 <script type="module">
   async function initSupabase(){
     try{
-      const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
-      if(!ok) return null;
+      const url = window.VRIJEPLEK?.SUPABASE_URL;
+      const key = window.VRIJEPLEK?.SUPABASE_ANON_KEY;
+      if(!url || !key) return null;
       const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-      return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
-        auth:{ persistSession:true, autoRefreshToken:true }
+      return createClient(url, key, {
+        auth:{ persistSession:true, autoRefreshToken:true, storage: localStorage }
       });
     }catch{ return null; }
   }
@@ -876,7 +883,7 @@
       window.__plan   = (d?.plan || 'monthly').toString();
       window.__status = normalizeStatus(d?.account_status || d?.status || 'pending');
 
-      els.st.showLocation.checked  = !!d?.show_location;
+      els.st.showLocation.checked   = !!d?.show_location;
       els.st.publicCalendar.checked = !!d?.public_calendar;
       els.st.depositEnabled.checked = !!d?.deposit_enabled;
       if(d?.deposit_amount != null) els.st.depositAmount.value = d.deposit_amount;
