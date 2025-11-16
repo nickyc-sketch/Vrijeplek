@@ -80,7 +80,13 @@ export async function handler(event) {
         postcode: (payload.postcode || '').trim(),
         website: (payload.website || '').trim(),
         bio: (payload.bio || '').trim()
-      };
+        show_location: !!payload.show_location,
+  public_calendar: !!payload.public_calendar,
+  deposit_enabled: !!payload.deposit_enabled,
+  deposit_amount: payload.deposit_amount ?? null,
+  deposit_note: (payload.deposit_note || '').trim(),
+  bank_iban: (payload.bank_iban || '').trim()
+};
 
       if (payload.plan) up.plan = String(payload.plan);
       if (payload.account_status) up.account_status = String(payload.account_status);
