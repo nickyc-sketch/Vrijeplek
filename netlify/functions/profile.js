@@ -15,20 +15,6 @@ function client() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
-function normalizeStatus(raw) {
-  const s = (raw ?? '').toString().trim().toLowerCase();
-  if (!s) return 'pending';
-  if (s === 'actief') return 'active';
-  return s;
-}
-
-function cleanIban(raw) {
-  const s = (raw || '').replace(/\s+/g, '').toUpperCase();
-  if (!s) return '';
-  if (!/^BE\d{2}\d{4}\d{4}\d{4}$/.test(s)) return null;
-  return s;
-}
-
 export async function handler(event) {
   try {
     if (event.httpMethod === 'OPTIONS') {
@@ -69,19 +55,14 @@ export async function handler(event) {
         postcode: '',
         website: '',
         bio: '',
-        show_location: false,
-        public_calendar: true,
-        notify_mail: true,
-        daily_mail: false,
-        deposit_enabled: false,
-        deposit_amount: 0,
-        deposit_note: '',
-        bank_iban: '',
         plan: 'monthly',
-        account_status: 'pending'
+        account_status: 'pending',
+        iban: '',
+        show_location: false,
+        public_calendar: false,
+        bank_iban: '',
+        deposit_note: ''
       };
-
-      row.account_status = normalizeStatus(row.account_status || row.status || 'pending');
 
       return { statusCode: 200, headers, body: JSON.stringify(row) };
     }
@@ -94,20 +75,6 @@ export async function handler(event) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'email_required' }) };
       }
 
-      const ibanClean = cleanIban(payload.bank_iban);
-      if (ibanClean === null) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: 'invalid_iban' })
-        };
-      }
-
-      const depositAmount =
-        payload.deposit_amount === undefined || payload.deposit_amount === null
-          ? 0
-          : Number(payload.deposit_amount) || 0;
-
       const up = {
         email,
         zaak: (payload.zaak || '').trim(),
@@ -118,18 +85,15 @@ export async function handler(event) {
         postcode: (payload.postcode || '').trim(),
         website: (payload.website || '').trim(),
         bio: (payload.bio || '').trim(),
+        iban: (payload.iban || '').trim(),
         show_location: !!payload.show_location,
         public_calendar: !!payload.public_calendar,
-        notify_mail: !!payload.notify_mail,
-        daily_mail: !!payload.daily_mail,
-        deposit_enabled: !!payload.deposit_enabled,
-        deposit_amount: depositAmount,
-        deposit_note: (payload.deposit_note || '').trim(),
-        bank_iban: ibanClean || ''
+        bank_iban: (payload.bank_iban || '').trim(),
+        deposit_note: (payload.deposit_note || '').trim()
       };
 
       if (payload.plan) up.plan = String(payload.plan);
-      if (payload.account_status) up.account_status = normalizeStatus(payload.account_status);
+      if (payload.account_status) up.account_status = String(payload.account_status);
 
       const { data, error } = await supa
         .from('profiles')
