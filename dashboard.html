@@ -99,7 +99,7 @@
     .btn-light{
       padding:10px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:var(--ink);font-weight:600;cursor:pointer
+      color:#ink;font-weight:600;cursor:pointer
     }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
@@ -528,23 +528,36 @@
     return s;
   }
 
+  const qs = new URLSearchParams(location.search);
+  const qsEmail = (qs.get('email') || '').trim().toLowerCase();
+
   async function ensureSession(){
-    if(!window.__supabase){
-      els.welcomeWrap.classList.add('hide');
-      window.__email = '';
+    if(window.__supabase){
+      try{
+        const { data:{ session } } = await window.__supabase.auth.getSession();
+        if(session?.user){
+          applyUser(session.user);
+          return;
+        }
+        hardGo('login.html');
+        return;
+      }catch{
+        hardGo('login.html');
+        return;
+      }
+    }
+
+    if(qsEmail){
+      window.__email = qsEmail;
+      await loadProfile(qsEmail);
+      fillDraftGaps();
       await afterProfileLoaded();
       return;
     }
-    try{
-      const { data:{ session } } = await window.__supabase.auth.getSession();
-      if(session?.user){
-        applyUser(session.user);
-        return;
-      }
-      hardGo('login.html');
-    }catch{
-      hardGo('login.html');
-    }
+
+    els.welcomeWrap.classList.add('hide');
+    window.__email = '';
+    await afterProfileLoaded();
   }
 
   function applyUser(user){
@@ -633,7 +646,7 @@
       if(error) return { changed:true, ok:false };
       __origEmail = newEmail;
       return { changed:true, ok:true };
-    }catch(e){ return { changed:true, ok:false }; }
+    }catch{ return { changed:true, ok:false }; }
   }
 
   async function saveProfileLive(){
