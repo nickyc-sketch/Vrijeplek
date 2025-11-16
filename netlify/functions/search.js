@@ -10,7 +10,7 @@ const headers = {
 
 function client() {
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // server-side key
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
   return createClient(url, key, { auth: { persistSession: false } });
 }
@@ -43,23 +43,21 @@ export async function handler(event) {
     const to   = (body.to   || '').trim();
 
     const dateFrom = from || todayISO();
-    const dateTo   = to   || null; // optioneel einddatum
+    const dateTo   = to   || null;
 
-    // 1) Profielen zoeken die publiek / actief zijn
+    // 1) Profielen (actief) ophalen
     let profQuery = supa
       .from('profiles')
-      .select('email, zaak, cat, straat, postcode, website, bio, account_status')
+      .select('email, zaak, cat, straat, postcode, website, bio, account_status, deposit_enabled, deposit_amount, iban')
       .eq('account_status', 'active');
 
     if(q){
-      // zoeken in bedrijfsnaam + email
       profQuery = profQuery.or(
         `zaak.ilike.%${q}%,email.ilike.%${q}%`
       );
     }
 
     if(loc){
-      // zoeken in postcode of gemeente
       profQuery = profQuery.or(
         `postcode.ilike.%${loc}%,straat.ilike.%${loc}%`
       );
@@ -87,11 +85,12 @@ export async function handler(event) {
       .map(p => (p.email || '').toLowerCase())
       .filter(Boolean);
 
-    // 2) Slots ophalen voor al die emails
+    // 2) Slots ophalen / filteren
     let slotQuery = supa
       .from('slots')
-      .select('email, date, from, to, desc')
-      .in('email', emails);
+      .select('id, email, date, from, to, desc, status')
+      .in('email', emails)
+      .eq('status', 'open'); // alleen open slots
 
     if(dateFrom){
       slotQuery = slotQuery.gte('date', dateFrom);
@@ -138,10 +137,12 @@ export async function handler(event) {
           postcode: p.postcode,
           website: p.website,
           bio: p.bio,
+          deposit_enabled: p.deposit_enabled,
+          deposit_amount: p.deposit_amount,
+          iban: p.iban,
           slots: userSlots
         };
       })
-      // Toon alleen zaken met minstens één vrij tijdslot
       .filter(r => r.slots && r.slots.length);
 
     return { statusCode:200, headers, body:JSON.stringify(results) };
