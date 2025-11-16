@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b3a;
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
       --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
       --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
@@ -99,7 +99,7 @@
     .btn-light{
       padding:10px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:var(--ink);font-weight:600;cursor:pointer
+      color:#ink;font-weight:600;cursor:pointer
     }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
@@ -108,20 +108,11 @@
     .field label{font-weight:600;margin-bottom:4px}
     .input{
       padding:10px;border:1px solid var(--line);
-      border-radius:8px;background:#fff;
-      font-family:inherit;font-size:14px;color:var(--ink);
-      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
-    }
-    .input:focus{
-      outline:none;
-      border-color:var(--o1);
-      box-shadow:0 0 0 2px rgba(26,102,255,.18);
-      background:#fff;
+      border-radius:8px;background:#fff
     }
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
-    /* Afspraken */
     .day-group{margin:8px 0 14px}
     .day-head{
       display:flex;align-items:center;gap:10px;
@@ -141,88 +132,29 @@
       border-radius:12px;background:#fcfdff;margin-bottom:8px
     }
 
-    /* OPEN TIJDSTIPPEN – mooiere layout */
-    .slot-card h2{
-      margin-top:0;
-      margin-bottom:4px;
-    }
-    .slot-sub{
-      margin:0 0 12px;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .slot-grid{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:14px;
-      align-items:flex-start;
-    }
-    @media(max-width:900px){
-      .slot-grid{grid-template-columns:1fr;}
-    }
-    .slot-box{
-      background:rgba(255,255,255,.9);
-      border-radius:12px;
-      padding:12px 12px 10px;
-      border:1px solid rgba(148,163,184,.5);
-    }
-    .slot-box h3{
-      margin:0 0 6px;
-      font-size:14px;
-    }
-    .slot-box p{
-      margin:0 0 10px;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .slot-preview{
-      margin-top:6px;
-      font-size:12px;
-      color:#0f172a;
-      font-weight:600;
-    }
-    .slot-preview.empty{
-      color:#94a3b8;
-      font-weight:400;
-    }
-    .slot-meta{
-      font-size:12px;
-      color:#64748b;
-      margin-top:8px;
-    }
-    .slot-meta strong{
-      font-weight:700;
-    }
-    #slot-msg.ok{
-      color:var(--ok);
-      font-weight:600;
-    }
-    #slot-msg.error{
-      color:var(--danger);
-      font-weight:600;
-    }
-
-    /* Instellingen */
     .settings{
       display:grid;grid-template-columns:260px 1fr;
-      gap:14px;align-items:stretch
+      gap:14px;align-items:flex-start
     }
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
     .sidenav{
       background:var(--glass);border:1px solid var(--glass-b);
-      border-radius:14px;padding:8px;min-height:560px
+      border-radius:14px;padding:8px;min-height:560px;
+      position:sticky;top:90px
     }
     .side-item{
       display:flex;align-items:center;gap:10px;width:100%;
       border:1px solid transparent;background:transparent;
       color:var(--ink);font-weight:600;border-radius:12px;
-      padding:12px;cursor:pointer;justify-content:space-between
+      padding:12px;cursor:pointer;justify-content:space-between;
+      transition:.18s
     }
     .side-item .label{display:flex;align-items:center;gap:10px}
     .side-item.active{
       background:linear-gradient(180deg,#fff,#f3f7ff);
       border-color:var(--glass-b);
-      box-shadow:0 6px 18px rgba(10,27,90,.06)
+      box-shadow:0 6px 18px rgba(10,27,90,.06);
+      transform:translateY(-1px)
     }
     .panel-wrap{min-height:560px}
     .panel{
@@ -232,21 +164,6 @@
     .panel h3{margin:0 0 10px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
-
-    /* Toggle-rijen netter */
-    .field.toggle-inline{
-      flex-direction:row;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-    .field.toggle-inline label{
-      margin-bottom:0;
-      flex:1;
-    }
-    .field.toggle-inline .toggle{
-      flex:0 0 auto;
-    }
 
     .dot{
       display:none;width:10px;height:10px;border-radius:50%;
@@ -295,6 +212,82 @@
       color:#0a3c23;
       box-shadow:0 0 0 3px rgba(15,169,88,.18);
     }
+
+    .switch-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .switch-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      transition:.18s;
+    }
+    .switch-row:hover{
+      border-color:var(--o1);
+      box-shadow:0 4px 14px rgba(15,23,42,.08);
+      transform:translateY(-1px);
+    }
+    .switch-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .switch-title{
+      font-size:13px;
+      font-weight:600;
+    }
+    .switch-sub{
+      font-size:11px;
+      color:#6b7280;
+    }
+    .switch-shell{
+      position:relative;
+      width:44px;
+      height:24px;
+      flex-shrink:0;
+      border-radius:999px;
+      background:#e5e7eb;
+      box-shadow:inset 0 0 0 1px rgba(148,163,184,.9);
+      transition:.2s;
+    }
+    .switch-shell::after{
+      content:"";
+      position:absolute;
+      top:3px;
+      left:3px;
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      background:#fff;
+      box-shadow:0 1px 3px rgba(0,0,0,.25);
+      transition:.2s;
+    }
+    .switch-input{
+      position:absolute;
+      opacity:0;
+      inset:0;
+      margin:0;
+      cursor:pointer;
+    }
+    .switch-input:checked + .switch-shell{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      box-shadow:0 0 0 1px rgba(37,99,235,.45);
+    }
+    .switch-input:checked + .switch-shell::after{
+      transform:translateX(16px);
+    }
+    .error-text{
+      color:var(--danger);
+      font-weight:600;
+    }
   </style>
 </head>
 
@@ -336,7 +329,6 @@
 
     <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
-    <!-- Afspraken -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
@@ -345,69 +337,21 @@
       </div>
     </section>
 
-    <!-- Open tijdstippen -->
     <section id="tab-open" class="tab-content" hidden>
-      <div class="card slot-card">
+      <div class="card">
         <h2>Nieuw tijdstip publiceren</h2>
-        <p class="slot-sub">Kies een dag en tijdslot dat nog vrij is. Je klanten zien deze momenten live op Vrijeplek.</p>
-
-        <div class="slot-grid">
-          <!-- Formulierzijde -->
-          <div class="slot-box">
-            <h3>Tijdslot instellen</h3>
-            <p>Gebruik datum en tijden zoals in je agenda. We blokkeren automatisch overlappende slots (later via backend).</p>
-            <form id="slot-form">
-              <div class="form-row">
-                <div class="field">
-                  <label for="slot-date">Datum</label>
-                  <input type="date" class="input" id="slot-date">
-                </div>
-                <div class="field">
-                  <label for="slot-from">Van</label>
-                  <input type="time" class="input" id="slot-from">
-                </div>
-                <div class="field">
-                  <label for="slot-to">Tot</label>
-                  <input type="time" class="input" id="slot-to">
-                </div>
-              </div>
-              <div class="field">
-                <label for="slot-desc">Omschrijving (optioneel)</label>
-                <input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt, intakegesprek, late shift">
-              </div>
-
-              <div id="slot-preview" class="slot-preview empty">
-                Nog geen tijdstip gekozen.
-              </div>
-
-              <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
-                <button class="btn" type="submit">Publiceren</button>
-                <span id="slot-msg" class="tiny"></span>
-              </div>
-            </form>
+        <form id="slot-form">
+          <div class="form-row">
+            <div class="field"><label>Datum</label><input type="date" class="input" id="slot-date"></div>
+            <div class="field"><label>Van</label><input type="time" class="input" id="slot-from"></div>
+            <div class="field"><label>Tot</label><input type="time" class="input" id="slot-to"></div>
           </div>
-
-          <!-- Infozijde -->
-          <div class="slot-box">
-            <h3>Hoe werkt dit?</h3>
-            <p>
-              Elk gepubliceerd tijdstip wordt gekoppeld aan je account. Klanten kunnen hierop intekenen
-              via je publieke Vrijeplek-pagina.
-            </p>
-            <ul class="tiny" style="padding-left:18px;margin:0;">
-              <li>Je kunt later tijdsloten aanpassen of verwijderen in je agenda-overzicht.</li>
-              <li>Combineer meerdere korte slots op één dag (bv. 14:00–14:30, 14:30–15:00).</li>
-              <li>Je blijft altijd baas over de bevestiging van aanvragen.</li>
-            </ul>
-            <div class="slot-meta">
-              <strong>Tip:</strong> Zet ook last-minute gaten van 1–2 uur online. Dat is precies waar Vrijeplek voor gemaakt is.
-            </div>
-          </div>
-        </div>
+          <div class="field"><label>Omschrijving</label><input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt of intake"></div>
+          <button class="btn" type="submit">Publiceren</button>
+        </form>
       </div>
     </section>
 
-    <!-- Website -->
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
@@ -415,7 +359,6 @@
       </div>
     </section>
 
-    <!-- Instellingen -->
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
@@ -423,7 +366,7 @@
             <span class="label"><i class="dot-green"></i><span>Persoonlijk</span></span>
           </button>
           <button class="side-item" data-side="privacy">
-            <span class="label"><i class="dot-green"></i><span>Privacy & locatie</span></span>
+            <span class="label"><i class="dot-green"></i><span>Privacy & betalingen</span></span>
           </button>
           <button class="side-item" data-side="zichtbaarheid">
             <span class="label"><i class="dot-green"></i><span>Zichtbaarheid</span></span>
@@ -479,31 +422,74 @@
           </div>
 
           <div class="panel hide" id="panel-privacy">
-            <h3>Privacy & locatie</h3>
-            <div class="two">
-              <div class="field toggle-inline">
-                <label for="st-show-location">Locatie tonen op publieke pagina</label>
-                <input id="st-show-location" class="toggle" type="checkbox">
+            <h3>Privacy, zichtbaarheid & betalingen</h3>
+
+            <div class="switch-list">
+              <label class="switch-row" for="st-show-location">
+                <div class="switch-text">
+                  <div class="switch-title">Locatie tonen op publieke pagina</div>
+                  <div class="switch-sub">Toon postcode en gemeente in de zoekresultaten.</div>
+                </div>
+                <input id="st-show-location" class="switch-input" type="checkbox">
+                <span class="switch-shell"></span>
+              </label>
+
+              <label class="switch-row" for="st-public-calendar">
+                <div class="switch-text">
+                  <div class="switch-title">Kalender publiek zichtbaar</div>
+                  <div class="switch-sub">Laat bezoekers je vrije momenten zien zonder eerst te boeken.</div>
+                </div>
+                <input id="st-public-calendar" class="switch-input" type="checkbox">
+                <span class="switch-shell"></span>
+              </label>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="field">
+              <label>Rekeningnummer voor voorschotbetalingen</label>
+              <div id="st-iban-current" class="tiny">Nog geen rekeningnummer ingesteld.</div>
+              <input id="st-iban-new" class="input" type="text" placeholder="BE00 0000 0000 0000">
+              <div class="tiny">Na opslaan tonen we hier alleen de laatste 4 cijfers.</div>
+            </div>
+
+            <div class="switch-list">
+              <label class="switch-row" for="st-deposit-enabled">
+                <div class="switch-text">
+                  <div class="switch-title">Voorschot vragen bij boeking</div>
+                  <div class="switch-sub">Laat klanten een voorschot betalen wanneer ze een tijdslot boeken.</div>
+                </div>
+                <input id="st-deposit-enabled" class="switch-input" type="checkbox">
+                <span class="switch-shell"></span>
+              </label>
+            </div>
+
+            <div class="two" id="deposit-amount-wrap">
+              <div class="field">
+                <label>Voorschotbedrag</label>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span>€</span>
+                  <input id="st-deposit-amount" class="input" type="number" min="0" step="1" placeholder="25">
+                </div>
+                <div class="tiny">Wordt per boeking als voorschot aangerekend.</div>
               </div>
-              <div class="field toggle-inline">
-                <label for="st-public-calendar">Kalender publiek zichtbaar</label>
-                <input id="st-public-calendar" class="toggle" type="checkbox">
+              <div class="field">
+                <label>Opmerking voor klanten (optioneel)</label>
+                <input id="st-deposit-note" class="input" type="text" placeholder="Bijvoorbeeld: voorschot wordt niet terugbetaald bij no-show.">
               </div>
             </div>
-            <button id="st-save-privacy" class="btn">Opslaan</button>
+
+            <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+              <button id="st-save-privacy" class="btn">Opslaan</button>
+              <span id="st-privacy-msg" class="tiny"></span>
+            </div>
           </div>
 
           <div class="panel hide" id="panel-zichtbaarheid">
             <h3>Zichtbaarheid</h3>
             <div class="two">
-              <div class="field toggle-inline">
-                <label for="st-reviews">Google reviews tonen</label>
-                <input id="st-reviews" class="toggle" type="checkbox">
-              </div>
-              <div class="field">
-                <label for="st-place">Google Place ID / Review-link</label>
-                <input id="st-place" class="input" type="text" placeholder="ChIJN1t...">
-              </div>
+              <div class="field"><label>Google reviews tonen</label><input id="st-reviews" class="toggle" type="checkbox"></div>
+              <div class="field"><label>Google Place ID / Review-link</label><input id="st-place" class="input" type="text" placeholder="ChIJN1t..."></div>
             </div>
             <button id="st-save-vis" class="btn">Opslaan</button>
           </div>
@@ -529,14 +515,8 @@
           <div class="panel hide" id="panel-notificaties">
             <h3>Notificaties</h3>
             <div class="two">
-              <div class="field toggle-inline">
-                <label for="st-notify-mail">Nieuwe reservatie per e-mail</label>
-                <input id="st-notify-mail" class="toggle" type="checkbox">
-              </div>
-              <div class="field toggle-inline">
-                <label for="st-daily-mail">Dagelijkse agenda per e-mail</label>
-                <input id="st-daily-mail" class="toggle" type="checkbox">
-              </div>
+              <div class="field"><label>Nieuwe reservatie per e-mail</label><input id="st-notify-mail" class="toggle" type="checkbox"></div>
+              <div class="field"><label>Dagelijkse agenda per e-mail</label><input id="st-daily-mail" class="toggle" type="checkbox"></div>
             </div>
             <button id="st-save-notify" class="btn">Opslaan</button>
           </div>
@@ -549,7 +529,6 @@
 </div>
 
 <script type="module">
-  // ---------- Supabase init ----------
   async function initSupabase(){
     try{
       const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
@@ -575,24 +554,26 @@
     btnActivate: $('#btn-activate'),
     lastCheckout: $('#last-checkout-url'),
     saveState: $('#save-state'),
-    // open tijdstippen
-    slotForm: $('#slot-form'),
-    slotDate: $('#slot-date'),
-    slotFrom: $('#slot-from'),
-    slotTo:   $('#slot-to'),
-    slotDesc: $('#slot-desc'),
-    slotPreview: $('#slot-preview'),
-    slotMsg: $('#slot-msg'),
-    // profiel
     st: {
       name: $('#st-name'), company: $('#st-company'), phone: $('#st-phone'),
       email: $('#st-email'), btw: $('#st-btw'), cat: $('#st-cat'),
       straat: $('#st-straat'), postcode: $('#st-postcode'),
-      website: $('#st-website'), bio: $('#st-bio'), msg: $('#st-msg')
+      website: $('#st-website'), bio: $('#st-bio'), msg: $('#st-msg'),
+      showLocation: $('#st-show-location'),
+      publicCalendar: $('#st-public-calendar'),
+      ibanCurrent: $('#st-iban-current'),
+      ibanNew: $('#st-iban-new'),
+      depositEnabled: $('#st-deposit-enabled'),
+      depositAmount: $('#st-deposit-amount'),
+      depositNote: $('#st-deposit-note'),
+      privacyMsg: $('#st-privacy-msg'),
+      reviews: $('#st-reviews'),
+      place: $('#st-place'),
+      notifyMail: $('#st-notify-mail'),
+      dailyMail: $('#st-daily-mail')
     }
   };
 
-  // ---------- Tabs ----------
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -602,7 +583,6 @@
     });
   });
 
-  // ---------- Sidenav ----------
   const sideBtns = document.querySelectorAll('.side-item');
   const sidePanels = {
     persoonlijk: $('#panel-persoonlijk'),
@@ -620,7 +600,6 @@
     });
   });
 
-  // ---------- Logout + header menu ----------
   const hardGo = (url)=>{ try{ location.replace(url) }catch{ location.href=url } };
 
   function clearSupabaseTokens(){
@@ -652,11 +631,18 @@
     e.stopPropagation();
     userDropdown?.classList.toggle('open');
   });
-  menuDashboard?.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); });
-  menuLogout?.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); logoutAlways(); });
+
+  menuDashboard?.addEventListener('click', ()=>{
+    userDropdown?.classList.remove('open');
+  });
+
+  menuLogout?.addEventListener('click', ()=>{
+    userDropdown?.classList.remove('open');
+    logoutAlways();
+  });
+
   document.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); });
 
-  // ---------- Session + user ----------
   function firstNameFrom(user){
     try{
       const meta = user?.user_metadata?.display_name
@@ -674,6 +660,7 @@
   }
 
   let __origEmail = '';
+  let __iban = '';
 
   function normalizeStatus(raw){
     const s = (raw ?? '').toString().trim().toLowerCase();
@@ -735,7 +722,6 @@
     loadAppointments();
   }
 
-  // ---------- Profiel opslaan ----------
   const DRAFT_KEY = 'vp.profile.draft';
 
   function getPayload(){
@@ -844,6 +830,33 @@
     if(raw){ e.preventDefault(); e.returnValue = ''; }
   });
 
+  function maskIban(raw){
+    if(!raw) return '';
+    const clean = raw.replace(/\s+/g,'');
+    if(clean.length<=4) return clean;
+    const last4 = clean.slice(-4);
+    return 'IBAN eindigend op ' + last4;
+  }
+
+  function updateIbanDisplay(iban){
+    __iban = iban || '';
+    const txt = __iban ? maskIban(__iban) : 'Nog geen rekeningnummer ingesteld.';
+    els.st.ibanCurrent.textContent = txt;
+  }
+
+  function isValidBelgianIban(raw){
+    if(!raw) return false;
+    const clean = raw.replace(/\s+/g,'').toUpperCase();
+    if(!/^BE[0-9]{14}$/.test(clean)) return false;
+    const moved = clean.slice(4) + clean.slice(0,4);
+    const replaced = moved.replace(/[A-Z]/g,c=>(c.charCodeAt(0)-55).toString());
+    let remainder = 0;
+    for(let i=0;i<replaced.length;i++){
+      remainder = (remainder*10 + Number(replaced[i])) % 97;
+    }
+    return remainder === 1;
+  }
+
   async function loadProfile(email){
     try{
       const r = await fetch('/.netlify/functions/profile' + (email ? ('?email=' + encodeURIComponent(email)) : ''));
@@ -862,14 +875,21 @@
 
       window.__plan   = (d?.plan || 'monthly').toString();
       window.__status = normalizeStatus(d?.account_status || d?.status || 'pending');
+
+      els.st.showLocation.checked  = !!d?.show_location;
+      els.st.publicCalendar.checked = !!d?.public_calendar;
+      els.st.depositEnabled.checked = !!d?.deposit_enabled;
+      if(d?.deposit_amount != null) els.st.depositAmount.value = d.deposit_amount;
+      if(d?.deposit_note) els.st.depositNote.value = d.deposit_note || '';
+      updateIbanDisplay(d?.bank_iban || '');
     }catch{
       window.__profile = {};
       window.__plan = 'monthly';
       window.__status = 'pending';
+      updateIbanDisplay('');
     }
   }
 
-  // ---------- Betalen ----------
   function selectPlan(plan){
     window.__plan = plan;
     els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
@@ -958,7 +978,6 @@
     gateUI(window.__status || 'pending', window.__plan || 'monthly');
   }
 
-  // ---------- Afspraken ----------
   function groupByDate(items){
     const map={};
     items.forEach(x=>{ (map[x.date] ||= []).push(x); });
@@ -1065,93 +1084,63 @@
     renderAppointments(appts);
   }
 
-  // ---------- Open tijdstippen: live preview + echte call ----------
-  function updateSlotPreview(){
-    const d = els.slotDate?.value;
-    const f = els.slotFrom?.value;
-    const t = els.slotTo?.value;
-    if(!els.slotPreview) return;
+  async function savePrivacy(){
+    const msg = els.st.privacyMsg;
+    msg.textContent = '';
+    msg.classList.remove('error-text');
 
-    if(!d && !f && !t){
-      els.slotPreview.textContent = 'Nog geen tijdstip gekozen.';
-      els.slotPreview.classList.add('empty');
+    const email = (window.__email || els.st.email.value || '').trim().toLowerCase();
+    if(!email){
+      msg.textContent = 'Geen e-mailadres gevonden.';
+      msg.classList.add('error-text');
       return;
     }
 
-    let label = '';
-    if(d){
-      try{
-        label += new Date(d+'T00:00:00').toLocaleDateString('nl-BE',{
-          weekday:'long',day:'2-digit',month:'long'
-        });
-      }catch{
-        label += d;
+    const rawIban = (els.st.ibanNew.value || '').trim();
+    let ibanToSend = '';
+    if(rawIban){
+      if(!isValidBelgianIban(rawIban)){
+        msg.textContent = 'Rekeningnummer lijkt niet geldig. Controleer je IBAN.';
+        msg.classList.add('error-text');
+        return;
       }
-    }
-    if(f || t){
-      if(label) label += ' — ';
-      label += (f || '??') + ' – ' + (t || '??');
-    }
-    els.slotPreview.textContent = label || 'Nog geen tijdstip gekozen.';
-    els.slotPreview.classList.remove('empty');
-  }
-
-  ['change','input'].forEach(ev=>{
-    els.slotDate?.addEventListener(ev, updateSlotPreview);
-    els.slotFrom?.addEventListener(ev, updateSlotPreview);
-    els.slotTo?.addEventListener(ev, updateSlotPreview);
-  });
-
-  els.slotForm?.addEventListener('submit', async (e)=>{
-    e.preventDefault(); // belangrijk: GEEN reload, dus geen rood dashboard
-    if(!els.slotMsg) return;
-
-    const date = els.slotDate?.value;
-    const from = els.slotFrom?.value;
-    const to   = els.slotTo?.value;
-    const desc = (els.slotDesc?.value || '').trim();
-
-    els.slotMsg.className = 'tiny';
-    if(!date || !from || !to){
-      els.slotMsg.textContent = 'Vul datum, begin- én einduur in.';
-      els.slotMsg.classList.add('error');
-      return;
+      ibanToSend = rawIban.replace(/\s+/g,'').toUpperCase();
     }
 
-    els.slotMsg.textContent = 'Tijdstip bewaren…';
-
-    const payload = {
-      date, from, to, desc,
-      email: window.__email || null
+    const body = {
+      email,
+      show_location: !!els.st.showLocation.checked,
+      public_calendar: !!els.st.publicCalendar.checked,
+      deposit_enabled: !!els.st.depositEnabled.checked,
+      deposit_amount: els.st.depositAmount.value ? Number(els.st.depositAmount.value) : null,
+      deposit_note: els.st.depositNote.value.trim()
     };
+    if(ibanToSend) body.bank_iban = ibanToSend;
 
     try{
-      const r = await fetch('/.netlify/functions/slots', {
+      const r = await fetch('/.netlify/functions/profile',{
         method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify(payload)
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
       });
-
-      if(r.ok){
-        els.slotMsg.textContent = 'Tijdstip gepubliceerd ✔';
-        els.slotMsg.classList.add('ok');
-        // optioneel velden leegmaken
-        // els.slotDate.value = ''; els.slotFrom.value=''; els.slotTo.value=''; els.slotDesc.value='';
-        // updateSlotPreview();
-      }else{
-        const txt = await r.text().catch(()=>r.status);
-        console.warn('Slot save failed:', txt);
-        els.slotMsg.textContent = 'Kon tijdstip niet opslaan (server).';
-        els.slotMsg.classList.add('error');
+      if(!r.ok){
+        msg.textContent = 'Opslaan mislukt (server).';
+        msg.classList.add('error-text');
+        return;
       }
-    }catch(err){
-      console.warn('Slot save error:', err);
-      els.slotMsg.textContent = 'Offline of server niet bereikbaar.';
-      els.slotMsg.classList.add('error');
+      if(ibanToSend){
+        els.st.ibanNew.value = '';
+        updateIbanDisplay(ibanToSend);
+      }
+      msg.textContent = 'Instellingen opgeslagen.';
+    }catch{
+      msg.textContent = 'Opslaan mislukt (verbinding).';
+      msg.classList.add('error-text');
     }
-  });
+  }
 
-  // ---------- Start ----------
+  document.getElementById('st-save-privacy')?.addEventListener('click', savePrivacy);
+
   await ensureSession();
 </script>
 </body>
