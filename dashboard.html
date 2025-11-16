@@ -99,7 +99,7 @@
     .btn-light{
       padding:10px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:#ink;font-weight:600;cursor:pointer
+      color:var(--ink);font-weight:600;cursor:pointer
     }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
@@ -113,6 +113,7 @@
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
+    /* Afspraken */
     .day-group{margin:8px 0 14px}
     .day-head{
       display:flex;align-items:center;gap:10px;
@@ -132,20 +133,31 @@
       border-radius:12px;background:#fcfdff;margin-bottom:8px
     }
 
+    /* Instellingen-layout */
     .settings{
       display:grid;grid-template-columns:260px 1fr;
-      gap:14px;align-items:stretch
+      gap:18px;align-items:flex-start
     }
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
+
     .sidenav{
-      background:var(--glass);border:1px solid var(--glass-b);
-      border-radius:14px;padding:8px;min-height:560px
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:14px;
+      padding:8px;
+      min-height:400px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      position:sticky;
+      top:0;
     }
     .side-item{
       display:flex;align-items:center;gap:10px;width:100%;
       border:1px solid transparent;background:transparent;
       color:var(--ink);font-weight:600;border-radius:12px;
-      padding:12px;cursor:pointer;justify-content:space-between
+      padding:10px 12px;cursor:pointer;justify-content:space-between;
+      font-size:14px;
     }
     .side-item .label{display:flex;align-items:center;gap:10px}
     .side-item.active{
@@ -153,14 +165,36 @@
       border-color:var(--glass-b);
       box-shadow:0 6px 18px rgba(10,27,90,.06)
     }
+
     .panel-wrap{min-height:560px}
     .panel{
       background:var(--glass);border:1px solid var(--glass-b);
-      border-radius:14px;padding:18px
+      border-radius:14px;padding:18px 18px 20px
     }
-    .panel h3{margin:0 0 10px}
+    .panel h3{margin:0 0 6px}
+    .panel > p.panel-sub{
+      margin:0 0 14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
+
+    /* Toggle-rijen netter op één lijn */
+    .field.toggle-inline{
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .field.toggle-inline label{
+      margin-bottom:0;
+      flex:1;
+    }
+    .field.toggle-inline .toggle{
+      flex:0 0 auto;
+    }
 
     .dot{
       display:none;width:10px;height:10px;border-radius:50%;
@@ -250,6 +284,7 @@
 
     <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
+    <!-- Afspraken -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
@@ -258,6 +293,7 @@
       </div>
     </section>
 
+    <!-- Open tijdsstippen -->
     <section id="tab-open" class="tab-content" hidden>
       <div class="card">
         <h2>Nieuw tijdstip publiceren</h2>
@@ -273,6 +309,7 @@
       </div>
     </section>
 
+    <!-- Website -->
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
@@ -280,6 +317,7 @@
       </div>
     </section>
 
+    <!-- Instellingen -->
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
@@ -301,8 +339,10 @@
         </div>
 
         <div class="panel-wrap">
+          <!-- Persoonlijk -->
           <div class="panel" id="panel-persoonlijk">
             <h3>Persoonlijk</h3>
+            <p class="panel-sub">Gegevens die we gebruiken voor je dashboard, facturatie en communicatie.</p>
             <div class="two">
               <div class="field"><label>Naam (toon op dashboard)</label><input id="st-name" class="input" type="text" placeholder="Voornaam"></div>
               <div class="field"><label>Bedrijfsnaam</label><input id="st-company" class="input" type="text" placeholder="Naam van je zaak"></div>
@@ -342,32 +382,44 @@
             </div>
           </div>
 
+          <!-- Privacy -->
           <div class="panel hide" id="panel-privacy">
             <h3>Privacy & locatie</h3>
+            <p class="panel-sub">Bepaal wat er zichtbaar is voor bezoekers van je Vrijeplek-pagina.</p>
             <div class="two">
-              <div class="field">
-                <label>Locatie tonen op publieke pagina</label>
+              <div class="field toggle-inline">
+                <label for="st-show-location">Locatie tonen op publieke pagina</label>
                 <input id="st-show-location" class="toggle" type="checkbox">
               </div>
-              <div class="field">
-                <label>Kalender publiek zichtbaar</label>
+              <div class="field toggle-inline">
+                <label for="st-public-calendar">Kalender publiek zichtbaar</label>
                 <input id="st-public-calendar" class="toggle" type="checkbox">
               </div>
             </div>
             <button id="st-save-privacy" class="btn">Opslaan</button>
           </div>
 
+          <!-- Zichtbaarheid -->
           <div class="panel hide" id="panel-zichtbaarheid">
             <h3>Zichtbaarheid</h3>
+            <p class="panel-sub">Koppel je Google-profiel en stuur bezoekers rechtstreeks naar je reviews.</p>
             <div class="two">
-              <div class="field"><label>Google reviews tonen</label><input id="st-reviews" class="toggle" type="checkbox"></div>
-              <div class="field"><label>Google Place ID / Review-link</label><input id="st-place" class="input" type="text" placeholder="ChIJN1t..."></div>
+              <div class="field toggle-inline">
+                <label for="st-reviews">Google reviews tonen</label>
+                <input id="st-reviews" class="toggle" type="checkbox">
+              </div>
+              <div class="field">
+                <label for="st-place">Google Place ID / Review-link</label>
+                <input id="st-place" class="input" type="text" placeholder="ChIJN1t...">
+              </div>
             </div>
             <button id="st-save-vis" class="btn">Opslaan</button>
           </div>
 
+          <!-- Account -->
           <div class="panel hide" id="panel-account">
             <h3>Accountstatus & Betaling</h3>
+            <p class="panel-sub">Hier beheer je je abonnement en zie je of je account actief is.</p>
             <div id="acc-status" class="tiny" style="margin-bottom:10px">Status: <strong>—</strong></div>
             <div class="sep"></div>
             <div class="field">
@@ -384,11 +436,19 @@
             <div class="tiny" style="margin-top:8px">Je gegevens worden pas publiek na activatie.</div>
           </div>
 
+          <!-- Notificaties -->
           <div class="panel hide" id="panel-notificaties">
             <h3>Notificaties</h3>
+            <p class="panel-sub">Kies welke e-mails je van ons wilt ontvangen.</p>
             <div class="two">
-              <div class="field"><label>Nieuwe reservatie per e-mail</label><input id="st-notify-mail" class="toggle" type="checkbox"></div>
-              <div class="field"><label>Dagelijkse agenda per e-mail</label><input id="st-daily-mail" class="toggle" type="checkbox"></div>
+              <div class="field toggle-inline">
+                <label for="st-notify-mail">Nieuwe reservatie per e-mail</label>
+                <input id="st-notify-mail" class="toggle" type="checkbox">
+              </div>
+              <div class="field toggle-inline">
+                <label for="st-daily-mail">Dagelijkse agenda per e-mail</label>
+                <input id="st-daily-mail" class="toggle" type="checkbox">
+              </div>
             </div>
             <button id="st-save-notify" class="btn">Opslaan</button>
           </div>
