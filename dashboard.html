@@ -684,7 +684,8 @@
       els.st.bio.value     ||= d?.bio || '';
 
       window.__plan   = d?.plan || 'monthly';
-      window.__status = d?.account_status || 'pending';
+      window.__status = d?.account_status || d?.status || 'pending';
+
     }catch{
       window.__plan = 'monthly';
       window.__status = 'pending';
