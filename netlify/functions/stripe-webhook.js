@@ -25,34 +25,66 @@ export async function handler(event) {
   if (stripeEvent.type === 'checkout.session.completed') {
     const session = stripeEvent.data.object;
 
-    const email = session.customer_details.email;
+    const email = session.customer_details?.email;
     const subscriptionId = session.subscription;
     const customerId = session.customer;
 
-    // 1. Zoek Supabase user op basis van email
-    const { data: user } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
-
-    if (!user) {
-      console.log("Geen Supabase user gevonden voor", email);
-      return { statusCode: 200, body: 'No user found' };
+    if (!email) {
+      console.log('Geen e-mail in checkout.session.completed');
+      return { statusCode: 200, body: 'No email on session' };
     }
 
-    // 2. Activeer gebruiker in Supabase
-    await supabase
-      .from('users')
-      .update({
-        is_active: true,
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscriptionId,
-        subscribed_at: new Date().toISOString()
-      })
-      .eq('id', user.id);
+    const lowerEmail = email.toLowerCase();
 
-    console.log("Gebruiker geactiveerd:", email);
+    // 1. Zoek Supabase user op basis van email
+    const { data: user, error: userErr } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', lowerEmail)
+      .single();
+
+    if (userErr) {
+      console.log('Fout bij zoeken user:', userErr.message);
+    }
+
+    if (!user) {
+      console.log('Geen Supabase user gevonden voor', lowerEmail);
+    } else {
+      // 2. Activeer gebruiker in Supabase (users)
+      const { error: updUserErr } = await supabase
+        .from('users')
+        .update({
+          is_active: true,
+          stripe_customer_id: customerId,
+          stripe_subscription_id: subscriptionId,
+          subscribed_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (updUserErr) {
+        console.log('Fout bij updaten users:', updUserErr.message);
+      } else {
+        console.log('Gebruiker geactiveerd in users:', lowerEmail);
+      }
+    }
+
+    // 3. Zet ook het profiel op actief in "profiles"
+    const { error: profileErr } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          email: lowerEmail,
+          account_status: 'active',
+          plan: 'monthly'
+        },
+        { onConflict: 'email' }
+      );
+
+    if (profileErr) {
+      console.log('Fout bij upsert profiles:', profileErr.message);
+    } else {
+      console.log('Profiel geactiveerd in profiles:', lowerEmail);
+    }
   }
 
   return { statusCode: 200, body: 'ok' };
