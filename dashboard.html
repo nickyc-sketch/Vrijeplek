@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b3a;
       --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
       --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
@@ -108,7 +108,15 @@
     .field label{font-weight:600;margin-bottom:4px}
     .input{
       padding:10px;border:1px solid var(--line);
-      border-radius:8px;background:#fff
+      border-radius:8px;background:#fff;
+      font-family:inherit;font-size:14px;color:var(--ink);
+      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .input:focus{
+      outline:none;
+      border-color:var(--o1);
+      box-shadow:0 0 0 2px rgba(26,102,255,.18);
+      background:#fff;
     }
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
@@ -133,31 +141,82 @@
       border-radius:12px;background:#fcfdff;margin-bottom:8px
     }
 
-    /* Instellingen-layout */
+    /* OPEN TIJDSTIPPEN – mooiere layout */
+    .slot-card h2{
+      margin-top:0;
+      margin-bottom:4px;
+    }
+    .slot-sub{
+      margin:0 0 12px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .slot-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:14px;
+      align-items:flex-start;
+    }
+    @media(max-width:900px){
+      .slot-grid{grid-template-columns:1fr;}
+    }
+    .slot-box{
+      background:rgba(255,255,255,.9);
+      border-radius:12px;
+      padding:12px 12px 10px;
+      border:1px solid rgba(148,163,184,.5);
+    }
+    .slot-box h3{
+      margin:0 0 6px;
+      font-size:14px;
+    }
+    .slot-box p{
+      margin:0 0 10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .slot-preview{
+      margin-top:6px;
+      font-size:12px;
+      color:#0f172a;
+      font-weight:600;
+    }
+    .slot-preview.empty{
+      color:#94a3b8;
+      font-weight:400;
+    }
+    .slot-meta{
+      font-size:12px;
+      color:#64748b;
+      margin-top:8px;
+    }
+    .slot-meta strong{
+      font-weight:700;
+    }
+    #slot-msg.ok{
+      color:var(--ok);
+      font-weight:600;
+    }
+    #slot-msg.error{
+      color:var(--danger);
+      font-weight:600;
+    }
+
+    /* Instellingen */
     .settings{
       display:grid;grid-template-columns:260px 1fr;
-      gap:18px;align-items:flex-start
+      gap:14px;align-items:stretch
     }
     @media(max-width:900px){.settings{grid-template-columns:1fr}}
-
     .sidenav{
-      background:var(--glass);
-      border:1px solid var(--glass-b);
-      border-radius:14px;
-      padding:8px;
-      min-height:400px;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      position:sticky;
-      top:0;
+      background:var(--glass);border:1px solid var(--glass-b);
+      border-radius:14px;padding:8px;min-height:560px
     }
     .side-item{
       display:flex;align-items:center;gap:10px;width:100%;
       border:1px solid transparent;background:transparent;
       color:var(--ink);font-weight:600;border-radius:12px;
-      padding:10px 12px;cursor:pointer;justify-content:space-between;
-      font-size:14px;
+      padding:12px;cursor:pointer;justify-content:space-between
     }
     .side-item .label{display:flex;align-items:center;gap:10px}
     .side-item.active{
@@ -165,23 +224,16 @@
       border-color:var(--glass-b);
       box-shadow:0 6px 18px rgba(10,27,90,.06)
     }
-
     .panel-wrap{min-height:560px}
     .panel{
       background:var(--glass);border:1px solid var(--glass-b);
-      border-radius:14px;padding:18px 18px 20px
+      border-radius:14px;padding:18px
     }
-    .panel h3{margin:0 0 6px}
-    .panel > p.panel-sub{
-      margin:0 0 14px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
+    .panel h3{margin:0 0 10px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
 
-    /* Toggle-rijen netter op één lijn */
+    /* Toggle-rijen netter */
     .field.toggle-inline{
       flex-direction:row;
       align-items:center;
@@ -293,19 +345,65 @@
       </div>
     </section>
 
-    <!-- Open tijdsstippen -->
+    <!-- Open tijdstippen -->
     <section id="tab-open" class="tab-content" hidden>
-      <div class="card">
+      <div class="card slot-card">
         <h2>Nieuw tijdstip publiceren</h2>
-        <form id="slot-form">
-          <div class="form-row">
-            <div class="field"><label>Datum</label><input type="date" class="input" id="slot-date"></div>
-            <div class="field"><label>Van</label><input type="time" class="input" id="slot-from"></div>
-            <div class="field"><label>Tot</label><input type="time" class="input" id="slot-to"></div>
+        <p class="slot-sub">Kies een dag en tijdslot dat nog vrij is. Je klanten zien deze momenten live op Vrijeplek.</p>
+
+        <div class="slot-grid">
+          <!-- Formulierzijde -->
+          <div class="slot-box">
+            <h3>Tijdslot instellen</h3>
+            <p>Gebruik datum en tijden zoals in je agenda. We blokkeren automatisch overlappende slots (later via backend).</p>
+            <form id="slot-form">
+              <div class="form-row">
+                <div class="field">
+                  <label for="slot-date">Datum</label>
+                  <input type="date" class="input" id="slot-date">
+                </div>
+                <div class="field">
+                  <label for="slot-from">Van</label>
+                  <input type="time" class="input" id="slot-from">
+                </div>
+                <div class="field">
+                  <label for="slot-to">Tot</label>
+                  <input type="time" class="input" id="slot-to">
+                </div>
+              </div>
+              <div class="field">
+                <label for="slot-desc">Omschrijving (optioneel)</label>
+                <input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt, intakegesprek, late shift">
+              </div>
+
+              <div id="slot-preview" class="slot-preview empty">
+                Nog geen tijdstip gekozen.
+              </div>
+
+              <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+                <button class="btn" type="submit">Publiceren</button>
+                <span id="slot-msg" class="tiny"></span>
+              </div>
+            </form>
           </div>
-          <div class="field"><label>Omschrijving</label><input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt of intake"></div>
-          <button class="btn" type="submit">Publiceren</button>
-        </form>
+
+          <!-- Infozijde -->
+          <div class="slot-box">
+            <h3>Hoe werkt dit?</h3>
+            <p>
+              Elk gepubliceerd tijdstip wordt gekoppeld aan je account. Klanten kunnen hierop intekenen
+              via je publieke Vrijeplek-pagina.
+            </p>
+            <ul class="tiny" style="padding-left:18px;margin:0;">
+              <li>Je kunt later tijdsloten aanpassen of verwijderen in je agenda-overzicht.</li>
+              <li>Combineer meerdere korte slots op één dag (bv. 14:00–14:30, 14:30–15:00).</li>
+              <li>Je blijft altijd baas over de bevestiging van aanvragen.</li>
+            </ul>
+            <div class="slot-meta">
+              <strong>Tip:</strong> Zet ook last-minute gaten van 1–2 uur online. Dat is precies waar Vrijeplek voor gemaakt is.
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -339,10 +437,8 @@
         </div>
 
         <div class="panel-wrap">
-          <!-- Persoonlijk -->
           <div class="panel" id="panel-persoonlijk">
             <h3>Persoonlijk</h3>
-            <p class="panel-sub">Gegevens die we gebruiken voor je dashboard, facturatie en communicatie.</p>
             <div class="two">
               <div class="field"><label>Naam (toon op dashboard)</label><input id="st-name" class="input" type="text" placeholder="Voornaam"></div>
               <div class="field"><label>Bedrijfsnaam</label><input id="st-company" class="input" type="text" placeholder="Naam van je zaak"></div>
@@ -382,10 +478,8 @@
             </div>
           </div>
 
-          <!-- Privacy -->
           <div class="panel hide" id="panel-privacy">
             <h3>Privacy & locatie</h3>
-            <p class="panel-sub">Bepaal wat er zichtbaar is voor bezoekers van je Vrijeplek-pagina.</p>
             <div class="two">
               <div class="field toggle-inline">
                 <label for="st-show-location">Locatie tonen op publieke pagina</label>
@@ -399,10 +493,8 @@
             <button id="st-save-privacy" class="btn">Opslaan</button>
           </div>
 
-          <!-- Zichtbaarheid -->
           <div class="panel hide" id="panel-zichtbaarheid">
             <h3>Zichtbaarheid</h3>
-            <p class="panel-sub">Koppel je Google-profiel en stuur bezoekers rechtstreeks naar je reviews.</p>
             <div class="two">
               <div class="field toggle-inline">
                 <label for="st-reviews">Google reviews tonen</label>
@@ -416,10 +508,8 @@
             <button id="st-save-vis" class="btn">Opslaan</button>
           </div>
 
-          <!-- Account -->
           <div class="panel hide" id="panel-account">
             <h3>Accountstatus & Betaling</h3>
-            <p class="panel-sub">Hier beheer je je abonnement en zie je of je account actief is.</p>
             <div id="acc-status" class="tiny" style="margin-bottom:10px">Status: <strong>—</strong></div>
             <div class="sep"></div>
             <div class="field">
@@ -436,10 +526,8 @@
             <div class="tiny" style="margin-top:8px">Je gegevens worden pas publiek na activatie.</div>
           </div>
 
-          <!-- Notificaties -->
           <div class="panel hide" id="panel-notificaties">
             <h3>Notificaties</h3>
-            <p class="panel-sub">Kies welke e-mails je van ons wilt ontvangen.</p>
             <div class="two">
               <div class="field toggle-inline">
                 <label for="st-notify-mail">Nieuwe reservatie per e-mail</label>
@@ -461,6 +549,7 @@
 </div>
 
 <script type="module">
+  // ---------- Supabase init ----------
   async function initSupabase(){
     try{
       const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
@@ -486,6 +575,15 @@
     btnActivate: $('#btn-activate'),
     lastCheckout: $('#last-checkout-url'),
     saveState: $('#save-state'),
+    // open tijdstippen
+    slotForm: $('#slot-form'),
+    slotDate: $('#slot-date'),
+    slotFrom: $('#slot-from'),
+    slotTo:   $('#slot-to'),
+    slotDesc: $('#slot-desc'),
+    slotPreview: $('#slot-preview'),
+    slotMsg: $('#slot-msg'),
+    // profiel
     st: {
       name: $('#st-name'), company: $('#st-company'), phone: $('#st-phone'),
       email: $('#st-email'), btw: $('#st-btw'), cat: $('#st-cat'),
@@ -494,6 +592,7 @@
     }
   };
 
+  // ---------- Tabs ----------
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -503,6 +602,7 @@
     });
   });
 
+  // ---------- Sidenav ----------
   const sideBtns = document.querySelectorAll('.side-item');
   const sidePanels = {
     persoonlijk: $('#panel-persoonlijk'),
@@ -520,6 +620,7 @@
     });
   });
 
+  // ---------- Logout + header menu ----------
   const hardGo = (url)=>{ try{ location.replace(url) }catch{ location.href=url } };
 
   function clearSupabaseTokens(){
@@ -551,18 +652,11 @@
     e.stopPropagation();
     userDropdown?.classList.toggle('open');
   });
-
-  menuDashboard?.addEventListener('click', ()=>{
-    userDropdown?.classList.remove('open');
-  });
-
-  menuLogout?.addEventListener('click', ()=>{
-    userDropdown?.classList.remove('open');
-    logoutAlways();
-  });
-
+  menuDashboard?.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); });
+  menuLogout?.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); logoutAlways(); });
   document.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); });
 
+  // ---------- Session + user ----------
   function firstNameFrom(user){
     try{
       const meta = user?.user_metadata?.display_name
@@ -641,6 +735,7 @@
     loadAppointments();
   }
 
+  // ---------- Profiel opslaan ----------
   const DRAFT_KEY = 'vp.profile.draft';
 
   function getPayload(){
@@ -774,6 +869,7 @@
     }
   }
 
+  // ---------- Betalen ----------
   function selectPlan(plan){
     window.__plan = plan;
     els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
@@ -862,6 +958,7 @@
     gateUI(window.__status || 'pending', window.__plan || 'monthly');
   }
 
+  // ---------- Afspraken ----------
   function groupByDate(items){
     const map={};
     items.forEach(x=>{ (map[x.date] ||= []).push(x); });
@@ -968,6 +1065,93 @@
     renderAppointments(appts);
   }
 
+  // ---------- Open tijdstippen: live preview + echte call ----------
+  function updateSlotPreview(){
+    const d = els.slotDate?.value;
+    const f = els.slotFrom?.value;
+    const t = els.slotTo?.value;
+    if(!els.slotPreview) return;
+
+    if(!d && !f && !t){
+      els.slotPreview.textContent = 'Nog geen tijdstip gekozen.';
+      els.slotPreview.classList.add('empty');
+      return;
+    }
+
+    let label = '';
+    if(d){
+      try{
+        label += new Date(d+'T00:00:00').toLocaleDateString('nl-BE',{
+          weekday:'long',day:'2-digit',month:'long'
+        });
+      }catch{
+        label += d;
+      }
+    }
+    if(f || t){
+      if(label) label += ' — ';
+      label += (f || '??') + ' – ' + (t || '??');
+    }
+    els.slotPreview.textContent = label || 'Nog geen tijdstip gekozen.';
+    els.slotPreview.classList.remove('empty');
+  }
+
+  ['change','input'].forEach(ev=>{
+    els.slotDate?.addEventListener(ev, updateSlotPreview);
+    els.slotFrom?.addEventListener(ev, updateSlotPreview);
+    els.slotTo?.addEventListener(ev, updateSlotPreview);
+  });
+
+  els.slotForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault(); // belangrijk: GEEN reload, dus geen rood dashboard
+    if(!els.slotMsg) return;
+
+    const date = els.slotDate?.value;
+    const from = els.slotFrom?.value;
+    const to   = els.slotTo?.value;
+    const desc = (els.slotDesc?.value || '').trim();
+
+    els.slotMsg.className = 'tiny';
+    if(!date || !from || !to){
+      els.slotMsg.textContent = 'Vul datum, begin- én einduur in.';
+      els.slotMsg.classList.add('error');
+      return;
+    }
+
+    els.slotMsg.textContent = 'Tijdstip bewaren…';
+
+    const payload = {
+      date, from, to, desc,
+      email: window.__email || null
+    };
+
+    try{
+      const r = await fetch('/.netlify/functions/slots', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if(r.ok){
+        els.slotMsg.textContent = 'Tijdstip gepubliceerd ✔';
+        els.slotMsg.classList.add('ok');
+        // optioneel velden leegmaken
+        // els.slotDate.value = ''; els.slotFrom.value=''; els.slotTo.value=''; els.slotDesc.value='';
+        // updateSlotPreview();
+      }else{
+        const txt = await r.text().catch(()=>r.status);
+        console.warn('Slot save failed:', txt);
+        els.slotMsg.textContent = 'Kon tijdstip niet opslaan (server).';
+        els.slotMsg.classList.add('error');
+      }
+    }catch(err){
+      console.warn('Slot save error:', err);
+      els.slotMsg.textContent = 'Offline of server niet bereikbaar.';
+      els.slotMsg.classList.add('error');
+    }
+  });
+
+  // ---------- Start ----------
   await ensureSession();
 </script>
 </body>
