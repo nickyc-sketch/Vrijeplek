@@ -30,13 +30,12 @@
       flex-direction:column;
     }
 
-    /* Header in lijn met waarom/aanmelden */
     .site-header{
       position:sticky;
       top:0;
       z-index:40;
       backdrop-filter:blur(14px);
-      background:linear-gradient(180deg,rgba(248,251,FF,.96),rgba(248,251,FF,.86));
+      background:linear-gradient(180deg,rgba(248,251,255,.96),rgba(248,251,255,.86));
       border-bottom:1px solid rgba(26,102,255,.15);
     }
     .site-header::after{
@@ -102,7 +101,6 @@
       padding:0 12px;
     }
 
-    /* Layout login */
     .login-hero{
       padding:32px 0 10px;
     }
@@ -141,7 +139,6 @@
       color:#6b7280;
     }
 
-    /* Card */
     .login-card{
       padding:18px 18px 20px;
       border-radius:18px;
@@ -310,7 +307,6 @@
     <main>
       <section class="login-hero">
         <div class="container login-grid">
-          <!-- LINKERKANT: korte uitleg -->
           <div class="login-copy">
             <h1>Welkom bij Vrijeplek.</h1>
             <p class="lead">
@@ -327,7 +323,6 @@
             </p>
           </div>
 
-          <!-- RECHTERKANT: login card -->
           <div class="login-card">
             <div class="card-head">
               <h2>Beveiligde login</h2>
@@ -385,12 +380,10 @@
     const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || 'https://xdmrikvxyeebeusnbzav.supabase.co';
     const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0';
 
-    // Gebruik altijd localStorage, zodat dashboard dezelfde sessie ziet
     const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
     });
 
-    // Nav-knoppen wisselen
     const btnLogin = document.getElementById('nav-login');
     const btnMijn  = document.getElementById('nav-mijn');
 
@@ -409,10 +402,14 @@
     await toggleNav();
     supa.auth.onAuthStateChange(()=>toggleNav());
 
-    // Als er al een sessie is, meteen naar dashboard
+    // Als er al een sessie is, meteen naar dashboard MET email in de URL
     {
       const { data: { session } } = await supa.auth.getSession();
-      if (session) window.location.href = '/dashboard.html';
+      if (session) {
+        const mail = (session.user?.email || '').trim().toLowerCase();
+        const target = '/dashboard.html' + (mail ? ('?email=' + encodeURIComponent(mail)) : '');
+        window.location.href = target;
+      }
     }
 
     const form   = document.getElementById('login-form');
@@ -422,7 +419,9 @@
 
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
-      if (!email.value.trim() || !pass.value) {
+      const cleanEmail = email.value.trim().toLowerCase();
+
+      if (!cleanEmail || !pass.value) {
         msg.className = 'error';
         msg.textContent = 'Vul e-mailadres en wachtwoord in.';
         return;
@@ -431,7 +430,7 @@
       msg.textContent = 'Aan het inloggen…';
 
       const { error } = await supa.auth.signInWithPassword({
-        email: email.value.trim(),
+        email: cleanEmail,
         password: pass.value
       });
 
@@ -441,7 +440,9 @@
         return;
       }
 
-      window.location.href = '/dashboard.html';
+      // Succes → dashboard met email in de URL
+      const target = '/dashboard.html?email=' + encodeURIComponent(cleanEmail);
+      window.location.href = target;
     });
   </script>
 </body>
