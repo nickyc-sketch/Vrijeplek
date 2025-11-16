@@ -19,6 +19,8 @@
       --line:rgba(26,102,255,.25);
       --glass-b:rgba(26,102,255,.18);
       --glass:rgba(255,255,255,.78);
+      --success:#0fa958;
+      --danger:#e23b3b;
     }
     html,body{height:100%}
     body{
@@ -240,6 +242,7 @@
     .result-body .line{
       margin:2px 0;
     }
+
     .slots-list{
       display:flex;
       flex-wrap:wrap;
@@ -250,9 +253,9 @@
       font-size:12px;
     }
     .slot-pill{
-      display:inline-flex;
+      display:flex;
       align-items:center;
-      gap:4px;
+      gap:6px;
       padding:5px 9px;
       border-radius:999px;
       background:#fff;
@@ -266,6 +269,50 @@
     .slot-pill span.time{
       font-size:11px;
       color:#4b5563;
+    }
+    .slot-pill button.slot-book{
+      border:none;
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:700;
+      cursor:pointer;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;
+    }
+    .slot-pill span.deposit-tag{
+      font-size:10px;
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid rgba(15,169,88,.4);
+      background:rgba(209,250,229,.85);
+      color:#166534;
+      font-weight:600;
+    }
+    .slot-pill span.deposit-tag.no-deposit{
+      border-color:rgba(148,163,184,.6);
+      background:#f3f4f6;
+      color:#374151;
+    }
+
+    .booking-msg{
+      max-width:1200px;
+      margin:0 auto 10px;
+      padding:0 12px;
+      font-size:13px;
+    }
+    .booking-msg span{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#ecfdf3;
+      color:#166534;
+      border:1px solid rgba(22,163,74,.35);
+    }
+    .booking-msg.error span{
+      background:#fef2f2;
+      color:#b91c1c;
+      border-color:rgba(248,113,113,.7);
     }
 
     .site-footer{
@@ -330,11 +377,11 @@
             <form id="zoeken" class="search" role="search" aria-label="Zoeken">
               <div class="field">
                 <label for="q">Welk bedrijf zoek je?</label>
-                <input id="q" name="q" type="search" required>
+                <input id="q" name="q" type="search">
               </div>
               <div class="field">
-                <label for="loc">Locatie</label>
-                <input id="loc" name="loc" type="text" required placeholder="Postcode of gemeente">
+                <label for="loc">Locatie (optioneel)</label>
+                <input id="loc" name="loc" type="text" placeholder="Postcode of gemeente (optioneel)">
               </div>
               <div class="field">
                 <label for="from">Van</label>
@@ -362,6 +409,10 @@
           </div>
         </div>
       </section>
+
+      <div id="booking-msg" class="booking-msg" hidden>
+        <span></span>
+      </div>
 
       <!-- Resultaten op dezelfde pagina -->
       <section id="results" class="results" hidden>
@@ -414,7 +465,7 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
     const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>'; // zelf invullen
+    const SUPABASE_ANON_KEY = '<YOUR-ANON-KEY>'; // invullen
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth:{ persistSession:true, autoRefreshToken:true }
@@ -437,7 +488,7 @@
     await toggleNav();
     supabase.auth.onAuthStateChange(()=>toggleNav());
 
-    // ---------- Zoeken op dezelfde pagina ----------
+    // ---------- Zoeken ----------
     const form   = document.getElementById('zoeken');
     const qEl    = document.getElementById('q');
     const locEl  = document.getElementById('loc');
@@ -449,6 +500,8 @@
     const resultsList    = document.getElementById('results-list');
     const resultsTitle   = document.getElementById('results-title');
     const resultsMeta    = document.getElementById('results-meta');
+    const bookingMsgBox  = document.getElementById('booking-msg');
+    const bookingMsgText = bookingMsgBox?.querySelector('span');
 
     function escapeHtml(str){
       return (str || '').replace(/[&<>"']/g, m=>({
@@ -464,6 +517,16 @@
       }catch{
         return iso;
       }
+    }
+
+    function showBookingMessage(text, isError){
+      if(!bookingMsgBox || !bookingMsgText) return;
+      bookingMsgText.textContent = text;
+      bookingMsgBox.hidden = false;
+      bookingMsgBox.classList.toggle('error', !!isError);
+      setTimeout(()=>{
+        bookingMsgBox.hidden = true;
+      }, 6000);
     }
 
     form.addEventListener('submit', async (e)=>{
@@ -495,8 +558,8 @@
         }
 
         resultsMeta.textContent = `${data.length} zaak/zak(en) met vrije momenten gevonden`;
-
         resultsList.innerHTML = '';
+
         data.forEach(item=>{
           const card = document.createElement('article');
           card.className = 'result-card';
@@ -511,12 +574,36 @@
 
           const bio = item.bio ? escapeHtml(item.bio) : '';
 
-          const slots = (item.slots || []).slice(0,12); // max 12 pills
+          const useDeposit = !!item.deposit_enabled && Number(item.deposit_amount) > 0;
+          const depositAmount = Number(item.deposit_amount || 0);
+
+          const slots = (item.slots || []).slice(0,12);
 
           const slotsHtml = slots.map(s=>{
             const d = formatDateNL(s.date);
             const t = `${s.from || ''} – ${s.to || ''}`;
-            return `<li class="slot-pill"><span class="date">${escapeHtml(d)}</span><span class="time">${escapeHtml(t)}</span></li>`;
+            const tagText = useDeposit
+              ? `Voorschot €${depositAmount.toFixed(2)}`
+              : 'Geen voorschot';
+
+            const tagClass = useDeposit ? '' : ' no-deposit';
+
+            return `
+              <li class="slot-pill">
+                <span class="date">${escapeHtml(d)}</span>
+                <span class="time">${escapeHtml(t)}</span>
+                <span class="deposit-tag${tagClass}">${escapeHtml(tagText)}</span>
+                <button
+                  type="button"
+                  class="slot-book"
+                  data-slot-id="${escapeHtml(s.id)}"
+                  data-provider="${escapeHtml(item.email || '')}"
+                  data-use-deposit="${useDeposit ? '1' : '0'}"
+                  data-deposit-amount="${depositAmount}"
+                  data-zaak="${title}"
+                >Boek nu</button>
+              </li>
+            `;
           }).join('');
 
           card.innerHTML = `
@@ -538,6 +625,54 @@
         resultsMeta.textContent = 'Zoeken mislukt (server).';
         resultsList.innerHTML = '';
         console.error(err);
+      }
+    });
+
+    // ---------- Boek nu (deposit / geen deposit) ----------
+    resultsList.addEventListener('click', async (e)=>{
+      const btn = e.target.closest('.slot-book');
+      if(!btn) return;
+
+      const slotId = btn.dataset.slotId;
+      const useDeposit = btn.dataset.useDeposit === '1';
+      const zaak = btn.dataset.zaak || 'Vrijeplek partner';
+
+      const customer_email = prompt('Vul je e-mailadres in om je afspraak te bevestigen:');
+      if(!customer_email){
+        return;
+      }
+      const customer_name = prompt('Hoe mogen we je aanspreken? (optioneel)') || '';
+
+      try{
+        btn.disabled = true;
+        btn.textContent = 'Bezig…';
+
+        const r = await fetch('/.netlify/functions/create-deposit', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ slotId, customer_email, customer_name })
+        });
+        const data = await r.json().catch(()=>null);
+
+        if(!r.ok || !data){
+          showBookingMessage('Boeking mislukt. Probeer later opnieuw.', true);
+          return;
+        }
+
+        if(data.mode === 'no_deposit'){
+          showBookingMessage(`Afspraak bij ${zaak} is geboekt zonder voorschot.`, false);
+          btn.textContent = 'Geboekt';
+        }else if(data.mode === 'deposit' && data.url){
+          // Naar Stripe
+          window.location.href = data.url;
+        }else{
+          showBookingMessage('Onverwacht antwoord van server.', true);
+        }
+      }catch(err){
+        console.error(err);
+        showBookingMessage('Boeking mislukt (server).', true);
+      }finally{
+        btn.disabled = false;
       }
     });
   </script>
