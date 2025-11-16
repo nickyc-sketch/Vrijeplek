@@ -10,44 +10,46 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- GLOBAL STYLE (OCEAN V2) -->
+  <!-- GLOBAL / OCEAN / GLASS CSS -->
   <style>
-
     :root{
       --o1:#1a66ff;
       --o2:#0056ff;
       --ink:#0a2a4a;
       --muted:#3a4b6a;
-      --line:rgba(26,102,255,.25);
-      --glass:rgba(255,255,255,.78);
-      --glass-b:rgba(26,102,255,.15);
+      --glass-b: rgba(26,102,255,.18);
+      --glass: rgba(255,255,255,.7);
+      --line: rgba(26,102,255,.25);
       --danger:#e23b3b;
       --ok:#0fa958;
-      --bg:#f6f9ff;
     }
 
     html,body{
       margin:0;
       padding:0;
-      height:100%;
-      font-family:"Poppins",sans-serif;
+      font-family:'Poppins',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);
       color:var(--ink);
-      background:linear-gradient(180deg,#e8f1ff,#f6faff);
-      -webkit-font-smoothing:antialiased;
     }
 
-    .site{display:flex;flex-direction:column;min-height:100vh}
+    /* SITE WRAPPER */
+    .site{
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
     main{flex:1}
 
-    /* ===== HEADER ===== */
+    /* HEADER */
     .site-header{
-      position:sticky;
-      top:0;
-      z-index:50;
       background:linear-gradient(120deg,var(--o1),var(--o2));
       color:#fff;
       padding:14px 20px;
-      box-shadow:0 4px 22px rgba(0,0,0,.09);
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow:0 4px 16px rgba(0,0,0,.15);
     }
     .site-header .inner{
       max-width:1200px;
@@ -55,84 +57,80 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:20px;
     }
-    .brand{
+    .site-header a.brand{
       display:flex;
       align-items:center;
       gap:10px;
       color:#fff;
       text-decoration:none;
-      font-size:20px;
       font-weight:700;
+      font-size:20px;
     }
-    .brand img{
+    .site-header img{
       height:38px;
-      filter:drop-shadow(0 1px 3px rgba(0,0,0,.25));
     }
 
     .header-right{
       display:flex;
       align-items:center;
-      gap:20px;
+      gap:16px;
     }
 
-    .user-menu{
-      position:relative;
-    }
+    /* USER MENU */
+    .user-menu{position:relative}
     .user-trigger{
       display:flex;
       align-items:center;
       gap:8px;
-      background:rgba(255,255,255,.22);
+      border:none;
+      background:rgba(255,255,255,.18);
       border-radius:999px;
       padding:6px 14px;
-      border:none;
-      cursor:pointer;
-      color:#fff;
+      color:#e6ffe9;
       font-weight:600;
+      cursor:pointer;
       font-size:14px;
-      backdrop-filter:blur(4px);
     }
+    .user-trigger .caret{font-size:11px;opacity:.9}
+
     .user-dropdown{
-      display:none;
       position:absolute;
-      top:calc(100% + 6px);
       right:0;
+      top:calc(100% + 6px);
       background:#fff;
-      border:1px solid var(--line);
-      border-radius:14px;
-      box-shadow:0 8px 24px rgba(0,0,0,.12);
-      min-width:160px;
-      overflow:hidden;
+      border-radius:12px;
+      box-shadow:0 8px 26px rgba(10,27,90,.18);
+      padding:6px 0;
+      min-width:170px;
+      display:none;
+      z-index:9999;
     }
     .user-dropdown.open{display:block}
     .user-dropdown button{
       width:100%;
-      padding:10px 14px;
+      padding:8px 16px;
       border:none;
       background:none;
+      text-align:left;
       font-size:14px;
       color:var(--ink);
-      text-align:left;
       cursor:pointer;
     }
-    .user-dropdown button:hover{
-      background:#f2f6ff;
-    }
+    .user-dropdown button:hover{background:#f2f5ff}
 
-    /* ===== TABS BAR ===== */
+    /* TABS BAR */
     .tabs-bar{
-      background:rgba(255,255,255,.85);
+      background:rgba(255,255,255,.82);
       backdrop-filter:blur(8px);
       border-bottom:1px solid var(--line);
     }
     .tabs-inner{
       max-width:1200px;
       margin:0 auto;
-      padding:10px 12px;
       display:flex;
       gap:16px;
+      padding:10px 12px;
     }
     .tab-btn{
       border:none;
@@ -140,232 +138,284 @@
       padding:10px 18px;
       border-radius:999px;
       font-weight:600;
-      cursor:pointer;
-      transition:.25s;
       font-size:15px;
       color:var(--ink);
+      cursor:pointer;
+      transition:.25s;
     }
     .tab-btn.active{
       background:linear-gradient(120deg,var(--o1),var(--o2));
       color:#fff;
-      box-shadow:0 4px 12px rgba(26,102,255,.25);
-      transform:translateY(-1px);
+      box-shadow:0 4px 14px rgba(10,27,90,.15);
     }
 
-    /* ===== PANELS / CARDS ===== */
+    /* CONTENT WRAP */
     .content-wrap{
       max-width:1200px;
       margin:32px auto;
       padding:0 12px;
     }
 
-    .card{
-      background:var(--glass);
-      border-radius:14px;
-      padding:20px;
-      border:1px solid var(--glass-b);
-      box-shadow:0 4px 20px rgba(0,0,0,.04);
-      margin-bottom:20px;
+    h1.section-title{
+      font-size:26px;
+      font-weight:700;
+      margin:0 0 18px;
     }
 
+    /* CARD */
+    .card{
+      background:var(--glass);
+      border:1px solid var(--glass-b);
+      border-radius:14px;
+      padding:20px;
+      margin-bottom:20px;
+      box-shadow:0 4px 24px rgba(10,27,90,.06);
+      backdrop-filter:blur(8px);
+    }
+
+    /* BTN */
     .btn{
-      background:linear-gradient(120deg,var(--o1),var(--o2));
+      padding:10px 18px;
       border:none;
       border-radius:999px;
-      padding:10px 20px;
-      font-weight:700;
+      background:linear-gradient(120deg,var(--o1),var(--o2));
       color:#fff;
+      font-weight:700;
       cursor:pointer;
+      transition:.2s;
     }
+    .btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+
     .btn-light{
-      background:#fff;
-      border:1px solid var(--line);
-      padding:10px 14px;
+      padding:10px 18px;
       border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
       font-weight:600;
       cursor:pointer;
     }
+
     .btn-danger{
       background:var(--danger);
       color:#fff;
       border:none;
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-weight:600;
     }
 
+    /* FORMS */
     .field{
       display:flex;
       flex-direction:column;
-      gap:6px;
-      margin-bottom:14px;
+      margin-bottom:12px;
     }
     .field label{
       font-weight:600;
-      font-size:14px;
+      margin-bottom:4px;
     }
     .input{
-      background:#fff;
+      padding:10px;
       border:1px solid var(--line);
       border-radius:8px;
-      padding:10px;
+      background:#fff;
+      width:100%;
+    }
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:12px;
+    }
+    @media(max-width:720px){
+      .form-row{grid-template-columns:1fr}
+    }
+    /* ========== OPEN TIJDSTIPPEN LAYOUT ========== */
+    .open-layout{
+      display:grid;
+      grid-template-columns:1fr 1.25fr;
+      gap:20px;
+    }
+    @media(max-width:900px){
+      .open-layout{grid-template-columns:1fr}
+    }
+
+    /* ========== KALENDER ========== */
+    .calendar-card{
+      position:relative;
+      overflow:hidden;
+    }
+    .calendar-card::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle at top,var(--o1),transparent 60%);
+      opacity:.08;
+      pointer-events:none;
+    }
+
+    .calendar-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .calendar-month{
+      font-weight:700;
+      font-size:18px;
+    }
+    .calendar-nav{
+      display:flex;
+      gap:6px;
+    }
+    .calendar-nav button{
+      border:none;
+      padding:6px 12px;
+      border-radius:999px;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+      cursor:pointer;
+      font-size:12px;
+      font-weight:600;
+      color:var(--ink);
+    }
+    .calendar-nav button:hover{
+      background:#f3f6ff;
+    }
+
+    /* WEEKDAGEN */
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:4px;
+      margin-bottom:10px;
+    }
+    .weekday{
+      text-align:center;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      color:#7b8aaa;
+      padding-bottom:4px;
+    }
+
+    /* DAGEN */
+    .calendar-day{
+      background:#fff;
+      border-radius:12px;
+      padding:10px 0 14px;
+      text-align:center;
+      cursor:pointer;
+      border:1px solid transparent;
+      transition:.15s;
+      position:relative;
+      min-height:40px;
+      font-weight:600;
+      font-size:14px;
+      box-shadow:0 2px 6px rgba(0,0,0,.06);
+    }
+    .calendar-day:hover{
+      border-color:var(--o1);
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .calendar-day.selected{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;
+      box-shadow:0 4px 12px rgba(26,102,255,.3);
+    }
+    .calendar-day.empty{
+      background:transparent;
+      border:none;
+      cursor:default;
+      box-shadow:none;
+      opacity:.3;
+    }
+    .calendar-day.has-slots::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:6px;
+      transform:translateX(-50%);
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:var(--o1);
+      box-shadow:0 0 0 4px rgba(26,102,255,.18);
+    }
+
+    /* ========== SLOTS LIST ========== */
+    .slots-list-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:12px;
+      margin-bottom:6px;
+    }
+    #slots-list-title{
+      margin:0;
+      font-size:18px;
+      font-weight:700;
+    }
+    .sub{
+      margin-top:2px;
+      font-size:12px;
+      color:#6b7280;
+    }
+
+    #slots-list{
+      margin-top:10px;
+    }
+
+    .slot-row{
+      display:grid;
+      grid-template-columns:90px 1fr auto auto;
+      gap:12px;
+      align-items:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,.05);
       font-size:14px;
     }
 
-    .tiny{font-size:12px;color:#6b7a91}
+    .slot-time{
+      font-weight:700;
+      color:var(--ink);
+    }
 
- /* ========= OPEN TIJDSTIPPEN – KALENDER & SLOTS ========= */
+    .slot-desc{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
 
-.open-layout{
-  display:grid;
-  grid-template-columns:1fr 1.25fr;
-  gap:20px;
-}
-@media(max-width:900px){
-  .open-layout{grid-template-columns:1fr}
-}
+    .slot-status-pill{
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+    }
+    .slot-status-pill.active{
+      background:rgba(0,185,0,.12);
+      border:1px solid rgba(0,185,0,.4);
+      color:#0a4d0a;
+    }
+    .slot-status-pill.inactive{
+      background:rgba(0,0,0,.06);
+      border:1px solid rgba(0,0,0,.2);
+      color:#444;
+    }
 
-/* KALENDER */
-.calendar-card{position:relative;overflow:hidden}
-.calendar-card::before{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:radial-gradient(circle at top,var(--o1),transparent 60%);
-  opacity:.08;
-  pointer-events:none;
-}
-
-.calendar-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.calendar-month{
-  font-weight:700;
-  font-size:16px;
-  color:var(--ink);
-}
-
-.calendar-nav{
-  display:flex;
-  gap:6px;
-}
-.calendar-nav button{
-  border:none;
-  padding:5px 10px;
-  border-radius:999px;
-  background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.12);
-  cursor:pointer;
-  font-size:12px;
-}
-
-.calendar-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:4px;
-}
-
-.calendar-grid .weekday{
-  text-align:center;
-  font-size:11px;
-  text-transform:uppercase;
-  font-weight:600;
-  color:#7b8aaa;
-  padding-bottom:2px;
-}
-
-.calendar-day{
-  background:#fff;
-  border-radius:10px;
-  padding:6px 0;
-  text-align:center;
-  cursor:pointer;
-  border:1px solid transparent;
-  transition:.15s;
-  position:relative;
-  min-height:34px;
-}
-.calendar-day span{
-  font-size:13px;
-  font-weight:600;
-}
-.calendar-day:hover{
-  border-color:var(--o1);
-  transform:translateY(-2px);
-  box-shadow:0 4px 10px rgba(0,0,0,.15);
-}
-.calendar-day.selected{
-  background:linear-gradient(120deg,var(--o1),var(--o2));
-  color:#fff;
-  box-shadow:0 4px 12px rgba(26,102,255,.3);
-}
-.calendar-day.empty{
-  background:transparent;
-  border:none;
-  box-shadow:none;
-  cursor:default;
-}
-.calendar-day.has-slots::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:4px;
-  transform:translateX(-50%);
-  width:6px;height:6px;
-  background:var(--o1);
-  border-radius:999px;
-  box-shadow:0 0 0 4px rgba(26,102,255,.18);
-}
-
-/* SLOT LIJST */
-.slot-row{
-  display:grid;
-  grid-template-columns:90px 1fr auto auto;
-  gap:10px;
-  align-items:center;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px;
-  margin-bottom:8px;
-  font-size:14px;
-}
-.slot-time{
-  font-weight:700;
-}
-.slot-desc{
-  display:flex;
-  flex-direction:column;
-}
-.slot-status-pill{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
-}
-.slot-status-pill.active{
-  background:rgba(0,185,0,.12);
-  border:1px solid rgba(0,185,0,.4);
-  color:#0a4d0a;
-}
-.slot-status-pill.inactive{
-  background:rgba(0,0,0,.06);
-  border:1px solid rgba(0,0,0,.15);
-  color:#444;
-}
-.slot-row-actions{
-  display:flex;
-  gap:6px;
-}
-
+    .slot-row-actions{
+      display:flex;
+      gap:8px;
+    }
 
   </style>
 </head>
+
 <body>
 <div class="site">
 
@@ -373,27 +423,21 @@
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand">
-        <img src="img/logo.png" alt="Vrijeplek logo">
-        Vrijeplek
+        <img src="img/logo.png" alt="">Vrijeplek
       </a>
 
       <div class="header-right">
-
-        <span id="save-state" class="tiny"></span>
-
         <div class="user-menu">
-          <button id="user-menu-trigger" class="user-trigger" type="button">
+          <button id="user-menu-trigger" class="user-trigger">
             <span class="dot-green small-dot"></span>
             <span>Mijn Vrijeplek</span>
             <span class="caret">▾</span>
           </button>
-
           <div id="user-menu-dropdown" class="user-dropdown">
-            <button type="button" id="menu-dashboard">Dashboard</button>
-            <button type="button" id="menu-logout">Uitloggen</button>
+            <button id="menu-dashboard">Dashboard</button>
+            <button id="menu-logout">Uitloggen</button>
           </div>
         </div>
-
       </div>
     </div>
   </header>
@@ -404,109 +448,152 @@
       <button class="tab-btn active" data-tab="afspraken">Afspraken</button>
       <button class="tab-btn" data-tab="open">Open tijdsstippen</button>
       <button class="tab-btn" data-tab="website">Website</button>
-      <button class="tab-btn" data-tab="instellingen">Instellingen <i id="settings-dot" class="dot"></i></button>
+      <button class="tab-btn" data-tab="instellingen">Instellingen</button>
     </div>
   </div>
 
-  <!-- CONTENT -->
   <main class="content-wrap">
 
-    <!-- Betaal-banner -->
-    <div id="pay-banner" class="banner" style="display:none"></div>
-
-    <!-- Welkom -->
     <h1 id="welcome-wrap" class="section-title">
       Welkom, <span id="user-firstname">—</span> 👋
     </h1>
 
-    <!-- TAB: Afspraken -->
-    <section id="tab-afspraken" class="tab-content">
-      <div class="card">
-        <h2>Jouw afspraken</h2>
-        <div id="appointments-list"></div>
-        <div class="tiny">Klik op <strong>Bewerken</strong> of <strong>Verwijderen</strong> om een afspraak te beheren.</div>
-      </div>
-    </section>
-
-    <!-- TAB: Open tijdsstippen (DEEL 3 zal dit stuk overschrijven met nieuwe kalender) -->
+    <!-- ========== OPEN TIJDSTIPPEN TAB (NIEUW) ========== -->
     <section id="tab-open" class="tab-content" hidden>
-      <div id="open-times-wrapper">
-        <!-- Dit wordt volledig vervangen in DEEL 3 -->
-      </div>
-    </section>
 
-    <!-- TAB: Website -->
-    <section id="tab-website" class="tab-content" hidden>
-      <div class="card">
-        <h2>Mijn mini-website</h2>
-        <p class="tiny">Hier configureer je je publieke pagina op Vrijeplek.</p>
-      </div>
-    </section>
+      <div class="open-layout">
 
-    <!-- TAB: Instellingen -->
+        <!-- LINKERKAART – NIEUW SLOT -->
+        <div class="card">
+          <h2>Nieuw tijdslot publiceren</h2>
+
+          <form id="slot-form" style="margin-top:14px;">
+            <div class="form-row">
+              <div class="field">
+                <label>Datum</label>
+                <input type="date" class="input" id="slot-date">
+              </div>
+
+              <div class="field">
+                <label>Van</label>
+                <input type="time" class="input" id="slot-from">
+              </div>
+
+              <div class="field">
+                <label>Tot</label>
+                <input type="time" class="input" id="slot-to">
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Omschrijving</label>
+              <input type="text" class="input" id="slot-desc" placeholder="vb. Intake, snelle beurt, onderhoud…">
+            </div>
+
+            <button class="btn" type="submit">Publiceren</button>
+            <div id="slot-feedback" class="tiny" style="margin-top:8px;"></div>
+          </form>
+        </div>
+
+        <!-- RECHTERKAART – NIEUWE KALENDER -->
+        <div class="card calendar-card">
+
+          <div class="calendar-head">
+            <div class="calendar-month" id="slots-month-label">—</div>
+            <div class="calendar-nav">
+              <button id="slots-prev">◀</button>
+              <button id="slots-today">Vandaag</button>
+              <button id="slots-next">▶</button>
+            </div>
+          </div>
+
+          <div id="slots-calendar" class="calendar-grid"></div>
+
+          <div class="sep" style="height:1px;background:var(--line);margin:14px 0;"></div>
+
+          <div class="slots-list-head">
+            <div>
+              <h3 id="slots-list-title">Tijdslots</h3>
+              <div id="slots-list-sub" class="sub"></div>
+            </div>
+          </div>
+
+          <div id="slots-list"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- ========== INSTELLINGEN TAB ========== -->
     <section id="tab-instellingen" class="tab-content" hidden>
-      <div class="settings">
 
-        <!-- LINKER MENU IN INSTELLINGEN -->
-        <div class="sidenav">
+      <div class="settings" style="display:grid;grid-template-columns:260px 1fr;gap:20px;">
+        
+        <!-- SIDE MENU -->
+        <div class="sidenav" style="
+          background:var(--glass);
+          border:1px solid var(--glass-b);
+          border-radius:14px;
+          padding:8px;
+          min-height:560px;
+        ">
           <button class="side-item active" data-side="persoonlijk">
-            <span class="label">Persoonlijk</span>
+            <span class="label"><span>Persoonlijk</span></span>
           </button>
-
           <button class="side-item" data-side="privacy">
-            <span class="label">Privacy & betalingen</span>
+            <span class="label"><span>Privacy & betalingen</span></span>
           </button>
-
           <button class="side-item" data-side="zichtbaarheid">
-            <span class="label">Zichtbaarheid</span>
+            <span class="label"><span>Zichtbaarheid</span></span>
           </button>
-
           <button class="side-item" data-side="account">
-            <span class="label">Account</span>
+            <span class="label"><span>Account</span></span>
           </button>
-
           <button class="side-item" data-side="notificaties">
-            <span class="label">Notificaties</span>
+            <span class="label"><span>Notificaties</span></span>
           </button>
         </div>
 
-        <!-- RECHTER PANEL IN INSTELLINGEN -->
+        <!-- PANELS -->
         <div class="panel-wrap">
 
-          <!-- Paneel 1: Persoonlijk -->
-          <div class="panel" id="panel-persoonlijk">
+          <!-- PERSOONLIJK -->
+          <div class="panel" id="panel-persoonlijk" style="
+            background:var(--glass);
+            border:1px solid var(--glass-b);
+            border-radius:14px;
+            padding:20px;
+          ">
             <h3>Persoonlijke gegevens</h3>
 
-            <div class="two">
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
               <div class="field">
-                <label>Naam</label>
-                <input id="st-name" class="input" type="text">
+                <label>Naam (dashboard weergave)</label>
+                <input id="st-name" class="input" type="text" placeholder="Voornaam">
               </div>
-
               <div class="field">
                 <label>Bedrijfsnaam</label>
-                <input id="st-company" class="input" type="text">
+                <input id="st-company" class="input" type="text" placeholder="Naam van je zaak">
               </div>
             </div>
 
-            <div class="two">
-              <div class="field">
-                <label>Telefoon</label>
-                <input id="st-phone" class="input" type="tel">
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div class="field"><label>Telefoon</label>
+                <input id="st-phone" class="input" type="tel" placeholder="+32 ...">
               </div>
-
               <div class="field">
-                <label>E-mail</label>
+                <label>E-mail (wijziging vereist bevestiging)</label>
                 <input id="st-email" class="input" type="email">
+                <div class="tiny">We sturen een bevestigingsmail via Supabase.</div>
               </div>
             </div>
 
-            <div class="two">
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
               <div class="field">
                 <label>BTW-nummer</label>
-                <input id="st-btw" class="input" type="text">
+                <input id="st-btw" class="input" type="text" placeholder="BE0123456789">
               </div>
-
               <div class="field">
                 <label>Categorie</label>
                 <select id="st-cat" class="input">
@@ -522,188 +609,1550 @@
               </div>
             </div>
 
-            <div class="two">
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
               <div class="field">
-                <label>Straat + nr</label>
+                <label>Straat + nr.</label>
                 <input id="st-straat" class="input" type="text">
               </div>
-
               <div class="field">
                 <label>Postcode & gemeente</label>
-                <input id="st-postcode" class="input" type="text">
+                <input id="st-postcode" class="input" type="text" placeholder="3500 Hasselt">
               </div>
             </div>
 
             <div class="field">
               <label>Website</label>
-              <input id="st-website" class="input" type="url">
+              <input id="st-website" class="input" type="url" placeholder="https://voorbeeld.be">
             </div>
 
             <div class="field">
               <label>Korte omschrijving</label>
-              <input id="st-bio" class="input" type="text">
+              <input id="st-bio" class="input" type="text" placeholder="Beschrijf kort je diensten">
             </div>
 
-            <button id="st-save-person" class="btn">Opslaan</button>
-            <span id="st-msg" class="tiny"></span>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+              <button id="st-save-person" class="btn">Opslaan</button>
+              <span id="st-msg" class="tiny"></span>
+            </div>
           </div>
 
-          <!-- Paneel 2: Privacy -->
-          <div class="panel hide" id="panel-privacy">
+          <!-- PRIVACY -->
+          <div class="panel hide" id="panel-privacy" style="
+            background:var(--glass);
+            border:1px solid var(--glass-b);
+            border-radius:14px;
+            padding:20px;
+          ">
             <h3>Privacy & betalingen</h3>
 
-            <label class="switch-row">
-              <span class="switch-title">Locatie tonen</span>
-              <input id="st-show-location" type="checkbox">
-            </label>
-
-            <label class="switch-row">
-              <span class="switch-title">Kalender publiek</span>
-              <input id="st-public-calendar" type="checkbox">
-            </label>
+            <div class="field">
+              <label>Locatie tonen (gemeente)</label>
+              <input id="st-show-location" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
+            </div>
 
             <div class="field">
-              <label>Rekeningnummer (IBAN)</label>
+              <label>Publieke kalender zichtbaar</label>
+              <input id="st-public-calendar" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
+            </div>
+
+            <div class="field">
+              <label>Rekeningnummer voor voorschotten</label>
+              <div id="st-iban-current" class="tiny">Nog geen IBAN ingesteld.</div>
               <input id="st-iban-new" class="input" type="text" placeholder="BE00 0000 0000 0000">
-              <div id="st-iban-current" class="tiny"></div>
             </div>
 
-            <button id="st-save-privacy" class="btn">Opslaan</button>
-            <span id="st-privacy-msg" class="tiny"></span>
-          </div>
-
-          <!-- Paneel 3: Zichtbaarheid -->
-          <div class="panel hide" id="panel-zichtbaarheid">
-            <h3>Zichtbaarheid</h3>
-
             <div class="field">
-              <label>Google review link</label>
-              <input id="st-place" class="input" type="text" placeholder="Google ID of URL">
+              <label>Voorschot vragen?</label>
+              <input id="st-deposit-enabled" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
             </div>
 
-            <button id="st-save-vis" class="btn">Opslaan</button>
-          </div>
-
-          <!-- Paneel 4: Account -->
-          <div class="panel hide" id="panel-account">
-            <h3>Accountstatus</h3>
-
-            <div id="acc-status" class="tiny">Status: —</div>
-
-            <div class="field">
-              <label>Plan</label>
-              <div id="plan-wrap" class="plan">
-                <button type="button" class="pill" data-plan="monthly">€19,95 / maand</button>
-                <button type="button" class="pill" data-plan="yearly">€180 / jaar</button>
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div class="field">
+                <label>Bedrag (€)</label>
+                <input id="st-deposit-amount" class="input" type="number" min="0">
+              </div>
+              <div class="field">
+                <label>Notitie (klant)</label>
+                <input id="st-deposit-note" class="input" type="text">
               </div>
             </div>
 
-            <button id="btn-activate" class="btn">Activeer abonnement</button>
-            <a id="last-checkout-url" class="tiny" href="#" target="_blank" style="display:none">Laatste betalinks openen</a>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+              <button id="st-save-privacy" class="btn">Opslaan</button>
+              <span id="st-privacy-msg" class="tiny"></span>
+            </div>
           </div>
 
-          <!-- Paneel 5: Notificaties -->
-          <div class="panel hide" id="panel-notificaties">
+          <!-- ZICHTBAARHEID -->
+          <div class="panel hide" id="panel-zichtbaarheid" style="
+            background:var(--glass);
+            border:1px solid var(--glass-b);
+            border-radius:14px;
+            padding:20px;
+          ">
+            <h3>Zichtbaarheid</h3>
+
+            <div class="field">
+              <label>Google reviews tonen</label>
+              <input id="st-reviews" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
+            </div>
+
+            <div class="field">
+              <label>Google Place ID / Review-link</label>
+              <input id="st-place" class="input" type="text">
+            </div>
+
+            <button id="st-save-vis" class="btn" style="margin-top:10px;">Opslaan</button>
+          </div>
+
+          <!-- ACCOUNT -->
+          <div class="panel hide" id="panel-account" style="
+            background:var(--glass);
+            border:1px solid var(--glass-b);
+            border-radius:14px;
+            padding:20px;
+          ">
+            <h3>Accountstatus & betaling</h3>
+
+            <div id="acc-status" class="tiny" style="margin-bottom:10px;">
+              Status: <strong>—</strong>
+            </div>
+
+            <div class="field">
+              <label>Abonnement</label>
+              <div id="plan-wrap" class="plan" style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="pill" data-plan="monthly">€19,25 / maand</button>
+                <button class="pill" data-plan="yearly">€180 / jaar</button>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+              <button id="btn-activate" class="btn">Activeer abonnement</button>
+              <a id="last-checkout-url" href="#" class="tiny" target="_blank" style="display:none;">Laatste betaallink</a>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIES -->
+          <div class="panel hide" id="panel-notificaties" style="
+            background:var(--glass);
+            border:1px solid var(--glass-b);
+            border-radius:14px;
+            padding:20px;
+          ">
             <h3>Notificaties</h3>
 
-            <label class="switch-row">
-              <span class="switch-title">Nieuwe reservatie per e-mail</span>
-              <input id="st-notify-mail" type="checkbox">
-            </label>
+            <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div class="field">
+                <label>Nieuwe reservatie per e-mail</label>
+                <input id="st-notify-mail" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
+              </div>
+              <div class="field">
+                <label>Dagelijkse agenda per e-mail</label>
+                <input id="st-daily-mail" type="checkbox" style="transform:scale(1.2);margin-right:8px;">
+              </div>
+            </div>
 
-            <label class="switch-row">
-              <span class="switch-title">Dagelijkse agenda per e-mail</span>
-              <input id="st-daily-mail" type="checkbox">
-            </label>
+            <button id="st-save-notify" class="btn" style="margin-top:10px;">Opslaan</button>
+          </div>
 
-            <button id="st-save-notify" class="btn">Opslaan</button>
+        </div>
+
+      </div>
+
+    </section>
+    <!-- ========== AFSPRAKEN TAB ========== -->
+    <section id="tab-afspraken" class="tab-content" style="animation:fadeIn .3s;">
+      <div class="card" style="
+        background:var(--glass);
+        border:1px solid var(--glass-b);
+        border-radius:16px;
+        box-shadow:0 4px 20px rgba(10,27,90,.05);
+        padding:24px;
+      ">
+        <h2 style="margin-top:0;">Jouw afspraken</h2>
+
+        <!-- Afspraken container -->
+        <div id="appointments-list" style="margin-top:20px;"></div>
+
+        <div class="tiny" style="margin-top:10px;">
+          Klik op <strong>Bewerken</strong> om een afspraak aan te passen  
+          of <strong>Verwijderen</strong> om te annuleren.
+        </div>
+      </div>
+    </section>
+
+    <!-- Styling specifiek voor afspraken -->
+    <style>
+      .day-group {
+        margin: 0 0 24px;
+      }
+
+      .day-head {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 10px;
+        padding-left: 4px;
+        color: var(--ink);
+        text-transform: capitalize;
+      }
+
+      .appt {
+        display: grid;
+        grid-template-columns: 110px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 3px 8px rgba(10,27,90,.05);
+        margin-bottom: 10px;
+        transition: .18s;
+      }
+      .appt:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(10,27,90,.12);
+        border-color: var(--o1);
+      }
+
+      .appt-time {
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--ink);
+      }
+
+      .appt-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .appt-meta strong {
+        font-size: 15px;
+      }
+
+      .appt-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* Edit row */
+      .edit-row {
+        display: grid;
+        grid-template-columns: 110px 1fr 1fr auto;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 1px dashed var(--o1);
+        background: #f9fbff;
+        margin-bottom: 10px;
+      }
+
+      .edit-row input {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+
+      @media(max-width: 720px) {
+        .appt,
+        .edit-row {
+          grid-template-columns: 1fr;
+          text-align: left;
+        }
+        .appt-time {
+          font-size: 16px;
+        }
+        .appt-actions {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+    <!-- ========== OPEN TIJDSTIPPEN TAB ========== -->
+    <section id="tab-open" class="tab-content" hidden style="animation:fadeIn .3s;">
+
+      <div class="card" style="
+        background:var(--glass);
+        border:1px solid var(--glass-b);
+        border-radius:16px;
+        padding:24px;
+      ">
+        <h2 style="margin-top:0;">Open tijdstippen beheren</h2>
+
+        <!-- Kalender -->
+        <div id="calendar-wrap" style="margin-top:20px;margin-bottom:20px;">
+          <div id="calendar" style="
+            display:grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap:8px;
+            padding:16px;
+            background:#fff;
+            border-radius:18px;
+            border:1px solid var(--line);
+            box-shadow:0 4px 18px rgba(10,27,90,.08);
+            animation:floatIn .35s ease-out;
+          ">
+          </div>
+        </div>
+
+        <style>
+          @keyframes floatIn {
+            from {opacity:0; transform:translateY(8px);}
+            to   {opacity:1; transform:translateY(0);}
+          }
+          .cal-day {
+            background:#f6f9ff;
+            padding:12px;
+            border-radius:10px;
+            text-align:center;
+            font-weight:600;
+            cursor:pointer;
+            border:1px solid transparent;
+            transition:.18s;
+          }
+          .cal-day:hover {
+            background:#e6f0ff;
+            border-color:var(--o1);
+            transform:translateY(-2px);
+          }
+          .cal-day.active {
+            background:linear-gradient(120deg,var(--o1),var(--o2));
+            color:#fff;
+            border-color:var(--o2);
+            box-shadow:0 4px 16px rgba(26,102,255,.25);
+          }
+        </style>
+
+        <!-- Form tijdslot aanmaken -->
+        <h3 style="margin-top:30px;">Nieuw tijdslot toevoegen</h3>
+
+        <form id="slot-form" style="margin-top:14px;">
+          <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="field">
+              <label>Datum</label>
+              <input type="date" id="slot-date" class="input">
+            </div>
+            <div class="field">
+              <label>Van</label>
+              <input type="time" id="slot-from" class="input">
+            </div>
+            <div class="field">
+              <label>Tot</label>
+              <input type="time" id="slot-to" class="input">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Omschrijving</label>
+            <input type="text" id="slot-desc" class="input" placeholder="vb. Snelle beurt, intake…">
+          </div>
+
+          <button class="btn" type="submit">Tijdslot publiceren</button>
+        </form>
+
+        <!-- Getoonde slots voor geselecteerde dag -->
+        <div id="slot-output" style="margin-top:30px;"></div>
+
+      </div>
+    </section>
+
+    <style>
+      /* Mooie slotblokken */
+      .slot-item {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:12px 16px;
+        border-radius:12px;
+        background:#fff;
+        border:1px solid var(--line);
+        box-shadow:0 3px 8px rgba(10,27,90,.05);
+        margin-bottom:10px;
+        transition:.18s;
+      }
+      .slot-item:hover {
+        transform:translateY(-2px);
+        border-color:var(--o1);
+        box-shadow:0 6px 20px rgba(10,27,90,.12);
+      }
+      .slot-time {
+        font-weight:700;
+      }
+      .slot-actions {
+        display:flex;
+        gap:10px;
+      }
+    </style>
+
+    <script>
+      /* ================================================
+         KALENDER GENERATOR + SLOT BEHEER FRONTEND
+         ================================================ */
+
+      const cal = document.getElementById('calendar');
+      const slotOut = document.getElementById('slot-output');
+      const slotDate = document.getElementById('slot-date');
+
+      let selectedDay = null;
+      let slotData = [];
+
+      // ---------- HELPER: format naar YYYY-MM-DD ----------
+      function toISO(d){
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const da = String(d.getDate()).padStart(2,'0');
+        return `${y}-${m}-${da}`;
+      }
+
+      // ---------- KALENDER BOUWEN ----------
+      function buildCalendar(year, month){
+        cal.innerHTML = "";
+
+        const first = new Date(year,month,1);
+        const days = new Date(year,month+1,0).getDate();
+        const empty = first.getDay() === 0 ? 6 : first.getDay()-1;
+
+        // lege cellen vóór de 1e dag
+        for(let i=0;i<empty;i++){
+          const div = document.createElement('div');
+          div.style.opacity=".25";
+          cal.appendChild(div);
+        }
+
+        // echte dagen
+        for(let d=1; d<=days; d++){
+          const dateObj = new Date(year,month,d);
+          const iso = toISO(dateObj);
+
+          const div = document.createElement('div');
+          div.className = "cal-day";
+          div.textContent = d;
+
+          if(iso === selectedDay){
+            div.classList.add("active");
+          }
+
+          div.addEventListener('click', ()=>{
+            selectedDay = iso;
+            slotDate.value = iso;
+            refreshSelected();
+          });
+
+          cal.appendChild(div);
+        }
+      }
+
+      // ---------- SELECTIE UPDATE ----------
+      function refreshSelected(){
+        [...cal.querySelectorAll('.cal-day')].forEach(d=>{
+          d.classList.toggle('active', d.textContent.padStart(2,'0') === selectedDay?.slice(8,10));
+        });
+        loadSlotsOf(selectedDay);
+      }
+
+      // ---------- SLOT LADEN ----------
+      async function loadSlotsOf(date){
+        try{
+          const r = await fetch('/.netlify/functions/appointments?action=listSlots&date=' + date);
+          const data = await r.json();
+          slotData = data || [];
+        }catch{
+          slotData = [];
+        }
+        renderSlots();
+      }
+
+      // ---------- SLOT RENDER ----------
+      function renderSlots(){
+        slotOut.innerHTML = `<h3>Geplande slots (${selectedDay})</h3>`;
+
+        if(!slotData.length){
+          slotOut.innerHTML += `<div class="tiny">Geen tijdstippen voor deze dag.</div>`;
+          return;
+        }
+
+        slotData.forEach(s=>{
+          const div = document.createElement('div');
+          div.className = "slot-item";
+
+          div.innerHTML = `
+            <div>
+              <div class="slot-time">${s.from}–${s.to}</div>
+              <div class="tiny">${s.desc || ""}</div>
+            </div>
+            <div class="slot-actions">
+              <button class="btn-light" onclick="editSlot('${s.id}')">Bewerken</button>
+              <button class="btn-danger" onclick="delSlot('${s.id}')">Verwijderen</button>
+            </div>
+          `;
+          slotOut.appendChild(div);
+        });
+      }
+
+      // ---------- SLOT TOEVOEGEN ----------
+      document.getElementById('slot-form').addEventListener('submit', async (e)=>{
+        e.preventDefault();
+
+        const body = {
+          action:'addSlot',
+          date: slotDate.value,
+          from: document.getElementById('slot-from').value,
+          to: document.getElementById('slot-to').value,
+          desc: document.getElementById('slot-desc').value.trim(),
+        };
+
+        await fetch('/.netlify/functions/appointments',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+
+        loadSlotsOf(selectedDay);
+      });
+
+      // ---------- SLOT VERWIJDEREN ----------
+      async function delSlot(id){
+        if(!confirm('Tijdslot verwijderen?')) return;
+        await fetch('/.netlify/functions/appointments',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ action:'deleteSlot', id })
+        });
+        loadSlotsOf(selectedDay);
+      }
+
+      // ---------- SLOT BEWERKEN ----------
+      async function editSlot(id){
+        alert('Slot-bewerken UI komt in BLOC 6 (complex), maar backend is al klaar.');
+      }
+
+      // ---------- INIT KALENDER ----------
+      const now = new Date();
+      selectedDay = toISO(now);
+      buildCalendar(now.getFullYear(), now.getMonth());
+      refreshSelected();
+    </script>
+    <!-- ========== SLOT EDITOR (INLINE UI) ========== -->
+    <style>
+      .slot-edit-row {
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr auto;
+        gap:10px;
+        padding:14px 16px;
+        border-radius:14px;
+        background:#f9fbff;
+        border:1px dashed var(--o1);
+        box-shadow:0 3px 8px rgba(10,27,90,.05);
+        margin-bottom:10px;
+      }
+      .slot-edit-row input {
+        border-radius:8px;
+        border:1px solid var(--line);
+        padding:10px;
+      }
+      @media(max-width:720px){
+        .slot-edit-row {
+          grid-template-columns:1fr;
+        }
+      }
+    </style>
+
+    <script>
+      /* ========================================================
+         SLOT BEWERKEN — INLINE EDITOR (zoals afspraken)
+         ======================================================== */
+
+      let editingSlotId = null;
+
+      function editSlot(id){
+        editingSlotId = id;
+        renderSlots(); // slot wordt vervangen door editor
+      }
+
+      function cancelSlotEdit(){
+        editingSlotId = null;
+        renderSlots();
+      }
+
+      function renderSlots(){
+        slotOut.innerHTML = `<h3>Geplande slots (${selectedDay})</h3>`;
+
+        if(!slotData.length){
+          slotOut.innerHTML += `<div class="tiny">Geen tijdstippen voor deze dag.</div>`;
+          return;
+        }
+
+        slotData.forEach(s=>{
+
+          // AS EDITOR ?
+          if(s.id === editingSlotId){
+            const wrap = document.createElement('div');
+            wrap.className = "slot-edit-row";
+
+            wrap.innerHTML = `
+              <input type="time" id="edit-from" value="${s.from}">
+              <input type="time" id="edit-to" value="${s.to}">
+              <input type="text" id="edit-desc" value="${s.desc || ''}">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="btn" onclick="saveSlotEdit('${s.id}')">Opslaan</button>
+                <button class="btn-light" onclick="cancelSlotEdit()">Annuleren</button>
+              </div>
+            `;
+
+            slotOut.appendChild(wrap);
+            return;
+          }
+
+          // NORMAAL SLOT
+          const div = document.createElement('div');
+          div.className = "slot-item";
+
+          div.innerHTML = `
+            <div>
+              <div class="slot-time">${s.from}–${s.to}</div>
+              <div class="tiny">${s.desc || ""}</div>
+            </div>
+            <div class="slot-actions">
+              <button class="btn-light" onclick="editSlot('${s.id}')">Bewerken</button>
+              <button class="btn-danger" onclick="delSlot('${s.id}')">Verwijderen</button>
+            </div>
+          `;
+          slotOut.appendChild(div);
+        });
+      }
+
+      // ------------------ SAVE EDIT -------------------
+      async function saveSlotEdit(id){
+        const body = {
+          action: 'updateSlot',
+          id,
+          date: selectedDay,
+          from: document.getElementById('edit-from').value,
+          to: document.getElementById('edit-to').value,
+          desc: document.getElementById('edit-desc').value.trim()
+        };
+
+        await fetch('/.netlify/functions/appointments',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+
+        editingSlotId = null;
+        loadSlotsOf(selectedDay);
+      }
+    </script>
+    <!-- ========== WEBSITE BUILDER TAB ========== -->
+    <section id="tab-website" class="tab-content" hidden style="animation:fadeIn .3s;">
+
+      <div class="card" style="
+        background:var(--glass);
+        border:1px solid var(--glass-b);
+        border-radius:16px;
+        padding:24px;
+      ">
+        <h2 style="margin-top:0;">Mini-website builder</h2>
+        <p class="tiny" style="margin-top:-6px;">
+          Bouw jouw eigen Vrijeplek-pagina met jouw stijl, foto’s, logo en kleuren.
+        </p>
+
+        <div class="builder-grid" style="
+          display:grid;
+          grid-template-columns: 340px 1fr;
+          gap:24px;
+          margin-top:20px;
+        ">
+          
+          <!-- ====== LEFT CONTROL PANEL ====== -->
+          <div class="builder-controls" style="
+            background:#fff;
+            border-radius:16px;
+            padding:20px;
+            border:1px solid var(--line);
+            box-shadow:0 3px 12px rgba(10,27,90,.06);
+          ">
+
+            <!-- LOGO UPLOAD -->
+            <div class="field">
+              <label>Logo uploaden</label>
+              <input type="file" id="wb-logo" accept="image/*" class="input" style="padding:8px;">
+            </div>
+
+            <!-- TITEL -->
+            <div class="field">
+              <label>Bedrijfstitel</label>
+              <input type="text" id="wb-title" class="input" placeholder="Jouw zaaknaam">
+            </div>
+
+            <!-- KLEUR -->
+            <div class="field">
+              <label>Hoofdkleur</label>
+              <input type="color" id="wb-color" class="input" style="padding:2px; height:45px;">
+            </div>
+
+            <!-- OMSCHRIJVING -->
+            <div class="field">
+              <label>Korte beschrijving</label>
+              <textarea id="wb-desc" class="input" style="height:90px; resize:none;" placeholder="Vertel kort wat je doet."></textarea>
+            </div>
+
+            <!-- TEMPLATE SELECTOR -->
+            <div class="field">
+              <label>Template</label>
+              <select id="wb-template" class="input">
+                <option value="clean">Clean</option>
+                <option value="soft">Soft Gradient</option>
+                <option value="dark">Dark Modern</option>
+              </select>
+            </div>
+
+            <hr style="border:0;border-top:1px solid var(--line);margin:20px 0;">
+
+            <button id="wb-save" class="btn" style="width:100%;padding:12px;">
+              Opslaan
+            </button>
+            <div id="wb-status" class="tiny" style="margin-top:6px;"></div>
+
+          </div>
+
+          <!-- ====== RIGHT LIVE PREVIEW ====== -->
+          <div class="builder-preview" style="
+            background:#fff;
+            border-radius:16px;
+            padding:0;
+            border:1px solid var(--line);
+            box-shadow:0 3px 12px rgba(10,27,90,.06);
+            overflow:hidden;
+          ">
+            <iframe id="wb-frame" style="width:100%;height:600px;border:0;border-radius:16px;background:#fff;"></iframe>
           </div>
 
         </div>
       </div>
     </section>
 
-  </main>
+    <script>
+      /* ======================================================
+         WEBSITE BUILDER FRONTEND LOGIC
+         ====================================================== */
 
-  <footer class="site-footer">
-    © 2025 Vrijeplek. Alle rechten voorbehouden.
-  </footer>
+      const wbFrame = document.getElementById("wb-frame");
+      const wbLogo = document.getElementById("wb-logo");
+      const wbTitle = document.getElementById("wb-title");
+      const wbColor = document.getElementById("wb-color");
+      const wbDesc = document.getElementById("wb-desc");
+      const wbTemplate = document.getElementById("wb-template");
+      const wbStatus = document.getElementById("wb-status");
 
-</div>
-<section id="tab-open" class="tab-content" hidden>
+      // preview content builder
+      function updateBuilderPreview(){
+        const logoURL = window.__wbLogo || "";
+        const title = wbTitle.value;
+        const desc = wbDesc.value;
+        const color = wbColor.value || "#1a66ff";
+        const template = wbTemplate.value;
 
-  <div class="open-layout">
+        let bg = "#fff";
+        if(template === "soft") bg = `linear-gradient(180deg, ${color}33, #ffffff)`;
+        if(template === "dark") bg = "#0a2a4a";
 
-    <!-- LINKERKAART – NIEUW TIJDSLOT -->
-    <div class="card">
-      <h2>Nieuw tijdslot publiceren</h2>
-      <p class="tiny" style="margin-top:0;margin-bottom:14px;">
-        Maak hier een vrij moment aan. Je kan elk slot later activeren, verbergen of verwijderen.
-      </p>
+        wbFrame.srcdoc = `
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <style>
+              body{
+                margin:0;
+                font-family:'Poppins',sans-serif;
+                background:${bg};
+                color:${template==='dark'?'#fff':'#0a2a4a'};
+                padding:40px;
+                text-align:center;
+              }
+              .logo{
+                max-width:140px;
+                margin-bottom:20px;
+              }
+              h1{
+                margin:0;
+                font-size:30px;
+              }
+              p{
+                margin-top:12px;
+                font-size:16px;
+              }
+            </style>
+          </head>
+          <body>
+            ${logoURL ? `<img src="${logoURL}" class="logo">` : ""}
+            <h1>${title || "Jouw bedrijfsnaam"}</h1>
+            <p>${desc || ""}</p>
+          </body>
+          </html>
+        `;
+      }
 
-      <form id="slot-form">
-        <div class="form-row">
-          <div class="field">
-            <label>Datum</label>
-            <input type="date" class="input" id="slot-date">
+      wbLogo.addEventListener("change", ()=>{
+        const file = wbLogo.files[0];
+        if(!file) return;
+        const r = new FileReader();
+        r.onload = e=>{
+          window.__wbLogo = e.target.result;
+          updateBuilderPreview();
+        };
+        r.readAsDataURL(file);
+      });
+
+      [wbTitle, wbColor, wbDesc, wbTemplate].forEach(el=>{
+        el.addEventListener("input", updateBuilderPreview);
+      });
+
+      // SAVE (placeholder — backend kan later erbij)
+      document.getElementById("wb-save").addEventListener("click", async ()=>{
+        wbStatus.textContent = "Opslaan...";
+        wbStatus.style.color = "var(--ink)";
+
+        const payload = {
+          title: wbTitle.value,
+          desc: wbDesc.value,
+          color: wbColor.value,
+          template: wbTemplate.value,
+          logo: window.__wbLogo || ""
+        };
+
+        try{
+          const r = await fetch('/.netlify/functions/profile',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({website_builder:payload})
+          });
+          if(r.ok){
+            wbStatus.textContent = "Opgeslagen ✔";
+            wbStatus.style.color = "#0fa958";
+          } else {
+            wbStatus.textContent = "Opslaan mislukt (server)";
+            wbStatus.style.color = "var(--danger)";
+          }
+        }catch{
+          wbStatus.textContent = "Opslaan mislukt (verbinding)";
+          wbStatus.style.color = "var(--danger)";
+        }
+      });
+
+      // eerste preview
+      updateBuilderPreview();
+    </script>
+    <!-- ========== GLOBAL TAB & NAV LOGIC ========== -->
+    <script>
+      /* ===============================================================
+         HOOFD-TABS
+         =============================================================== */
+
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+
+          // active UI
+          tabButtons.forEach(b=> b.classList.remove('active'));
+          btn.classList.add('active');
+
+          // show tab
+          const t = btn.dataset.tab;
+          tabContents.forEach(sec=> sec.hidden = (sec.id !== 'tab-'+t));
+
+          // reset scroll
+          window.scrollTo({ top:0, behavior:'smooth' });
+        });
+      });
+
+
+      /* ===============================================================
+         USER DROPDOWN MENU
+         =============================================================== */
+
+      const userTrigger = document.getElementById('user-menu-trigger');
+      const userDropdown = document.getElementById('user-menu-dropdown');
+
+      userTrigger?.addEventListener('click', e=>{
+        e.stopPropagation();
+        userDropdown.classList.toggle('open');
+      });
+
+      document.addEventListener('click', ()=>{
+        userDropdown?.classList.remove('open');
+      });
+
+
+      /* ===============================================================
+         INSTELLINGEN SIDE NAV
+         =============================================================== */
+
+      const sideItems = document.querySelectorAll('.side-item');
+      const sidePanels = {
+        persoonlijk: document.getElementById('panel-persoonlijk'),
+        privacy: document.getElementById('panel-privacy'),
+        zichtbaarheid: document.getElementById('panel-zichtbaarheid'),
+        account: document.getElementById('panel-account'),
+        notificaties: document.getElementById('panel-notificaties')
+      };
+
+      sideItems.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          // active styling
+          sideItems.forEach(x=> x.classList.remove('active'));
+          btn.classList.add('active');
+
+          // panel switching
+          const which = btn.dataset.side;
+          Object.entries(sidePanels).forEach(([key,panel])=>{
+            panel.classList.toggle('hide', key !== which);
+          });
+
+          // fix scroll-bug
+          document.querySelector('.panel-wrap').scrollTop = 0;
+        });
+      });
+
+
+      /* ===============================================================
+         FIX: INSTELLINGEN BLIJFT NU STABIEL OP ZIJN PLAATS
+         =============================================================== */
+
+      const sidenav = document.querySelector('.sidenav');
+      const observer = new ResizeObserver(()=>{
+        // houdt de hoogte consistent
+        const ph = sidenav.offsetHeight;
+        document.querySelector('.panel-wrap').style.minHeight = ph + 'px';
+      });
+      observer.observe(sidenav);
+
+
+      /* ===============================================================
+         SMOOTH FADE-IN ANIMATIONS
+         =============================================================== */
+
+      const fadeCSS = document.createElement("style");
+      fadeCSS.textContent = `
+        @keyframes fadeIn {
+          from { opacity:0; transform:translateY(8px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+      `;
+      document.head.appendChild(fadeCSS);
+
+    </script>
+    <!-- ========== SUPABASE / ACCOUNT / PROFIEL LOGICA ========== -->
+    <script type="module">
+      /* ============================================================
+         SUPABASE INIT
+         ============================================================ */
+      async function initSupabase(){
+        try{
+          const url = window.VRIJEPLEK?.SUPABASE_URL;
+          const key = window.VRIJEPLEK?.SUPABASE_ANON_KEY;
+          if(!url || !key) return null;
+
+          const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+          return createClient(url, key, {
+            auth:{ persistSession:true, autoRefreshToken:true, storage: localStorage }
+          });
+        }catch(e){
+          console.warn("Supabase fout:",e);
+          return null;
+        }
+      }
+
+      window.__supabase = await initSupabase();
+
+      const $ = s => document.querySelector(s);
+
+      /* ELEMENT SELECTORS */
+      const els = {
+        welcome: $('#welcome-wrap'),
+        userFirst: $('#user-firstname'),
+        payBanner: $('#pay-banner'),
+        settingsDot: $('#settings-dot'),
+        
+        apptList: $('#appointments-list'),
+        sections: {
+          open: $('#tab-open'),
+          website: $('#tab-website')
+        },
+
+        st:{
+          name: $('#st-name'),
+          company: $('#st-company'),
+          phone: $('#st-phone'),
+          email: $('#st-email'),
+          btw: $('#st-btw'),
+          cat: $('#st-cat'),
+          straat: $('#st-straat'),
+          postcode: $('#st-postcode'),
+          website: $('#st-website'),
+          bio: $('#st-bio'),
+
+          msg: $('#st-msg'),
+
+          showLocation: $('#st-show-location'),
+          publicCalendar: $('#st-public-calendar'),
+          ibanCurrent: $('#st-iban-current'),
+          ibanNew: $('#st-iban-new'),
+          depositEnabled: $('#st-deposit-enabled'),
+          depositAmount: $('#st-deposit-amount'),
+          depositNote: $('#st-deposit-note'),
+          privacyMsg: $('#st-privacy-msg'),
+
+          reviews: $('#st-reviews'),
+          place: $('#st-place'),
+
+          notifyMail: $('#st-notify-mail'),
+          dailyMail: $('#st-daily-mail')
+        },
+
+        planPills: document.querySelectorAll('#plan-wrap .pill'),
+        accStatus: $('#acc-status'),
+        btnActivate: $('#btn-activate'),
+        lastCheckout: $('#last-checkout-url'),
+
+        saveState: $('#save-state')
+      };
+
+
+      /* ============================================================
+         FUNCTIE: VOORNAAM UIT EMAIL OF METADATA
+         ============================================================ */
+      function firstNameFrom(user){
+        try{
+          const meta = user?.user_metadata?.display_name
+            || user?.user_metadata?.name
+            || user?.user_metadata?.full_name
+            || '';
+
+          const metaFirst = (meta||'').split(/[.\s_-]/)[0];
+          const mailFirst = (user?.email||'').split('@')[0];
+          const blacklist = ['info','contact','admin','hallo','support'];
+
+          const c = metaFirst?.trim() || mailFirst?.trim() || '';
+          const l = c.toLowerCase();
+          if(!c || c.length < 2 || blacklist.includes(l)) return '';
+
+          return c.charAt(0).toUpperCase()+c.slice(1);
+        }catch{ return ''; }
+      }
+
+
+      /* ============================================================
+         LOGIN CHECK
+         ============================================================ */
+      async function ensureSession(){
+        if(window.__supabase){
+          try{
+            const { data:{ session } } = await window.__supabase.auth.getSession();
+            if(session?.user){
+              applyUser(session.user);
+              return;
+            }
+          }catch{}
+        }
+        location.href="login.html";
+      }
+
+
+      /* ============================================================
+         USER PROFIEL LADEN EN INVULLEN
+         ============================================================ */
+      async function applyUser(user){
+        // welkom
+        const f = firstNameFrom(user);
+        if(f){
+          els.userFirst.textContent = f;
+          els.welcome.classList.remove('hide');
+        } else {
+          els.welcome.classList.add('hide');
+        }
+
+        els.st.email.value = user.email;
+        window.__email = user.email.toLowerCase();
+
+        await loadProfile();
+        loadAppointments();
+      }
+
+
+      /* ============================================================
+         PROFIEL OPHALEN
+         ============================================================ */
+      async function loadProfile(){
+        try{
+          const r = await fetch("/.netlify/functions/profile?email="+encodeURIComponent(window.__email));
+          const d = await r.json();
+
+          window.__profile = d || {};
+          window.__plan = d.plan || "monthly";
+          window.__status = (d.account_status || d.status || "pending");
+
+          // velden invullen
+          els.st.name.value = d.zaakhouder || els.st.name.value;
+          els.st.company.value = d.zaak || "";
+          els.st.phone.value = d.telefoon || "";
+          els.st.btw.value = d.btw || "";
+          els.st.cat.value = d.cat || "";
+          els.st.straat.value = d.straat || "";
+          els.st.postcode.value = d.postcode || "";
+          els.st.website.value = d.website || "";
+          els.st.bio.value = d.bio || "";
+
+          els.st.showLocation.checked = !!d.show_location;
+          els.st.publicCalendar.checked = !!d.public_calendar;
+          els.st.depositEnabled.checked = !!d.deposit_enabled;
+          els.st.depositAmount.value = d.deposit_amount || "";
+          els.st.depositNote.value = d.deposit_note || "";
+          els.st.reviews.checked = !!d.reviews;
+          els.st.place.value = d.place || "";
+          els.st.notifyMail.checked = !!d.notify_mail;
+          els.st.dailyMail.checked = !!d.daily_mail;
+
+          els.st.ibanCurrent.textContent = d.bank_iban
+            ? "IBAN eindigend op " + d.bank_iban.slice(-4)
+            : "Nog geen rekeningnummer ingesteld.";
+
+          applyPlanUI();
+        }catch{
+          console.warn("Kon profiel niet laden");
+        }
+      }
+
+
+      /* ============================================================
+         IBAN VALIDATIE
+         ============================================================ */
+      function isValidBelgianIban(raw){
+        const clean = raw.replace(/\s+/g,'').toUpperCase();
+        if(!/^BE[0-9]{14}$/.test(clean)) return false;
+        const moved = clean.slice(4) + clean.slice(0,4);
+        const replaced = moved.replace(/[A-Z]/g, c => (c.charCodeAt(0)-55));
+        let remainder = 0;
+        for(let i=0;i<replaced.length;i++){
+          remainder = (remainder*10 + Number(replaced[i])) % 97;
+        }
+        return remainder === 1;
+      }
+
+
+      /* ============================================================
+         OPSLAAN PROFIEL
+         ============================================================ */
+      async function saveProfile(){
+        els.st.msg.textContent = "Opslaan...";
+        els.st.msg.style.color = "var(--ink)";
+
+        const body = {
+          email: window.__email,
+          zaak: els.st.company.value.trim(),
+          telefoon: els.st.phone.value.trim(),
+          btw: els.st.btw.value.trim(),
+          cat: els.st.cat.value.trim(),
+          straat: els.st.straat.value.trim(),
+          postcode: els.st.postcode.value.trim(),
+          website: els.st.website.value.trim(),
+          bio: els.st.bio.value.trim()
+        };
+
+        try{
+          const r = await fetch("/.netlify/functions/profile",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(body)
+          });
+          if(!r.ok) throw 0;
+
+          els.st.msg.textContent = "Opgeslagen ✔";
+          els.st.msg.style.color = "#0fa958";
+        }catch{
+          els.st.msg.textContent = "Opslaan mislukt";
+          els.st.msg.style.color = "var(--danger)";
+        }
+      }
+
+      $('#st-save-person')?.addEventListener('click', saveProfile);
+
+
+      /* ============================================================
+         OPSLAAN PRIVACY
+         ============================================================ */
+      $('#st-save-privacy')?.addEventListener('click',async()=>{
+        els.st.privacyMsg.textContent = "Opslaan...";
+
+        let iban = els.st.ibanNew.value.trim();
+        if(iban){
+          if(!isValidBelgianIban(iban)){
+            els.st.privacyMsg.textContent = "IBAN ongeldig";
+            els.st.privacyMsg.style.color = "var(--danger)";
+            return;
+          }
+        }
+
+        const body = {
+          email: window.__email,
+          show_location: els.st.showLocation.checked,
+          public_calendar: els.st.publicCalendar.checked,
+          deposit_enabled: els.st.depositEnabled.checked,
+          deposit_amount: els.st.depositAmount.value || null,
+          deposit_note: els.st.depositNote.value.trim(),
+        };
+        if(iban) body.bank_iban = iban.replace(/\s+/g,'');
+
+        try{
+          const r = await fetch("/.netlify/functions/profile",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(body)
+          });
+          if(!r.ok) throw 0;
+
+          els.st.privacyMsg.textContent = "Opgeslagen ✔";
+          els.st.privacyMsg.style.color = "#0fa958";
+
+          if(iban){
+            els.st.ibanNew.value = "";
+            els.st.ibanCurrent.textContent = "IBAN eindigend op " + iban.slice(-4);
+          }
+
+        }catch{
+          els.st.privacyMsg.textContent = "Opslaan mislukt";
+          els.st.privacyMsg.style.color = "var(--danger)";
+        }
+      });
+
+
+      /* ============================================================
+         OPSLAAN ZICHTBAARHEID
+         ============================================================ */
+      $('#st-save-vis')?.addEventListener('click',async()=>{
+        const body = {
+          email: window.__email,
+          reviews: els.st.reviews.checked,
+          place: els.st.place.value.trim()
+        };
+
+        try{
+          const r = await fetch("/.netlify/functions/profile",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(body)
+          });
+          if(!r.ok) throw 0;
+
+          alert("Opgeslagen ✔");
+        }catch{
+          alert("Opslaan mislukt");
+        }
+      });
+
+
+      /* ============================================================
+         OPSLAAN NOTIFICATIES
+         ============================================================ */
+      $('#st-save-notify')?.addEventListener('click',async()=>{
+        const body = {
+          email: window.__email,
+          notify_mail: els.st.notifyMail.checked,
+          daily_mail: els.st.dailyMail.checked
+        };
+
+        try{
+          const r = await fetch("/.netlify/functions/profile",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(body)
+          });
+          if(!r.ok) throw 0;
+
+          alert("Opgeslagen ✔");
+        }catch{
+          alert("Opslaan mislukt");
+        }
+      });
+
+
+      /* ============================================================
+         PLAN UI (ACTIVE / NIET-ACTIEF)
+         ============================================================ */
+      function applyPlanUI(){
+        const active = (window.__status === "active");
+
+        els.accStatus.innerHTML =
+          `Status: <strong style="color:${active?'#0fa958':'#e23b3b'}">`+
+          (active?"Actief":"Niet actief")+
+          `</strong> — plan: <strong>${window.__plan}</strong>`;
+
+        if(!active){
+          els.settingsDot.style.display = "inline-block";
+          els.payBanner.style.display = "block";
+          els.payBanner.innerHTML = "Je account is <strong>niet actief</strong>. Rond je betaling af om alles te gebruiken.";
+
+          els.sections.open.classList.add("locked");
+          els.sections.website.classList.add("locked");
+
+          els.btnActivate.disabled = false;
+          els.btnActivate.textContent = "Activeer abonnement";
+          els.lastCheckout.style.display = "inline";
+        }else{
+          els.settingsDot.style.display = "none";
+          els.payBanner.style.display = "none";
+
+          els.sections.open.classList.remove("locked");
+          els.sections.website.classList.remove("locked");
+
+          els.btnActivate.disabled = true;
+          els.btnActivate.textContent = "Geabonneerd ✔";
+          els.lastCheckout.style.display = "none";
+        }
+      }
+
+
+      /* ============================================================
+         PLAN SELECTIE
+         ============================================================ */
+      els.planPills.forEach(p=>{
+        p.addEventListener('click',()=>{
+          window.__plan = p.dataset.plan;
+          els.planPills.forEach(x=> x.classList.remove('active'));
+          p.classList.add('active');
+        });
+      });
+
+
+      /* ============================================================
+         BETALING STARTEN
+         ============================================================ */
+      els.btnActivate.addEventListener('click',async()=>{
+        els.btnActivate.disabled = true;
+        els.btnActivate.textContent = "Link maken...";
+
+        const body = {
+          email: window.__email,
+          plan: window.__plan
+        };
+
+        try{
+          const r = await fetch("/.netlify/functions/create-checkout",{
+            method:"POST",
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(body)
+          });
+          const d = await r.json();
+
+          if(d.url){
+            els.lastCheckout.href = d.url;
+            els.lastCheckout.style.display = "inline";
+            location.href = d.url;
+          } else throw 0;
+
+        }catch{
+          alert("Kon betaallink niet ophalen.");
+        }
+
+        els.btnActivate.disabled = false;
+        els.btnActivate.textContent = "Activeer abonnement";
+      });
+
+
+      /* ============================================================
+         AFSPRAKEN LADEN
+         ============================================================ */
+      let appts = [];
+
+      async function loadAppointments(){
+        try{
+          const r = await fetch("/.netlify/functions/appointments?action=list");
+          appts = await r.json();
+        }catch{
+          appts = [];
+        }
+        renderAppointments(appts);
+      }
+
+
+      /* ============================================================
+         START
+         ============================================================ */
+      await ensureSession();
+    </script>
+    <!-- ========== AFSPRAKEN + TIMESLOTS LOGICA ========== -->
+    <script>
+      /* ============================================
+         HELPER: HTML ESCAPE
+         ============================================ */
+      function esc(s){
+        return (s||"").replace(/[&<>"]/g, m=>({
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          "\"":"&quot;"
+        }[m]));
+      }
+
+      /* ============================================
+         HELPER: DATUM LABEL
+         ============================================ */
+      function formatDateLabel(iso){
+        try{
+          return new Date(iso+"T00:00:00").toLocaleDateString("nl-BE",{
+            weekday:"long",
+            day:"2-digit",
+            month:"long"
+          });
+        }catch{
+          return iso;
+        }
+      }
+
+      /* ============================================
+         AFSPRAKEN RENDER
+         ============================================ */
+      function viewRow(item){
+        const div = document.createElement("div");
+        div.className = "appt";
+        div.dataset.id = item.id;
+
+        div.innerHTML = `
+          <div class="appt-time">${esc(item.time)}</div>
+          <div class="appt-meta">
+            <div><strong>${esc(item.client||"—")}</strong> — ${esc(item.purpose||"")}</div>
+            <div class="tiny">${esc(item.note||"")}</div>
           </div>
-
-          <div class="field">
-            <label>Van</label>
-            <input type="time" class="input" id="slot-from">
+          <div class="appt-actions">
+            <button class="btn-light" onclick="editAppt('${item.id}')">Bewerken</button>
+            <button class="btn-danger" onclick="deleteAppt('${item.id}')">Verwijderen</button>
           </div>
+        `;
 
-          <div class="field">
-            <label>Tot</label>
-            <input type="time" class="input" id="slot-to">
+        return div;
+      }
+
+      function editRow(item){
+        const div = document.createElement("div");
+        div.className = "edit-row";
+        div.dataset.id = item.id;
+
+        div.innerHTML = `
+          <input type="time" id="e-time-${item.id}" value="${esc(item.time)}">
+          <input type="text" id="e-client-${item.id}" value="${esc(item.client||"")}">
+          <input type="text" id="e-purpose-${item.id}" value="${esc(item.purpose||"")}" placeholder="Omschrijving">
+          <div style="display:flex;gap:8px;">
+            <button class="btn" onclick="saveAppt('${item.id}')">Opslaan</button>
+            <button class="btn-light" onclick="cancelAppt('${item.id}')">Annuleren</button>
           </div>
-        </div>
+        `;
 
-        <div class="field">
-          <label>Omschrijving</label>
-          <input type="text" class="input" id="slot-desc" placeholder="bv. Snelle beurt (20 min), intake, onderhoud…">
-        </div>
+        return div;
+      }
 
-        <button class="btn" type="submit">Publiceren</button>
-        <div id="slot-feedback" class="slot-feedback tiny"></div>
-      </form>
-    </div>
+      let editingId = null;
+
+      function editAppt(id){
+        editingId = id;
+        renderAppointments(appts);
+      }
+
+      function cancelAppt(id){
+        editingId = null;
+        renderAppointments(appts);
+      }
+
+      async function saveAppt(id){
+        const item = appts.find(a=>a.id===id);
+        if(!item) return;
+
+        const updated = {
+          action:"update",
+          id,
+          date: item.date,
+          time: document.getElementById("e-time-"+id).value,
+          client: document.getElementById("e-client-"+id).value.trim(),
+          purpose: document.getElementById("e-purpose-"+id).value.trim(),
+          note: item.note||""
+        };
+
+        await fetch("/.netlify/functions/appointments",{
+          method:"POST",
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(updated)
+        });
+
+        editingId = null;
+        await loadAppointments();
+      }
+
+      async function deleteAppt(id){
+        if(!confirm("Afspraak verwijderen?")) return;
+        await fetch("/.netlify/functions/appointments",{
+          method:"POST",
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ action:"delete", id })
+        });
+        await loadAppointments();
+      }
+
+      function groupByDate(items){
+        const map = {};
+        items.forEach(i=>{
+          (map[i.date] ||= []).push(i);
+        });
+        Object.values(map).forEach(list=>{
+          list.sort((a,b)=> a.time.localeCompare(b.time));
+        });
+        return Object.keys(map).sort().map(date=>({date, items:map[date]}));
+      }
+
+      function renderAppointments(list){
+        const wrap = els.apptList;
+        wrap.innerHTML = "";
+
+        if(!list.length){
+          wrap.innerHTML = `<div class="tiny">Nog geen afspraken.</div>`;
+          return;
+        }
+
+        const groups = groupByDate(list);
+        groups.forEach(g=>{
+          const dayWrap = document.createElement("div");
+          dayWrap.className = "day-group";
+
+          const head = document.createElement("div");
+          head.className = "day-head";
+          head.textContent = formatDateLabel(g.date);
+          dayWrap.appendChild(head);
+
+          g.items.forEach(item=>{
+            if(item.id === editingId){
+              dayWrap.appendChild(editRow(item));
+            }else{
+              dayWrap.appendChild(viewRow(item));
+            }
+          });
+
+          wrap.appendChild(dayWrap);
+        });
+      }
 
 
+      /* ============================================
+         TIMESLOTS (ADD / DELETE / UPDATE zitten al in Bloc 5 + Bloc 6)
+         Enkel wat final glue hier:
+         ============================================ */
 
-    <!-- RECHTERKAART – KALENDER + LIJST -->
-    <div class="card calendar-card">
+      // Omdat Bloc 5 & 6 alles regelen, hoeven we enkel te zorgen
+      // dat we opnieuw renderen wanneer kalender veranderd wordt.
+      // Dat gebeurt reeds in die blokken.
+      // Deze final hook zorgt dat loadAppointments na sessie werkt.
+      window.addEventListener("load", ()=>{
+        if(typeof loadAppointments === "function"){
+          loadAppointments();
+        }
+      });
 
-      <!-- Kalender header -->
-      <div class="calendar-head">
-        <div class="calendar-month">
-          <span id="slots-month-label">Maart 2025</span>
-        </div>
-
-        <div class="calendar-nav">
-          <button type="button" id="slots-prev">◀</button>
-          <button type="button" id="slots-today">Vandaag</button>
-          <button type="button" id="slots-next">▶</button>
-        </div>
-      </div>
-
-      <!-- Hier tekent JS de kalender -->
-      <div id="slots-calendar" class="calendar-grid"></div>
-
-      <div class="sep"></div>
-
-      <div class="slots-list-head">
-        <div>
-          <h3 id="slots-list-title">Tijdslots</h3>
-          <div id="slots-list-sub" class="sub tiny"></div>
-        </div>
-      </div>
-
-      <!-- Tijdslotenlijst -->
-      <div id="slots-list"></div>
-
-    </div>
-
-  </div>
-
-</section>
+    </script>
