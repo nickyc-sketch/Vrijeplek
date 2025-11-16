@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b3a;
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
       --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
       --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
@@ -99,7 +99,7 @@
     .btn-light{
       padding:10px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:#ink;font-weight:600;cursor:pointer
+      color:var(--ink);font-weight:600;cursor:pointer
     }
     .btn-danger{background:var(--danger);border:none;color:#fff}
     .tiny{font-size:12px;color:#5b6b86}
@@ -113,7 +113,6 @@
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
 
-    /* Afspraken */
     .day-group{margin:8px 0 14px}
     .day-head{
       display:flex;align-items:center;gap:10px;
@@ -133,7 +132,6 @@
       border-radius:12px;background:#fcfdff;margin-bottom:8px
     }
 
-    /* Instellingen */
     .settings{
       display:grid;grid-template-columns:260px 1fr;
       gap:14px;align-items:stretch
@@ -164,7 +162,6 @@
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.two{grid-template-columns:1fr}}
 
-    /* Indicatoren / gating */
     .dot{
       display:none;width:10px;height:10px;border-radius:50%;
       background:#e23b3b;box-shadow:0 0 0 4px rgba(226,59,59,.15)
@@ -185,7 +182,7 @@
       opacity:.55;pointer-events:none;position:relative
     }
     .locked:after{
-      content:"🔒 Betaal je abonnement om dit te gebruiken";
+      content:"🔒 Activeer je abonnement om dit te gebruiken";
       position:absolute;inset:12px;display:flex;align-items:center;
       justify-content:center;background:rgba(255,255,255,.75);
       border:1px dashed #e1e7ff;border-radius:12px;font-weight:700
@@ -253,7 +250,6 @@
 
     <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
-    <!-- Afspraken -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
@@ -262,7 +258,6 @@
       </div>
     </section>
 
-    <!-- Open tijdstippen -->
     <section id="tab-open" class="tab-content" hidden>
       <div class="card">
         <h2>Nieuw tijdstip publiceren</h2>
@@ -278,7 +273,6 @@
       </div>
     </section>
 
-    <!-- Website -->
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
@@ -286,7 +280,6 @@
       </div>
     </section>
 
-    <!-- Instellingen -->
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
@@ -408,7 +401,6 @@
 </div>
 
 <script type="module">
-  // ---------- Supabase ----------
   async function initSupabase(){
     try{
       const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
@@ -417,9 +409,7 @@
       return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
         auth:{ persistSession:true, autoRefreshToken:true }
       });
-    }catch{
-      return null;
-    }
+    }catch{ return null; }
   }
   window.__supabase = await initSupabase();
 
@@ -444,7 +434,6 @@
     }
   };
 
-  // ---------- Tabs ----------
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -454,7 +443,6 @@
     });
   });
 
-  // ---------- Sidenav ----------
   const sideBtns = document.querySelectorAll('.side-item');
   const sidePanels = {
     persoonlijk: $('#panel-persoonlijk'),
@@ -472,10 +460,7 @@
     });
   });
 
-  // ---------- Logout + header menu ----------
-  const hardGo = (url)=>{
-    try{ location.replace(url); }catch{ location.href = url; }
-  };
+  const hardGo = (url)=>{ try{ location.replace(url) }catch{ location.href=url } };
 
   function clearSupabaseTokens(){
     try{
@@ -516,11 +501,8 @@
     logoutAlways();
   });
 
-  document.addEventListener('click', ()=>{
-    userDropdown?.classList.remove('open');
-  });
+  document.addEventListener('click', ()=>{ userDropdown?.classList.remove('open'); });
 
-  // ---------- Session + user ----------
   function firstNameFrom(user){
     try{
       const meta = user?.user_metadata?.display_name
@@ -539,11 +521,17 @@
 
   let __origEmail = '';
 
+  function normalizeStatus(raw){
+    const s = (raw ?? '').toString().trim().toLowerCase();
+    if(!s) return 'pending';
+    if(s === 'actief') return 'active';
+    return s;
+  }
+
   async function ensureSession(){
     if(!window.__supabase){
       els.welcomeWrap.classList.add('hide');
       window.__email = '';
-      window.__status = window.__status || 'pending';
       await afterProfileLoaded();
       return;
     }
@@ -570,7 +558,7 @@
     els.st.email.value = user?.email || '';
     __origEmail = user?.email || '';
     if(!els.st.name.value) els.st.name.value = f || '';
-    window.__email = user?.email || '';
+    window.__email = (user?.email || '').toLowerCase();
 
     restoreDraft();
     loadProfile(window.__email).then(()=>{
@@ -580,12 +568,11 @@
     loadAppointments();
   }
 
-  // ---------- Profile persistence ----------
   const DRAFT_KEY = 'vp.profile.draft';
 
   function getPayload(){
     return {
-      email: (els.st.email.value||'').trim(),
+      email: (els.st.email.value||'').trim().toLowerCase(),
       zaak: els.st.company.value.trim(),
       telefoon: els.st.phone.value.trim(),
       btw: els.st.btw.value.trim(),
@@ -638,20 +625,20 @@
   function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
 
   async function saveEmailIfChanged(){
-    const newEmail = (els.st.email.value || '').trim();
-    if(!newEmail || newEmail === __origEmail) return { changed:false, ok:true };
-    if(!window.__supabase) return { changed:true, ok:false, msg:'Geen Supabase; e-mail niet aangepast in auth.' };
+    const newEmail = (els.st.email.value || '').trim().toLowerCase();
+    if(!newEmail || newEmail === __origEmail.toLowerCase()) return { changed:false, ok:true };
+    if(!window.__supabase) return { changed:true, ok:false };
     try{
       const { error } = await window.__supabase.auth.updateUser({ email: newEmail });
-      if(error) return { changed:true, ok:false, msg:error.message||'Kon e-mail niet wijzigen' };
+      if(error) return { changed:true, ok:false };
       __origEmail = newEmail;
       return { changed:true, ok:true };
-    }catch(e){ return { changed:true, ok:false, msg:String(e?.message||e) }; }
+    }catch(e){ return { changed:true, ok:false }; }
   }
 
   async function saveProfileLive(){
     setSaveState('Opslaan…');
-    const emailRes = await saveEmailIfChanged();
+    await saveEmailIfChanged();
     const payload = getPayload();
 
     try{
@@ -689,36 +676,6 @@
     if(raw){ e.preventDefault(); e.returnValue = ''; }
   });
 
-  // ---------- Status normaliseren ----------
-  function normalizeStatus(profile){
-    const raw =
-      (profile?.account_status ??
-       profile?.status ??
-       '').toString().toLowerCase().trim();
-
-    const flagActive =
-      profile?.is_active === true ||
-      profile?.active === true ||
-      profile?.betaald === true ||
-      profile?.paid === true;
-
-    const activeWords = ['active','actief','paid','betaald','ok','oké','okay'];
-    const blockedWords = ['blocked','geblokkeerd','cancelled','canceled','opgezegd','stopped'];
-
-    if(flagActive) return 'active';
-    if(activeWords.includes(raw)) return 'active';
-    if(blockedWords.includes(raw)) return 'blocked';
-    if(!raw) return 'pending';
-    return raw; // iets anders: bv "pending"
-  }
-
-  function normalizePlan(profile){
-    const p = (profile?.plan || '').toString().toLowerCase().trim();
-    if(['year','yearly','annual','jaar','180'].includes(p)) return 'yearly';
-    return 'monthly';
-  }
-
-  // ---------- Profile GET ----------
   async function loadProfile(email){
     try{
       const r = await fetch('/.netlify/functions/profile' + (email ? ('?email=' + encodeURIComponent(email)) : ''));
@@ -735,15 +692,15 @@
       els.st.website.value ||= d?.website || '';
       els.st.bio.value     ||= d?.bio || '';
 
-      window.__plan   = normalizePlan(d);
-      window.__status = normalizeStatus(d);
+      window.__plan   = (d?.plan || 'monthly').toString();
+      window.__status = normalizeStatus(d?.account_status || d?.status || 'pending');
     }catch{
+      window.__profile = {};
       window.__plan = 'monthly';
       window.__status = 'pending';
     }
   }
 
-  // ---------- Betalen ----------
   function selectPlan(plan){
     window.__plan = plan;
     els.planPills.forEach(p=> p.classList.toggle('active', p.dataset.plan===plan));
@@ -755,7 +712,7 @@
       els.btnActivate.disabled = true;
       els.btnActivate.textContent = 'Link maken...';
       const body = {
-        email: (els.st.email.value||'').trim(),
+        email: (els.st.email.value||'').trim().toLowerCase(),
         plan: window.__plan || 'monthly'
       };
       const r = await fetch('/.netlify/functions/create-checkout', {
@@ -781,10 +738,9 @@
   }
   els.btnActivate.addEventListener('click', payNow);
 
-  // ---------- Gating ----------
   function gateUI(status, plan){
-    const normalized = (status || '').toString().toLowerCase();
-    const active = (normalized === 'active');
+    const s = normalizeStatus(status);
+    const active = (s === 'active');
     const currentPlan = plan || 'monthly';
 
     els.accStatus.innerHTML =
@@ -794,7 +750,7 @@
     if(!active){
       els.settingsDot.style.display = 'inline-block';
       els.payBanner.style.display = 'block';
-      els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Activeer om alles te gebruiken.';
+      els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Rond je betaling af om alles te gebruiken.';
 
       els.sections.open?.classList.add('locked');
       els.sections.website?.classList.add('locked');
@@ -833,7 +789,6 @@
     gateUI(window.__status || 'pending', window.__plan || 'monthly');
   }
 
-  // ---------- Agenda dummy ----------
   function groupByDate(items){
     const map={};
     items.forEach(x=>{ (map[x.date] ||= []).push(x); });
@@ -844,8 +799,8 @@
     try{
       return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
         weekday:'long',day:'2-digit',month:'long'
-      });
-    }catch{ return iso; }
+      })
+    }catch{ return iso }
   }
   function escapeHtml(s){
     return (s||'').replace(/[&<>"']/g, m=>({
@@ -940,7 +895,6 @@
     renderAppointments(appts);
   }
 
-  // ---------- Start ----------
   await ensureSession();
 </script>
 </body>
