@@ -1,680 +1,104 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vrijeplek — Last minute? Zoek een afspraak!</title>
+const Stripe = require('stripe');
+const { createClient } = require('@supabase/supabase-js');
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const supa = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
-  <link rel="stylesheet" href="styles.css?v=smurf5">
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode:405, body:'Method not allowed' };
+  }
 
-  <style>
-    :root{
-      --o1:#1a66ff;
-      --o2:#0056ff;
-      --ink:#0a2a4a;
-      --line:rgba(26,102,255,.25);
-      --glass-b:rgba(26,102,255,.18);
-      --glass:rgba(255,255,255,.78);
-      --success:#0fa958;
-      --danger:#e23b3b;
-    }
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--ink);
-      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);
-    }
-    .site{min-height:100svh; display:flex; flex-direction:column;}
-    main{flex:1}
+  let payload;
+  try{
+    payload = JSON.parse(event.body || '{}');
+  }catch{
+    return { statusCode:400, body:JSON.stringify({ error:'invalid_body' }) };
+  }
 
-    .site-header{
-      position:sticky;
-      top:0;
-      z-index:50;
-      background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;
-    }
-    .site-header .inner{
-      max-width:1200px;
-      margin:0 auto;
-      padding:14px 12px;
-      display:flex;
-      align-items:center;
-      gap:16px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      text-decoration:none;
-      color:#fff;
-      font-weight:700;
-      font-size:20px;
-      margin-right:auto;
-    }
-    .brand img{height:38px}
-    .brand-name{font-weight:800;}
-    .brand-dot{width:7px;height:7px;border-radius:999px;background:#fff;}
+  const slotId = payload.slot_id;
+  if (!slotId) {
+    return { statusCode:400, body:JSON.stringify({ error:'missing_slot_id' }) };
+  }
 
-    .header-actions{display:flex; align-items:center; gap:10px; margin-left:auto;}
-    .nav-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 14px;
-      border-radius:999px;
-      text-decoration:none;
-      font-weight:600;
-      border:1px solid rgba(255,255,255,.35);
-      color:#fff;
-      background:rgba(255,255,255,.12);
-      font-size:13px;
-    }
-    .nav-btn:hover{background:rgba(255,255,255,.2)}
-    .btn-green{
-      background:linear-gradient(120deg,#16a34a,#0e9f6e);
-      border:1px solid rgba(16,185,129,.25);
-      color:#fff!important;
-      box-shadow:0 6px 18px rgba(16,185,129,.18);
+  // 1. Haal slot + profiel op
+  const { data: rows, error } = await supa
+    .from('slots')
+    .select(`
+      id, date, from, to, status, email,
+      profiles:profiles!inner (
+        email,
+        zaak,
+        deposit_enabled,
+        deposit_amount
+      )
+    `)
+    .eq('id', slotId)
+    .limit(1);
+
+  if (error || !rows || !rows.length) {
+    console.error(error);
+    return { statusCode:404, body:JSON.stringify({ error:'slot_not_found' }) };
+  }
+
+  const slot = rows[0];
+  const profile = slot.profiles;
+
+  if (slot.status !== 'open') {
+    return { statusCode:409, body:JSON.stringify({ error:'slot_not_open' }) };
+  }
+
+  const depositEnabled = !!profile.deposit_enabled && Number(profile.deposit_amount) > 0;
+  const depositAmount  = depositEnabled ? Number(profile.deposit_amount) : 0;
+
+  // 2. Als geen voorschot: gewoon slot op "booked" zetten
+  if (!depositEnabled) {
+    const { error: updateErr } = await supa
+      .from('slots')
+      .update({ status:'booked', booked_at:new Date().toISOString() })
+      .eq('id', slot.id);
+
+    if (updateErr) {
+      console.error(updateErr);
+      return { statusCode:500, body:JSON.stringify({ error:'book_update_failed' }) };
     }
 
-    .container{max-width:1200px; margin:0 auto; padding:0 12px;}
+    return { statusCode:200, body:JSON.stringify({ ok:true }) };
+  }
 
-    .hero{padding:32px 0 8px;}
-    .hero-inner{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      gap:14px;
-    }
-    .hero h1{
-      margin:0;
-      font-size:32px;
-    }
-
-    .search-wrap{
-      width:100%;
-      max-width:920px;
-      margin:10px auto 28px;
-      padding:14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.7);
-      border:1px solid var(--line);
-      box-shadow:0 8px 30px rgba(10,27,90,.08);
-    }
-    .search{
-      display:grid;
-      grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto;
-      gap:10px;
-    }
-    .search .field{display:flex; flex-direction:column; gap:6px; text-align:left;}
-    .search label{
-      font-size:12px;
-      font-weight:700;
-      color:#223655;
-    }
-    .search input,
-    .search select{
-      padding:10px;
-      border:1px solid var(--line);
-      border-radius:10px;
-      background:#fff;
-      font-size:13px;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 18px;
-      border-radius:999px;
-      border:0;
-      background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;
-      font-weight:700;
-      cursor:pointer;
-      font-size:14px;
-      box-shadow:0 8px 22px rgba(37,99,235,.3);
-    }
-    @media(max-width:1024px){
-      .search{grid-template-columns:1fr 1fr 1fr;}
-    }
-    @media(max-width:720px){
-      .search{grid-template-columns:1fr;}
-    }
-
-    .cat-dots{padding:18px 0 0;}
-    .cat-dots-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      list-style:none;
-      padding:0;
-      margin:0;
-      justify-content:center;
-    }
-    .catdot{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
-      text-decoration:none;
-      color:var(--ink);
-    }
-    .catdot img{
-      width:86px;
-      height:86px;
-      object-fit:cover;
-      border-radius:999px;
-      border:1px solid var(--line);
-      box-shadow:0 8px 24px rgba(10,27,90,.08);
-      background:#fff;
-    }
-    .catdot span{font-weight:700; font-size:13px;}
-
-    /* Resultatenblok */
-    .results{
-      padding:0 0 40px;
-    }
-    .results-inner{
-      max-width:1200px;
-      margin:0 auto;
-      padding:0 12px;
-    }
-    .results-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .results-head h2{
-      margin:0;
-      font-size:20px;
-    }
-    .results-meta{
-      font-size:13px;
-      color:#5b6b86;
-    }
-    .results-list{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .result-card{
-      background:var(--glass);
-      border:1px solid var(--glass-b);
-      border-radius:14px;
-      box-shadow:0 6px 22px rgba(10,27,90,.06);
-      padding:14px 16px 12px;
-      text-align:left;
-    }
-    .result-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom:6px;
-    }
-    .result-title{
-      font-size:16px;
-      font-weight:700;
-      margin:0;
-    }
-    .result-cat{
-      font-size:11px;
-      padding:4px 9px;
-      border-radius:999px;
-      border:1px solid rgba(26,102,255,.25);
-      background:#fff;
-      text-transform:capitalize;
-    }
-    .result-body{
-      font-size:13px;
-      color:#374151;
-      margin-bottom:8px;
-    }
-    .result-body .line{
-      margin:2px 0;
-    }
-
-    .slots-list{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin:4px 0 0;
-      padding:0;
-      list-style:none;
-      font-size:12px;
-    }
-    .slot-pill{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      padding:5px 9px;
-      border-radius:999px;
-      background:#fff;
-      border:1px solid rgba(26,102,255,.18);
-      box-shadow:0 2px 6px rgba(15,23,42,.12);
-      white-space:nowrap;
-    }
-    .slot-pill span.date{
-      font-weight:600;
-    }
-    .slot-pill span.time{
-      font-size:11px;
-      color:#4b5563;
-    }
-    .slot-pill button.slot-book{
-      border:none;
-      border-radius:999px;
-      padding:4px 9px;
-      font-size:11px;
-      font-weight:700;
-      cursor:pointer;
-      background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;
-    }
-    .slot-pill span.deposit-tag{
-      font-size:10px;
-      padding:2px 6px;
-      border-radius:999px;
-      border:1px solid rgba(15,169,88,.4);
-      background:rgba(209,250,229,.85);
-      color:#166534;
-      font-weight:600;
-    }
-    .slot-pill span.deposit-tag.no-deposit{
-      border-color:rgba(148,163,184,.6);
-      background:#f3f4f6;
-      color:#374151;
-    }
-
-    .booking-msg{
-      max-width:1200px;
-      margin:0 auto 10px;
-      padding:0 12px;
-      font-size:13px;
-    }
-    .booking-msg span{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      background:#ecfdf3;
-      color:#166534;
-      border:1px solid rgba(22,163,74,.35);
-    }
-    .booking-msg.error span{
-      background:#fef2f2;
-      color:#b91c1c;
-      border-color:rgba(248,113,113,.7);
-    }
-
-    .site-footer{
-      border-top:1px solid var(--line);
-      background:rgba(255,255,255,.8);
-    }
-    .footer-inner{
-      max-width:1200px;
-      margin:0 auto;
-      padding:16px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:10px;
-      font-size:12px;
-      color:#4b5563;
-    }
-    .footer-nav{display:flex; gap:12px;}
-    .footer-nav a{text-decoration:none; color:#244; font-weight:600;}
-  </style>
-</head>
-
-<body>
-  <div class="site">
-
-    <header class="site-header">
-      <div class="header-inner">
-        <a href="index.html" class="brand">
-          <img src="img/logo.png" alt="">
-          <span class="brand-name">Vrijeplek</span>
-          <span class="brand-dot"></span>
-        </a>
-        <nav class="header-actions">
-          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-          <a class="nav-btn" href="aanmelden.html">Word lid</a>
-          <a id="nav-login" class="nav-btn" href="login.html">Login</a>
-          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-      <section class="cat-dots">
-        <div class="container">
-          <ul class="cat-dots-row">
-            <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
-            <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
-            <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
-            <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
-            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
-            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
-            <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="hero">
-        <div class="container hero-inner">
-          <h1>Last minute? Zoek een afspraak!</h1>
-          <div class="search-wrap">
-            <form id="zoeken" class="search" role="search" aria-label="Zoeken">
-              <div class="field">
-                <label for="q">Welk bedrijf zoek je?</label>
-                <input id="q" name="q" type="search">
-              </div>
-              <div class="field">
-                <label for="loc">Locatie (optioneel)</label>
-                <input id="loc" name="loc" type="text" placeholder="Postcode of gemeente (optioneel)">
-              </div>
-              <div class="field">
-                <label for="from">Van</label>
-                <input id="from" name="from" type="date">
-              </div>
-              <div class="field">
-                <label for="to">Tot</label>
-                <input id="to" name="to" type="date">
-              </div>
-              <div class="field">
-                <label for="cat">Categorie</label>
-                <select id="cat" name="cat">
-                  <option value="">Alle categorieën</option>
-                  <option value="horeca">Horeca</option>
-                  <option value="wellness">Wellness</option>
-                  <option value="zorg">Gezondheid</option>
-                  <option value="events">Events</option>
-                  <option value="poetsdiensten">Poetsdiensten</option>
-                  <option value="ramenwasser">Ramenwasser</option>
-                  <option value="dieren">Dieren</option>
-                </select>
-              </div>
-              <button class="btn" type="submit">Zoek</button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <div id="booking-msg" class="booking-msg" hidden>
-        <span></span>
-      </div>
-
-      <!-- Resultaten op dezelfde pagina -->
-      <section id="results" class="results" hidden>
-        <div class="results-inner">
-          <div class="results-head">
-            <h2 id="results-title">Vrije plekken</h2>
-            <span id="results-meta" class="results-meta"></span>
-          </div>
-          <div id="results-list" class="results-list"></div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
-        <nav class="footer-nav">
-          <a href="#voorwaarden">Algemene voorwaarden</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </div>
-    </footer>
-  </div>
-
-  <script>
-  (function(){
-    const catSelect = document.getElementById('cat');
-    document.querySelectorAll('.catdot').forEach(el=>{
-      el.addEventListener('click',()=>{
-        const val = el.dataset.cat || '';
-        if(!catSelect) return;
-        const opt = [...catSelect.options].find(o=>o.value===val);
-        if(opt) opt.selected = true;
-      });
-    });
-    function sync(el){
-      if(!el) return;
-      const set = ()=> el.dataset.hasValue = el.value ? '1' : '';
-      el.addEventListener('change', set);
-      el.addEventListener('input', set);
-      set();
-    }
-    sync(document.getElementById('from'));
-    sync(document.getElementById('to'));
-  })();
-  </script>
-
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-    const SUPABASE_URL = 'https://xdmrikvxyeebeusnbzav.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0'; // invullen
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth:{ persistSession:true, autoRefreshToken:true }
-    });
-
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
-
-    async function toggleNav(){
-      const { data:{ session } } = await supabase.auth.getSession();
-      const loggedIn = !!session?.user;
-      if(loggedIn){
-        btnLogin.style.display = 'none';
-        btnMijn.style.display  = 'inline-flex';
-      }else{
-        btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display  = 'none';
-      }
-    }
-    await toggleNav();
-    supabase.auth.onAuthStateChange(()=>toggleNav());
-
-    // ---------- Zoeken ----------
-    const form   = document.getElementById('zoeken');
-    const qEl    = document.getElementById('q');
-    const locEl  = document.getElementById('loc');
-    const fromEl = document.getElementById('from');
-    const toEl   = document.getElementById('to');
-    const catEl  = document.getElementById('cat');
-
-    const resultsSection = document.getElementById('results');
-    const resultsList    = document.getElementById('results-list');
-    const resultsTitle   = document.getElementById('results-title');
-    const resultsMeta    = document.getElementById('results-meta');
-    const bookingMsgBox  = document.getElementById('booking-msg');
-    const bookingMsgText = bookingMsgBox?.querySelector('span');
-
-    function escapeHtml(str){
-      return (str || '').replace(/[&<>"']/g, m=>({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[m]));
-    }
-
-    function formatDateNL(iso){
-      try{
-        return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
-          weekday:'short', day:'2-digit', month:'short'
-        });
-      }catch{
-        return iso;
-      }
-    }
-
-    function showBookingMessage(text, isError){
-      if(!bookingMsgBox || !bookingMsgText) return;
-      bookingMsgText.textContent = text;
-      bookingMsgBox.hidden = false;
-      bookingMsgBox.classList.toggle('error', !!isError);
-      setTimeout(()=>{
-        bookingMsgBox.hidden = true;
-      }, 6000);
-    }
-
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      const q   = qEl.value.trim();
-      const loc = locEl.value.trim();
-      const from = fromEl.value || '';
-      const to   = toEl.value || '';
-      const cat  = catEl.value || '';
-
-      resultsSection.hidden = false;
-      resultsTitle.textContent = 'Vrije plekken';
-      resultsMeta.textContent  = 'Zoeken…';
-      resultsList.innerHTML    = '';
-
-      try{
-        const r = await fetch('/.netlify/functions/search', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ q, loc, from, to, cat })
-        });
-        const data = await r.json().catch(()=>[]);
-
-        if(!Array.isArray(data) || !data.length){
-          resultsMeta.textContent = 'Geen vrije plekken gevonden met deze filters.';
-          resultsList.innerHTML = '';
-          return;
+  // 3. Met voorschot: Stripe Checkout aanmaken
+  try{
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: [{
+        quantity: 1,
+        price_data: {
+          currency: 'eur',
+          unit_amount: Math.round(depositAmount * 100),
+          product_data: {
+            name: `Voorschot ${profile.zaak} (${slot.date} ${slot.from}-${slot.to})`
+          }
         }
-
-        resultsMeta.textContent = `${data.length} zaak/zak(en) met vrije momenten gevonden`;
-        resultsList.innerHTML = '';
-
-        data.forEach(item=>{
-          const card = document.createElement('article');
-          card.className = 'result-card';
-
-          const title = escapeHtml(item.zaak || item.email || 'Onbekend');
-          const catLabel = item.cat ? escapeHtml(item.cat) : 'Onbekend';
-
-          const addrParts = [];
-          if(item.straat) addrParts.push(escapeHtml(item.straat));
-          if(item.postcode) addrParts.push(escapeHtml(item.postcode));
-          const addr = addrParts.join(' • ');
-
-          const bio = item.bio ? escapeHtml(item.bio) : '';
-
-          const useDeposit = !!item.deposit_enabled && Number(item.deposit_amount) > 0;
-          const depositAmount = Number(item.deposit_amount || 0);
-
-          const slots = (item.slots || []).slice(0,12);
-
-          const slotsHtml = slots.map(s=>{
-            const d = formatDateNL(s.date);
-            const t = `${s.from || ''} – ${s.to || ''}`;
-            const tagText = useDeposit
-              ? `Voorschot €${depositAmount.toFixed(2)}`
-              : 'Geen voorschot';
-
-            const tagClass = useDeposit ? '' : ' no-deposit';
-
-            return `
-              <li class="slot-pill">
-                <span class="date">${escapeHtml(d)}</span>
-                <span class="time">${escapeHtml(t)}</span>
-                <span class="deposit-tag${tagClass}">${escapeHtml(tagText)}</span>
-                <button
-                  type="button"
-                  class="slot-book"
-                  data-slot-id="${escapeHtml(s.id)}"
-                  data-provider="${escapeHtml(item.email || '')}"
-                  data-use-deposit="${useDeposit ? '1' : '0'}"
-                  data-deposit-amount="${depositAmount}"
-                  data-zaak="${title}"
-                >Boek nu</button>
-              </li>
-            `;
-          }).join('');
-
-          card.innerHTML = `
-            <div class="result-head">
-              <h3 class="result-title">${title}</h3>
-              <span class="result-cat">${catLabel}</span>
-            </div>
-            <div class="result-body">
-              ${addr ? `<div class="line">${addr}</div>` : ``}
-              ${bio ? `<div class="line">${bio}</div>` : ``}
-            </div>
-            <ul class="slots-list">
-              ${slotsHtml || `<li class="slot-pill"><span class="time">Geen vrije momenten in deze periode.</span></li>`}
-            </ul>
-          `;
-          resultsList.appendChild(card);
-        });
-      }catch(err){
-        resultsMeta.textContent = 'Zoeken mislukt (server).';
-        resultsList.innerHTML = '';
-        console.error(err);
+      }],
+      success_url: `${process.env.FRONTEND_BASE_URL}/success.html?slot=${slot.id}`,
+      cancel_url: `${process.env.FRONTEND_BASE_URL}/cancel.html`,
+      metadata: {
+        slot_id: slot.id,
+        zaak: profile.zaak || '',
+        email: profile.email || ''
       }
     });
 
-    // ---------- Boek nu (deposit / geen deposit) ----------
-    resultsList.addEventListener('click', async (e)=>{
-      const btn = e.target.closest('.slot-book');
-      if(!btn) return;
-
-      const slotId = btn.dataset.slotId;
-      const useDeposit = btn.dataset.useDeposit === '1';
-      const zaak = btn.dataset.zaak || 'Vrijeplek partner';
-
-      const customer_email = prompt('Vul je e-mailadres in om je afspraak te bevestigen:');
-      if(!customer_email){
-        return;
-      }
-      const customer_name = prompt('Hoe mogen we je aanspreken? (optioneel)') || '';
-
-      try{
-        btn.disabled = true;
-        btn.textContent = 'Bezig…';
-
-        const r = await fetch('/.netlify/functions/create-deposit', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ slotId, customer_email, customer_name })
-        });
-        const data = await r.json().catch(()=>null);
-
-        if(!r.ok || !data){
-          showBookingMessage('Boeking mislukt. Probeer later opnieuw.', true);
-          return;
-        }
-
-        if(data.mode === 'no_deposit'){
-          showBookingMessage(`Afspraak bij ${zaak} is geboekt zonder voorschot.`, false);
-          btn.textContent = 'Geboekt';
-        }else if(data.mode === 'deposit' && data.url){
-          // Naar Stripe
-          window.location.href = data.url;
-        }else{
-          showBookingMessage('Onverwacht antwoord van server.', true);
-        }
-      }catch(err){
-        console.error(err);
-        showBookingMessage('Boeking mislukt (server).', true);
-      }finally{
-        btn.disabled = false;
-      }
-    });
-  </script>
-</body>
-</html>
+    return {
+      statusCode:200,
+      body:JSON.stringify({ checkout_url: session.url })
+    };
+  }catch(err){
+    console.error(err);
+    return { statusCode:500, body:JSON.stringify({ error:'stripe_failed' }) };
+  }
+};
