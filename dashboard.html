@@ -25,9 +25,11 @@
     .site{display:flex;flex-direction:column;min-height:100svh}
     main{flex:1}
 
+    /* HEADER */
     .site-header{
       background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50
+      color:#fff;padding:14px 20px;position:sticky;top:0;z-index:50;
+      box-shadow:0 6px 18px rgba(10,27,90,.35);
     }
     .site-header .inner{
       max-width:1200px;margin:0 auto;display:flex;
@@ -66,21 +68,35 @@
     }
     .user-dropdown button:hover{background:#f2f5ff}
 
+    /* TABS */
     .tabs-bar{
-      background:rgba(255,255,255,.82);
-      backdrop-filter:blur(8px);border-bottom:1px solid var(--line)
+      background:rgba(255,255,255,.9);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+      box-shadow:0 8px 26px rgba(15,23,42,.08);
     }
     .tabs-inner{
-      max-width:1200px;margin:0 auto;display:flex;gap:16px;
-      align-items:center;justify-content:flex-start;padding:10px 12px
+      max-width:1200px;margin:0 auto;display:flex;gap:10px;
+      align-items:center;justify-content:flex-start;padding:8px 12px
     }
     .tab-btn{
-      border:none;background:none;padding:10px 18px;border-radius:999px;
-      font-weight:600;font-size:15px;color:var(--ink);cursor:pointer;transition:.25s
+      border:1px solid rgba(148,163,184,.45);
+      background:linear-gradient(180deg,#f4f7ff,#ffffff);
+      padding:9px 18px;border-radius:999px;
+      font-weight:600;font-size:14px;color:var(--ink);cursor:pointer;
+      transition:.22s ease;
+      box-shadow:0 2px 6px rgba(15,23,42,.04);
+    }
+    .tab-btn:hover{
+      border-color:var(--o1);
+      box-shadow:0 4px 12px rgba(37,99,235,.18);
+      transform:translateY(-1px);
     }
     .tab-btn.active{
       background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;box-shadow:0 4px 14px rgba(10,27,90,.15)
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 6px 18px rgba(15,23,42,.35);
     }
 
     .content-wrap{max-width:1200px;margin:32px auto;padding:0 12px}
@@ -91,24 +107,48 @@
       border-radius:14px;box-shadow:0 4px 24px rgba(10,27,90,.06);
       padding:20px;margin-bottom:18px
     }
+    .card h2{margin-top:0;margin-bottom:8px}
+
     .btn{
       padding:10px 18px;border:none;border-radius:999px;
       background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;font-weight:700;cursor:pointer
+      color:#fff;font-weight:700;cursor:pointer;
+      box-shadow:0 6px 18px rgba(15,23,42,.25);
+      transition:.18s;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 9px 24px rgba(15,23,42,.35);
     }
     .btn-light{
-      padding:10px 14px;border-radius:999px;
+      padding:8px 14px;border-radius:999px;
       background:#fff;border:1px solid var(--line);
-      color:#ink;font-weight:600;cursor:pointer
+      color:#0f172a;font-weight:600;cursor:pointer;
+      box-shadow:0 2px 5px rgba(15,23,42,.08);
+      font-size:13px;
     }
-    .btn-danger{background:var(--danger);border:none;color:#fff}
+    .btn-light:hover{
+      border-color:var(--o1);
+      box-shadow:0 4px 10px rgba(15,23,42,.18);
+    }
+    .btn-danger{
+      padding:8px 14px;
+      background:var(--danger);border:none;color:#fff;
+      border-radius:999px;font-weight:600;cursor:pointer;
+      font-size:13px;
+      box-shadow:0 2px 6px rgba(248,113,113,.4);
+    }
+    .btn-danger:hover{
+      box-shadow:0 4px 12px rgba(248,113,113,.6);
+      transform:translateY(-1px);
+    }
     .tiny{font-size:12px;color:#5b6b86}
 
     .field{display:flex;flex-direction:column;margin-bottom:10px}
-    .field label{font-weight:600;margin-bottom:4px}
+    .field label{font-weight:600;margin-bottom:4px;font-size:13px}
     .input{
       padding:10px;border:1px solid var(--line);
-      border-radius:8px;background:#fff
+      border-radius:8px;background:#fff;font-size:14px;
     }
     .form-row{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
     @media(max-width:720px){.form-row{grid-template-columns:1fr}}
@@ -125,13 +165,14 @@
     }
     .appt-time{font-weight:700}
     .appt-meta{display:flex;flex-direction:column;gap:3px}
-    .appt-actions{display:flex;gap:8px}
+    .appt-actions{display:flex;gap:8px;flex-wrap:wrap}
     .edit-row{
       display:grid;grid-template-columns:110px 1fr 1fr auto;
       gap:8px;align-items:center;padding:10px;border:1px dashed var(--line);
       border-radius:12px;background:#fcfdff;margin-bottom:8px
     }
 
+    /* INSTELLINGEN LAYOUT */
     .settings{
       display:grid;grid-template-columns:260px 1fr;
       gap:14px;align-items:flex-start
@@ -200,7 +241,8 @@
     .plan{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .pill{
       display:inline-block;padding:6px 10px;border:1px solid var(--line);
-      border-radius:999px;background:#fff;font-weight:600;cursor:pointer
+      border-radius:999px;background:#fff;font-weight:600;cursor:pointer;
+      font-size:13px;
     }
     .pill.active{
       border-color:var(--o1);
@@ -213,7 +255,7 @@
       box-shadow:0 0 0 3px rgba(15,169,88,.18);
     }
 
-    /* nette switch-lijst, geen overlappende klikzones meer */
+    /* nette switch-lijst */
     .switch-list{
       display:flex;
       flex-direction:column;
@@ -291,6 +333,214 @@
       color:var(--danger);
       font-weight:600;
     }
+
+    /* ---------- OPEN TIJDSTIPPEN LAYOUT ---------- */
+
+    .open-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,1.4fr);
+      gap:16px;
+      align-items:flex-start;
+    }
+    @media(max-width:960px){
+      .open-layout{grid-template-columns:1fr}
+    }
+
+    .calendar-card{position:relative;overflow:hidden}
+    .calendar-card::before{
+      content:"";
+      position:absolute;
+      inset:-60%;
+      background:radial-gradient(circle at top,var(--o1) 0,transparent 56%);
+      opacity:.08;
+      pointer-events:none;
+    }
+
+    .calendar-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .calendar-month{
+      font-weight:700;
+      font-size:15px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .calendar-nav{
+      display:flex;
+      gap:6px;
+    }
+    .calendar-nav button{
+      border:none;
+      background:#fff;
+      border-radius:999px;
+      padding:4px 9px;
+      font-size:12px;
+      cursor:pointer;
+      box-shadow:0 2px 5px rgba(15,23,42,.18);
+    }
+
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:4px;
+      font-size:11px;
+    }
+    .calendar-grid .weekday{
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-weight:600;
+      color:#64748b;
+      text-align:center;
+      padding-bottom:2px;
+    }
+    .calendar-day{
+      position:relative;
+      background:#ffffff;
+      border-radius:10px;
+      padding:6px 0 4px;
+      text-align:center;
+      cursor:pointer;
+      border:1px solid transparent;
+      transition:.18s;
+      min-height:34px;
+    }
+    .calendar-day span{
+      font-size:12px;
+      font-weight:600;
+    }
+    .calendar-day.has-slots::after{
+      content:"";
+      position:absolute;
+      left:50%;bottom:4px;
+      transform:translateX(-50%);
+      width:6px;height:6px;border-radius:999px;
+      background:var(--o1);
+      box-shadow:0 0 0 4px rgba(37,99,235,.16);
+    }
+    .calendar-day:hover{
+      border-color:var(--o1);
+      box-shadow:0 4px 10px rgba(37,99,235,.22);
+      transform:translateY(-1px);
+    }
+    .calendar-day.selected{
+      background:linear-gradient(120deg,var(--o1),var(--o2));
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 6px 16px rgba(15,23,42,.35);
+    }
+    .calendar-day.selected.has-slots::after{
+      background:#fbbf24;
+      box-shadow:0 0 0 4px rgba(251,191,36,.5);
+    }
+    .calendar-day.empty{
+      background:transparent;
+      border:none;
+      cursor:default;
+      box-shadow:none;
+    }
+
+    .slots-list-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-bottom:6px;
+    }
+    .slots-list-head h3{
+      margin:0;
+      font-size:15px;
+    }
+    .slots-list-head .sub{
+      font-size:12px;
+      color:#64748b;
+    }
+
+    .slot-row{
+      display:grid;
+      grid-template-columns:90px minmax(0,1.3fr) auto auto;
+      gap:8px;
+      align-items:center;
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      margin-bottom:6px;
+      font-size:13px;
+    }
+    @media(max-width:720px){
+      .slot-row{
+        grid-template-columns:80px minmax(0,1.2fr);
+        grid-template-rows:auto auto;
+      }
+      .slot-row-actions{
+        grid-column:1 / -1;
+        justify-content:flex-end;
+      }
+    }
+    .slot-time{
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .slot-desc{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .slot-desc-main{
+      font-weight:600;
+    }
+    .slot-meta{
+      font-size:11px;
+      color:#64748b;
+    }
+    .slot-status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:4px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:600;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .slot-status-pill.active{
+      border-color:rgba(22,163,74,.6);
+      background:rgba(22,163,74,.10);
+      color:#166534;
+    }
+    .slot-status-pill.inactive{
+      border-color:rgba(148,163,184,.9);
+      background:rgba(148,163,184,.12);
+      color:#475569;
+    }
+    .slot-row-actions{
+      display:flex;
+      gap:6px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .slot-feedback{
+      font-size:12px;
+      margin-top:4px;
+    }
+    .slot-feedback.error-text{
+      color:var(--danger);
+    }
+
+    @keyframes calendarPop{
+      from{opacity:0;transform:translateY(4px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    .slots-animate{
+      animation:calendarPop .18s ease-out;
+    }
   </style>
 </head>
 
@@ -332,6 +582,7 @@
 
     <h1 id="welcome-wrap" class="section-title">Welkom, <span id="user-firstname">—</span> 👋</h1>
 
+    <!-- AFSPRAKEN -->
     <section id="tab-afspraken" class="tab-content">
       <div class="card">
         <h2>Jouw afspraken</h2>
@@ -340,21 +591,71 @@
       </div>
     </section>
 
+    <!-- OPEN TIJDSTIPPEN - NIEUWE LOOK -->
     <section id="tab-open" class="tab-content" hidden>
-      <div class="card">
-        <h2>Nieuw tijdstip publiceren</h2>
-        <form id="slot-form">
-          <div class="form-row">
-            <div class="field"><label>Datum</label><input type="date" class="input" id="slot-date"></div>
-            <div class="field"><label>Van</label><input type="time" class="input" id="slot-from"></div>
-            <div class="field"><label>Tot</label><input type="time" class="input" id="slot-to"></div>
+      <div class="open-layout">
+        <!-- Nieuw tijdslot aanmaken -->
+        <div class="card">
+          <h2>Nieuw tijdslot publiceren</h2>
+          <p class="tiny" style="margin-top:0;margin-bottom:10px;">
+            Maak hier een vrij moment aan. Denk bv. aan <strong>“Snelle knipbeurt (20 min)”</strong> of
+            <strong>“Intakegesprek”</strong>. Je kan elk tijdslot nadien nog activeren/deactiveren.
+          </p>
+
+          <form id="slot-form">
+            <div class="form-row">
+              <div class="field">
+                <label>Datum</label>
+                <input type="date" class="input" id="slot-date">
+              </div>
+              <div class="field">
+                <label>Van</label>
+                <input type="time" class="input" id="slot-from">
+              </div>
+              <div class="field">
+                <label>Tot</label>
+                <input type="time" class="input" id="slot-to">
+              </div>
+            </div>
+            <div class="field">
+              <label>Omschrijving</label>
+              <input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt, kleurbeurt, intake, onderhoud…">
+            </div>
+            <button class="btn" type="submit">Publiceren</button>
+            <div id="slot-feedback" class="slot-feedback tiny"></div>
+          </form>
+        </div>
+
+        <!-- Kalender + bestaande tijdslots -->
+        <div class="card calendar-card">
+          <div class="calendar-head">
+            <div class="calendar-month">
+              <span id="slots-month-label">Maand</span>
+            </div>
+            <div class="calendar-nav">
+              <button type="button" id="slots-prev">◀</button>
+              <button type="button" id="slots-today">Vandaag</button>
+              <button type="button" id="slots-next">▶</button>
+            </div>
           </div>
-          <div class="field"><label>Omschrijving</label><input type="text" class="input" id="slot-desc" placeholder="vb. Snelle beurt of intake"></div>
-          <button class="btn" type="submit">Publiceren</button>
-        </form>
+
+          <div id="slots-calendar" class="calendar-grid slots-animate"></div>
+
+          <div class="sep"></div>
+
+          <div class="slots-list-head">
+            <div>
+              <h3 id="slots-list-title">Tijdslots voor …</h3>
+              <div id="slots-list-sub" class="sub tiny"></div>
+            </div>
+          </div>
+
+          <div id="slots-list"></div>
+        </div>
       </div>
     </section>
 
+    <!-- WEBSITE -->
     <section id="tab-website" class="tab-content" hidden>
       <div class="card">
         <h2>Mijn mini-website</h2>
@@ -362,6 +663,7 @@
       </div>
     </section>
 
+    <!-- INSTELLINGEN -->
     <section id="tab-instellingen" class="tab-content" hidden>
       <div class="settings">
         <div class="sidenav">
@@ -578,9 +880,25 @@
       place: $('#st-place'),
       notifyMail: $('#st-notify-mail'),
       dailyMail: $('#st-daily-mail')
-    }
+    },
+    // open tijdstippen elementen
+    slotForm: $('#slot-form'),
+    slotDate: $('#slot-date'),
+    slotFrom: $('#slot-from'),
+    slotTo: $('#slot-to'),
+    slotDesc: $('#slot-desc'),
+    slotsCalendar: $('#slots-calendar'),
+    slotsMonthLabel: $('#slots-month-label'),
+    slotsList: $('#slots-list'),
+    slotsListTitle: $('#slots-list-title'),
+    slotsListSub: $('#slots-list-sub'),
+    slotFeedback: $('#slot-feedback'),
+    slotsPrev: $('#slots-prev'),
+    slotsNext: $('#slots-next'),
+    slotsToday: $('#slots-today')
   };
 
+  /* TAB NAV */
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -590,6 +908,7 @@
     });
   });
 
+  /* SIDE NAV */
   const sideBtns = document.querySelectorAll('.side-item');
   const sidePanels = {
     persoonlijk: $('#panel-persoonlijk'),
@@ -725,8 +1044,9 @@
     loadProfile(window.__email).then(()=>{
       fillDraftGaps();
       afterProfileLoaded();
+      loadAppointments();
+      loadSlots();
     });
-    loadAppointments();
   }
 
   const DRAFT_KEY = 'vp.profile.draft';
@@ -985,6 +1305,7 @@
     gateUI(window.__status || 'pending', window.__plan || 'monthly');
   }
 
+  /* AFSPRAKEN */
   function groupByDate(items){
     const map={};
     items.forEach(x=>{ (map[x.date] ||= []).push(x); });
@@ -1091,6 +1412,7 @@
     renderAppointments(appts);
   }
 
+  /* PRIVACY OPSLAAN */
   async function savePrivacy(){
     const msg = els.st.privacyMsg;
     msg.textContent = '';
@@ -1148,7 +1470,262 @@
 
   document.getElementById('st-save-privacy')?.addEventListener('click', savePrivacy);
 
+  /* ---------- OPEN TIJDSTIPPEN LOGICA ---------- */
+
+  let slotMonth = new Date();
+  slotMonth.setDate(1);
+  let selectedSlotDate = new Date().toISOString().slice(0,10);
+  let slots = [];
+
+  function formatIso(dateObj){
+    return dateObj.toISOString().slice(0,10);
+  }
+
+  function renderSlotCalendar(){
+    if(!els.slotsCalendar) return;
+    const month = slotMonth.getMonth();
+    const year  = slotMonth.getFullYear();
+
+    els.slotsMonthLabel.textContent = slotMonth.toLocaleDateString('nl-BE',{
+      month:'long', year:'numeric'
+    });
+
+    const firstDay = new Date(year, month, 1);
+    const startWeekday = (firstDay.getDay()+6)%7; // maandag=0
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+
+    const slotsByDate = {};
+    slots.forEach(s=>{
+      if(!s.date) return;
+      (slotsByDate[s.date] ||= []).push(s);
+    });
+
+    const frag = document.createDocumentFragment();
+
+    const weekdays = ['ma','di','wo','do','vr','za','zo'];
+    weekdays.forEach(w=>{
+      const el=document.createElement('div');
+      el.className='weekday';
+      el.textContent=w;
+      frag.appendChild(el);
+    });
+
+    for(let i=0;i<startWeekday;i++){
+      const e=document.createElement('div');
+      e.className='calendar-day empty';
+      frag.appendChild(e);
+    }
+
+    for(let day=1;day<=daysInMonth;day++){
+      const d = new Date(year, month, day);
+      const iso = formatIso(d);
+      const has = !!slotsByDate[iso];
+
+      const el=document.createElement('button');
+      el.type='button';
+      el.className='calendar-day';
+      if(has) el.classList.add('has-slots');
+      if(iso===selectedSlotDate) el.classList.add('selected');
+      const span=document.createElement('span');
+      span.textContent=day;
+      el.appendChild(span);
+
+      el.addEventListener('click', ()=>{
+        selectedSlotDate = iso;
+        renderSlotCalendar();
+        renderSlotList();
+      });
+
+      frag.appendChild(el);
+    }
+
+    els.slotsCalendar.innerHTML='';
+    els.slotsCalendar.appendChild(frag);
+    els.slotsCalendar.classList.add('slots-animate');
+    setTimeout(()=>els.slotsCalendar.classList.remove('slots-animate'),180);
+  }
+
+  function renderSlotList(){
+    if(!els.slotsList) return;
+    const list = slots.filter(s=>s.date===selectedSlotDate)
+      .sort((a,b)=>((a.from||'').localeCompare(b.from||'')));
+
+    els.slotsListTitle.textContent =
+      'Tijdslots voor ' + formatDateLabel(selectedSlotDate);
+
+    if(!list.length){
+      els.slotsListSub.textContent = 'Nog geen vrije momenten voor deze dag.';
+    }else{
+      els.slotsListSub.textContent = list.length + ' vrij moment(en) gepubliceerd.';
+    }
+
+    els.slotsList.innerHTML='';
+    if(!list.length) return;
+
+    list.forEach(slot=>{
+      const row=document.createElement('div');
+      row.className='slot-row';
+      row.dataset.id = slot.id;
+
+      const time=document.createElement('div');
+      time.className='slot-time';
+      time.textContent = (slot.from||'?') + ' – ' + (slot.to||'?');
+
+      const desc=document.createElement('div');
+      desc.className='slot-desc';
+      const main=document.createElement('div');
+      main.className='slot-desc-main';
+      main.textContent = slot.desc || 'Geen omschrijving';
+      const meta=document.createElement('div');
+      meta.className='slot-meta';
+      meta.textContent = slot.note || '';
+      desc.appendChild(main); desc.appendChild(meta);
+
+      const status=document.createElement('div');
+      const pill=document.createElement('div');
+      const isActive = !!slot.active;
+      pill.className='slot-status-pill ' + (isActive?'active':'inactive');
+      pill.textContent = isActive ? 'Actief' : 'Verborgen';
+      status.appendChild(pill);
+
+      const actions=document.createElement('div');
+      actions.className='slot-row-actions';
+      const toggleBtn=document.createElement('button');
+      toggleBtn.className='btn-light';
+      toggleBtn.textContent = isActive ? 'Deactiveren' : 'Activeren';
+      toggleBtn.addEventListener('click', ()=> toggleSlotActive(slot.id, !isActive));
+      const delBtn=document.createElement('button');
+      delBtn.className='btn-danger';
+      delBtn.textContent='Verwijderen';
+      delBtn.addEventListener('click', ()=> deleteSlot(slot.id));
+      actions.appendChild(toggleBtn);
+      actions.appendChild(delBtn);
+
+      row.appendChild(time);
+      row.appendChild(desc);
+      row.appendChild(status);
+      row.appendChild(actions);
+
+      els.slotsList.appendChild(row);
+    });
+  }
+
+  async function loadSlots(){
+    if(!els.slotsCalendar) return;
+    try{
+      const r = await fetch('/.netlify/functions/appointments?action=list_slots');
+      const d = await r.json().catch(()=>[]);
+      slots = Array.isArray(d)?d:[];
+    }catch{
+      slots = [];
+    }
+
+    if(!selectedSlotDate){
+      selectedSlotDate = new Date().toISOString().slice(0,10);
+    }
+    renderSlotCalendar();
+    renderSlotList();
+  }
+
+  async function saveSlot(e){
+    e.preventDefault();
+    if(!els.slotDate || !els.slotFrom || !els.slotTo) return;
+
+    const date = els.slotDate.value;
+    const from = els.slotFrom.value;
+    const to   = els.slotTo.value;
+    const desc = (els.slotDesc.value||'').trim();
+
+    els.slotFeedback.textContent='';
+    els.slotFeedback.classList.remove('error-text');
+
+    if(!date || !from || !to){
+      els.slotFeedback.textContent='Vul datum, begin- en einduur in.';
+      els.slotFeedback.classList.add('error-text');
+      return;
+    }
+    if(from >= to){
+      els.slotFeedback.textContent='Einduur moet later zijn dan beginuur.';
+      els.slotFeedback.classList.add('error-text');
+      return;
+    }
+
+    try{
+      const r = await fetch('/.netlify/functions/appointments',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          action:'save_slot',
+          date, from, to, desc
+        })
+      });
+      if(!r.ok){
+        els.slotFeedback.textContent='Opslaan mislukt (server).';
+        els.slotFeedback.classList.add('error-text');
+        return;
+      }
+      els.slotFeedback.textContent='Tijdslot opgeslagen ✔';
+      els.slotDate.value='';
+      els.slotFrom.value='';
+      els.slotTo.value='';
+      els.slotDesc.value='';
+      selectedSlotDate = date;
+      await loadSlots();
+    }catch{
+      els.slotFeedback.textContent='Opslaan mislukt (verbinding).';
+      els.slotFeedback.classList.add('error-text');
+    }
+  }
+
+  async function toggleSlotActive(id, active){
+    try{
+      await fetch('/.netlify/functions/appointments',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ action:'toggle_slot', id, active })
+      });
+      const idx = slots.findIndex(s=>s.id===id);
+      if(idx>-1) slots[idx].active = active;
+      renderSlotCalendar();
+      renderSlotList();
+    }catch{}
+  }
+
+  async function deleteSlot(id){
+    if(!confirm('Dit vrije tijdslot verwijderen?')) return;
+    try{
+      await fetch('/.netlify/functions/appointments',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ action:'delete_slot', id })
+      });
+      slots = slots.filter(s=>s.id!==id);
+      renderSlotCalendar();
+      renderSlotList();
+    }catch{}
+  }
+
+  els.slotForm?.addEventListener('submit', saveSlot);
+
+  els.slotsPrev?.addEventListener('click', ()=>{
+    slotMonth.setMonth(slotMonth.getMonth()-1);
+    renderSlotCalendar();
+  });
+  els.slotsNext?.addEventListener('click', ()=>{
+    slotMonth.setMonth(slotMonth.getMonth()+1);
+    renderSlotCalendar();
+  });
+  els.slotsToday?.addEventListener('click', ()=>{
+    slotMonth = new Date(); slotMonth.setDate(1);
+    selectedSlotDate = new Date().toISOString().slice(0,10);
+    renderSlotCalendar();
+    renderSlotList();
+  });
+
+  // STARTUP
   await ensureSession();
+  loadAppointments();
+  loadSlots();
 </script>
 </body>
 </html>
