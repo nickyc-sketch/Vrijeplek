@@ -408,7 +408,7 @@
 </div>
 
 <script type="module">
-  // ---------- Supabase defensief ----------
+  // ---------- Supabase ----------
   async function initSupabase(){
     try{
       const ok = !!(window.env?.SUPABASE_URL && window.env?.SUPABASE_ANON_KEY);
@@ -417,11 +417,12 @@
       return createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
         auth:{ persistSession:true, autoRefreshToken:true }
       });
-    }catch{ return null; }
+    }catch{
+      return null;
+    }
   }
   window.__supabase = await initSupabase();
 
-  // ---------- UI refs ----------
   const $ = (s)=>document.querySelector(s);
   const els = {
     welcomeWrap: $('#welcome-wrap'),
@@ -472,10 +473,27 @@
   });
 
   // ---------- Logout + header menu ----------
-  const hardGo = (url)=>{ try{ location.replace(url) }catch{ location.href=url } };
+  const hardGo = (url)=>{
+    try{ location.replace(url); }catch{ location.href = url; }
+  };
+
+  function clearSupabaseTokens(){
+    try{
+      Object.keys(localStorage).forEach(k=>{
+        if(k.startsWith('sb-') && k.endsWith('-auth-token')){
+          localStorage.removeItem(k);
+        }
+      });
+    }catch{}
+  }
+
   async function logoutAlways(){
     try{ await window.__supabase?.auth?.signOut(); }catch{}
-    try{ sessionStorage.clear(); localStorage.removeItem('vp.profile.draft'); }catch{}
+    try{
+      sessionStorage.clear();
+      localStorage.removeItem('vp.profile.draft');
+      clearSupabaseTokens();
+    }catch{}
     hardGo('login.html');
   }
 
@@ -491,7 +509,6 @@
 
   menuDashboard?.addEventListener('click', ()=>{
     userDropdown?.classList.remove('open');
-    // je zit al op dashboard; eventueel later: navigatie naar andere view
   });
 
   menuLogout?.addEventListener('click', ()=>{
@@ -521,34 +538,47 @@
   }
 
   let __origEmail = '';
+
   async function ensureSession(){
+    // Zonder Supabase: altijd naar login
     if(!window.__supabase){
-      els.welcomeWrap.classList.add('hide');
       window.__email = '';
-      await afterProfileLoaded(); // gate pending
+      hardGo('login.html');
       return;
     }
     try{
       const { data:{ session } } = await window.__supabase.auth.getSession();
-      if(session?.user){ applyUser(session.user); return; }
-      const to = setTimeout(()=>hardGo('login.html'), 1200);
+      if(session?.user){
+        applyUser(session.user);
+        return;
+      }
+      const to = setTimeout(()=>hardGo('login.html'), 800);
       window.__supabase.auth.onAuthStateChange((_e, s)=>{
-        if(s?.user){ clearTimeout(to); applyUser(s.user); }
+        if(s?.user){
+          clearTimeout(to);
+          applyUser(s.user);
+        }
       });
-    }catch{ await afterProfileLoaded(); }
+    }catch{
+      hardGo('login.html');
+    }
   }
 
   function applyUser(user){
     const f = firstNameFrom(user);
-    if(f){ els.userFirst.textContent = f; els.welcomeWrap.classList.remove('hide'); }
-    else { els.welcomeWrap.classList.add('hide'); }
+    if(f){
+      els.userFirst.textContent = f;
+      els.welcomeWrap.classList.remove('hide');
+    }else{
+      els.welcomeWrap.classList.add('hide');
+    }
     els.st.email.value = user?.email || '';
     __origEmail = user?.email || '';
     if(!els.st.name.value) els.st.name.value = f || '';
     window.__email = user?.email || '';
 
     restoreDraft();
-    loadProfile(window.__email).then(()=> {
+    loadProfile(window.__email).then(()=>{
       fillDraftGaps();
       afterProfileLoaded();
     });
@@ -634,16 +664,13 @@
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload)
       });
-      const ok = r.ok;
-      if(ok){
+      if(r.ok){
         try{ localStorage.removeItem(DRAFT_KEY); }catch{}
         setSaveState('Opgeslagen ✔');
       }else{
-        const t = await r.text().catch(()=>r.status);
         setSaveState('Niet opgeslagen (server) — lokaal bewaard');
-        console.warn('Profile save failed:', t);
       }
-    }catch(e){
+    }catch{
       setSaveState('Offline — lokaal bewaard');
     }
   }
@@ -685,7 +712,6 @@
 
       window.__plan   = d?.plan || 'monthly';
       window.__status = d?.account_status || d?.status || 'pending';
-
     }catch{
       window.__plan = 'monthly';
       window.__status = 'pending';
@@ -735,13 +761,11 @@
     const active = (status === 'active');
     const currentPlan = plan || 'monthly';
 
-    // Status-label groen / rood
     els.accStatus.innerHTML =
       `Status: <strong style="color:${active ? '#0fa958' : '#e23b3b'};">` +
       `${active ? 'Actief' : 'Niet actief'}</strong> — plan: <strong>${currentPlan}</strong>`;
 
     if(!active){
-      // Niet actief → toon banner, lock bepaalde tabs
       els.settingsDot.style.display = 'inline-block';
       els.payBanner.style.display = 'block';
       els.payBanner.innerHTML = 'Je account is <strong>niet actief</strong>. Activeer om alles te gebruiken.';
@@ -756,7 +780,6 @@
       els.btnActivate.textContent = 'Activeer abonnement';
       els.lastCheckout.style.display = 'inline';
     }else{
-      // Actief → alles open, groene knop, geen banner
       els.settingsDot.style.display = 'none';
       els.payBanner.style.display = 'none';
 
@@ -771,12 +794,11 @@
       els.lastCheckout.style.display = 'none';
     }
 
-    // Plan-pillen stylen
     selectPlan(currentPlan);
     els.planPills.forEach(p=>{
       const isCurrent = p.dataset.plan === currentPlan;
       p.classList.toggle('subscribed', active && isCurrent);
-      p.disabled = active;                        // bij actief abonnement geen klik meer
+      p.disabled = active;
       p.style.cursor = active ? 'default' : 'pointer';
     });
   }
@@ -796,8 +818,8 @@
     try{
       return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
         weekday:'long',day:'2-digit',month:'long'
-      })
-    }catch{ return iso }
+      });
+    }catch{ return iso; }
   }
   function escapeHtml(s){
     return (s||'').replace(/[&<>"']/g, m=>({
