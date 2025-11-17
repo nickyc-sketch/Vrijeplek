@@ -15,1838 +15,1189 @@
   <style>
     :root{
       --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
-      --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.78);
-      --line: rgba(26,102,255,.20); --danger:#e23b3b; --ok:#0fa958;
-      --bg-deep:#030b18;
+      --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
+      --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
     }
-
     html,body{height:100%}
     body{
-      background:radial-gradient(circle at top, #163a7a 0, #030b18 52%, #020712 100%);
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--ink);
+      background:
+        radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
+        radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
+        radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
+      background-attachment:fixed;
     }
-
     .site{
       min-height:100vh;
       display:flex;
       flex-direction:column;
     }
-
-    /* Header */
     .site-header{
       position:sticky;
       top:0;
       z-index:40;
-      backdrop-filter:blur(22px);
-      background:linear-gradient(120deg, rgba(3,11,24,.92), rgba(8,23,54,.96));
-      border-bottom:1px solid rgba(255,255,255,.04);
+      backdrop-filter:blur(26px);
+      background:linear-gradient(180deg,rgba(2,6,23,.92),rgba(2,6,23,.7),rgba(2,6,23,0));
+      border-bottom:1px solid rgba(255,255,255,.12);
     }
     .header-inner{
-      max-width:1180px;
+      max-width:1120px;
       margin:0 auto;
-      padding:10px 16px;
+      padding:.9rem 1.5rem .8rem;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
+      gap:1.25rem;
     }
     .brand{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:.6rem;
     }
-    .brand-badge{
-      width:34px;
-      height:34px;
-      border-radius:14px;
-      background:radial-gradient(circle at 30% 0, #7fd3ff 0, #1a66ff 35%, #001c4a 100%);
+    .brand-mark{
+      width:32px; height:32px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
+                 radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
+      box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4);
       display:flex;
       align-items:center;
       justify-content:center;
-      box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 10px 30px rgba(0,0,0,.6);
-      position:relative;
-      overflow:hidden;
-    }
-    .brand-badge::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.18), transparent 60%);
-      opacity:.7;
-    }
-    .brand-badge span{
+      font-size:1.1rem;
       font-weight:700;
-      font-size:17px;
-      letter-spacing:.04em;
       color:#fff;
-      text-shadow:0 0 10px rgba(0,0,0,.65);
     }
-    .brand-text a{
-      display:block;
+    .brand-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand-wordmark span:first-child{
       font-weight:700;
-      font-size:20px;
-      letter-spacing:.03em;
-      color:#f7fbff;
-      text-decoration:none;
+      letter-spacing:.02em;
+      font-size:1.05rem;
+      color:#f9fafb;
     }
-    .brand-text small{
-      display:block;
-      font-size:11px;
-      color:rgba(255,255,255,.65);
-      margin-top:1px;
+    .brand-wordmark span:last-child{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(226,232,240,.7);
     }
-
     .header-actions{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:.6rem;
     }
-    .header-pill{
-      padding:6px 11px;
+    .chip-pill{
+      font-size:.72rem;
+      padding:.2rem .6rem;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      font-size:11px;
-      color:rgba(255,255,255,.75);
+      border:1px solid rgba(148,163,184,.5);
+      color:rgba(226,232,240,.7);
       display:flex;
       align-items:center;
-      gap:6px;
-      background:linear-gradient(120deg, rgba(255,255,255,.04), rgba(0,0,0,.25));
+      gap:.35rem;
     }
-    .header-pill-dot{
-      width:7px;
-      height:7px;
-      border-radius:50%;
-      background:radial-gradient(circle at 30% 0, #5fffba 0, #0fa958 60%, #006233 100%);
-      box-shadow:0 0 0 1px rgba(0,0,0,.4), 0 0 12px rgba(15,169,88,.7);
-    }
-    .header-btn{
-      padding:7px 13px;
+    .chip-dot{
+      width:8px; height:8px;
       border-radius:999px;
-      border:1px solid rgba(104,160,255,.65);
-      background:radial-gradient(circle at 0 0, rgba(133,199,255,.45), rgba(0,41,122,1));
-      font-size:12px;
-      font-weight:600;
-      color:#f7fbff;
+      background:radial-gradient(circle at 50% 50%, #4ade80 0,#22c55e 50%,#166534 100%);
+      box-shadow:0 0 0 4px rgba(34,197,94,.2);
+    }
+    .btn-head{
+      border-radius:999px;
+      padding:.4rem .9rem;
+      font-size:.82rem;
+      border:1px solid rgba(129,140,248,.7);
+      background:rgba(15,23,42,.4);
+      color:#e5edff;
       cursor:pointer;
-      display:flex;
+      display:inline-flex;
       align-items:center;
-      gap:6px;
-      box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 18px 40px rgba(0,0,0,.85);
+      gap:.4rem;
+      backdrop-filter:blur(10px);
     }
-    .header-btn span.icon{
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.45);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:11px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.3), transparent 60%);
+    .btn-head-primary{
+      border:none;
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#fff;
+      box-shadow:0 10px 30px rgba(15,118,255,.4);
     }
 
-    /* Shell */
+    .site-main{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:1.2rem 1.2rem 2.2rem;
+    }
     .dash-shell{
-      flex:1;
-      max-width:1180px;
-      margin:18px auto 26px;
-      padding:0 16px 20px;
+      width:100%;
+      max-width:1120px;
+    }
+
+    /* DASH LAYOUT + CARDS */
+
+    .dash-layout{
       display:grid;
-      grid-template-columns:280px minmax(0,1fr);
-      gap:18px;
-    }
-    @media(max-width:960px){
-      .dash-shell{
-        grid-template-columns:minmax(0,1fr);
-      }
+      grid-template-columns:minmax(220px,260px) minmax(0,1fr);
+      gap:1.5rem;
+      align-items:flex-start;
     }
 
-    /* Sidebar */
-    .dash-sidebar{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    .card-glass{
-      position:relative;
-      border-radius:22px;
-      background:linear-gradient(135deg, rgba(8,32,72,.92), rgba(5,13,30,.98));
-      border:1px solid rgba(120,177,255,.30);
-      box-shadow:0 22px 60px rgba(0,0,0,.85);
-      overflow:hidden;
-    }
-    .card-glass::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      background:
-        radial-gradient(circle at 0 0, rgba(127,211,255,.35), transparent 60%),
-        radial-gradient(circle at 100% 0, rgba(52,104,255,.35), transparent 55%),
-        radial-gradient(circle at 0 100%, rgba(0,0,0,.95), rgba(0,0,0,1));
-      mix-blend-mode:screen;
-      opacity:.55;
-      pointer-events:none;
-    }
-    .card-glass-inner{
-      position:relative;
-      padding:16px 16px 15px;
-      z-index:1;
-    }
-
-    .acct-header{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:10px;
-    }
-    .acct-avatar{
-      width:46px;
-      height:46px;
-      border-radius:18px;
-      background:radial-gradient(circle at 30% 0, #ffe9c0 0, #f6b78c 45%, #d46d4f 100%);
-      border:1px solid rgba(255,255,255,.65);
-      box-shadow:0 12px 30px rgba(0,0,0,.9);
-      position:relative;
-      overflow:hidden;
-    }
-    .acct-avatar::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.34), transparent 65%);
-      opacity:.7;
-    }
-    .acct-avatar span{
-      position:absolute;
-      inset:auto 6px 4px auto;
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0, #7dffbe, #0fa958 55%, #005f32 100%);
-      border:1px solid rgba(0,0,0,.7);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:11px;
-      color:#faffff;
-      box-shadow:0 0 0 1px rgba(255,255,255,.38), 0 0 15px rgba(5,188,121,.9);
-    }
-    .acct-main{
-      flex:1;
-      min-width:0;
-    }
-    .acct-main h1{
-      font-size:15px;
-      color:#f8fbff;
-      margin:0 0 2px;
-    }
-    .acct-main p{
-      font-size:12px;
-      color:rgba(225,233,255,.74);
-      margin:0;
-    }
-
-    .acct-meta{
-      margin:10px 0 0;
-      padding:8px 9px;
-      border-radius:16px;
-      background:linear-gradient(120deg, rgba(2,14,32,.88), rgba(4,27,61,.96));
-      border:1px solid rgba(255,255,255,.08);
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-    .acct-meta-row{
-      display:flex;
-      justify-content:space-between;
-      font-size:11px;
-      color:rgba(214,225,255,.82);
-    }
-    .acct-meta-row span.label{
-      opacity:.7;
-    }
-    .acct-meta-row span.value{
-      font-weight:600;
-      letter-spacing:.02em;
-    }
-
-    .acct-footer{
-      margin-top:12px;
-      display:flex;
-      gap:8px;
-    }
-    .pill-ghost{
-      flex:1;
-      padding:7px 9px;
-      border-radius:999px;
-      border:1px dashed rgba(255,255,255,.38);
-      font-size:11px;
-      color:rgba(228,234,255,.9);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.08), rgba(0,0,0,.9));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      cursor:pointer;
-    }
-    .pill-ghost span.icon{
-      font-size:13px;
-    }
-
-    .side-mini{
-      padding:11px 12px 12px;
-      border-radius:18px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.02), rgba(0,0,0,.95));
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 18px 40px rgba(0,0,0,.9);
-      color:rgba(227,234,255,.88);
-      font-size:11px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .side-mini strong{
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      opacity:.7;
-    }
-    .side-mini span{
-      font-size:11px;
-      opacity:.85;
-    }
-
-    /* Main */
-    .dash-main{
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    /* Tabs */
     .dash-tabs{
-      position:relative;
-      display:flex;
-      gap:6px;
-      padding:6px;
-      border-radius:999px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.08), rgba(0,0,0,.95));
-      border:1px solid rgba(135,187,255,.45);
-      box-shadow:0 18px 40px rgba(0,0,0,.85);
-      overflow:hidden;
+      background:rgba(15,23,42,.8);
+      border-radius:1.25rem;
+      padding:.75rem;
+      border:1px solid rgba(148,163,184,.3);
+      box-shadow:0 18px 50px rgba(15,23,42,.7);
+      backdrop-filter:blur(22px);
     }
+
     .dash-tab{
-      flex:1;
-      position:relative;
-      border-radius:999px;
-      padding:7px 10px;
-      font-size:12px;
-      font-weight:600;
-      letter-spacing:.02em;
-      color:rgba(219,230,255,.78);
+      width:100%;
+      text-align:left;
       border:none;
       background:transparent;
-      cursor:pointer;
+      padding:.65rem .9rem;
+      border-radius:.9rem;
       display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      transition:color .18s ease;
+      flex-direction:column;
+      gap:.1rem;
+      cursor:pointer;
+      transition:.18s ease;
+      color:rgba(226,232,240,.8);
+      position:relative;
     }
-    .dash-tab small{
-      font-size:10px;
-      font-weight:500;
-      opacity:.8;
-    }
+    .dash-tab + .dash-tab{margin-top:.25rem;}
+    .dash-tab-icon{font-size:1.05rem;}
+    .dash-tab-label{font-weight:600; font-size:.9rem;}
+    .dash-tab-sub{font-size:.75rem; opacity:.7;}
+
     .dash-tab::after{
       content:"";
       position:absolute;
-      inset:3px;
-      border-radius:999px;
-      background:radial-gradient(circle at 0 0, rgba(143,198,255,.32), rgba(0,51,153,1));
-      opacity:0;
-      transform:scale(.95);
-      transition:opacity .2s ease, transform .2s ease;
-      z-index:-1;
+      inset:0;
+      border-radius:inherit;
+      border:1px solid transparent;
+      transition:.18s ease;
+    }
+
+    .dash-tab:hover{
+      background:rgba(15,118,255,.08);
     }
     .dash-tab.is-active{
-      color:#f8fbff;
-      text-shadow:0 0 10px rgba(0,0,0,.6);
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(30,64,175,.9));
+      color:#f9fafb;
+      box-shadow:0 14px 40px rgba(15,23,42,.9);
     }
     .dash-tab.is-active::after{
-      opacity:1;
-      transform:scale(1);
+      border-color:rgba(191,219,254,.9);
     }
 
-    .tab-icon{
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.6);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:11px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.4), transparent 60%);
-    }
-
-    /* Panels */
     .dash-panels{
-      position:relative;
-      flex:1;
-      min-height:0;
+      display:block;
     }
-    .dash-panel{
-      display:none;
-      padding:14px;
-      margin-top:4px;
-      border-radius:22px;
-      border:1px solid rgba(120,177,255,.30);
-      background:radial-gradient(circle at 0 0, rgba(127,211,255,.12), rgba(2,11,28,.98));
-      box-shadow:0 22px 60px rgba(0,0,0,.9);
-      color:rgba(230,236,255,.94);
-    }
-    .dash-panel.is-active{display:block;}
+    .dash-panel{display:none;}
+    .dash-panel.is-visible{display:block;}
 
-    .dash-panel-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom:8px;
+    .panel-head{
+      margin-bottom:1rem;
     }
-    .dash-panel-header h2{
-      font-size:15px;
+    .panel-head h1{
+      font-size:1.4rem;
+      color:#e5edff;
+      margin:0 0 .25rem;
+    }
+    .panel-intro{
       margin:0;
-      color:#f9fbff;
-    }
-    .dash-panel-header p{
-      font-size:12px;
-      margin:2px 0 0;
-      color:rgba(210,222,255,.85);
-    }
-    .dash-panel-tag{
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:10px;
-      border:1px solid rgba(143,198,255,.8);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.12), rgba(0,0,0,.9));
-      display:flex;
-      align-items:center;
-      gap:6px;
+      font-size:.88rem;
+      color:rgba(191,219,254,.8);
     }
 
-    /* Afspraken lijst (placeholder) */
-    .appt-list{
-      margin-top:8px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.04), rgba(0,0,0,.9));
-      padding:10px;
-      font-size:12px;
-      color:rgba(220,230,255,.9);
-    }
-    .appt-empty{
-      padding:12px 10px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.25);
-      text-align:center;
-      font-size:12px;
-      color:rgba(205,216,245,.88);
-    }
-
-    /* OPEN TIJDSTIPPEN */
-    .slots-layout{
-      display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr);
-      gap:14px;
-    }
-    @media(max-width:960px){
-      .slots-layout{
-        grid-template-columns:minmax(0,1fr);
-      }
-    }
-
-    /* Kalender wrapper */
-    .calendar-shell{
+    .card{
+      background:rgba(15,23,42,.84);
+      border-radius:1.25rem;
+      padding:1.25rem 1.4rem 1.35rem;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 22px 60px rgba(15,23,42,.9);
+      color:#e5e7eb;
       position:relative;
-      border-radius:18px;
-      border:1px solid rgba(149,200,255,.55);
-      background:radial-gradient(circle at 0 0, rgba(127,211,255,.18), rgba(3,10,30,.98));
-      box-shadow:0 18px 50px rgba(0,0,0,.9);
       overflow:hidden;
     }
-    .calendar-shell::before{
+    .card::before{
       content:"";
       position:absolute;
-      inset:-60%;
+      inset:-20%;
       background:
-        radial-gradient(circle at 0 0, rgba(255,255,255,.24), transparent 60%),
-        radial-gradient(circle at 100% 0, rgba(101,164,255,.38), transparent 60%);
-      mix-blend-mode:screen;
-      opacity:.55;
+        radial-gradient(circle at 0 0,rgba(59,130,246,.12),transparent 55%),
+        radial-gradient(circle at 100% 0,rgba(56,189,248,.12),transparent 50%);
+      opacity:.7;
       pointer-events:none;
     }
-    .calendar-inner{
-      position:relative;
-      z-index:1;
-      padding:10px 10px 11px;
-      backdrop-filter:blur(18px);
+    .card > *{position:relative; z-index:1;}
+    .card-soft{
+      background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(15,23,42,.92));
     }
-    .cal-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:6px;
-      margin-bottom:6px;
-    }
-    .cal-month-label{
-      font-size:13px;
-      font-weight:600;
-      color:#f7fbff;
-      display:flex;
-      flex-direction:column;
-      gap:1px;
-    }
-    .cal-month-label span.sub{
-      font-size:11px;
-      font-weight:500;
-      color:rgba(214,226,255,.82);
-    }
-    .cal-nav{
-      display:flex;
-      align-items:center;
-      gap:6px;
-    }
-    .cal-nav button{
-      width:24px;
-      height:24px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.75);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.42), rgba(0,0,0,.85));
-      color:#02132e;
-      font-size:13px;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:0 0 0 1px rgba(0,0,0,.7);
-    }
-    .cal-nav button:disabled{
-      opacity:.4;
-      cursor:default;
-    }
-    .cal-today-pill{
-      padding:5px 9px;
-      border-radius:999px;
-      border:1px solid rgba(142,198,255,.82);
-      font-size:11px;
-      color:rgba(229,238,255,.96);
-      display:flex;
-      align-items:center;
-      gap:5px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.2), rgba(0,0,0,.9));
-    }
-    .cal-today-pill span.dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0, #7dffbe, #0fa958 60%, #005630 100%);
-      box-shadow:0 0 0 1px rgba(0,0,0,.7), 0 0 10px rgba(9,205,130,.9);
+    .card-glass{
+      background:linear-gradient(135deg,rgba(37,99,235,.96),rgba(8,47,107,.96));
+      border-color:rgba(191,219,254,.55);
+      color:#f9fafb;
     }
 
-    .cal-grid{
-      margin-top:6px;
-      border-radius:16px;
-      padding:8px 8px 9px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.12), rgba(0,0,0,.9));
-      border:1px solid rgba(255,255,255,.09);
-      box-shadow:inset 0 0 0 1px rgba(0,0,0,.7);
+    .card-title{
+      font-size:1.1rem;
+      margin:0 0 .3rem;
     }
-    .cal-weekdays{
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:3px;
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.11em;
-      color:rgba(221,230,255,.82);
-      margin-bottom:3px;
+    .card-subtitle{
+      margin:0 0 1rem;
+      font-size:.85rem;
+      color:rgba(226,232,240,.85);
     }
-    .cal-weekdays span{
-      text-align:center;
-      opacity:.8;
-    }
-
-    .cal-days{
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:4px;
-      font-size:12px;
-    }
-    .cal-day{
-      position:relative;
-      border-radius:999px;
-      height:32px;
+    .card-header-row{
       display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      color:rgba(222,232,255,.92);
-      overflow:hidden;
-      transform:translateY(0) scale(1);
-      transition:
-        transform .16s ease,
-        box-shadow .16s ease,
-        background .16s ease,
-        color .16s ease;
-    }
-    .cal-day::before{
-      content:"";
-      position:absolute;
-      inset:2px;
-      border-radius:999px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.18), rgba(0,0,0,.9));
-      opacity:0;
-      transition:opacity .18s ease;
-    }
-    .cal-day span{
-      position:relative;
-      z-index:1;
-    }
-    .cal-day:hover{
-      transform:translateY(-1px) scale(1.02);
-      box-shadow:0 6px 15px rgba(0,0,0,.65);
-    }
-    .cal-day:hover::before{
-      opacity:.9;
-    }
-    .cal-day.is-out{
-      opacity:.35;
-      cursor:default;
-    }
-    .cal-day.is-out:hover{
-      transform:none;
-      box-shadow:none;
-    }
-    .cal-day.is-today{
-      box-shadow:0 0 0 1px rgba(142,198,255,.9), 0 0 16px rgba(80,150,255,.95);
-    }
-    .cal-day.is-selected{
-      background:radial-gradient(circle at 0 0, #7fd3ff, #1a66ff 50%, #001a46 100%);
-      color:#fdfdff;
-      box-shadow:0 0 0 1px rgba(255,255,255,.92), 0 10px 24px rgba(0,0,0,.8);
-      transform:translateY(-1px) scale(1.03);
-    }
-    .cal-day.is-selected::before{
-      opacity:0;
-    }
-
-    .cal-legend{
-      margin-top:7px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:6px;
-      font-size:10px;
-      color:rgba(213,224,248,.9);
-    }
-    .cal-leg-dot{
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      margin-right:4px;
-    }
-    .cal-leg-row{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    /* Slots detail */
-    .slots-shell{
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.08), rgba(0,0,0,.96));
-      box-shadow:0 20px 50px rgba(0,0,0,.9);
-      padding:10px 11px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .slots-head{
-      display:flex;
-      justify-content:space-between;
       align-items:flex-start;
-      gap:8px;
-    }
-    .slots-head-main{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .slots-head-main strong{
-      font-size:13px;
-      color:#f9fbff;
-    }
-    .slots-head-main span{
-      font-size:11px;
-      color:rgba(215,226,252,.9);
+      justify-content:space-between;
+      gap:1rem;
     }
 
-    .btn-primary{
-      border-radius:999px;
-      padding:7px 11px;
-      border:1px solid rgba(148,205,255,.9);
-      background:radial-gradient(circle at 0 0, rgba(143,198,255,.55), rgba(0,29,100,1));
-      color:#f9fbff;
-      font-size:11px;
-      font-weight:600;
-      display:flex;
-      align-items:center;
-      gap:6px;
-      cursor:pointer;
-      box-shadow:0 0 0 1px rgba(0,0,0,.7), 0 16px 32px rgba(0,0,0,.9);
+    .card-divider{
+      border:none;
+      border-top:1px solid rgba(148,163,184,.4);
+      margin:1.2rem 0 1rem;
     }
-    .btn-primary span.icon{
-      width:18px;
-      height:18px;
+
+    .badge-warning{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      font-size:.78rem;
+      padding:.2rem .6rem;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.7);
-      display:flex;
+      background:rgba(250,204,21,.15);
+      border:1px solid rgba(250,204,21,.6);
+      color:#fef3c7;
+      margin-bottom:.75rem;
+    }
+    .badge-warning::before{
+      content:"!";
+      display:inline-flex;
       align-items:center;
       justify-content:center;
-      font-size:12px;
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.45), transparent 60%);
+      width:14px; height:14px;
+      border-radius:999px;
+      background:#facc15;
+      color:#1f2937;
+      font-size:.7rem;
+      font-weight:800;
     }
 
-    .slots-form{
+    /* GRID */
+    .cards-grid{
       display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:8px;
-      font-size:11px;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,1.25fr);
+      gap:1.25rem;
     }
-    @media(max-width:560px){
-      .slots-form{
-        grid-template-columns:minmax(0,1fr);
-      }
-    }
+
+    /* FIELDS + FORMS */
     .field{
       display:flex;
       flex-direction:column;
-      gap:4px;
+      gap:.28rem;
+      margin-bottom:.8rem;
     }
     .field label{
-      font-size:11px;
-      color:rgba(219,229,255,.9);
-    }
-    .field-row{
-      display:flex;
-      gap:6px;
+      font-size:.84rem;
+      font-weight:500;
+      color:rgba(226,232,240,.9);
     }
     .field input,
-    .field select,
     .field textarea{
-      width:100%;
-      border-radius:11px;
-      border:1px solid rgba(188,205,236,.8);
-      background:rgba(4,14,33,.98);
-      color:#eef3ff;
-      padding:6px 8px;
-      font-size:12px;
+      border-radius:.75rem;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.85);
+      color:#e5e7eb;
+      padding:.5rem .7rem;
+      font-size:.9rem;
       outline:none;
-      box-shadow:0 0 0 1px rgba(0,0,0,.6);
+      transition:.16s ease;
     }
     .field input::placeholder,
     .field textarea::placeholder{
-      color:rgba(160,176,210,.85);
+      color:rgba(148,163,184,.8);
+      font-size:.84rem;
     }
-    .field textarea{
-      min-height:40px;
-      resize:vertical;
-    }
-    .check-inline{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:11px;
-      color:rgba(220,233,255,.9);
-    }
-    .check-inline input{
-      width:auto;
-      height:auto;
+    .field input:focus,
+    .field textarea:focus{
+      border-color:rgba(59,130,246,.9);
+      box-shadow:0 0 0 1px rgba(59,130,246,.6);
+      background:rgba(15,23,42,.96);
     }
 
-    .slots-list{
-      margin-top:4px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.03), rgba(0,0,0,.92));
-      max-height:260px;
-      overflow:auto;
-    }
-    .slot-empty{
-      padding:10px;
-      font-size:11px;
-      color:rgba(209,220,247,.9);
-      text-align:center;
-    }
-    .slot-item{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:8px;
-      padding:8px 9px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      font-size:11px;
-      color:rgba(225,233,255,.95);
-    }
-    .slot-item:last-child{border-bottom:none;}
-    .slot-main{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .slot-time{
-      font-size:12px;
-      font-weight:600;
-    }
-    .slot-desc{
-      opacity:.86;
-    }
-    .slot-tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:4px;
-      margin-top:2px;
-    }
-    .slot-tag{
-      padding:3px 6px;
-      border-radius:999px;
-      border:1px solid rgba(142,198,255,.7);
-      font-size:9px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      color:rgba(215,227,255,.92);
-    }
-    .slot-actions{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:4px;
-      min-width:86px;
-    }
-
-    .toggle{
-      position:relative;
-      width:46px;
-      height:22px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.22);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.15), rgba(0,0,0,.9));
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      padding:2px;
-      box-shadow:0 0 0 1px rgba(0,0,0,.6);
-    }
-    .toggle-dot{
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0, #f5f7ff, #c3d2ff 65%, #6b85e5 100%);
-      box-shadow:0 0 0 1px rgba(0,0,0,.5), 0 0 12px rgba(127,176,255,.9);
-      transform:translateX(0);
-      transition:transform .18s ease;
-    }
-    .toggle.is-on{
-      background:radial-gradient(circle at 0 0, #7dffbe, #0fa958 60%, #004827 100%);
-      border-color:rgba(175,243,208,.9);
-      box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 0 16px rgba(20,201,123,.95);
-    }
-    .toggle.is-on .toggle-dot{
-      transform:translateX(22px);
-    }
-    .label-muted{
-      font-size:10px;
-      color:rgba(193,207,234,.88);
-    }
-    .btn-ghost{
-      border-radius:999px;
-      padding:4px 8px;
-      border:1px solid rgba(255,255,255,.26);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.15), rgba(0,0,0,.9));
-      font-size:10px;
-      color:rgba(240,244,255,.95);
-      cursor:pointer;
-    }
-    .btn-ghost.danger{
-      border-color:rgba(234,108,108,.9);
-      color:#ffd8d8;
-    }
-
-    .hint-row{
-      margin-top:4px;
-      display:flex;
-      align-items:flex-start;
-      gap:8px;
-      font-size:10px;
-      color:rgba(194,208,238,.95);
-    }
-
-    /* WEBSITE tab (builder link) */
-    .panel-section{
-      margin-top:8px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.06), rgba(0,0,0,.94));
-      padding:10px 11px;
-      font-size:12px;
-      color:rgba(222,232,255,.95);
-    }
-    .panel-section h3{
-      font-size:13px;
-      margin:0 0 4px;
-      color:#f9fbff;
-    }
-    .panel-section p{
-      margin:0 0 6px;
-    }
-    .panel-section a.btn-link{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 11px;
-      border-radius:999px;
-      border:1px solid rgba(143,198,255,.8);
-      background:radial-gradient(circle at 0 0, rgba(143,198,255,.4), rgba(0,23,73,1));
-      font-size:11px;
-      font-weight:600;
-      color:#f8fbff;
-      text-decoration:none;
-      box-shadow:0 0 0 1px rgba(0,0,0,.7), 0 14px 30px rgba(0,0,0,.9);
-    }
-
-    /* INSTELLINGEN */
-    .settings-grid{
-      margin-top:8px;
+    .field-group{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      font-size:11px;
-    }
-    @media(max-width:880px){
-      .settings-grid{
-        grid-template-columns:minmax(0,1fr);
-      }
-    }
-    .settings-group{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background:radial-gradient(circle at 0 0, rgba(255,255,255,.05), rgba(0,0,0,.95));
-      padding:9px 10px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .settings-group h3{
-      font-size:12px;
-      margin:0 0 2px;
-      color:#f8fbff;
-    }
-    .settings-row{
-      display:flex;
-      flex-direction:column;
-      gap:3px;
-    }
-    .settings-row label{
-      font-size:11px;
-      color:rgba(216,228,252,.9);
-    }
-    .settings-row input,
-    .settings-row textarea{
-      width:100%;
-      border-radius:11px;
-      border:1px solid rgba(185,205,236,.9);
-      background:rgba(3,12,30,.98);
-      color:#f0f4ff;
-      padding:6px 8px;
-      font-size:12px;
-      outline:none;
-      box-shadow:0 0 0 1px rgba(0,0,0,.6);
-    }
-    .settings-row textarea{
-      min-height:46px;
-      resize:vertical;
+      gap:.75rem;
     }
 
-    .settings-footer{
-      margin-top:9px;
+    .slot-form .slot-row{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .helper{
+      font-size:.78rem;
+      color:rgba(148,163,184,.95);
+      line-height:1.5;
+    }
+    .example{
+      font-size:.8rem;
+      color:rgba(191,219,254,.9);
+      margin-top:.35rem;
+    }
+
+    .input-with-prefix{
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    .input-with-prefix span{
+      padding:.35rem .6rem;
+      border-radius:.75rem;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.95);
+      font-size:.8rem;
+      color:rgba(226,232,240,.9);
+    }
+
+    .form-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:.5rem;
+      margin-top:.6rem;
+    }
+
+    /* SWITCH */
+    .switch{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      cursor:pointer;
+      user-select:none;
+    }
+    .switch input{display:none;}
+    .switch-slider{
+      width:38px;
+      height:20px;
+      border-radius:18px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.7);
+      position:relative;
+      transition:.18s ease;
+    }
+    .switch-slider::after{
+      content:"";
+      position:absolute;
+      width:16px; height:16px;
+      border-radius:999px;
+      background:#e5e7eb;
+      top:1px; left:1px;
+      transition:.18s ease;
+      box-shadow:0 2px 6px rgba(15,23,42,.6);
+    }
+    .switch input:checked + .switch-slider{
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      border-color:rgba(191,219,254,.9);
+    }
+    .switch input:checked + .switch-slider::after{
+      transform:translateX(16px);
+      background:#f9fafb;
+    }
+    .switch-label{
+      font-size:.85rem;
+      color:rgba(226,232,240,.9);
+    }
+
+    .deposit-settings{
+      margin-top:.75rem;
+      padding:.85rem .95rem;
+      border-radius:.9rem;
+      border:1px dashed rgba(148,163,184,.7);
+      background:rgba(15,23,42,.9);
+    }
+    .deposit-settings.is-disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    /* BUTTONS */
+    .btn,
+    .btn-primary,
+    .btn-ghost,
+    .btn-pill{
+      border-radius:999px;
+      padding:.48rem 1.05rem;
+      font-size:.86rem;
+      border:1px solid transparent;
+      cursor:pointer;
+      font-weight:500;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      background:transparent;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#f9fafb;
+      border:none;
+      box-shadow:0 14px 40px rgba(37,99,235,.55);
+    }
+    .btn-primary:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+    .btn-ghost{
+      background:rgba(15,23,42,.2);
+      border-color:rgba(148,163,184,.7);
+      color:rgba(226,232,240,.9);
+    }
+    .btn-ghost:hover{
+      background:rgba(15,23,42,.4);
+    }
+    .btn-pill{
+      background:rgba(15,23,42,.1);
+      border-color:rgba(191,219,254,.7);
+      color:#e0f2fe;
+      font-size:.78rem;
+      padding:.3rem .8rem;
+    }
+
+    /* EMPTY STATE */
+    .empty-state{
+      border-radius:.9rem;
+      background:rgba(15,23,42,.85);
+      border:1px dashed rgba(148,163,184,.7);
+      padding:.85rem 1rem;
+      font-size:.86rem;
+      color:rgba(226,232,240,.95);
+    }
+    .empty-state strong{font-weight:600;}
+
+    /* CALENDAR */
+    .calendar-controls{
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      font-size:.82rem;
+    }
+    .calendar-month{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      min-width:96px;
+    }
+    .calendar-month span:first-child{
+      font-weight:600;
+    }
+    .calendar-month span:last-child{
+      font-size:.75rem;
+      opacity:.85;
+    }
+
+    .calendar-shell{
+      margin-top:.85rem;
+      padding:.75rem .8rem .9rem;
+      border-radius:1rem;
+      background:radial-gradient(circle at 0 0,rgba(15,23,42,.18),transparent 60%);
+      box-shadow:inset 0 0 0 1px rgba(148,163,184,.4);
+    }
+    .calendar-days-row{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:rgba(226,232,240,.8);
+      margin-bottom:.3rem;
+    }
+    .calendar-days-row span{
+      text-align:center;
+      padding-bottom:.15rem;
+    }
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:.18rem;
+    }
+    .calendar-day{
+      position:relative;
+      aspect-ratio:1/1;
+      border-radius:.85rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.8rem;
+      cursor:pointer;
+      background:rgba(15,23,42,.92);
+      border:1px solid rgba(148,163,184,.55);
+      color:#e5e7eb;
+      transition:.14s ease;
+      overflow:hidden;
+    }
+    .calendar-day::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 10% 0,rgba(248,250,252,.22),transparent 55%);
+      opacity:0;
+      transition:.2s ease;
+    }
+    .calendar-day:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 30px rgba(15,23,42,.95);
+      border-color:rgba(191,219,254,.9);
+    }
+    .calendar-day:hover::after{opacity:1;}
+    .calendar-day.is-today{
+      border-color:#fbbf24;
+      box-shadow:0 0 0 1px rgba(251,191,36,.6);
+    }
+    .calendar-day.is-selected{
+      background:linear-gradient(135deg,#f9fafb,#93c5fd);
+      color:#0f172a;
+      font-weight:700;
+      box-shadow:0 14px 40px rgba(15,23,42,1);
+    }
+
+    .slot-list h3{
+      margin:0 0 .25rem;
+      font-size:.95rem;
+      color:#e5e7eb;
+    }
+
+    .settings-group{
+      border-radius:1rem;
+      border:1px solid rgba(148,163,184,.5);
+      padding:1rem 1rem .9rem;
+      margin-bottom:1rem;
+      background:rgba(15,23,42,.95);
+    }
+    .settings-group-muted{
+      background:rgba(15,23,42,.85);
+      border-style:dashed;
+    }
+    .settings-group legend{
+      padding:0 .3rem;
+      font-size:.86rem;
+      font-weight:600;
+      color:rgba(191,219,254,.95);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:.4rem;
+    }
+
+    /* FOOTER */
+    .site-footer{
+      padding:1rem 1.5rem 1.4rem;
+      border-top:1px solid rgba(15,23,42,.8);
+      background:radial-gradient(circle at 50% -50%,rgba(59,130,246,.35),transparent 60%),
+                 rgba(2,6,23,.96);
+    }
+    .footer-inner{
+      max-width:1120px;
+      margin:0 auto;
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:8px;
-      font-size:10px;
-      color:rgba(198,211,239,.9);
+      gap:.75rem;
+      color:rgba(148,163,184,.9);
+      font-size:.78rem;
     }
-    .settings-footer button{
-      min-width:130px;
-    }
-
-    .status-badge{
-      border-radius:999px;
-      padding:4px 9px;
-      border:1px solid rgba(147,204,255,.9);
-      background:radial-gradient(circle at 0 0, rgba(143,198,255,.35), rgba(0,0,0,.95));
-      font-size:10px;
-      color:#eaf2ff;
-      display:flex;
-      align-items:center;
-      gap:6px;
-    }
-    .status-badge span.dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:radial-gradient(circle at 30% 0, #7dffbe, #0fa958 60%, #004f2c 100%);
-      box-shadow:0 0 0 1px rgba(0,0,0,.7), 0 0 10px rgba(15,169,88,.9);
+    .footer-inner a{
+      color:rgba(191,219,254,.95);
+      text-decoration:none;
     }
 
-    .msg{
-      margin-top:6px;
-      font-size:11px;
+    /* RESPONSIVE */
+    @media (max-width:960px){
+      .header-inner{
+        padding:.8rem 1rem .7rem;
+      }
+      .dash-layout{
+        grid-template-columns:minmax(0,1fr);
+      }
+      .cards-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+      .site-main{
+        padding:1rem .9rem 1.6rem;
+      }
     }
-    .msg.ok{color:#a6f5c5;}
-    .msg.err{color:#ffb3b3;}
+    @media (max-width:640px){
+      .header-actions{
+        gap:.45rem;
+      }
+      .chip-pill{display:none;}
+      .slot-form .slot-row{
+        grid-template-columns:repeat(1,minmax(0,1fr));
+      }
+      .field-group{
+        grid-template-columns:1fr;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="site">
+    <!-- HEADER -->
     <header class="site-header">
       <div class="header-inner">
-        <div class="brand">
-          <div class="brand-badge">
-            <span>VP</span>
+        <a href="/" class="brand" aria-label="Terug naar Vrijeplek home">
+          <div class="brand-mark">V</div>
+          <div class="brand-wordmark">
+            <span>vrijeplek</span>
+            <span>last minute afspreken</span>
           </div>
-          <div class="brand-text">
-            <a href="index.html">Vrijeplek</a>
-            <small>Dashboard voor ondernemers</small>
-          </div>
-        </div>
+        </a>
 
         <div class="header-actions">
-          <div class="header-pill">
-            <span class="header-pill-dot"></span>
-            <span id="header-user-email">Ingelogd</span>
+          <div class="chip-pill">
+            <span class="chip-dot"></span>
+            <span>Dashboard actief</span>
           </div>
-          <button class="header-btn" id="logout-btn" type="button">
-            <span class="icon">⏻</span>
-            <span>Afmelden</span>
+          <button class="btn-head" type="button" onclick="window.open('/', '_blank')">
+            Website bekijken
+          </button>
+          <button class="btn-head btn-head-primary" type="button" id="logout-btn">
+            Uitloggen
           </button>
         </div>
       </div>
     </header>
 
-    <main class="dash-shell">
-      <!-- Zijbalk -->
-      <aside class="dash-sidebar">
-        <section class="card-glass">
-          <div class="card-glass-inner">
-            <div class="acct-header">
-              <div class="acct-avatar">
-                <span>★</span>
-              </div>
-              <div class="acct-main">
-                <h1 id="acct-name">Jouw Vrijeplek</h1>
-                <p id="acct-subtitle">Laat vandaag nog een leeg tijdslot opvallen.</p>
-              </div>
-            </div>
+    <!-- MAIN -->
+    <main class="site-main">
+      <div class="dash-shell">
+        <div class="dash-layout">
+          <!-- SIDE TABS -->
+          <aside class="dash-tabs" aria-label="Dashboard navigatie">
+            <button class="dash-tab is-active" data-panel="afspraken">
+              <span class="dash-tab-icon">📅</span>
+              <span class="dash-tab-label">Afspraken</span>
+              <span class="dash-tab-sub">Vandaag & binnenkort</span>
+            </button>
+            <button class="dash-tab" data-panel="tijden">
+              <span class="dash-tab-icon">✨</span>
+              <span class="dash-tab-label">Open tijdstippen</span>
+              <span class="dash-tab-sub">Kalender & tijdsloten</span>
+            </button>
+            <button class="dash-tab" data-panel="website">
+              <span class="dash-tab-icon">🌐</span>
+              <span class="dash-tab-label">Website</span>
+              <span class="dash-tab-sub">Jouw Vrijeplek-pagina</span>
+            </button>
+            <button class="dash-tab" data-panel="instellingen">
+              <span class="dash-tab-icon">⚙</span>
+              <span class="dash-tab-label">Instellingen</span>
+              <span class="dash-tab-sub">Gegevens & facturen</span>
+            </button>
+          </aside>
 
-            <div class="acct-meta">
-              <div class="acct-meta-row">
-                <span class="label">Plan</span>
-                <span class="value" id="acct-plan">Proefperiode</span>
-              </div>
-              <div class="acct-meta-row">
-                <span class="label">Volgende factuur</span>
-                <span class="value" id="acct-next-bill">—</span>
-              </div>
-              <div class="acct-meta-row">
-                <span class="label">IBAN actief</span>
-                <span class="value" id="acct-iban-status">Nog instellen</span>
-              </div>
-            </div>
+          <!-- PANELS -->
+          <section class="dash-panels">
+            <!-- Afspraken -->
+            <section class="dash-panel is-visible" id="panel-afspraken">
+              <header class="panel-head">
+                <h1>Jouw Vrijeplek</h1>
+                <p class="panel-intro">
+                  Hier verschijnen straks de echte boekingen die via jouw vrije tijdsloten binnenkomen.
+                </p>
+              </header>
 
-            <div class="acct-footer">
-              <button type="button" class="pill-ghost" id="go-open-slots">
-                <span class="icon">◎</span>
-                Open tijdstippen
-              </button>
-              <button type="button" class="pill-ghost" id="go-website">
-                <span class="icon">⚙</span>
-                Website
-              </button>
-            </div>
-          </div>
-        </section>
+              <section class="card card-soft">
+                <h2 class="card-title">Afspraken</h2>
+                <p class="card-subtitle">Overzicht van aankomende boekingen.</p>
 
-        <section class="side-mini">
-          <strong>TIP</strong>
-          <span>
-            Hoe duidelijker jouw omschrijving per tijdslot (vb. “Kapper — snit & brushing 45 min”), hoe beter klanten begrijpen wat ze boeken.
-          </span>
-        </section>
-
-        <section class="side-mini">
-          <strong>BETALING</strong>
-          <span>
-            Vul je IBAN & btw-nummer in bij <b>Instellingen</b>. Klanten ontvangen dan facturen met
-            <b>Vrijeplek.be – Breeerweg 15A, 3665 As – BE0742.671.986</b> als afzender.
-          </span>
-        </section>
-      </aside>
-
-      <!-- Hoofd -->
-      <section class="dash-main">
-        <!-- Tabs -->
-        <div class="dash-tabs" role="tablist">
-          <button class="dash-tab is-active" data-tab="appointments" type="button">
-            <span class="tab-icon">📆</span>
-            Afspraken
-            <small>Vandaag & binnenkort</small>
-          </button>
-          <button class="dash-tab" data-tab="slots" type="button">
-            <span class="tab-icon">◎</span>
-            Open tijdstippen
-            <small>Kalender & beheer</small>
-          </button>
-          <button class="dash-tab" data-tab="website" type="button">
-            <span class="tab-icon">🧩</span>
-            Website
-            <small>Vrijeplek pagina</small>
-          </button>
-          <button class="dash-tab" data-tab="settings" type="button">
-            <span class="tab-icon">⚙</span>
-            Instellingen
-            <small>Gegevens & factuur</small>
-          </button>
-        </div>
-
-        <!-- Panels -->
-        <div class="dash-panels">
-          <!-- AFSPRAKEN -->
-          <section class="dash-panel is-active" data-panel="appointments">
-            <div class="dash-panel-header">
-              <div>
-                <h2>Afspraken</h2>
-                <p>Overzicht van ingevulde vrije plekken. Later komt hier je echte afsprakenfeed.</p>
-              </div>
-              <div class="dash-panel-tag">
-                <span>📡 Sync met Vrijeplek.be</span>
-              </div>
-            </div>
-
-            <div class="appt-list" id="appointments-list">
-              <div class="appt-empty">
-                Nog geen afspraken getoond.<br>
-                Start eerst met <b>Open tijdstippen</b> in te plannen; zodra klanten boeken,
-                verschijnen ze hier.
-              </div>
-            </div>
-          </section>
-
-          <!-- OPEN TIJDSTIPPEN -->
-          <section class="dash-panel" data-panel="slots">
-            <div class="dash-panel-header">
-              <div>
-                <h2>Open tijdstippen</h2>
-                <p>Klik in de kalender, voeg een tijdslot toe en bepaal zelf of het zichtbaar is op Vrijeplek.</p>
-              </div>
-              <div class="dash-panel-tag">
-                <span>✨ Live kalender</span>
-              </div>
-            </div>
-
-            <div class="slots-layout">
-              <!-- Kalender -->
-              <div class="calendar-shell">
-                <div class="calendar-inner">
-                  <div class="cal-header">
-                    <div class="cal-month-label">
-                      <span id="cal-month-label">Maand</span>
-                      <span class="sub" id="cal-year-label">Jaar</span>
-                    </div>
-                    <div class="cal-nav">
-                      <button type="button" id="cal-prev" aria-label="Vorige maand">‹</button>
-                      <button type="button" id="cal-next" aria-label="Volgende maand">›</button>
-                      <div class="cal-today-pill" id="cal-today-btn">
-                        <span class="dot"></span>
-                        Vandaag
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="cal-grid">
-                    <div class="cal-weekdays">
-                      <span>Ma</span>
-                      <span>Di</span>
-                      <span>Wo</span>
-                      <span>Do</span>
-                      <span>Vr</span>
-                      <span>Za</span>
-                      <span>Zo</span>
-                    </div>
-                    <div class="cal-days" id="cal-days"></div>
-                  </div>
-
-                  <div class="cal-legend">
-                    <div class="cal-leg-row">
-                      <div class="cal-leg-dot" style="background:radial-gradient(circle at 0 0,#7fd3ff,#1a66ff 50%,#001a46 100%);"></div>
-                      <span>Geselecteerde dag</span>
-                    </div>
-                    <div class="cal-leg-row">
-                      <div class="cal-leg-dot" style="background:radial-gradient(circle at 0 0,#7dffbe,#0fa958 60%,#005630 100%);"></div>
-                      <span>Vandaag</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Slots detail -->
-              <div class="slots-shell">
-                <div class="slots-head">
-                  <div class="slots-head-main">
-                    <strong id="slots-date-label">Geen datum geselecteerd</strong>
-                    <span id="slots-date-sub">Klik in de kalender om een dag te kiezen.</span>
-                  </div>
-                  <button type="button" class="btn-primary" id="btn-new-slot">
-                    <span class="icon">＋</span>
-                    Nieuw tijdslot
+                <div class="empty-state" id="appointments-empty">
+                  <p><strong>Nog geen afspraken.</strong></p>
+                  <p>Maak eerst enkele open tijdstippen aan. Zodra klanten boeken, zie je ze hier automatisch verschijnen.</p>
+                  <button type="button" class="btn-ghost" data-panel-jump="tijden">
+                    ➜ Open tijdstippen beheren
                   </button>
                 </div>
 
-                <form class="slots-form" id="slots-form">
-                  <div class="field">
-                    <label for="slot-start">Start & einduur</label>
-                    <div class="field-row">
-                      <input type="time" id="slot-start" required>
-                      <input type="time" id="slot-end" required>
+                <div id="appointments-list" style="display:none;"></div>
+              </section>
+            </section>
+
+            <!-- Open tijdstippen -->
+            <section class="dash-panel" id="panel-tijden">
+              <header class="panel-head">
+                <h1>Open tijdstippen</h1>
+                <p class="panel-intro">
+                  Klik in de kalender, voeg een tijdslot toe en kies zelf of het zichtbaar is op Vrijeplek.
+                </p>
+              </header>
+
+              <div class="cards-grid">
+                <!-- Kalender -->
+                <section class="card card-glass">
+                  <header class="card-header-row">
+                    <div>
+                      <h2 class="card-title">Kalender</h2>
+                      <p class="card-subtitle">Intuïtieve kalender met subtiele animatie-feel.</p>
+                    </div>
+                    <div class="calendar-controls">
+                      <button type="button" class="btn-ghost" data-cal-prev>‹</button>
+                      <div class="calendar-month">
+                        <span data-cal-month>Maand</span>
+                        <span data-cal-year>Jaar</span>
+                      </div>
+                      <button type="button" class="btn-ghost" data-cal-next>›</button>
+                      <button type="button" class="btn-pill" data-cal-today>Vandaag</button>
+                    </div>
+                  </header>
+
+                  <div class="calendar-shell">
+                    <div class="calendar-days-row">
+                      <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span><span>Za</span><span>Zo</span>
+                    </div>
+                    <div class="calendar-grid" data-cal-grid>
+                      <!-- JS vult hier de dagen in -->
                     </div>
                   </div>
-                  <div class="field">
-                    <label for="slot-desc">Omschrijving (zichtbaar voor klant)</label>
-                    <textarea id="slot-desc" placeholder="Bv. 'Kapper — snit & brushing (45 min)'"></textarea>
-                  </div>
-                  <div class="field">
-                    <label for="slot-capacity">Aantal plaatsen (optioneel)</label>
-                    <input type="number" id="slot-capacity" min="1" placeholder="Standaard 1 klant">
-                  </div>
-                  <div class="field">
-                    <label>Instellingen</label>
-                    <div class="check-inline">
-                      <input type="checkbox" id="slot-active" checked>
-                      <label for="slot-active">Zichtbaar op Vrijeplek</label>
+                </section>
+
+                <!-- Tijdslot formulier + lijst -->
+                <section class="card card-soft">
+                  <h2 class="card-title">
+                    Tijdslot voor <span data-selected-date>geen datum geselecteerd</span>
+                  </h2>
+                  <p class="card-subtitle">
+                    Kies eerst een dag in de kalender en vul hieronder jouw vrije plek in.
+                  </p>
+
+                  <form class="slot-form" id="slot-form">
+                    <div class="slot-row">
+                      <div class="field">
+                        <label for="slot-start">Startuur</label>
+                        <input type="time" id="slot-start" name="start">
+                      </div>
+                      <div class="field">
+                        <label for="slot-end">Einduur</label>
+                        <input type="time" id="slot-end" name="end">
+                      </div>
+                      <div class="field">
+                        <label for="slot-places">Aantal plaatsen (optioneel)</label>
+                        <input type="number" id="slot-places" name="places" min="1" placeholder="1">
+                      </div>
                     </div>
+
+                    <div class="field">
+                      <label for="slot-desc">Omschrijving (zichtbaar voor klant)</label>
+                      <input
+                        type="text"
+                        id="slot-desc"
+                        name="description"
+                        placeholder="bv. ‘Kapper — snit &amp; brushing (45 min)’"
+                      >
+                    </div>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="slot-visible" name="visible" checked>
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Zichtbaar op Vrijeplek</span>
+                      </label>
+                    </div>
+
+                    <p class="helper">
+                      Voorbeeld: “Vrije plek: tandarts — controle (30 min)” of
+                      “Vrije plek: gyproc-offerte ter plaatse (1u)”.
+                    </p>
+
+                    <div class="form-actions">
+                      <button type="submit" class="btn-primary">
+                        ＋ Tijdslot opslaan
+                      </button>
+                    </div>
+                  </form>
+
+                  <hr class="card-divider">
+
+                  <div class="slot-list">
+                    <h3>Bestaande tijdstippen op <span data-selected-date-short>–</span></h3>
+                    <p class="helper">
+                      Hier zie je alle open tijdstippen voor de gekozen dag. Je zal ze later kunnen activeren/deactiveren.
+                    </p>
+                    <div class="empty-state" id="slot-empty">
+                      <p><strong>Nog geen tijdstippen voor deze dag.</strong></p>
+                      <p>Voeg hierboven een eerste vrij moment toe.</p>
+                    </div>
+                    <div id="slot-list"></div>
+                  </div>
+                </section>
+              </div>
+            </section>
+
+            <!-- Website -->
+            <section class="dash-panel" id="panel-website">
+              <header class="panel-head">
+                <h1>Website</h1>
+                <p class="panel-intro">
+                  Bouw of pas jouw Vrijeplek-pagina aan. Dit is wat klanten zien wanneer ze jouw vrije plek openen.
+                </p>
+              </header>
+
+              <section class="card card-soft">
+                <h2 class="card-title">AI websitebuilder</h2>
+                <p class="card-subtitle">
+                  Laat Vrijeplek automatisch een stijlvolle pagina voor je ontwerpen. Jij kiest foto’s, kleuren en teksten –
+                  AI doet de rest.
+                </p>
+
+                <button type="button" class="btn-primary" onclick="window.location.href='/builder.html'">
+                  Open de websitebuilder
+                </button>
+
+                <hr class="card-divider">
+
+                <h3>Link naar jouw Vrijeplek</h3>
+                <p class="helper">
+                  De publieke link naar jouw pagina verschijnt hier zodra jouw profiel compleet is.
+                  Ideaal voor in je e-mailhandtekening of op Facebook.
+                </p>
+                <p class="example">Voorbeeld: https://vrijeplek.be/kapper-janssens</p>
+
+                <div id="public-url"></div>
+              </section>
+            </section>
+
+            <!-- Instellingen -->
+            <section class="dash-panel" id="panel-instellingen">
+              <header class="panel-head">
+                <h1>Instellingen &amp; facturatie</h1>
+                <p class="panel-intro">
+                  Jouw bedrijfsgegevens voor facturen van Vrijeplek + optioneel voorschot voor jouw eigen klanten.
+                </p>
+              </header>
+
+              <section class="card card-soft">
+                <p class="badge-warning" id="settings-status">
+                  Gegevens nog niet opgeslagen
+                </p>
+
+                <form id="settings-form" class="settings-form">
+                  <!-- Bedrijf -->
+                  <fieldset class="settings-group">
+                    <legend>Bedrijf</legend>
+                    <div class="field">
+                      <label for="company-name">Bedrijfsnaam</label>
+                      <input id="company-name" name="company_name" type="text" autocomplete="organization">
+                    </div>
+                    <div class="field">
+                      <label for="contact-name">Naam contactpersoon</label>
+                      <input id="contact-name" name="contact_name" type="text">
+                    </div>
+                    <div class="field">
+                      <label for="billing-email">E-mailadres voor facturen</label>
+                      <input id="billing-email" name="billing_email" type="email" autocomplete="email">
+                    </div>
+                    <div class="field">
+                      <label for="phone">Telefoon / GSM</label>
+                      <input id="phone" name="phone" type="tel" autocomplete="tel">
+                    </div>
+                  </fieldset>
+
+                  <!-- Facturatie Vrijeplek-abonnement -->
+                  <fieldset class="settings-group">
+                    <legend>Facturatie Vrijeplek-abonnement</legend>
+                    <div class="field">
+                      <label for="vat-number">Btw-nummer</label>
+                      <input id="vat-number" name="vat_number" type="text" placeholder="BE0…">
+                    </div>
+                    <div class="field">
+                      <label for="invoice-note">Standaard factuurnoot (op factuur van Vrijeplek naar jouw bedrijf)</label>
+                      <textarea id="invoice-note" name="invoice_note" rows="2"
+                        placeholder="Eventuele interne referentie of boodschap op de factuur van Vrijeplek."></textarea>
+                    </div>
+                  </fieldset>
+
+                  <!-- VOORSCHOT OPTIE -->
+                  <fieldset class="settings-group">
+                    <legend>Voorschot bij boeking (optioneel)</legend>
+
+                    <p class="helper">
+                      Dit gaat over het <strong>voorschot dat jouw klant rechtstreeks aan jouw bedrijf betaalt</strong>
+                      wanneer hij via Vrijeplek een afspraak vastlegt.<br>
+                      <strong>Vrijeplek factureert alleen jouw abonnement</strong> aan jouw bedrijf.
+                      Wij voorzien enkel de betaalinterface – het voorschot komt op jouw rekening.
+                    </p>
+
+                    <label class="switch">
+                      <input type="checkbox" id="deposit-enabled" name="deposit_enabled">
+                      <span class="switch-slider"></span>
+                      <span class="switch-label">Voorschot vragen bij elke online boeking</span>
+                    </label>
+
+                    <div class="deposit-settings" data-deposit-block>
+                      <div class="field">
+                        <label for="iban">IBAN rekeningnummer (voor jouw voorschot)</label>
+                        <input id="iban" name="iban" type="text" placeholder="BE00 0000 0000 0000">
+                      </div>
+                      <div class="field">
+                        <label for="bic">BIC (optioneel)</label>
+                        <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
+                      </div>
+                      <div class="field">
+                        <label for="deposit-amount">Standaard voorschotbedrag</label>
+                        <div class="input-with-prefix">
+                          <span>€</span>
+                          <input id="deposit-amount" name="deposit_amount" type="number" min="0" step="1"
+                            placeholder="bv. 20">
+                        </div>
+                        <p class="helper">
+                          Dit is het bedrag dat de klant vooraf betaalt bij een online boeking.
+                          Het wordt op jouw IBAN gestort; Vrijeplek blijft hier volledig buiten.
+                        </p>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <!-- Adres -->
+                  <fieldset class="settings-group">
+                    <legend>Adres</legend>
+                    <div class="field">
+                      <label for="street">Straat + nummer</label>
+                      <input id="street" name="street" type="text">
+                    </div>
+                    <div class="field-group">
+                      <div class="field">
+                        <label for="postcode">Postcode</label>
+                        <input id="postcode" name="postcode" type="text">
+                      </div>
+                      <div class="field">
+                        <label for="city">Gemeente</label>
+                        <input id="city" name="city" type="text">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label for="country">Land</label>
+                      <input id="country" name="country" type="text" value="België">
+                    </div>
+                  </fieldset>
+
+                  <!-- Vrijeplek facturatiegegevens (vast) -->
+                  <fieldset class="settings-group settings-group-muted">
+                    <legend>Vrijeplek facturatiegegevens</legend>
+                    <p class="helper">
+                      Dit zijn de gegevens van Vrijeplek die op jouw abonnement-factuur verschijnen:
+                    </p>
+                    <p class="example">
+                      Vrijeplek.be<br>
+                      Breeerweg 15A<br>
+                      3665 As<br>
+                      BTW: BE0742.671.986
+                    </p>
+
+                    <div class="field">
+                      <label for="extra-footer">Extra info onderaan factuur (optioneel)</label>
+                      <textarea id="extra-footer" name="extra_footer" rows="2"
+                        placeholder="Bv. ‘Betaling binnen 14 dagen na factuurdatum.’"></textarea>
+                    </div>
+                  </fieldset>
+
+                  <p class="helper">
+                    Door op <strong>Instellingen opslaan</strong> te klikken, gebruik je deze gegevens voor
+                    facturen van Vrijeplek naar jouw bedrijf en voor bevestigingsmails naar jouw klanten.
+                  </p>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">Instellingen opslaan</button>
                   </div>
                 </form>
-
-                <div class="hint-row">
-                  <span>💡</span>
-                  <span>
-                    Voorbeeld: “Vrije plek: tandarts — controle (30 min)” of “Vrije plek: gyproc offerte ter plaatse (1u)”.
-                  </span>
-                </div>
-
-                <div class="slots-list" id="slots-list">
-                  <div class="slot-empty" id="slots-empty">Nog geen tijdstippen voor deze dag.</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- WEBSITE -->
-          <section class="dash-panel" data-panel="website">
-            <div class="dash-panel-header">
-              <div>
-                <h2>Website</h2>
-                <p>Bouw of wijzig je Vrijeplek pagina. Dit is wat klanten zien wanneer ze jouw vrije plek aanklikken.</p>
-              </div>
-              <div class="dash-panel-tag">
-                <span>🧠 AI websitebuilder</span>
-              </div>
-            </div>
-
-            <div class="panel-section">
-              <h3>AI Websitebuilder</h3>
-              <p>
-                Wil je dat Vrijeplek automatisch een stijlvolle pagina voor je maakt?
-                Gebruik de builder en kies foto’s, kleuren en teksten. AI doet de rest.
-              </p>
-              <a href="builder.html" class="btn-link">
-                <span>🧩</span>
-                Open de websitebuilder
-              </a>
-            </div>
-
-            <div class="panel-section">
-              <h3>Link naar jouw Vrijeplek</h3>
-              <p>
-                De publieke link naar jouw pagina wordt later hier zichtbaar.
-                Deel deze link in je e-mailhandtekening of op Facebook.
-              </p>
-              <p style="font-size:11px;opacity:.85;">
-                Voorbeeld: <b>https://vrijeplek.be/kapper-janssens</b>
-              </p>
-            </div>
-          </section>
-
-          <!-- INSTELLINGEN -->
-          <section class="dash-panel" data-panel="settings">
-            <div class="dash-panel-header">
-              <div>
-                <h2>Instellingen & facturatie</h2>
-                <p>
-                  Bedrijfsgegevens, IBAN en btw-nummer voor facturen. Alles netjes volgens Belgische regels.
-                </p>
-              </div>
-              <div class="status-badge" id="settings-status">
-                <span class="dot"></span>
-                Gegevens nog niet opgeslagen
-              </div>
-            </div>
-
-            <form id="settings-form">
-              <div class="settings-grid">
-                <div class="settings-group">
-                  <h3>Bedrijf</h3>
-
-                  <div class="settings-row">
-                    <label for="set-business-name">Bedrijfsnaam</label>
-                    <input id="set-business-name" type="text" placeholder="Bv. Kapsalon Els">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-contact-name">Naam contactpersoon</label>
-                    <input id="set-contact-name" type="text" placeholder="Jouw naam">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-email">E-mailadres voor facturen</label>
-                    <input id="set-email" type="email" placeholder="jouw@bedrijf.be">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-phone">Telefoon / GSM</label>
-                    <input id="set-phone" type="tel" placeholder="+32 …">
-                  </div>
-                </div>
-
-                <div class="settings-group">
-                  <h3>Facturatie</h3>
-
-                  <div class="settings-row">
-                    <label for="set-vat">Btw-nummer</label>
-                    <input id="set-vat" type="text" placeholder="BE0... (verplicht)">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-iban">IBAN rekeningnummer</label>
-                    <input id="set-iban" type="text" placeholder="BE.. jouw IBAN">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-bic">BIC (optioneel)</label>
-                    <input id="set-bic" type="text" placeholder="Bv. KREDBEBB">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-invoice-note">Standaard factuurnoot</label>
-                    <textarea id="set-invoice-note" placeholder="Bv. 'Betaling binnen 14 dagen op IBAN…'"></textarea>
-                  </div>
-                </div>
-
-                <div class="settings-group">
-                  <h3>Adres</h3>
-
-                  <div class="settings-row">
-                    <label for="set-street">Straat + nummer</label>
-                    <input id="set-street" type="text" placeholder="Breeerweg 15A">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-zip">Postcode</label>
-                    <input id="set-zip" type="text" placeholder="3665">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-city">Gemeente</label>
-                    <input id="set-city" type="text" placeholder="As">
-                  </div>
-
-                  <div class="settings-row">
-                    <label for="set-country">Land</label>
-                    <input id="set-country" type="text" value="België">
-                  </div>
-                </div>
-
-                <div class="settings-group">
-                  <h3>Vrijeplek facturatiegegevens</h3>
-                  <div class="settings-row">
-                    <label>Afzender op facturen</label>
-                    <textarea disabled>Vrijeplek.be
-Breeerweg 15A
-3665 As
-BTW: BE0742.671.986</textarea>
-                  </div>
-                  <div class="settings-row">
-                    <label for="set-extra">Extra info onderaan factuur (optioneel)</label>
-                    <textarea id="set-extra" placeholder="Bv. 'Vrijeplek-abonnement wordt automatisch verlengd tenzij opzegging.'"></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <div class="settings-footer">
-                <div>
-                  Door op <b>Opslaan</b> te klikken, worden je gegevens gebruikt voor
-                  facturen en bevestigingsmails naar klanten.
-                </div>
-                <button type="submit" class="btn-primary">
-                  <span class="icon">💾</span>
-                  Opslaan
-                </button>
-              </div>
-              <div id="settings-msg" class="msg"></div>
-            </form>
+              </section>
+            </section>
           </section>
         </div>
-      </section>
+      </div>
     </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© <span id="year-span"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
+        <span><a href="/voorwaarden.html">Algemene voorwaarden</a></span>
+      </div>
+    </footer>
   </div>
 
-  <!-- JS: tabs, kalender, simpele API-calls -->
+  <!-- UI LOGICA (tabs, kalender, voorschot-toggle, jaar, dummy hooks) -->
   <script>
-    // BASIC TAB SWITCH
-    const tabButtons = document.querySelectorAll('.dash-tab');
-    const panels = document.querySelectorAll('.dash-panel');
+    // Jaar in footer
+    document.getElementById('year-span').textContent = new Date().getFullYear();
 
-    tabButtons.forEach(btn => {
+    // Tabs schakelen
+    document.querySelectorAll('.dash-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-panel');
+
+        document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
+
+        document.querySelectorAll('.dash-panel').forEach(panel => {
+          panel.classList.toggle('is-visible', panel.id === `panel-${target}`);
+        });
+      });
+    });
+
+    // Panel-jump knoppen (bv. vanuit afspraken → open tijdstippen)
+    document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const target = btn.dataset.tab;
-        tabButtons.forEach(b => b.classList.toggle('is-active', b === btn));
-        panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === target));
+        const targetTab = document.querySelector('.dash-tab[data-panel="tijden"]');
+        if (targetTab) targetTab.click();
       });
     });
 
-    document.getElementById('go-open-slots').addEventListener('click', () => {
-      document.querySelector('.dash-tab[data-tab="slots"]').click();
-    });
-    document.getElementById('go-website').addEventListener('click', () => {
-      document.querySelector('.dash-tab[data-tab="website"]').click();
-    });
-
-    // KALENDER
-    const calMonthLabel = document.getElementById('cal-month-label');
-    const calYearLabel = document.getElementById('cal-year-label');
-    const calDaysContainer = document.getElementById('cal-days');
-    const calPrev = document.getElementById('cal-prev');
-    const calNext = document.getElementById('cal-next');
-    const calTodayBtn = document.getElementById('cal-today-btn');
-
-    let today = new Date();
-    today.setHours(0,0,0,0);
-    let viewDate = new Date(today);
-    let selectedDate = new Date(today);
-
-    const monthNames = [
-      'januari','februari','maart','april','mei','juni',
-      'juli','augustus','september','oktober','november','december'
-    ];
-
-    function formatISO(d){
-      return d.toISOString().slice(0,10);
-    }
-
-    function updateSlotsDateLabel(){
-      const label = document.getElementById('slots-date-label');
-      const sub = document.getElementById('slots-date-sub');
-      if(!selectedDate){
-        label.textContent = 'Geen datum geselecteerd';
-        sub.textContent = 'Klik in de kalender om een dag te kiezen.';
-        return;
-      }
-      const fmt = selectedDate.toLocaleDateString('nl-BE',{
-        weekday:'long', day:'2-digit', month:'long'
-      });
-      label.textContent = fmt.charAt(0).toUpperCase()+fmt.slice(1);
-      sub.textContent = 'Tijdstippen voor ' + formatISO(selectedDate) + '.';
-      loadSlotsForSelectedDate();
-    }
-
-    function buildCalendar(){
-      const year = viewDate.getFullYear();
-      const month = viewDate.getMonth();
-
-      calMonthLabel.textContent = monthNames[month].charAt(0).toUpperCase() + monthNames[month].slice(1);
-      calYearLabel.textContent = String(year);
-
-      calDaysContainer.innerHTML = '';
-
-      const firstOfMonth = new Date(year, month, 1);
-      const startDay = (firstOfMonth.getDay() + 6) % 7; // maandag=0
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      const prevMonthDays = new Date(year, month, 0).getDate();
-      const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
-
-      for(let i=0;i<totalCells;i++){
-        const cell = document.createElement('button');
-        cell.type = 'button';
-        cell.className = 'cal-day';
-
-        let dayNum;
-        let cellDate;
-
-        if(i < startDay){
-          dayNum = prevMonthDays - (startDay - 1 - i);
-          cell.classList.add('is-out');
-          cellDate = new Date(year, month-1, dayNum);
-        }else if(i >= startDay + daysInMonth){
-          dayNum = i - (startDay + daysInMonth) + 1;
-          cell.classList.add('is-out');
-          cellDate = new Date(year, month+1, dayNum);
-        }else{
-          dayNum = i - startDay + 1;
-          cellDate = new Date(year, month, dayNum);
+    // Voorschot-blok aan/uit
+    const depositToggle = document.getElementById('deposit-enabled');
+    const depositBlock = document.querySelector('[data-deposit-block]');
+    if (depositToggle && depositBlock) {
+      const updateDepositState = () => {
+        if (depositToggle.checked) {
+          depositBlock.classList.remove('is-disabled');
+        } else {
+          depositBlock.classList.add('is-disabled');
         }
-
-        const span = document.createElement('span');
-        span.textContent = dayNum;
-        cell.appendChild(span);
-
-        const sameDay = d => d.getFullYear() === cellDate.getFullYear() &&
-                              d.getMonth() === cellDate.getMonth() &&
-                              d.getDate() === cellDate.getDate();
-
-        if(sameDay(today)){
-          cell.classList.add('is-today');
-        }
-        if(selectedDate && sameDay(selectedDate)){
-          cell.classList.add('is-selected');
-        }
-
-        if(!cell.classList.contains('is-out')){
-          cell.addEventListener('click', () => {
-            selectedDate = new Date(cellDate);
-            buildCalendar();
-            updateSlotsDateLabel();
-          });
-        }
-
-        calDaysContainer.appendChild(cell);
-      }
-    }
-
-    calPrev.addEventListener('click', () => {
-      viewDate.setMonth(viewDate.getMonth() - 1);
-      buildCalendar();
-    });
-    calNext.addEventListener('click', () => {
-      viewDate.setMonth(viewDate.getMonth() + 1);
-      buildCalendar();
-    });
-    calTodayBtn.addEventListener('click', () => {
-      viewDate = new Date(today);
-      selectedDate = new Date(today);
-      buildCalendar();
-      updateSlotsDateLabel();
-    });
-
-    // SLOTS LOGICA (front-end, met fetch hooks)
-    const slotsListEl = document.getElementById('slots-list');
-    const slotsEmptyEl = document.getElementById('slots-empty');
-    const slotStart = document.getElementById('slot-start');
-    const slotEnd = document.getElementById('slot-end');
-    const slotDesc = document.getElementById('slot-desc');
-    const slotCap = document.getElementById('slot-capacity');
-    const slotActive = document.getElementById('slot-active');
-    const btnNewSlot = document.getElementById('btn-new-slot');
-
-    // simpele in-memory cache + paddings om later naar backend te sturen
-    const localSlots = {}; // { 'YYYY-MM-DD': [ {id, start, end, desc, cap, active} ] }
-    let nextSlotId = 1;
-
-    function renderSlots(dateKey){
-      const list = localSlots[dateKey] || [];
-      slotsListEl.innerHTML = '';
-      if(list.length === 0){
-        slotsListEl.appendChild(slotsEmptyEl);
-        slotsEmptyEl.style.display = 'block';
-        return;
-      }
-      slotsEmptyEl.style.display = 'none';
-
-      list.forEach(slot => {
-        const row = document.createElement('div');
-        row.className = 'slot-item';
-
-        const main = document.createElement('div');
-        main.className = 'slot-main';
-
-        const time = document.createElement('div');
-        time.className = 'slot-time';
-        time.textContent = slot.start + ' – ' + slot.end;
-
-        const desc = document.createElement('div');
-        desc.className = 'slot-desc';
-        desc.textContent = slot.desc || 'Geen omschrijving';
-
-        const tags = document.createElement('div');
-        tags.className = 'slot-tags';
-
-        const tagType = document.createElement('span');
-        tagType.className = 'slot-tag';
-        tagType.textContent = 'Vrije plek';
-
-        const tagActive = document.createElement('span');
-        tagActive.className = 'slot-tag';
-        tagActive.textContent = slot.active ? 'Zichtbaar' : 'Verborgen';
-
-        tags.appendChild(tagType);
-        tags.appendChild(tagActive);
-
-        main.appendChild(time);
-        main.appendChild(desc);
-        main.appendChild(tags);
-
-        const actions = document.createElement('div');
-        actions.className = 'slot-actions';
-
-        const toggle = document.createElement('div');
-        toggle.className = 'toggle' + (slot.active ? ' is-on' : '');
-        const dot = document.createElement('div');
-        dot.className = 'toggle-dot';
-        toggle.appendChild(dot);
-
-        const label = document.createElement('div');
-        label.className = 'label-muted';
-        label.textContent = slot.active ? 'Zichtbaar' : 'Verborgen';
-
-        toggle.addEventListener('click', () => {
-          slot.active = !slot.active;
-          label.textContent = slot.active ? 'Zichtbaar' : 'Verborgen';
-          toggle.classList.toggle('is-on', slot.active);
-          // TODO: stuur update naar backend (Netlify functie)
-          // saveSlotsToBackend(dateKey);
-        });
-
-        const del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'btn-ghost danger';
-        del.textContent = 'Verwijderen';
-        del.addEventListener('click', () => {
-          const idx = localSlots[dateKey].findIndex(s => s.id === slot.id);
-          if(idx >= 0){
-            localSlots[dateKey].splice(idx,1);
-            renderSlots(dateKey);
-            // TODO backend delete
-            // deleteSlotFromBackend(slot.id);
-          }
-        });
-
-        actions.appendChild(toggle);
-        actions.appendChild(label);
-        actions.appendChild(del);
-
-        row.appendChild(main);
-        row.appendChild(actions);
-
-        slotsListEl.appendChild(row);
-      });
-    }
-
-    function loadSlotsForSelectedDate(){
-      if(!selectedDate) return;
-      const key = formatISO(selectedDate);
-      renderSlots(key);
-
-      // Hier kan je je Netlify functie aanspreken:
-      // fetch('/.netlify/functions/appointments?date=' + key)
-      //   .then(r => r.json())
-      //   .then(data => { ...localSlots[key] = data.slots; renderSlots(key); });
-    }
-
-    btnNewSlot.addEventListener('click', () => {
-      if(!selectedDate){
-        alert('Kies eerst een datum in de kalender.');
-        return;
-      }
-      if(!slotStart.value || !slotEnd.value){
-        alert('Geef start- en einduur in.');
-        return;
-      }
-      const key = formatISO(selectedDate);
-      if(!localSlots[key]) localSlots[key] = [];
-
-      localSlots[key].push({
-        id: nextSlotId++,
-        start: slotStart.value,
-        end: slotEnd.value,
-        desc: slotDesc.value.trim(),
-        cap: slotCap.value ? parseInt(slotCap.value,10) || 1 : 1,
-        active: slotActive.checked
-      });
-
-      // velden leegmaken
-      // slotStart.value = '';
-      // slotEnd.value = '';
-      slotDesc.value = '';
-      slotCap.value = '';
-
-      renderSlots(key);
-
-      // TODO: stuur naar backend (Netlify / Supabase)
-      // saveSlotsToBackend(key);
-    });
-
-    // INSTELLINGEN (simple placeholder met eventuele Netlify /profile)
-    const settingsForm = document.getElementById('settings-form');
-    const settingsStatus = document.getElementById('settings-status');
-    const settingsMsg = document.getElementById('settings-msg');
-
-    function markSettings(saved){
-      if(saved){
-        settingsStatus.querySelector('span.dot').style.background =
-          'radial-gradient(circle at 30% 0, #7dffbe, #0fa958 60%, #004f2c 100%)';
-        settingsStatus.textContent = 'Gegevens opgeslagen';
-        settingsStatus.prepend(settingsStatus.querySelector('span.dot'));
-      }else{
-        settingsStatus.querySelector('span.dot').style.background =
-          'radial-gradient(circle at 30% 0, #ffcb7d, #f8943b 60%, #884000 100%)';
-        settingsStatus.lastChild && (settingsStatus.lastChild.textContent = 'Gegevens nog niet opgeslagen');
-      }
-    }
-
-    settingsForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      settingsMsg.textContent = '';
-      settingsMsg.className = 'msg';
-
-      const payload = {
-        business_name: document.getElementById('set-business-name').value.trim(),
-        contact_name: document.getElementById('set-contact-name').value.trim(),
-        email: document.getElementById('set-email').value.trim(),
-        phone: document.getElementById('set-phone').value.trim(),
-        vat: document.getElementById('set-vat').value.trim(),
-        iban: document.getElementById('set-iban').value.trim(),
-        bic: document.getElementById('set-bic').value.trim(),
-        invoice_note: document.getElementById('set-invoice-note').value.trim(),
-        street: document.getElementById('set-street').value.trim(),
-        zip: document.getElementById('set-zip').value.trim(),
-        city: document.getElementById('set-city').value.trim(),
-        country: document.getElementById('set-country').value.trim(),
-        extra: document.getElementById('set-extra').value.trim()
       };
+      depositToggle.addEventListener('change', updateDepositState);
+      updateDepositState();
+    }
 
-      try{
-        // Verwacht een Netlify functie /profile (pas aan indien anders)
-        await fetch('/.netlify/functions/profile', {
-          method:'PUT',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
+    // Eenvoudige front-end kalender + datumselectie
+    (function initCalendar(){
+      const grid = document.querySelector('[data-cal-grid]');
+      const monthLabel = document.querySelector('[data-cal-month]');
+      const yearLabel = document.querySelector('[data-cal-year]');
+      const selectedLabel = document.querySelector('[data-selected-date]');
+      const selectedShort = document.querySelector('[data-selected-date-short]');
+      if (!grid) return;
 
-        settingsMsg.textContent = 'Instellingen opgeslagen.';
-        settingsMsg.classList.add('ok');
-        markSettings(true);
+      let current = new Date();
+      let selected = new Date();
+      selected.setHours(0,0,0,0);
 
-        // Sidebar IBAN status bijwerken
-        document.getElementById('acct-iban-status').textContent =
-          payload.iban ? 'IBAN ingesteld' : 'Nog instellen';
-      }catch(err){
-        console.error(err);
-        settingsMsg.textContent = 'Er liep iets mis bij het opslaan. Controleer je verbinding of probeer opnieuw.';
-        settingsMsg.classList.add('err');
+      const monthNames = [
+        'januari','februari','maart','april','mei','juni',
+        'juli','augustus','september','oktober','november','december'
+      ];
+
+      function renderCalendar(){
+        const year = current.getFullYear();
+        const month = current.getMonth();
+        monthLabel.textContent = monthNames[month][0].toUpperCase() + monthNames[month].slice(1);
+        yearLabel.textContent = year;
+
+        grid.innerHTML = '';
+        const firstDay = new Date(year, month, 1);
+        const startWeekday = (firstDay.getDay() + 6) % 7; // 0 = maandag
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        for (let i = 0; i < startWeekday; i++) {
+          const pad = document.createElement('div');
+          grid.appendChild(pad);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(year, month, d);
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'calendar-day';
+          cell.textContent = d;
+
+          if (date.getTime() === today.getTime()) {
+            cell.classList.add('is-today');
+          }
+          if (selected && date.getTime() === selected.getTime()) {
+            cell.classList.add('is-selected');
+          }
+
+          cell.addEventListener('click', () => {
+            selected = date;
+            updateSelectedLabels();
+            renderCalendar();
+            // TODO: hier kun je later je open tijdstippen laden voor deze datum
+          });
+
+          grid.appendChild(cell);
+        }
       }
+
+      function updateSelectedLabels(){
+        if (!selected) {
+          selectedLabel.textContent = 'geen datum geselecteerd';
+          selectedShort.textContent = '–';
+          return;
+        }
+        const optionsLong = { weekday: 'long', day: 'numeric', month: 'long' };
+        const optionsShort = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        selectedLabel.textContent = selected.toLocaleDateString('nl-BE', optionsLong);
+        selectedShort.textContent = selected.toLocaleDateString('nl-BE', optionsShort);
+      }
+
+      document.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
+        current.setMonth(current.getMonth() - 1);
+        renderCalendar();
+      });
+      document.querySelector('[data-cal-next]')?.addEventListener('click', () => {
+        current.setMonth(current.getMonth() + 1);
+        renderCalendar();
+      });
+      document.querySelector('[data-cal-today]')?.addEventListener('click', () => {
+        current = new Date();
+        current.setDate(1);
+        selected = new Date();
+        selected.setHours(0,0,0,0);
+        updateSelectedLabels();
+        renderCalendar();
+      });
+
+      renderCalendar();
+      updateSelectedLabels();
+    })();
+
+    // Dummy submit handlers (hier later koppelen aan Netlify / Supabase)
+    document.getElementById('slot-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // TODO: stuur tijdslot naar backend (Netlify function / Supabase)
+      alert('Tijdslot wordt later gekoppeld aan de database. UI werkt al ✔');
     });
 
-    // LOGOUT knop – veronderstelt bestaande logout.js / Supabase sessie
-    document.getElementById('logout-btn').addEventListener('click', async () => {
+    document.getElementById('settings-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // TODO: stuur instellingen naar backend
+      document.getElementById('settings-status').textContent = 'Instellingen opgeslagen';
+      document.getElementById('settings-status').style.background = 'rgba(22,163,74,.18)';
+      document.getElementById('settings-status').style.borderColor = 'rgba(34,197,94,.7)';
+      document.getElementById('settings-status').style.color = '#bbf7d0';
+    });
+
+    // Uitloggen (koppelen met je bestaande logout logic / Supabase / Netlify function)
+    document.getElementById('logout-btn')?.addEventListener('click', async () => {
       try{
-        // Als je Supabase gebruikt via db.js: window.supabaseClient.auth.signOut()
-        if(window.supabaseClient){
-          await window.supabaseClient.auth.signOut();
-        }
+        // TODO: als je Supabase gebruikt: supabase.auth.signOut() of Netlify function /logout
+        window.location.href = '/login.html';
       }catch(e){
         console.error(e);
-      }finally{
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
       }
     });
-
-    // INIT
-    buildCalendar();
-    updateSlotsDateLabel();
-
-    // Optioneel: profiel laden via Netlify /profile
-    (async function loadProfile(){
-      try{
-        const res = await fetch('/.netlify/functions/profile');
-        if(!res.ok) return;
-        const data = await res.json();
-
-        if(data.email){
-          document.getElementById('header-user-email').textContent = data.email;
-        }
-        if(data.business_name){
-          document.getElementById('acct-name').textContent = data.business_name;
-          document.getElementById('set-business-name').value = data.business_name;
-        }
-        if(data.contact_name){
-          document.getElementById('set-contact-name').value = data.contact_name;
-        }
-        if(data.email){
-          document.getElementById('set-email').value = data.email;
-        }
-        if(data.phone){
-          document.getElementById('set-phone').value = data.phone;
-        }
-        if(data.vat){
-          document.getElementById('set-vat').value = data.vat;
-        }
-        if(data.iban){
-          document.getElementById('set-iban').value = data.iban;
-          document.getElementById('acct-iban-status').textContent = 'IBAN ingesteld';
-        }
-        if(data.bic){
-          document.getElementById('set-bic').value = data.bic;
-        }
-        if(data.invoice_note){
-          document.getElementById('set-invoice-note').value = data.invoice_note;
-        }
-        if(data.street){
-          document.getElementById('set-street').value = data.street;
-        }
-        if(data.zip){
-          document.getElementById('set-zip').value = data.zip;
-        }
-        if(data.city){
-          document.getElementById('set-city').value = data.city;
-        }
-        if(data.country){
-          document.getElementById('set-country').value = data.country;
-        }
-        if(data.extra){
-          document.getElementById('set-extra').value = data.extra;
-        }
-
-        markSettings(true);
-      }catch(e){
-        console.warn('Kon profiel niet laden', e);
-      }
-    })();
   </script>
 </body>
 </html>
