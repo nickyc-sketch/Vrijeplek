@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Vrijeplek</title>
 
-  <!-- Fonts + globale stijl -->
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=ocean3">
 
-  <!-- Pagina-specifieke aankleding -->
+  
   <style>
     :root{
       --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
@@ -56,6 +56,31 @@
       align-items:center;
       gap:.6rem;
     }
+    .header-left{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+}
+
+.btn-home{
+  border-radius:999px;
+  padding:.28rem .7rem;
+  font-size:.78rem;
+  border:1px solid rgba(148,163,184,.7);
+  background:rgba(15,23,42,.6);
+  color:rgba(226,232,240,.9);
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  backdrop-filter:blur(10px);
+}
+.btn-home:hover{
+  background:rgba(15,23,42,.9);
+  border-color:rgba(191,219,254,.9);
+  transform:translateY(-1px);
+}
+
     .brand-mark{
       width:32px; height:32px;
       border-radius:999px;
@@ -138,7 +163,7 @@
       max-width:1120px;
     }
 
-    /* DASH LAYOUT + CARDS */
+    
 
     .dash-layout{
       display:grid;
