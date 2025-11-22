@@ -1,4 +1,3 @@
-// netlify/functions/slots.js
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -7,31 +6,65 @@ const supabase = createClient(
 );
 
 export async function handler(event) {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method not allowed" };
-  }
-
-  let payload;
   try {
-    payload = JSON.parse(event.body || "{}");
-  } catch {
-    return { statusCode: 400, body: "Bad JSON" };
-  }
+    if (event.httpMethod === "GET") {
+      const qs = event.queryStringParameters || {};
+      const date = qs.date || null;
+      const email = (qs.email || "").trim().toLowerCase() || null;
 
-  const action = payload.action || "create";
+      let query = supabase
+        .from("slots")
+        .select("id,email,date,from,to,desc,booked_at,created_at,active");
 
-  try {
-    // --------------------------
-    // 1) Tijdslot aanmaken
-    // --------------------------
+      if (date) {
+        query = query.eq("date", date);
+      }
+      if (email) {
+        query = query.eq("email", email);
+      }
+
+      query = query.order("date", { ascending: true }).order("from", { ascending: true });
+
+      const { data, error } = await query;
+      if (error) {
+        console.error("slots.GET error:", error);
+        return { statusCode: 500, body: "DB error (get)" };
+      }
+
+      const mapped = (data || []).map((row) => ({
+        ...row,
+        start: row.from,
+        end: row.to,
+        description: row.desc
+      }));
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(mapped)
+      };
+    }
+
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 405, body: "Method not allowed" };
+    }
+
+    let payload;
+    try {
+      payload = JSON.parse(event.body || "{}");
+    } catch {
+      return { statusCode: 400, body: "Bad JSON" };
+    }
+
+    const action = payload.action || "create";
+
     if (action === "create") {
-      const email = (payload.email || "").trim().toLowerCase();
+      const email = (payload.email || "").trim().toLowerCase() || null;
       const date = payload.date;
-      const from = payload.from;
-      const to = payload.to;
-      const desc = (payload.desc || "").trim();
+      const from = payload.from || payload.start || null;
+      const to = payload.to || payload.end || null;
+      const desc = (payload.desc || payload.description || "").trim();
 
-      if (!email || !date || !from || !to) {
+      if (!date || !from || !to) {
         return { statusCode: 400, body: "Missing fields" };
       }
 
@@ -59,9 +92,6 @@ export async function handler(event) {
       };
     }
 
-    // --------------------------
-    // 2) Slots van ingelogde zaak
-    // --------------------------
     if (action === "list") {
       const email = (payload.email || "").trim().toLowerCase();
       if (!email) {
@@ -80,15 +110,19 @@ export async function handler(event) {
         return { statusCode: 500, body: "DB error (list)" };
       }
 
+      const mapped = (data || []).map((row) => ({
+        ...row,
+        start: row.from,
+        end: row.to,
+        description: row.desc
+      }));
+
       return {
         statusCode: 200,
-        body: JSON.stringify(data || [])
+        body: JSON.stringify(mapped)
       };
     }
 
-    // --------------------------
-    // 3) Slot actief / pauze
-    // --------------------------
     if (action === "toggle_active") {
       const id = payload.id;
       const active = !!payload.active;
@@ -110,9 +144,6 @@ export async function handler(event) {
       return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
 
-    // --------------------------
-    // 4) Slot verwijderen
-    // --------------------------
     if (action === "delete") {
       const id = payload.id;
       if (!id) {
@@ -129,9 +160,6 @@ export async function handler(event) {
       return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
 
-    // --------------------------
-    // 5) Publieke booking (nu enkel boeken)
-    // --------------------------
     if (action === "book") {
       const id = payload.id;
       if (!id) {
