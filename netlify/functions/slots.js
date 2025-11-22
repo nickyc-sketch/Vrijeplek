@@ -17,11 +17,12 @@ export async function handler(event) {
 
       const { data, error } = await supabase
         .from("slots")
-        .select('id, email, date, "from", "to", desc, booked_at, status, active, duration_min')
+        .select('id, email, date, "from", "to", "desc", booked_at, status, active, duration_min')
         .eq("date", date)
         .order("from", { ascending: true });
 
       if (error) {
+        console.error("slots GET error:", error);
         return { statusCode: 500, body: "DB error (get): " + error.message };
       }
 
@@ -77,6 +78,7 @@ export async function handler(event) {
         .insert([insertData]);
 
       if (error) {
+        console.error("slots POST error:", error);
         return {
           statusCode: 500,
           body: "DB error (create): " + error.message
@@ -92,6 +94,7 @@ export async function handler(event) {
     return { statusCode: 405, body: "Method not allowed" };
 
   } catch (err) {
+    console.error("slots handler crash:", err);
     return { statusCode: 500, body: "Server error" };
   }
 }
