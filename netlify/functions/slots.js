@@ -17,16 +17,15 @@ export async function handler(event) {
 
       const { data, error } = await supabase
         .from("slots")
-        .select("id, email, date, from, to, desc, booked_at, active")
+        .select('id, email, date, "from", "to", desc, booked_at, status, active, duration_min')
         .eq("date", date)
         .order("from", { ascending: true });
 
       if (error) {
-        console.error("slots GET error:", error);
-        return { statusCode: 500, body: "DB error (get)" };
+        return { statusCode: 500, body: "DB error (get): " + error.message };
       }
 
-      const mapped = (data || []).map((row) => ({
+      const mapped = (data || []).map(row => ({
         id: row.id,
         email: row.email,
         date: row.date,
@@ -34,7 +33,9 @@ export async function handler(event) {
         end: row.to,
         description: row.desc,
         booked_at: row.booked_at,
-        active: row.active
+        active: row.active,
+        status: row.status,
+        duration_min: row.duration_min
       }));
 
       return {
@@ -51,22 +52,24 @@ export async function handler(event) {
         return { statusCode: 400, body: "Bad JSON" };
       }
 
-      const date = payload.date;
-      const fromTime = payload.start || payload.from || null;
-      const toTime = payload.end || payload.to || null;
-      const desc = (payload.description || payload.desc || "").trim();
       const email = (payload.email || "").trim().toLowerCase() || null;
+      const date = payload.date;
+      const start = payload.start || null;
+      const end = payload.end || null;
+      const description = (payload.description || "").trim();
 
-      if (!date || !fromTime || !toTime) {
+      if (!date || !start || !end) {
         return { statusCode: 400, body: "Missing fields" };
       }
 
       const insertData = {
+        email,
         date,
-        from: fromTime,
-        to: toTime,
-        desc,
-        email
+        from: start,
+        to: end,
+        desc: description,
+        active: true,
+        status: "open"
       };
 
       const { error } = await supabase
@@ -74,7 +77,6 @@ export async function handler(event) {
         .insert([insertData]);
 
       if (error) {
-        console.error("slots POST error:", error);
         return {
           statusCode: 500,
           body: "DB error (create): " + error.message
@@ -88,8 +90,8 @@ export async function handler(event) {
     }
 
     return { statusCode: 405, body: "Method not allowed" };
-  } catch (e) {
-    console.error("slots handler crash:", e);
+
+  } catch (err) {
     return { statusCode: 500, body: "Server error" };
   }
 }
