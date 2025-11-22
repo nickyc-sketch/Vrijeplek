@@ -1039,66 +1039,175 @@
   </div>
 
   <!-- UI LOGICA (tabs, kalender, voorschot-toggle, jaar, dummy hooks) -->
+    <!-- UI LOGICA (tabs, kalender, voorschot-toggle, jaar, live koppeling slots) -->
   <script>
-    // Jaar in footer
-    document.getElementById('year-span').textContent = new Date().getFullYear();
+    const API_SLOTS = '/.netlify/functions/slots';
 
-    // Tabs schakelen
-    document.querySelectorAll('.dash-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.getAttribute('data-panel');
+    let settingsSaved = false;
 
-        document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
-        tab.classList.add('is-active');
-
-        document.querySelectorAll('.dash-panel').forEach(panel => {
-          panel.classList.toggle('is-visible', panel.id === `panel-${target}`);
-        });
-      });
-    });
-
-    // Panel-jump knoppen (bv. vanuit afspraken → open tijdstippen)
-    document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetTab = document.querySelector('.dash-tab[data-panel="tijden"]');
-        if (targetTab) targetTab.click();
-      });
-    });
-
-    // Voorschot-blok aan/uit
-    const depositToggle = document.getElementById('deposit-enabled');
-    const depositBlock = document.querySelector('[data-deposit-block]');
-    if (depositToggle && depositBlock) {
-      const updateDepositState = () => {
-        if (depositToggle.checked) {
-          depositBlock.classList.remove('is-disabled');
-        } else {
-          depositBlock.classList.add('is-disabled');
-        }
-      };
-      depositToggle.addEventListener('change', updateDepositState);
-      updateDepositState();
+    function formatDateKey(date){
+      const d = new Date(date.getTime());
+      d.setHours(0,0,0,0);
+      return d.toISOString().slice(0,10);
     }
 
-    // Eenvoudige front-end kalender + datumselectie
-    (function initCalendar(){
+    async function fetchSlotsForDate(dateKey){
+      const url = new URL(API_SLOTS, window.location.origin);
+      url.searchParams.set('date', dateKey);
+
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if(!res.ok){
+        throw new Error(await res.text());
+      }
+      return res.json();
+    }
+
+    async function createSlot(payload){
+      const res = await fetch(API_SLOTS, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok){
+        throw new Error(await res.text());
+      }
+      return res.json();
+    }
+
+    function renderSlotList(slotArray, slotListEl, slotEmptyEl){
+      if(!slotListEl || !slotEmptyEl) return;
+      if(!slotArray || !slotArray.length){
+        slotListEl.innerHTML = '';
+        slotListEl.style.display = 'none';
+        slotEmptyEl.style.display = 'block';
+        return;
+      }
+
+      slotEmptyEl.style.display = 'none';
+      slotListEl.style.display = 'block';
+
+      const rows = slotArray.map(item => {
+        const start = item.start_time || item.start || '';
+        const end = item.end_time || item.end || '';
+        const desc = item.description || item.desc || 'Geen omschrijving';
+        const places = item.places || 1;
+        const visible = typeof item.visible === 'boolean' ? item.visible : true;
+        const visibleText = visible ? 'Zichtbaar op Vrijeplek' : 'Verborgen';
+
+        return `
+          <div class="empty-state">
+            <p><strong>${start} – ${end}</strong></p>
+            <p>${desc}</p>
+            <p class="helper">${places} plaats(en) • ${visibleText}</p>
+          </div>
+        `;
+      });
+
+      slotListEl.innerHTML = rows.join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const yearSpan = document.getElementById('year-span');
+      if(yearSpan){
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      document.querySelectorAll('.dash-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-panel');
+
+          document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
+          tab.classList.add('is-active');
+
+          document.querySelectorAll('.dash-panel').forEach(panel => {
+            panel.classList.toggle('is-visible', panel.id === `panel-${target}`);
+          });
+        });
+      });
+
+      document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = document.querySelector('.dash-tab[data-panel="tijden"]');
+          if (targetTab) targetTab.click();
+        });
+      });
+
+      const depositToggle = document.getElementById('deposit-enabled');
+      const depositBlock = document.querySelector('[data-deposit-block]');
+      if (depositToggle && depositBlock) {
+        const updateDepositState = () => {
+          if (depositToggle.checked) {
+            depositBlock.classList.remove('is-disabled');
+          } else {
+            depositBlock.classList.add('is-disabled');
+          }
+        };
+        depositToggle.addEventListener('change', updateDepositState);
+        updateDepositState();
+      }
+
+      const slotForm   = document.getElementById('slot-form');
+      const slotList   = document.getElementById('slot-list');
+      const slotEmpty  = document.getElementById('slot-empty');
+      const slotStart  = document.getElementById('slot-start');
+      const slotEnd    = document.getElementById('slot-end');
+      const slotPlaces = document.getElementById('slot-places');
+      const slotDesc   = document.getElementById('slot-desc');
+      const slotVisible= document.getElementById('slot-visible');
+
       const grid = document.querySelector('[data-cal-grid]');
       const monthLabel = document.querySelector('[data-cal-month]');
       const yearLabel = document.querySelector('[data-cal-year]');
       const selectedLabel = document.querySelector('[data-selected-date]');
       const selectedShort = document.querySelector('[data-selected-date-short]');
-      if (!grid) return;
 
       let current = new Date();
+      current.setDate(1);
       let selected = new Date();
       selected.setHours(0,0,0,0);
+
+      const slotsCache = {};
 
       const monthNames = [
         'januari','februari','maart','april','mei','juni',
         'juli','augustus','september','oktober','november','december'
       ];
 
+      function updateSelectedLabels(){
+        if (!selected) {
+          if(selectedLabel) selectedLabel.textContent = 'geen datum geselecteerd';
+          if(selectedShort) selectedShort.textContent = '–';
+          return;
+        }
+        const optionsLong = { weekday: 'long', day: 'numeric', month: 'long' };
+        const optionsShort = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        if(selectedLabel){
+          selectedLabel.textContent = selected.toLocaleDateString('nl-BE', optionsLong);
+        }
+        if(selectedShort){
+          selectedShort.textContent = selected.toLocaleDateString('nl-BE', optionsShort);
+        }
+      }
+
+      async function loadSlotsForSelectedDate(){
+        if(!grid || !selected) return;
+        const key = formatDateKey(selected);
+        try{
+          const data = await fetchSlotsForDate(key);
+          slotsCache[key] = data || [];
+          renderSlotList(slotsCache[key], slotList, slotEmpty);
+        }catch(err){
+          console.error(err);
+          alert('Kon de tijdstippen voor deze dag niet laden. Probeer opnieuw.');
+        }
+      }
+
       function renderCalendar(){
+        if(!grid) return;
         const year = current.getFullYear();
         const month = current.getMonth();
         monthLabel.textContent = monthNames[month][0].toUpperCase() + monthNames[month].slice(1);
@@ -1106,7 +1215,7 @@
 
         grid.innerHTML = '';
         const firstDay = new Date(year, month, 1);
-        const startWeekday = (firstDay.getDay() + 6) % 7; // 0 = maandag
+        const startWeekday = (firstDay.getDay() + 6) % 7;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const today = new Date();
         today.setHours(0,0,0,0);
@@ -1118,6 +1227,7 @@
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
+          date.setHours(0,0,0,0);
           const cell = document.createElement('button');
           cell.type = 'button';
           cell.className = 'calendar-day';
@@ -1130,76 +1240,108 @@
             cell.classList.add('is-selected');
           }
 
-          cell.addEventListener('click', () => {
+          cell.addEventListener('click', async () => {
             selected = date;
             updateSelectedLabels();
             renderCalendar();
-            // TODO: hier kun je later je open tijdstippen laden voor deze datum
+            await loadSlotsForSelectedDate();
           });
 
           grid.appendChild(cell);
         }
       }
 
-      function updateSelectedLabels(){
-        if (!selected) {
-          selectedLabel.textContent = 'geen datum geselecteerd';
-          selectedShort.textContent = '–';
-          return;
-        }
-        const optionsLong = { weekday: 'long', day: 'numeric', month: 'long' };
-        const optionsShort = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        selectedLabel.textContent = selected.toLocaleDateString('nl-BE', optionsLong);
-        selectedShort.textContent = selected.toLocaleDateString('nl-BE', optionsShort);
-      }
-
-      document.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
+      document.querySelector('[data-cal-prev]')?.addEventListener('click', async () => {
         current.setMonth(current.getMonth() - 1);
         renderCalendar();
       });
-      document.querySelector('[data-cal-next]')?.addEventListener('click', () => {
+      document.querySelector('[data-cal-next]')?.addEventListener('click', async () => {
         current.setMonth(current.getMonth() + 1);
         renderCalendar();
       });
-      document.querySelector('[data-cal-today]')?.addEventListener('click', () => {
+      document.querySelector('[data-cal-today]')?.addEventListener('click', async () => {
         current = new Date();
         current.setDate(1);
         selected = new Date();
         selected.setHours(0,0,0,0);
         updateSelectedLabels();
         renderCalendar();
+        await loadSlotsForSelectedDate();
       });
+
+      if(slotForm){
+        slotForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          if(!selected){
+            alert('Kies eerst een datum in de kalender.');
+            return;
+          }
+
+          const startVal  = slotStart.value;
+          const endVal    = slotEnd.value;
+          const descVal   = slotDesc.value.trim();
+          const placesVal = slotPlaces.value ? parseInt(slotPlaces.value, 10) : 1;
+          const visibleVal= !!slotVisible.checked;
+
+          if(!startVal || !endVal){
+            alert('Vul minstens een start- en einduur in.');
+            return;
+          }
+
+          const dateKey = formatDateKey(selected);
+
+          try{
+            await createSlot({
+              date: dateKey,
+              start: startVal,
+              end: endVal,
+              places: placesVal,
+              description: descVal,
+              visible: visibleVal
+            });
+
+            slotForm.reset();
+            slotVisible.checked = true;
+
+            await loadSlotsForSelectedDate();
+          }catch(err){
+            console.error(err);
+            alert('Tijdslot kon niet worden opgeslagen. Controleer je verbinding of probeer opnieuw.');
+          }
+        });
+      }
+
+      const settingsForm = document.getElementById('settings-form');
+      if(settingsForm){
+        settingsForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          settingsSaved = true;
+
+          const status = document.getElementById('settings-status');
+          if (status){
+            status.textContent = 'Instellingen opgeslagen';
+            status.style.background = 'rgba(22,163,74,.18)';
+            status.style.borderColor = 'rgba(34,197,94,.7)';
+            status.style.color = '#bbf7d0';
+          }
+
+          // hier later koppelen aan je profiel-backend (profile.js)
+        });
+      }
+
+      const logoutBtn = document.getElementById('logout-btn');
+      if(logoutBtn){
+        logoutBtn.addEventListener('click', () => {
+          window.location.href = '/login.html';
+        });
+      }
 
       renderCalendar();
       updateSelectedLabels();
-    })();
-
-    // Dummy submit handlers (hier later koppelen aan Netlify / Supabase)
-    document.getElementById('slot-form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // TODO: stuur tijdslot naar backend (Netlify function / Supabase)
-      alert('Tijdslot wordt later gekoppeld aan de database. UI werkt al ✔');
-    });
-
-    document.getElementById('settings-form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // TODO: stuur instellingen naar backend
-      document.getElementById('settings-status').textContent = 'Instellingen opgeslagen';
-      document.getElementById('settings-status').style.background = 'rgba(22,163,74,.18)';
-      document.getElementById('settings-status').style.borderColor = 'rgba(34,197,94,.7)';
-      document.getElementById('settings-status').style.color = '#bbf7d0';
-    });
-
-    // Uitloggen (koppelen met je bestaande logout logic / Supabase / Netlify function)
-    document.getElementById('logout-btn')?.addEventListener('click', async () => {
-      try{
-        // TODO: als je Supabase gebruikt: supabase.auth.signOut() of Netlify function /logout
-        window.location.href = '/login.html';
-      }catch(e){
-        console.error(e);
-        window.location.href = '/login.html';
-      }
+      loadSlotsForSelectedDate();
     });
   </script>
 </body>
 </html>
+
