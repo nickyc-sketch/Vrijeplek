@@ -299,7 +299,7 @@
           <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
           <a class="nav-btn" href="aanmelden.html">Word lid</a>
           <a id="nav-login" class="nav-btn" href="login.html" aria-current="page">Login</a>
-          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none !important;">Mijn Vrijeplek</a>
         </nav>
       </div>
     </header>
@@ -417,56 +417,91 @@
       });
     }
 
+    // Immediately hide the "Mijn Vrijeplek" button on page load
+    (function() {
+      const btnMijn = document.getElementById('nav-mijn');
+      const btnLogin = document.getElementById('nav-login');
+      if (btnMijn) {
+        btnMijn.style.display = 'none';
+        btnMijn.style.visibility = 'hidden';
+      }
+      if (btnLogin) {
+        btnLogin.style.display = 'inline-flex';
+        btnLogin.style.visibility = 'visible';
+      }
+    })();
+
     const supaPromise = initSupabase();
 
     supaPromise.then(async (supa) => {
-      if (!supa) return; // Config failed
+      if (!supa) {
+        // If Supabase failed, ensure buttons are in correct state
+        const btnLogin = document.getElementById('nav-login');
+        const btnMijn = document.getElementById('nav-mijn');
+        if (btnLogin) btnLogin.style.display = 'inline-flex';
+        if (btnMijn) btnMijn.style.display = 'none';
+        return;
+      }
 
       const btnLogin = document.getElementById('nav-login');
       const btnMijn  = document.getElementById('nav-mijn');
 
+      if (!btnLogin || !btnMijn) {
+        console.warn('Nav buttons not found');
+        return;
+      }
+
       async function toggleNav(){
-        if (!btnLogin || !btnMijn) {
-          console.warn('Nav buttons not found');
-          return;
-        }
-        
         try {
-          // Force fresh session check
+          // Force fresh session check - clear any cached session first
           const { data, error } = await supa.auth.getSession();
           
           if (error) {
             console.error('Session check error:', error);
-            // On error, show login button
+            // On error, show login button, hide mijn button
             btnLogin.style.display = 'inline-flex';
+            btnLogin.style.visibility = 'visible';
             btnMijn.style.display = 'none';
+            btnMijn.style.visibility = 'hidden';
             return;
           }
           
-          const loggedIn = !!(data?.session?.user);
-          console.log('Session check - logged in:', loggedIn);
+          // Check if we have a valid session with a user
+          const hasValidSession = !!(data?.session?.user?.id);
+          const sessionExpired = data?.session?.expires_at 
+            ? (new Date(data.session.expires_at * 1000) < new Date())
+            : false;
+          
+          const loggedIn = hasValidSession && !sessionExpired;
+          console.log('Session check - logged in:', loggedIn, 'User:', data?.session?.user?.email);
           
           if (loggedIn){
             btnLogin.style.display = 'none';
-            btnMijn.style.display  = 'inline-flex';
+            btnLogin.style.visibility = 'hidden';
+            btnMijn.style.display = 'inline-flex';
+            btnMijn.style.visibility = 'visible';
           } else {
             btnLogin.style.display = 'inline-flex';
-            btnMijn.style.display  = 'none';
+            btnLogin.style.visibility = 'visible';
+            btnMijn.style.display = 'none';
+            btnMijn.style.visibility = 'hidden';
           }
         } catch (err) {
           console.error('Toggle nav error:', err);
           // On error, default to showing login button
           btnLogin.style.display = 'inline-flex';
+          btnLogin.style.visibility = 'visible';
           btnMijn.style.display = 'none';
+          btnMijn.style.visibility = 'hidden';
         }
       }
       
-      // Initial check
+      // Initial check - run immediately
       await toggleNav();
       
       // Listen for auth state changes
       supa.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
+        console.log('Auth state changed:', event, 'Has session:', !!session);
         toggleNav();
       });
 
@@ -508,6 +543,17 @@
       });
     }).catch(err => {
       console.error('Failed to initialize Supabase:', err);
+      // On error, ensure buttons are in correct state
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn = document.getElementById('nav-mijn');
+      if (btnLogin) {
+        btnLogin.style.display = 'inline-flex';
+        btnLogin.style.visibility = 'visible';
+      }
+      if (btnMijn) {
+        btnMijn.style.display = 'none';
+        btnMijn.style.visibility = 'hidden';
+      }
       const msg = document.getElementById('login-msg');
       if (msg) {
         msg.className = 'error';

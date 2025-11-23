@@ -1453,49 +1453,78 @@
         yearSpan.textContent = new Date().getFullYear();
       }
 
-      // tabs - ensure they're clickable
+      // tabs - attach click handlers
       const tabs = document.querySelectorAll('.dash-tab');
       console.log('Found tabs:', tabs.length);
       
       if (tabs.length === 0) {
-        console.error('No tabs found!');
+        console.error('No tabs found! Check HTML structure.');
+        return; // Exit early if no tabs
       }
       
       tabs.forEach((tab, index) => {
-        // Remove any existing listeners to prevent duplicates
-        const newTab = tab.cloneNode(true);
-        tab.parentNode.replaceChild(newTab, tab);
-        
         // Ensure tab is clickable
-        newTab.style.cursor = 'pointer';
-        newTab.style.pointerEvents = 'auto';
-        newTab.style.userSelect = 'none';
+        tab.style.cursor = 'pointer';
+        tab.style.pointerEvents = 'auto';
+        tab.style.userSelect = 'none';
+        tab.style.position = 'relative';
+        tab.style.zIndex = '1';
         
-        // Remove any blocking styles
-        newTab.style.zIndex = 'auto';
+        // Remove any existing click handlers by cloning (clean slate)
+        const newTab = tab.cloneNode(true);
+        tab.replaceWith(newTab);
         
-        newTab.addEventListener('click', (e) => {
-          console.log('Tab clicked:', newTab.getAttribute('data-panel'));
+        // Mark as having listener attached
+        newTab.setAttribute('data-listener-attached', 'true');
+        
+        // Attach fresh click handler
+        newTab.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          e.stopImmediatePropagation();
           
-          const target = newTab.getAttribute('data-panel');
+          const target = this.getAttribute('data-panel');
+          console.log('Tab clicked:', target);
+          
+          if (!target) {
+            console.error('Tab has no data-panel attribute');
+            return;
+          }
 
-          document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
-          newTab.classList.add('is-active');
-
-          document.querySelectorAll('.dash-panel').forEach(panel => {
-            panel.classList.toggle('is-visible', panel.id === `panel-${target}`);
+          // Update active tab
+          document.querySelectorAll('.dash-tab').forEach(t => {
+            t.classList.remove('is-active');
           });
-        }, { passive: false });
+          this.classList.add('is-active');
+
+          // Show/hide panels
+          document.querySelectorAll('.dash-panel').forEach(panel => {
+            const panelId = panel.id;
+            if (panelId === `panel-${target}`) {
+              panel.classList.add('is-visible');
+            } else {
+              panel.classList.remove('is-visible');
+            }
+          });
+        }, false); // Use capture phase false
+        
+        console.log(`Tab ${index} handler attached:`, newTab.getAttribute('data-panel'));
       });
 
       document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
-        btn.addEventListener('click', () => {
+        // Ensure button is clickable
+        btn.style.cursor = 'pointer';
+        btn.style.pointerEvents = 'auto';
+        
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
           const targetTab = document.querySelector('.dash-tab[data-panel="tijden"]');
-          if (targetTab) targetTab.click();
-        });
+          if (targetTab) {
+            targetTab.click();
+          } else {
+            console.error('Target tab not found for panel-jump');
+          }
+        }, false);
       });
 
       const depositToggle = document.getElementById('deposit-enabled');
@@ -1843,21 +1872,23 @@
 
       const logoutBtn = document.getElementById('logout-btn');
       if (logoutBtn){
-        // Remove any existing listeners
-        const newLogoutBtn = logoutBtn.cloneNode(true);
-        logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
-        
         // Ensure button is clickable
-        newLogoutBtn.style.cursor = 'pointer';
-        newLogoutBtn.style.pointerEvents = 'auto';
-        newLogoutBtn.style.userSelect = 'none';
+        logoutBtn.style.cursor = 'pointer';
+        logoutBtn.style.pointerEvents = 'auto';
+        logoutBtn.style.userSelect = 'none';
+        logoutBtn.style.position = 'relative';
+        logoutBtn.style.zIndex = '10';
         
-        newLogoutBtn.addEventListener('click', (e) => {
+        // Remove existing handler and add fresh one
+        const newLogoutBtn = logoutBtn.cloneNode(true);
+        logoutBtn.replaceWith(newLogoutBtn);
+        
+        newLogoutBtn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
           console.log('Logout button clicked');
           window.location.href = '/logout.html';
-        }, { passive: false });
+        }, false);
         
         console.log('Logout button handler attached');
       } else {
@@ -1872,79 +1903,64 @@
       console.log('Dashboard initialized successfully');
       
       // Final check: ensure all buttons and interactive elements are clickable
-      const interactiveElements = document.querySelectorAll('button, .dash-tab, [onclick], [data-panel], a.btn, .btn-head');
+      const interactiveElements = document.querySelectorAll('button, .dash-tab, [data-panel-jump], a.btn, .btn-head, .btn-ghost');
       console.log('Found interactive elements:', interactiveElements.length);
       
       interactiveElements.forEach(el => {
-        // Remove any blocking styles
+        // Force enable clicks
         el.style.pointerEvents = 'auto';
         el.style.cursor = 'pointer';
         el.style.userSelect = 'none';
-        el.style.zIndex = 'auto';
         
-        // Remove any overlay that might block clicks
+        // Check computed style
         const computed = window.getComputedStyle(el);
         if (computed.pointerEvents === 'none') {
+          console.warn('Element has pointer-events: none, forcing auto:', el);
           el.style.pointerEvents = 'auto';
+          el.style.position = 'relative';
+          el.style.zIndex = '10';
         }
       });
       
-      // Check for any overlays that might block clicks
-      const overlays = document.querySelectorAll('[style*="pointer-events: none"], [style*="z-index"]');
-      overlays.forEach(overlay => {
-        const style = overlay.getAttribute('style') || '';
-        if (style.includes('pointer-events: none')) {
-          console.warn('Found overlay with pointer-events: none:', overlay);
+      // Remove any blocking overlays
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        const style = window.getComputedStyle(el);
+        if (style.pointerEvents === 'none' && el.classList.contains('dash-tab')) {
+          console.warn('Tab has pointer-events: none, fixing:', el);
+          el.style.pointerEvents = 'auto';
         }
       });
       
       console.log('All interactive elements enabled');
     }
 
-    // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
-    // Use a more robust initialization pattern
-    (function() {
-      function runInit() {
-        try {
-          console.log('Running dashboard init...');
-          console.log('Document ready state:', document.readyState);
-          console.log('Body exists:', !!document.body);
-          console.log('Tabs found:', document.querySelectorAll('.dash-tab').length);
-          
-          initDashboard();
-          
-          // Verify event listeners were attached
-          setTimeout(() => {
-            const tabs = document.querySelectorAll('.dash-tab');
-            console.log('Tabs after init:', tabs.length);
-            tabs.forEach((tab, i) => {
-              console.log(`Tab ${i} clickable:`, tab.style.pointerEvents !== 'none');
-            });
-          }, 100);
-        } catch (err) {
-          console.error('Dashboard initialization error:', err);
-          console.error('Error stack:', err.stack);
-          alert('Fout bij initialiseren van dashboard: ' + err.message + '. Check de console voor details.');
-        }
-      }
-
-      // Multiple initialization attempts to ensure it runs
-      function attemptInit() {
-        if (document.body && document.querySelector('.dash-tab')) {
-          runInit();
-        } else {
-          console.log('Waiting for DOM...');
-          setTimeout(attemptInit, 50);
-        }
-      }
-
-      // Start initialization attempts
+    // Initialize dashboard when DOM is ready
+    function startDashboard() {
+      // Wait for DOM to be fully ready
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', attemptInit);
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(initDashboard, 100);
+        });
+      } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        // DOM is ready, but wait a bit for all elements to be rendered
+        setTimeout(initDashboard, 100);
       } else {
-        attemptInit();
+        initDashboard();
       }
-    })();
+    }
+    
+    // Start initialization
+    startDashboard();
+    
+    // Also try after a short delay as fallback
+    setTimeout(function() {
+      const tabs = document.querySelectorAll('.dash-tab');
+      if (tabs.length > 0 && !tabs[0].hasAttribute('data-listener-attached')) {
+        console.log('Fallback: Re-initializing dashboard...');
+        initDashboard();
+      }
+    }, 500);
   </script>
 
 </body>
