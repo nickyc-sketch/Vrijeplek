@@ -1784,14 +1784,12 @@
         });
       }
 
-      const logoutBtn = document.getElementById('logout-btn');
-      if(logoutBtn){
-        logoutBtn.addEventListener('click', () => {
-          // gewoon naar login, supabase regelt session
-          window.location.href = '/login.html';
-        });
-      }
-
+     const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn){
+  logoutBtn.addEventListener('click', () => {
+    window.location.href = '/logout.html';
+  });
+}
       renderCalendar();
       updateSelectedLabels();
       loadSlotsForSelectedDate();
