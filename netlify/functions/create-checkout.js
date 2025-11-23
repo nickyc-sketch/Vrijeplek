@@ -1,81 +1,71 @@
 // netlify/functions/create-checkout.js
 import Stripe from 'stripe';
 
-export async function handler(event) {
+export const config = { path: '/.netlify/functions/create-checkout' };
+
+export default async (req) => {
   try {
-    // Debug/healthcheck: GET /.netlify/functions/create-checkout?ping=1
-    if (event.httpMethod === 'GET') {
-      const ok = !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_MONTHLY && process.env.STRIPE_PRICE_YEARLY);
-      return {
-        statusCode: ok ? 200 : 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ok,
-          has_SECRET: !!process.env.STRIPE_SECRET_KEY,
-          has_PRICE_MONTHLY: !!process.env.STRIPE_PRICE_MONTHLY,
-          has_PRICE_YEARLY: !!process.env.STRIPE_PRICE_YEARLY,
-          site_url: process.env.SITE_URL || null
-        })
-      };
+    if (req.method !== 'POST') {
+      return new Response('Method not allowed', { status: 405 });
     }
 
-    if (event.httpMethod === 'OPTIONS') {
-      return {
-        statusCode: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        },
-        body: ''
-      };
+    const { plan } = await req.json();
+
+    if (!plan) {
+      return new Response(JSON.stringify({ error: 'Missing plan' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    if (event.httpMethod !== 'POST') {
-      return { statusCode: 405, body: 'Method Not Allowed' };
+    // ENV keys
+    const sk = process.env.STRIPE_SECRET_KEY;
+    const priceMonthly = process.env.STRIPE_PRICE_MONTHLY;
+    const priceYearly = process.env.STRIPE_PRICE_YEARLY;
+
+    if (!sk || !priceMonthly || !priceYearly) {
+      return new Response(JSON.stringify({ error: 'Missing Stripe ENV vars' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    const { plan = 'monthly', email = '' } = JSON.parse(event.body || '{}');
+    const stripe = new Stripe(sk, { apiVersion: '2023-10-16' });
 
-    const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-    const PRICE_MONTHLY     = process.env.STRIPE_PRICE_MONTHLY; // bv. price_123
-    const PRICE_YEARLY      = process.env.STRIPE_PRICE_YEARLY;  // bv. price_abc
-    const SITE_URL          = process.env.SITE_URL || 'https://www.vrijeplek.be';
-
-    if (!STRIPE_SECRET_KEY || !PRICE_MONTHLY || !PRICE_YEARLY) {
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' },
-        body: JSON.stringify({ error: 'Missing Stripe env vars', details: {
-          has_SECRET: !!STRIPE_SECRET_KEY, has_PRICE_MONTHLY: !!PRICE_MONTHLY, has_PRICE_YEARLY: !!PRICE_YEARLY
-        }})
-      };
+    let priceId;
+    if (plan === 'monthly') priceId = priceMonthly;
+    else if (plan === 'yearly') priceId = priceYearly;
+    else {
+      return new Response(JSON.stringify({ error: 'Invalid plan' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
-    const price = plan === 'yearly' ? PRICE_YEARLY : PRICE_MONTHLY;
+    // Detect site origin
+    const origin =
+      req.headers.get('origin') ||
+      process.env.PUBLIC_BASE_URL ||
+      'http://localhost:8888';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      customer_email: email || undefined,
-      line_items: [{ price, quantity: 1 }],
-      allow_promotion_codes: true,
-      success_url: `${SITE_URL}/geactiveerd.html?cs={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${SITE_URL}/dashboard.html?cancelled=1`,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${origin}/payment-success.html`,
+      cancel_url: `${origin}/payment-cancelled.html`,
       metadata: { plan }
     });
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' },
-      body: JSON.stringify({ url: session.url })
-    };
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (err) {
-    console.error('create-checkout error:', err);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' },
-      body: JSON.stringify({ error: 'Stripe failed', message: String(err?.message || err) })
-    };
+    console.error('create-checkout error', err);
+    return new Response(
+      JSON.stringify({ error: String(err) }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   }
-}
+};
