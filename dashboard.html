@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — Vrijeplek</title>
 
- 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=ocean3">
 
-  
   <style>
     :root{
       --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
@@ -57,30 +55,28 @@
       gap:.6rem;
     }
     .header-left{
-  display:flex;
-  align-items:center;
-  gap:.75rem;
-}
-
-.btn-home{
-  border-radius:999px;
-  padding:.28rem .7rem;
-  font-size:.78rem;
-  border:1px solid rgba(148,163,184,.7);
-  background:rgba(15,23,42,.6);
-  color:rgba(226,232,240,.9);
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:.35rem;
-  backdrop-filter:blur(10px);
-}
-.btn-home:hover{
-  background:rgba(15,23,42,.9);
-  border-color:rgba(191,219,254,.9);
-  transform:translateY(-1px);
-}
-
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+    }
+    .btn-home{
+      border-radius:999px;
+      padding:.28rem .7rem;
+      font-size:.78rem;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.6);
+      color:rgba(226,232,240,.9);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      backdrop-filter:blur(10px);
+    }
+    .btn-home:hover{
+      background:rgba(15,23,42,.9);
+      border-color:rgba(191,219,254,.9);
+      transform:translateY(-1px);
+    }
     .brand-mark{
       width:32px; height:32px;
       border-radius:999px;
@@ -162,8 +158,6 @@
       width:100%;
       max-width:1120px;
     }
-
-    
 
     .dash-layout{
       display:grid;
@@ -319,14 +313,12 @@
       font-weight:800;
     }
 
-    /* GRID */
     .cards-grid{
       display:grid;
       grid-template-columns:minmax(0,1.05fr) minmax(0,1.25fr);
       gap:1.25rem;
     }
 
-    /* FIELDS + FORMS */
     .field{
       display:flex;
       flex-direction:column;
@@ -405,7 +397,6 @@
       margin-top:.6rem;
     }
 
-    /* SWITCH */
     .switch{
       display:inline-flex;
       align-items:center;
@@ -458,7 +449,6 @@
       pointer-events:none;
     }
 
-    /* BUTTONS */
     .btn,
     .btn-primary,
     .btn-ghost,
@@ -500,7 +490,6 @@
       padding:.3rem .8rem;
     }
 
-    /* EMPTY STATE */
     .empty-state{
       border-radius:.9rem;
       background:rgba(15,23,42,.85);
@@ -511,7 +500,6 @@
     }
     .empty-state strong{font-weight:600;}
 
-    /* CALENDAR */
     .calendar-controls{
       display:flex;
       align-items:center;
@@ -624,7 +612,6 @@
       margin-bottom:.4rem;
     }
 
-    /* FOOTER */
     .site-footer{
       padding:1rem 1.5rem 1.4rem;
       border-top:1px solid rgba(15,23,42,.8);
@@ -646,17 +633,13 @@
       text-decoration:none;
     }
 
-    /* RESPONSIVE */
     @media (max-width:960px){
       .calendar-day{
-  /* kleinere tekst */
-  font-size: 0.7rem;
-  /* hoogte mag zelf bepalen; aspect-ratio uitschakelen */
-  aspect-ratio: auto;
-  /* extra vertical padding zodat de cijfers niet vastkleven tegen de rand */
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-}
+        font-size:0.7rem;
+        aspect-ratio:auto;
+        padding-top:0.2rem;
+        padding-bottom:0.2rem;
+      }
       .header-inner{
         padding:.8rem 1rem .7rem;
       }
@@ -687,14 +670,38 @@
 
 <body>
   <div class="site">
-    <!-- HEADER -->
     <header class="site-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-home" type="button" onclick="window.location.href='/'">
+            ⟵ Home
+          </button>
+          <a href="/" class="brand" aria-label="Terug naar Vrijeplek home">
+            <div class="brand-mark">V</div>
+            <div class="brand-wordmark">
+              <span>vrijeplek</span>
+              <span>last minute afspreken</span>
+            </div>
+          </a>
+        </div>
+        <div class="header-actions">
+          <div class="chip-pill">
+            <span class="chip-dot"></span>
+            <span>Dashboard actief</span>
+          </div>
+          <button class="btn-head" type="button" onclick="window.open('/', '_blank')">
+            Website bekijken
+          </button>
+          <button class="btn-head btn-head-primary" type="button" id="logout-btn">
+            Uitloggen
+          </button>
+        </div>
+      </div>
+    </header>
 
-    <!-- MAIN -->
     <main class="site-main">
       <div class="dash-shell">
         <div class="dash-layout">
-          <!-- SIDE TABS -->
           <aside class="dash-tabs" aria-label="Dashboard navigatie">
             <button class="dash-tab is-active" data-panel="afspraken">
               <span class="dash-tab-icon">📅</span>
@@ -718,9 +725,7 @@
             </button>
           </aside>
 
-          <!-- PANELS -->
           <section class="dash-panels">
-            <!-- Afspraken -->
             <section class="dash-panel is-visible" id="panel-afspraken">
               <header class="panel-head">
                 <h1>Jouw Vrijeplek</h1>
@@ -745,7 +750,6 @@
               </section>
             </section>
 
-            <!-- Open tijdstippen -->
             <section class="dash-panel" id="panel-tijden">
               <header class="panel-head">
                 <h1>Open tijdstippen</h1>
@@ -755,7 +759,6 @@
               </header>
 
               <div class="cards-grid">
-                <!-- Kalender -->
                 <section class="card card-glass">
                   <header class="card-header-row">
                     <div>
@@ -777,13 +780,10 @@
                     <div class="calendar-days-row">
                       <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span><span>Za</span><span>Zo</span>
                     </div>
-                    <div class="calendar-grid" data-cal-grid>
-                      <!-- JS vult hier de dagen in -->
-                    </div>
+                    <div class="calendar-grid" data-cal-grid></div>
                   </div>
                 </section>
 
-                <!-- Tijdslot formulier + lijst -->
                 <section class="card card-soft">
                   <h2 class="card-title">
                     Tijdslot voor <span data-selected-date>geen datum geselecteerd</span>
@@ -855,7 +855,6 @@
               </div>
             </section>
 
-            <!-- Website -->
             <section class="dash-panel" id="panel-website">
               <header class="panel-head">
                 <h1>Website</h1>
@@ -888,7 +887,6 @@
               </section>
             </section>
 
-            <!-- Instellingen -->
             <section class="dash-panel" id="panel-instellingen">
               <header class="panel-head">
                 <h1>Instellingen &amp; facturatie</h1>
@@ -903,7 +901,6 @@
                 </p>
 
                 <form id="settings-form" class="settings-form">
-                  <!-- Bedrijf -->
                   <fieldset class="settings-group">
                     <legend>Bedrijf</legend>
                     <div class="field">
@@ -924,7 +921,6 @@
                     </div>
                   </fieldset>
 
-                  <!-- Facturatie Vrijeplek-abonnement -->
                   <fieldset class="settings-group">
                     <legend>Facturatie Vrijeplek-abonnement</legend>
                     <div class="field">
@@ -938,7 +934,6 @@
                     </div>
                   </fieldset>
 
-                  <!-- VOORSCHOT OPTIE -->
                   <fieldset class="settings-group">
                     <legend>Voorschot bij boeking (optioneel)</legend>
 
@@ -979,7 +974,6 @@
                     </div>
                   </fieldset>
 
-                  <!-- Adres -->
                   <fieldset class="settings-group">
                     <legend>Adres</legend>
                     <div class="field">
@@ -1002,7 +996,6 @@
                     </div>
                   </fieldset>
 
-                  <!-- Vrijeplek facturatiegegevens (vast) -->
                   <fieldset class="settings-group settings-group-muted">
                     <legend>Vrijeplek facturatiegegevens</legend>
                     <p class="helper">
@@ -1038,7 +1031,6 @@
       </div>
     </main>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="footer-inner">
         <span>© <span id="year-span"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
@@ -1047,10 +1039,13 @@
     </footer>
   </div>
 
-  <!-- UI LOGICA (tabs, kalender, voorschot-toggle, jaar, dummy hooks) -->
-    <!-- UI LOGICA (tabs, kalender, voorschot-toggle, jaar, live koppeling slots) -->
   <script>
     const API_SLOTS = '/.netlify/functions/slots';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const dashboardEmail = urlParams.get('email')
+      ? decodeURIComponent(urlParams.get('email'))
+      : null;
 
     let settingsSaved = false;
 
@@ -1307,7 +1302,8 @@
               end: endVal,
               places: placesVal,
               description: descVal,
-              visible: visibleVal
+              visible: visibleVal,
+              email: dashboardEmail
             });
 
             slotForm.reset();
@@ -1316,7 +1312,7 @@
             await loadSlotsForSelectedDate();
           }catch(err){
             console.error(err);
-            alert('Tijdslot kon niet worden opgeslagen. Controleer je verbinding of probeer opnieuw.');
+            alert('Tijdslot kon niet worden opgeslagen: ' + (err.message || err));
           }
         });
       }
@@ -1334,8 +1330,6 @@
             status.style.borderColor = 'rgba(34,197,94,.7)';
             status.style.color = '#bbf7d0';
           }
-
-          // hier later koppelen aan je profiel-backend (profile.js)
         });
       }
 
@@ -1353,4 +1347,3 @@
   </script>
 </body>
 </html>
-
