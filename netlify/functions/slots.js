@@ -1,6 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 
-/const supabaseUrl = process.env.SUPABASE_URL;
+/*
+ * Supabase client initialization
+ *
+ * The handler below exposes two endpoints via a Netlify Function:
+ *  1. GET /.netlify/functions/slots?date=YYYY-MM-DD
+ *     Returns an array of slot objects for the specified date.  We do not
+ *     specify any additional filter arguments here: the only mandatory
+ *     parameter is `date`.  The query quotes the reserved column names
+ *     ("from", "to", "desc") and sorts the results in JavaScript to
+ *     avoid issues with SQL keywords.  The response payload includes
+ *     normalised field names (start, end, description) that match the
+ *     expectations of the front‑end dashboard.
+ *
+ *  2. POST /.netlify/functions/slots
+ *     Creates a new slot.  The POST body should contain `date`, `start` and
+ *     `end`, with optional `description` and `email`.  Fields such as
+ *     `places` and `visible` from the dashboard are ignored by this function;
+ *     only valid column names are inserted.  The slot is created with
+ *     status "open" and active = true by default.
+ */
+
+const supabaseUrl = process.env.SUPABASE_URL;
 const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, serviceKey);
