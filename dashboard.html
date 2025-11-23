@@ -1213,19 +1213,21 @@
     // ---------- SLOTS API ----------
 
     async function fetchSlotsForDate(dateKey){
-      const url = new URL(API_SLOTS, window.location.origin);
-      url.searchParams.set('date', dateKey);
+  const url = new URL(API_SLOTS, window.location.origin);
+  url.searchParams.set('date', dateKey);
+  if (dashboardEmail) {
+    url.searchParams.set('email', dashboardEmail);
+  }
 
-      const res = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include'
-      });
-      if(!res.ok){
-        throw new Error(await res.text());
-      }
-      return res.json();
-    }
-
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    credentials: 'include'
+  });
+  if(!res.ok){
+    throw new Error(await res.text());
+  }
+  return res.json();
+}
     async function createSlot(payload){
       const res = await fetch(API_SLOTS, {
         method: 'POST',
