@@ -27,11 +27,13 @@
         radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
       background-attachment:fixed;
     }
+
     .site{
       min-height:100vh;
       display:flex;
       flex-direction:column;
     }
+
     .site-header{
       position:sticky;
       top:0;
@@ -53,6 +55,7 @@
       display:flex;
       align-items:center;
       gap:.6rem;
+      text-decoration:none;
     }
     .header-left{
       display:flex;
@@ -174,7 +177,6 @@
       box-shadow:0 18px 50px rgba(15,23,42,.7);
       backdrop-filter:blur(22px);
     }
-
     .dash-tab{
       width:100%;
       text-align:left;
@@ -194,7 +196,6 @@
     .dash-tab-icon{font-size:1.05rem;}
     .dash-tab-label{font-weight:600; font-size:.9rem;}
     .dash-tab-sub{font-size:.75rem; opacity:.7;}
-
     .dash-tab::after{
       content:"";
       position:absolute;
@@ -203,7 +204,6 @@
       border:1px solid transparent;
       transition:.18s ease;
     }
-
     .dash-tab:hover{
       background:rgba(15,118,255,.08);
     }
@@ -216,15 +216,11 @@
       border-color:rgba(191,219,254,.9);
     }
 
-    .dash-panels{
-      display:block;
-    }
+    .dash-panels{display:block;}
     .dash-panel{display:none;}
     .dash-panel.is-visible{display:block;}
 
-    .panel-head{
-      margin-bottom:1rem;
-    }
+    .panel-head{margin-bottom:1rem;}
     .panel-head h1{
       font-size:1.4rem;
       color:#e5edff;
@@ -282,7 +278,6 @@
       gap:1rem;
       flex-wrap:wrap;
     }
-
     .card-divider{
       border:none;
       border-top:1px solid rgba(148,163,184,.4);
@@ -364,9 +359,8 @@
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.75rem;
-      align-items:flex-end; /* alles mooi op één lijn */
+      align-items:flex-end;
     }
-    /* FORCE zelfde hoogte voor alle drie inputs */
     .slot-form .slot-row input[type="time"],
     .slot-form .slot-row input[type="number"]{
       height:44px;
@@ -697,7 +691,6 @@
       text-decoration:none;
     }
 
-    /* Toast / popup */
     .toast{
       position:fixed;
       right:1.4rem;
@@ -852,6 +845,7 @@
           </aside>
 
           <section class="dash-panels">
+            <!-- AFSPRAKEN -->
             <section class="dash-panel is-visible" id="panel-afspraken">
               <header class="panel-head">
                 <h1>Jouw Vrijeplek</h1>
@@ -876,6 +870,7 @@
               </section>
             </section>
 
+            <!-- OPEN TIJDSTIPPEN -->
             <section class="dash-panel" id="panel-tijden">
               <header class="panel-head">
                 <h1>Open tijdstippen</h1>
@@ -994,6 +989,7 @@
               </div>
             </section>
 
+            <!-- WEBSITE -->
             <section class="dash-panel" id="panel-website">
               <header class="panel-head">
                 <h1>Website</h1>
@@ -1026,6 +1022,7 @@
               </section>
             </section>
 
+            <!-- INSTELLINGEN -->
             <section class="dash-panel" id="panel-instellingen">
               <header class="panel-head">
                 <h1>Instellingen &amp; facturatie</h1>
@@ -1113,45 +1110,6 @@
                     </div>
                   </fieldset>
 
-                  <fieldset class="settings-group">
-                    <legend>Adres & locatie</legend>
-                    <div class="field">
-                      <label for="street">Straat + nummer</label>
-                      <input id="street" name="street" type="text">
-                    </div>
-                    <div class="field-group">
-                      <div class="field">
-                        <label for="postcode">Postcode</label>
-                        <input id="postcode" name="postcode" type="text">
-                      </div>
-                      <div class="field">
-                        <label for="city">Gemeente</label>
-                        <input id="city" name="city" type="text">
-                      </div>
-                    </div>
-                    <div class="field">
-                      <label for="country">Land</label>
-                      <input id="country" name="country" type="text" value="België">
-                    </div>
-                    <div class="field-group">
-                      <div class="field">
-                        <label for="business-lat">Breedtegraad (lat)</label>
-                        <input id="business-lat" name="lat" type="text" inputmode="decimal" placeholder="51.00…">
-                      </div>
-                      <div class="field">
-                        <label for="business-lng">Lengtegraad (lng)</label>
-                        <input id="business-lng" name="lng" type="text" inputmode="decimal" placeholder="5.48…">
-                      </div>
-                    </div>
-                    <button type="button" class="btn-ghost" id="geo-btn">
-                      Gebruik mijn huidige locatie
-                    </button>
-                    <p class="helper">
-                      Deze coördinaten worden gebruikt om klanten later “dichtsbijzijnde vrije plekken” te tonen
-                      en te kunnen sorteren op afstand.
-                    </p>
-                  </fieldset>
-
                   <fieldset class="settings-group settings-group-muted">
                     <legend>Vrijeplek facturatiegegevens</legend>
                     <p class="helper">
@@ -1202,14 +1160,21 @@
   </div>
 
   <script>
-    const API_SLOTS = '/.netlify/functions/slots';
-
+    // -------- EMAIL VANUIT URL OF LOCALSTORAGE (DB-error fix) ----------
     const urlParams = new URLSearchParams(window.location.search);
-    const dashboardEmail = urlParams.get('email')
+    let dashboardEmail = urlParams.get('email')
       ? decodeURIComponent(urlParams.get('email'))
       : null;
 
-    let settingsSaved = false;
+    if (!dashboardEmail) {
+      const stored = localStorage.getItem('vp_email');
+      if (stored) dashboardEmail = stored;
+    }
+    if (dashboardEmail) {
+      localStorage.setItem('vp_email', dashboardEmail);
+    }
+
+    const API_SLOTS = '/.netlify/functions/slots';
 
     function formatDateKey(date){
       const d = new Date(date.getTime());
@@ -1357,6 +1322,7 @@
         yearSpan.textContent = new Date().getFullYear();
       }
 
+      // tabs
       document.querySelectorAll('.dash-tab').forEach(tab => {
         tab.addEventListener('click', () => {
           const target = tab.getAttribute('data-panel');
@@ -1391,6 +1357,7 @@
         updateDepositState();
       }
 
+      // kalender + slots
       const slotForm   = document.getElementById('slot-form');
       const slotList   = document.getElementById('slot-list');
       const slotEmpty  = document.getElementById('slot-empty');
@@ -1432,7 +1399,7 @@
         }
         const d = selected.getDate();
         const m = selected.getMonth();
-        const weekdayIndex = (selected.getDay() + 6) % 7; // Ma = 0
+        const weekdayIndex = (selected.getDay() + 6) % 7;
         let long = `${weekdayNames[weekdayIndex]} ${d} ${monthNames[m]}`;
         long = long.charAt(0).toUpperCase() + long.slice(1);
 
@@ -1596,6 +1563,11 @@
             return;
           }
 
+          if(!dashboardEmail){
+            showToast('Geen e-mailadres gevonden voor dit account (login checken).','error');
+            return;
+          }
+
           const dateKey = formatDateKey(selected);
 
           const payloadBase = {
@@ -1638,7 +1610,6 @@
       if(settingsForm){
         settingsForm.addEventListener('submit', (e) => {
           e.preventDefault();
-          settingsSaved = true;
 
           const status = document.getElementById('settings-status');
           if (status){
@@ -1687,6 +1658,7 @@
       const logoutBtn = document.getElementById('logout-btn');
       if(logoutBtn){
         logoutBtn.addEventListener('click', () => {
+          // gewoon naar login, supabase regelt session
           window.location.href = '/login.html';
         });
       }
