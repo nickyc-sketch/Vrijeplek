@@ -429,19 +429,47 @@
   })();
   </script>
 
+  <script src="/js/config.js"></script>
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-    const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+    // Wait for config to load
+    function initSupabase() {
+      return new Promise((resolve) => {
+        // If config is already loaded, proceed immediately
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
+        // Otherwise wait for config-loaded event
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once: true });
+
+        // Timeout after 3 seconds
+        setTimeout(() => {
+          resolve(createSupabaseClient());
+        }, 3000);
+      });
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth:{ persistSession:true, autoRefreshToken:true }
-    });
+    function createSupabaseClient() {
+      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
+      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
+        return null;
+      }
+
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth:{ persistSession:true, autoRefreshToken:true }
+      });
+    }
+
+    initSupabase().then(supabase => {
+      if (!supabase) return;
 
     const btnLogin = document.getElementById('nav-login');
     const btnMijn  = document.getElementById('nav-mijn');
@@ -457,8 +485,8 @@
         btnMijn.style.display  = 'none';
       }
     }
-    await toggleNav();
-    supabase.auth.onAuthStateChange(()=>toggleNav());
+      await toggleNav();
+      supabase.auth.onAuthStateChange(()=>toggleNav());
 
     // ---------- Zoeken op dezelfde pagina + boekingen ----------
 
@@ -622,10 +650,10 @@
       btn.disabled = true;
 
       try{
-        const res = await fetch('/.netlify/functions/start-booking', {
+        const res = await fetch('/.netlify/functions/create-deposit', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ slot_id: slotId })
+          body: JSON.stringify({ slotId: slotId, customer_email: '', customer_name: '' })
         });
         const data = await res.json().catch(()=>null);
 
@@ -641,10 +669,10 @@
           return;
         }
 
-        if(data.checkout_url){
+        if(data.url){
           // Stripe / betaalpagina
           bookingMsg.textContent = 'Je wordt doorgestuurd naar de betaalpagina…';
-          window.location.href = data.checkout_url;
+          window.location.href = data.url;
           return;
         }
 
@@ -664,10 +692,13 @@
       }
     }
 
-    resultsList.addEventListener('click', (e)=>{
-      const btn = e.target.closest('.slot-book-btn');
-      if(!btn) return;
-      handleBook(btn);
+      resultsList.addEventListener('click', (e)=>{
+        const btn = e.target.closest('.slot-book-btn');
+        if(!btn) return;
+        handleBook(btn);
+      });
+    }).catch(err => {
+      console.error('Failed to initialize Supabase:', err);
     });
   </script>
 </body>

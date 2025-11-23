@@ -377,76 +377,118 @@
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-    const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+    // Wait for config to load
+    function initSupabase() {
+      return new Promise((resolve) => {
+        // If config is already loaded, proceed immediately
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.error('Supabase credentials not configured.');
-    }
+        // Otherwise wait for config-loaded event
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once: true });
 
-    const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
-    });
-
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
-
-    async function toggleNav(){
-      if (!btnLogin || !btnMijn) return;
-      const { data:{ session } } = await supa.auth.getSession();
-      const loggedIn = !!session?.user;
-      if (loggedIn){
-        btnLogin.style.display = 'none';
-        btnMijn.style.display  = 'inline-flex';
-      } else {
-        btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display  = 'none';
-      }
-    }
-    await toggleNav();
-    supa.auth.onAuthStateChange(()=>toggleNav());
-
-    // Als er al een sessie is, meteen naar dashboard MET email in de URL
-    {
-      const { data: { session } } = await supa.auth.getSession();
-      if (session) {
-        const mail = (session.user?.email || '').trim().toLowerCase();
-        const target = '/dashboard.html' + (mail ? ('?email=' + encodeURIComponent(mail)) : '');
-        window.location.href = target;
-      }
-    }
-
-    const form   = document.getElementById('login-form');
-    const email  = document.getElementById('login-email');
-    const pass   = document.getElementById('login-password');
-    const msg    = document.getElementById('login-msg');
-
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const cleanEmail = email.value.trim().toLowerCase();
-
-      if (!cleanEmail || !pass.value) {
-        msg.className = 'error';
-        msg.textContent = 'Vul e-mailadres en wachtwoord in.';
-        return;
-      }
-      msg.className = '';
-      msg.textContent = 'Aan het inloggen…';
-
-      const { error } = await supa.auth.signInWithPassword({
-        email: cleanEmail,
-        password: pass.value
+        // Timeout after 3 seconds
+        setTimeout(() => {
+          resolve(createSupabaseClient());
+        }, 3000);
       });
+    }
 
-      if (error) {
-        msg.className = 'error';
-        msg.textContent = error.message || 'Login mislukt.';
-        return;
+    function createSupabaseClient() {
+      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
+      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials not configured. Check Netlify environment variables.');
+        const msg = document.getElementById('login-msg');
+        if (msg) {
+          msg.className = 'error';
+          msg.textContent = 'Configuratie fout: Supabase credentials ontbreken. Neem contact op met de beheerder.';
+        }
+        return null;
       }
 
-      // Succes → dashboard met email in de URL
-      const target = '/dashboard.html?email=' + encodeURIComponent(cleanEmail);
-      window.location.href = target;
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+      });
+    }
+
+    const supaPromise = initSupabase();
+
+    supaPromise.then(async (supa) => {
+      if (!supa) return; // Config failed
+
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn  = document.getElementById('nav-mijn');
+
+      async function toggleNav(){
+        if (!btnLogin || !btnMijn) return;
+        const { data:{ session } } = await supa.auth.getSession();
+        const loggedIn = !!session?.user;
+        if (loggedIn){
+          btnLogin.style.display = 'none';
+          btnMijn.style.display  = 'inline-flex';
+        } else {
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display  = 'none';
+        }
+      }
+      await toggleNav();
+      supa.auth.onAuthStateChange(()=>toggleNav());
+
+      // Als er al een sessie is, meteen naar dashboard MET email in de URL
+      {
+        const { data: { session } } = await supa.auth.getSession();
+        if (session) {
+          const mail = (session.user?.email || '').trim().toLowerCase();
+          const target = '/dashboard.html' + (mail ? ('?email=' + encodeURIComponent(mail)) : '');
+          window.location.href = target;
+        }
+      }
+
+      const form   = document.getElementById('login-form');
+      const email  = document.getElementById('login-email');
+      const pass   = document.getElementById('login-password');
+      const msg    = document.getElementById('login-msg');
+
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const cleanEmail = email.value.trim().toLowerCase();
+
+        if (!cleanEmail || !pass.value) {
+          msg.className = 'error';
+          msg.textContent = 'Vul e-mailadres en wachtwoord in.';
+          return;
+        }
+        msg.className = '';
+        msg.textContent = 'Aan het inloggen…';
+
+        const { error } = await supa.auth.signInWithPassword({
+          email: cleanEmail,
+          password: pass.value
+        });
+
+        if (error) {
+          msg.className = 'error';
+          msg.textContent = error.message || 'Login mislukt.';
+          return;
+        }
+
+        // Succes → dashboard met email in de URL
+        const target = '/dashboard.html?email=' + encodeURIComponent(cleanEmail);
+        window.location.href = target;
+      });
+    }).catch(err => {
+      console.error('Failed to initialize Supabase:', err);
+      const msg = document.getElementById('login-msg');
+      if (msg) {
+        msg.className = 'error';
+        msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
+      }
     });
   </script>
 </body>

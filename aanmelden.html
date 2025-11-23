@@ -445,9 +445,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
 
   <!-- 2) Config -->
-  <script defer src="js/config.js"></script>
+  <script src="/js/config.js"></script>
 
   <!-- 3) Signup + nav + plan-highlight -->
+  <script src="/js/config.js"></script>
   <script defer>
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('signup-form');
@@ -467,15 +468,48 @@
         }
       }
 
-      const { SUPABASE_URL, SUPABASE_ANON_KEY } = window.VRIJEPLEK || {};
-      const { createClient } = window.supabase || {};
+      // Wait for config to load
+      function initSupabase() {
+        return new Promise((resolve) => {
+          if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+            resolve(createSupabaseClient());
+            return;
+          }
 
-      if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !createClient) {
-        console.error('Supabase/config niet geladen');
-        return;
+          window.addEventListener('vrijeplek-config-loaded', () => {
+            resolve(createSupabaseClient());
+          }, { once: true });
+
+          setTimeout(() => resolve(createSupabaseClient()), 3000);
+        });
       }
 
-      const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      function createSupabaseClient() {
+        const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
+        const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+          console.error('Supabase/config niet geladen');
+          return null;
+        }
+
+        // Import createClient dynamically
+        return import('https://esm.sh/@supabase/supabase-js@2').then(({ createClient }) => {
+          return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        });
+      }
+
+      initSupabase().then(clientPromise => {
+        if (!clientPromise) {
+          if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
+          return;
+        }
+
+        clientPromise.then(client => {
+          if (!client) {
+            if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
+            return;
+          }
 
       // Nav-knoppen wisselen op basis van sessie
       async function toggleNav(){
@@ -491,13 +525,13 @@
           btnMijn.style.display  = 'none';
         }
       }
-      toggleNav();
-      client.auth.onAuthStateChange(() => toggleNav());
+          toggleNav();
+          client.auth.onAuthStateChange(() => toggleNav());
 
-      // Signup handler
-      if (!form || !msg) return;
+          // Signup handler
+          if (!form || !msg) return;
 
-      form.addEventListener('submit', async (e) => {
+          form.addEventListener('submit', async (e) => {
         e.preventDefault();
         msg.className = '';
         msg.textContent = 'Even geduld…';
@@ -548,9 +582,17 @@
           msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
         } catch(err){
           console.error(err);
-          msg.className='error';
-          msg.textContent='Netwerkfout. Probeer opnieuw.';
-        }
+            msg.className='error';
+            msg.textContent='Netwerkfout. Probeer opnieuw.';
+          }
+        });
+        }).catch(err => {
+          console.error('Supabase init error:', err);
+          if (msg) msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
+        });
+      }).catch(err => {
+        console.error('Config load error:', err);
+        if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
       });
     });
   </script>

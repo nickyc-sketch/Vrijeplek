@@ -70,42 +70,72 @@
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-    const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+    function initSupabase() {
+      return new Promise((resolve) => {
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.error('Supabase credentials not configured.');
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once: true });
+
+        setTimeout(() => resolve(createSupabaseClient()), 3000);
+      });
     }
-    const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, storage: localStorage } });
 
-    const form = document.getElementById('reset-form');
-    const pw1  = document.getElementById('pw1');
-    const pw2  = document.getElementById('pw2');
-    const msg  = document.getElementById('reset-msg');
+    function createSupabaseClient() {
+      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
+      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
 
-    // Wacht tot Supabase de recovery sessie klaarzet
-    let ready = false;
-    const { data: sub } = supa.auth.onAuthStateChange(async (event, session) => {
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials not configured.');
+        return null;
+      }
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, storage: localStorage } });
+    }
+
+    initSupabase().then(supa => {
+      if (!supa) {
+        const msg = document.getElementById('reset-msg');
+        if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
+        return;
+      }
+
+      const form = document.getElementById('reset-form');
+      const pw1  = document.getElementById('pw1');
+      const pw2  = document.getElementById('pw2');
+      const msg  = document.getElementById('reset-msg');
+
+      // Wacht tot Supabase de recovery sessie klaarzet
+      let ready = false;
+      const { data: sub } = supa.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
         ready = true;
       }
     });
 
-    // Extra safeguard: korte timeout; daarna gaan we gewoon proberen
-    setTimeout(()=>{ ready = true; }, 1200);
+      // Extra safeguard: korte timeout; daarna gaan we gewoon proberen
+      setTimeout(()=>{ ready = true; }, 1200);
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      if(!ready){ msg.textContent = 'Even geduld…'; return; }
-      if(!pw1.value || pw1.value !== pw2.value){ msg.textContent = 'Wachtwoorden komen niet overeen.'; return; }
-      msg.textContent = 'Opslaan…';
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        if(!ready){ msg.textContent = 'Even geduld…'; return; }
+        if(!pw1.value || pw1.value !== pw2.value){ msg.textContent = 'Wachtwoorden komen niet overeen.'; return; }
+        msg.textContent = 'Opslaan…';
 
-      const { error } = await supa.auth.updateUser({ password: pw1.value });
-      if (error) { msg.textContent = error.message || 'Kon wachtwoord niet updaten.'; return; }
+        const { error } = await supa.auth.updateUser({ password: pw1.value });
+        if (error) { msg.textContent = error.message || 'Kon wachtwoord niet updaten.'; return; }
 
-      msg.textContent = 'Wachtwoord ingesteld. Je wordt aangemeld…';
-      // Na update is user ingelogd → naar dashboard
-      setTimeout(()=>{ window.location.href = '/dashboard.html'; }, 500);
+        msg.textContent = 'Wachtwoord ingesteld. Je wordt aangemeld…';
+        // Na update is user ingelogd → naar dashboard
+        setTimeout(()=>{ window.location.href = '/dashboard.html'; }, 500);
+      });
+    }).catch(err => {
+      console.error('Supabase init error:', err);
+      const msg = document.getElementById('reset-msg');
+      if (msg) msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
     });
   </script>
 </body>

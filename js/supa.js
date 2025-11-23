@@ -1,18 +1,28 @@
 // js/supa.js
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// Wait for config to load before initializing Supabase
+import { waitForConfig } from './config-loader.js';
 
-// Load from environment or config
-const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+(async function() {
+  try {
+    const config = await waitForConfig();
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
-}
+    if (!config.SUPABASE_URL || !config.SUPABASE_ANON_KEY) {
+      console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
+      return;
+    }
 
-// Maak 1 gedeelde client voor de hele site
-window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true
+    // Maak 1 gedeelde client voor de hele site
+    window.supabase = createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true
+      }
+    });
+
+    // Dispatch event when supabase is ready
+    window.dispatchEvent(new CustomEvent('supabase-ready'));
+  } catch (err) {
+    console.error('Failed to initialize Supabase:', err);
   }
-});
+})();

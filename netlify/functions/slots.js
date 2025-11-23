@@ -8,7 +8,11 @@ const supabase = createClient(supabaseUrl, serviceKey);
 export async function handler(event) {
   try {
     if (!supabaseUrl || !serviceKey) {
-      return { statusCode: 500, body: "Supabase env not configured" };
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Supabase env not configured" })
+      };
     }
 
     const method = event.httpMethod;
@@ -31,7 +35,11 @@ export async function handler(event) {
 
       if (error) {
         console.error("slots GET error:", error);
-        return { statusCode: 500, body: "DB error (get): " + error.message };
+        return {
+          statusCode: 500,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "DB error (get): " + error.message })
+        };
       }
 
       const mapped = (data || [])
@@ -50,6 +58,7 @@ export async function handler(event) {
 
       return {
         statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mapped),
       };
     }
@@ -73,7 +82,11 @@ export async function handler(event) {
       const description = (payload.description || "").trim();
 
       if (!date || !start || !end) {
-        return { statusCode: 400, body: "Missing fields" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Missing fields" })
+        };
       }
 
       const insertData = {
@@ -92,12 +105,14 @@ export async function handler(event) {
         console.error("slots POST error:", error);
         return {
           statusCode: 500,
-          body: "DB error (create): " + error.message,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "DB error (create): " + error.message })
         };
       }
 
       return {
         statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ok: true }),
       };
     }
@@ -111,7 +126,11 @@ export async function handler(event) {
       try {
         payload = JSON.parse(event.body || "{}");
       } catch {
-        return { statusCode: 400, body: "Bad JSON" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Bad JSON" })
+        };
       }
 
       const id          = payload.id;
@@ -129,7 +148,11 @@ export async function handler(event) {
       if (description !== undefined) updateData.desc  = description;
 
       if (Object.keys(updateData).length === 0) {
-        return { statusCode: 400, body: "Nothing to update" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Nothing to update" })
+        };
       }
 
       const { error } = await supabase
@@ -141,12 +164,14 @@ export async function handler(event) {
         console.error("slots PUT error:", error);
         return {
           statusCode: 500,
-          body: "DB error (update): " + error.message,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "DB error (update): " + error.message })
         };
       }
 
       return {
         statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ok: true }),
       };
     }
@@ -158,7 +183,11 @@ export async function handler(event) {
       const id = qs.id;
 
       if (!id) {
-        return { statusCode: 400, body: "Missing id" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Missing id" })
+        };
       }
 
       const { error } = await supabase
@@ -170,12 +199,14 @@ export async function handler(event) {
         console.error("slots DELETE error:", error);
         return {
           statusCode: 500,
-          body: "DB error (delete): " + error.message,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "DB error (delete): " + error.message })
         };
       }
 
       return {
         statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ok: true }),
       };
     }
@@ -183,10 +214,18 @@ export async function handler(event) {
     // --------------------------------
     // ALLES ANDERS → 405
     // --------------------------------
-    return { statusCode: 405, body: "Method not allowed" };
+    return {
+      statusCode: 405,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: "Method not allowed" })
+    };
 
   } catch (err) {
     console.error("slots handler crash:", err);
-    return { statusCode: 500, body: "Server error" };
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: "Server error", message: err.message })
+    };
   }
 }
