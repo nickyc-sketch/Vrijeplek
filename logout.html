@@ -6,13 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<script>
-(function(){
+<script src="/js/config.js"></script>
+<script type="module">
+(async function(){
   try{
-    // Local/session storage leeg
-    try{ localStorage.clear(); }catch{}
-    try{ sessionStorage.clear(); }catch{}
-
     // Cookies wissen (best effort)
     try{
       document.cookie.split(';').forEach(function(c){
@@ -23,21 +20,49 @@
       });
     }catch{}
 
-    // Supabase signout proberen (optioneel, niet verplicht)
+    // Supabase signout - use proper config
     (async function(){
       try{
-        if (window.env && window.env.SUPABASE_URL && window.env.SUPABASE_ANON_KEY) {
-          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-          const supa = createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, { auth:{ persistSession:true }});
-          await supa.auth.signOut().catch(()=>{});
+        // Wait for config if needed
+        let config = window.VRIJEPLEK;
+        if (!config?.SUPABASE_URL || !config?.SUPABASE_ANON_KEY) {
+          // Wait for config to load
+          await new Promise((resolve) => {
+            if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+              resolve();
+              return;
+            }
+            window.addEventListener('vrijeplek-config-loaded', resolve, { once: true });
+            setTimeout(resolve, 2000); // Timeout after 2 seconds
+          });
+          config = window.VRIJEPLEK;
         }
-      }catch(e){}
-      // Hoe dan ook: weg van hier
+        
+        if (config?.SUPABASE_URL && config?.SUPABASE_ANON_KEY) {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supa = createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, storage: localStorage }
+          });
+          
+          // Sign out from Supabase
+          const { error } = await supa.auth.signOut();
+          if (error) {
+            console.error('Sign out error:', error);
+          } else {
+            console.log('Signed out successfully');
+          }
+        }
+      }catch(e){
+        console.error('Logout error:', e);
+      }
+      
+      // Clear all storage
+      try{ localStorage.clear(); }catch{}
+      try{ sessionStorage.clear(); }catch{}
+      
+      // Redirect to login
       location.replace('login.html');
     })();
-  }catch(e){
-    location.href = 'login.html';
-  }
 })();
 </script>
 </body>

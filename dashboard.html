@@ -1453,31 +1453,42 @@
         yearSpan.textContent = new Date().getFullYear();
       }
 
-      // tabs
+      // tabs - ensure they're clickable
       const tabs = document.querySelectorAll('.dash-tab');
       console.log('Found tabs:', tabs.length);
+      
+      if (tabs.length === 0) {
+        console.error('No tabs found!');
+      }
+      
       tabs.forEach((tab, index) => {
-        console.log(`Attaching listener to tab ${index}:`, tab);
-        // Ensure tab is clickable
-        tab.style.cursor = 'pointer';
-        tab.style.pointerEvents = 'auto';
+        // Remove any existing listeners to prevent duplicates
+        const newTab = tab.cloneNode(true);
+        tab.parentNode.replaceChild(newTab, tab);
         
-        tab.addEventListener('click', (e) => {
-          console.log('Tab clicked:', tab.getAttribute('data-panel'));
+        // Ensure tab is clickable
+        newTab.style.cursor = 'pointer';
+        newTab.style.pointerEvents = 'auto';
+        newTab.style.userSelect = 'none';
+        
+        // Remove any blocking styles
+        newTab.style.zIndex = 'auto';
+        
+        newTab.addEventListener('click', (e) => {
+          console.log('Tab clicked:', newTab.getAttribute('data-panel'));
           e.preventDefault();
           e.stopPropagation();
-          const target = tab.getAttribute('data-panel');
+          e.stopImmediatePropagation();
+          
+          const target = newTab.getAttribute('data-panel');
 
           document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
-          tab.classList.add('is-active');
+          newTab.classList.add('is-active');
 
           document.querySelectorAll('.dash-panel').forEach(panel => {
             panel.classList.toggle('is-visible', panel.id === `panel-${target}`);
           });
-        });
-        // Also ensure tab is clickable
-        tab.style.cursor = 'pointer';
-        tab.style.pointerEvents = 'auto';
+        }, { passive: false });
       });
 
       document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
@@ -1832,9 +1843,25 @@
 
       const logoutBtn = document.getElementById('logout-btn');
       if (logoutBtn){
-        logoutBtn.addEventListener('click', () => {
+        // Remove any existing listeners
+        const newLogoutBtn = logoutBtn.cloneNode(true);
+        logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+        
+        // Ensure button is clickable
+        newLogoutBtn.style.cursor = 'pointer';
+        newLogoutBtn.style.pointerEvents = 'auto';
+        newLogoutBtn.style.userSelect = 'none';
+        
+        newLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Logout button clicked');
           window.location.href = '/logout.html';
-        });
+        }, { passive: false });
+        
+        console.log('Logout button handler attached');
+      } else {
+        console.error('Logout button not found!');
       }
       
       // Initialize calendar and load data
@@ -1845,10 +1872,32 @@
       console.log('Dashboard initialized successfully');
       
       // Final check: ensure all buttons and interactive elements are clickable
-      document.querySelectorAll('button, .dash-tab, [onclick], [data-panel]').forEach(el => {
+      const interactiveElements = document.querySelectorAll('button, .dash-tab, [onclick], [data-panel], a.btn, .btn-head');
+      console.log('Found interactive elements:', interactiveElements.length);
+      
+      interactiveElements.forEach(el => {
+        // Remove any blocking styles
         el.style.pointerEvents = 'auto';
         el.style.cursor = 'pointer';
+        el.style.userSelect = 'none';
+        el.style.zIndex = 'auto';
+        
+        // Remove any overlay that might block clicks
+        const computed = window.getComputedStyle(el);
+        if (computed.pointerEvents === 'none') {
+          el.style.pointerEvents = 'auto';
+        }
       });
+      
+      // Check for any overlays that might block clicks
+      const overlays = document.querySelectorAll('[style*="pointer-events: none"], [style*="z-index"]');
+      overlays.forEach(overlay => {
+        const style = overlay.getAttribute('style') || '';
+        if (style.includes('pointer-events: none')) {
+          console.warn('Found overlay with pointer-events: none:', overlay);
+        }
+      });
+      
       console.log('All interactive elements enabled');
     }
 

@@ -426,19 +426,49 @@
       const btnMijn  = document.getElementById('nav-mijn');
 
       async function toggleNav(){
-        if (!btnLogin || !btnMijn) return;
-        const { data:{ session } } = await supa.auth.getSession();
-        const loggedIn = !!session?.user;
-        if (loggedIn){
-          btnLogin.style.display = 'none';
-          btnMijn.style.display  = 'inline-flex';
-        } else {
+        if (!btnLogin || !btnMijn) {
+          console.warn('Nav buttons not found');
+          return;
+        }
+        
+        try {
+          // Force fresh session check
+          const { data, error } = await supa.auth.getSession();
+          
+          if (error) {
+            console.error('Session check error:', error);
+            // On error, show login button
+            btnLogin.style.display = 'inline-flex';
+            btnMijn.style.display = 'none';
+            return;
+          }
+          
+          const loggedIn = !!(data?.session?.user);
+          console.log('Session check - logged in:', loggedIn);
+          
+          if (loggedIn){
+            btnLogin.style.display = 'none';
+            btnMijn.style.display  = 'inline-flex';
+          } else {
+            btnLogin.style.display = 'inline-flex';
+            btnMijn.style.display  = 'none';
+          }
+        } catch (err) {
+          console.error('Toggle nav error:', err);
+          // On error, default to showing login button
           btnLogin.style.display = 'inline-flex';
-          btnMijn.style.display  = 'none';
+          btnMijn.style.display = 'none';
         }
       }
+      
+      // Initial check
       await toggleNav();
-      supa.auth.onAuthStateChange(()=>toggleNav());
+      
+      // Listen for auth state changes
+      supa.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+        toggleNav();
+      });
 
       // REMOVED: Auto-redirect when already logged in
       // Users can now stay on login page even if already logged in

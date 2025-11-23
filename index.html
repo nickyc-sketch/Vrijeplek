@@ -475,18 +475,39 @@
     const btnMijn  = document.getElementById('nav-mijn');
 
     async function toggleNav(){
-      const { data:{ session } } = await supabase.auth.getSession();
-      const loggedIn = !!session?.user;
-      if(loggedIn){
-        btnLogin.style.display = 'none';
-        btnMijn.style.display  = 'inline-flex';
-      }else{
+      if (!btnLogin || !btnMijn) return;
+      
+      try {
+        // Force fresh session check
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Session check error:', error);
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display = 'none';
+          return;
+        }
+        
+        const loggedIn = !!(data?.session?.user);
+        
+        if(loggedIn){
+          btnLogin.style.display = 'none';
+          btnMijn.style.display  = 'inline-flex';
+        }else{
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display  = 'none';
+        }
+      } catch (err) {
+        console.error('Toggle nav error:', err);
         btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display  = 'none';
+        btnMijn.style.display = 'none';
       }
     }
       await toggleNav();
-      supabase.auth.onAuthStateChange(()=>toggleNav());
+      supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event);
+        toggleNav();
+      });
 
     // ---------- Zoeken op dezelfde pagina + boekingen ----------
 

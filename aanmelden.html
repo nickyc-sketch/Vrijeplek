@@ -513,19 +513,37 @@
       // Nav-knoppen wisselen op basis van sessie
       async function toggleNav(){
         if (!btnLogin || !btnMijn) return;
-        const { data:{ session } } = await client.auth.getSession();
-        const loggedIn = !!session?.user;
-        if (loggedIn) {
-          btnLogin.style.display = 'none';
-          btnMijn.style.display  = 'inline-flex';
-        } else {
+        
+        try {
+          const { data, error } = await client.auth.getSession();
+          
+          if (error) {
+            console.error('Session check error:', error);
+            btnLogin.style.display = 'inline-flex';
+            btnMijn.style.display = 'none';
+            return;
+          }
+          
+          const loggedIn = !!(data?.session?.user);
+          
+          if (loggedIn) {
+            btnLogin.style.display = 'none';
+            btnMijn.style.display  = 'inline-flex';
+          } else {
+            btnLogin.style.display = 'inline-flex';
+            btnMijn.style.display  = 'none';
+          }
+        } catch (err) {
+          console.error('Toggle nav error:', err);
           btnLogin.style.display = 'inline-flex';
-          btnMijn.style.display  = 'inline-flex';
-          btnMijn.style.display  = 'none';
+          btnMijn.style.display = 'none';
         }
       }
           toggleNav();
-          client.auth.onAuthStateChange(() => toggleNav());
+          client.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event);
+            toggleNav();
+          });
 
           // Signup handler
           if (!form || !msg) return;
