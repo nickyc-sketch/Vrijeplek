@@ -1,9 +1,34 @@
 // js/supa.js
 // Wait for config to load before initializing Supabase
-import { waitForConfig } from './config-loader.js';
-
 (async function() {
   try {
+    // Wait for config to load
+    function waitForConfig() {
+      return new Promise((resolve) => {
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve({
+            SUPABASE_URL: window.VRIJEPLEK.SUPABASE_URL,
+            SUPABASE_ANON_KEY: window.VRIJEPLEK.SUPABASE_ANON_KEY
+          });
+          return;
+        }
+
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve({
+            SUPABASE_URL: window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '',
+            SUPABASE_ANON_KEY: window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || ''
+          });
+        }, { once: true });
+
+        setTimeout(() => {
+          resolve({
+            SUPABASE_URL: window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '',
+            SUPABASE_ANON_KEY: window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || ''
+          });
+        }, 3000);
+      });
+    }
+
     const config = await waitForConfig();
     const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
 

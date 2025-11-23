@@ -1,24 +1,9 @@
 
 const $ = s => document.querySelector(s);
 document.addEventListener('DOMContentLoaded',()=>{
-  const identity = window.netlifyIdentity;
-  const loginLink = document.getElementById('loginLink');
-  const logoutLink = document.getElementById('logoutLink');
-  if (identity){
-    identity.on('init', user => {
-      if (user){
-        if (loginLink) loginLink.style.display='none';
-        if (logoutLink){ logoutLink.style.display='inline-flex'; logoutLink.onclick=()=>identity.logout(); }
-        const emailSpan = document.getElementById('uEmail'); if (emailSpan) emailSpan.textContent = user.email;
-        if (location.pathname.endsWith('login.html')) window.location.href = 'dashboard.html';
-      } else {
-        if (logoutLink) logoutLink.style.display='none';
-        if (loginLink) loginLink.style.display='inline-flex';
-        if (location.pathname.endsWith('dashboard.html')) window.location.href = 'login.html';
-      }
-    });
-    identity.init();
-  }
+  // REMOVED: Old Netlify Identity code - now using Supabase auth
+  // This was causing conflicts with Supabase authentication
+  // If you need Netlify Identity features, use Supabase auth instead
 
   const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
 
@@ -140,6 +125,5 @@ async function delSlot(id){
   }
 }
 async function saveProfile(){ alert('Profiel bewaard'); }
-if (location.pathname.endsWith('dashboard.html')){
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(syncSlots, 300));
-}
+// REMOVED: Dashboard code - dashboard.html has its own inline script
+// This was causing conflicts with dashboard initialization
