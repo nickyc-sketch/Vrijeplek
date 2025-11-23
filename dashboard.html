@@ -366,6 +366,11 @@
       gap:.75rem;
     }
 
+    /* Hoogtes gelijk trekken Start/Eind/Aantal plaatsen */
+    .slot-form .slot-row input{
+      height:42px;
+    }
+
     .helper{
       font-size:.78rem;
       color:rgba(148,163,184,.95);
@@ -1420,13 +1425,26 @@
           if(selectedShort) selectedShort.textContent = '–';
           return;
         }
-        const optionsLong = { weekday: 'long', day: 'numeric', month: 'long' };
-        const optionsShort = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const weekdays = [
+          'maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag'
+        ];
+        const months = [
+          'januari','februari','maart','april','mei','juni',
+          'juli','augustus','september','oktober','november','december'
+        ];
+
+        const weekdayIndex = (selected.getDay() + 6) % 7; // JS: 0=zo → 0=ma
+        const w = weekdays[weekdayIndex];
+        const d = selected.getDate();
+        const m = months[selected.getMonth()];
+
         if(selectedLabel){
-          selectedLabel.textContent = selected.toLocaleDateString('nl-BE', optionsLong);
+          selectedLabel.textContent = `${w} ${d} ${m}`;
         }
         if(selectedShort){
-          selectedShort.textContent = selected.toLocaleDateString('nl-BE', optionsShort);
+          selectedShort.textContent = selected.toLocaleDateString('nl-BE', {
+            day:'2-digit', month:'2-digit', year:'numeric'
+          });
         }
       }
 
