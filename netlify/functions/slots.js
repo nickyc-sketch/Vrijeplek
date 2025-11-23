@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, serviceKey);
 
@@ -11,11 +11,13 @@ export async function handler(event) {
       return { statusCode: 500, body: "Supabase env not configured" };
     }
 
+    const method = event.httpMethod;
+    const qs     = event.queryStringParameters || {};
+
     // --------------------------------
     // GET /slots?date=YYYY-MM-DD
     // --------------------------------
-    if (event.httpMethod === "GET") {
-      const qs = event.queryStringParameters || {};
+    if (method === "GET") {
       const date = qs.date;
 
       if (!date) {
@@ -56,7 +58,7 @@ export async function handler(event) {
     // POST /slots   (tijdslot aanmaken)
     // body: { date, start, end, description, email? }
     // --------------------------------
-    if (event.httpMethod === "POST") {
+    if (method === "POST") {
       let payload;
       try {
         payload = JSON.parse(event.body || "{}");
@@ -64,10 +66,10 @@ export async function handler(event) {
         return { statusCode: 400, body: "Bad JSON" };
       }
 
-      const email = (payload.email || "").trim().toLowerCase() || null;
-      const date = payload.date;
-      const start = payload.start || null;
-      const end = payload.end || null;
+      const email       = (payload.email || "").trim().toLowerCase() || null;
+      const date        = payload.date;
+      const start       = payload.start || null;
+      const end         = payload.end || null;
       const description = (payload.description || "").trim();
 
       if (!date || !start || !end) {
@@ -100,7 +102,89 @@ export async function handler(event) {
       };
     }
 
+    // --------------------------------
+    // PUT /slots   (tijdslot bijwerken)
+    // body: { id, start?, end?, description? }
+    // --------------------------------
+    if (method === "PUT") {
+      let payload;
+      try {
+        payload = JSON.parse(event.body || "{}");
+      } catch {
+        return { statusCode: 400, body: "Bad JSON" };
+      }
+
+      const id          = payload.id;
+      const start       = payload.start;
+      const end         = payload.end;
+      const description = payload.description;
+
+      if (!id) {
+        return { statusCode: 400, body: "Missing id" };
+      }
+
+      const updateData = {};
+      if (start !== undefined)       updateData.from  = start;
+      if (end !== undefined)         updateData.to    = end;
+      if (description !== undefined) updateData.desc  = description;
+
+      if (Object.keys(updateData).length === 0) {
+        return { statusCode: 400, body: "Nothing to update" };
+      }
+
+      const { error } = await supabase
+        .from("slots")
+        .update(updateData)
+        .eq("id", id);
+
+      if (error) {
+        console.error("slots PUT error:", error);
+        return {
+          statusCode: 500,
+          body: "DB error (update): " + error.message,
+        };
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true }),
+      };
+    }
+
+    // --------------------------------
+    // DELETE /slots?id=...
+    // --------------------------------
+    if (method === "DELETE") {
+      const id = qs.id;
+
+      if (!id) {
+        return { statusCode: 400, body: "Missing id" };
+      }
+
+      const { error } = await supabase
+        .from("slots")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        console.error("slots DELETE error:", error);
+        return {
+          statusCode: 500,
+          body: "DB error (delete): " + error.message,
+        };
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true }),
+      };
+    }
+
+    // --------------------------------
+    // ALLES ANDERS → 405
+    // --------------------------------
     return { statusCode: 405, body: "Method not allowed" };
+
   } catch (err) {
     console.error("slots handler crash:", err);
     return { statusCode: 500, body: "Server error" };
