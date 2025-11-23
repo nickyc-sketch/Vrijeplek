@@ -364,11 +364,13 @@
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.75rem;
+      align-items:flex-end; /* alles mooi op één lijn */
     }
-
-    /* Hoogtes gelijk trekken Start/Eind/Aantal plaatsen */
-    .slot-form .slot-row input{
-      height:42px;
+    /* FORCE zelfde hoogte voor alle drie inputs */
+    .slot-form .slot-row input[type="time"],
+    .slot-form .slot-row input[type="number"]{
+      height:44px;
+      line-height:44px;
     }
 
     .helper{
@@ -695,7 +697,7 @@
       text-decoration:none;
     }
 
-    /* Toast / popup voor success & errors */
+    /* Toast / popup */
     .toast{
       position:fixed;
       right:1.4rem;
@@ -1193,7 +1195,7 @@
     </footer>
   </div>
 
-  <!-- Toast container (wordt dynamisch gevuld) -->
+  <!-- Toast -->
   <div id="vp-toast" class="toast" role="status" aria-live="polite" aria-atomic="true" style="display:none;">
     <div class="toast-icon">✓</div>
     <div class="toast-text"></div>
@@ -1418,6 +1420,9 @@
         'januari','februari','maart','april','mei','juni',
         'juli','augustus','september','oktober','november','december'
       ];
+      const weekdayNames = [
+        'maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag'
+      ];
 
       function updateSelectedLabels(){
         if (!selected) {
@@ -1425,21 +1430,14 @@
           if(selectedShort) selectedShort.textContent = '–';
           return;
         }
-        const weekdays = [
-          'maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag'
-        ];
-        const months = [
-          'januari','februari','maart','april','mei','juni',
-          'juli','augustus','september','oktober','november','december'
-        ];
-
-        const weekdayIndex = (selected.getDay() + 6) % 7; // JS: 0=zo → 0=ma
-        const w = weekdays[weekdayIndex];
         const d = selected.getDate();
-        const m = months[selected.getMonth()];
+        const m = selected.getMonth();
+        const weekdayIndex = (selected.getDay() + 6) % 7; // Ma = 0
+        let long = `${weekdayNames[weekdayIndex]} ${d} ${monthNames[m]}`;
+        long = long.charAt(0).toUpperCase() + long.slice(1);
 
         if(selectedLabel){
-          selectedLabel.textContent = `${w} ${d} ${m}`;
+          selectedLabel.textContent = long;
         }
         if(selectedShort){
           selectedShort.textContent = selected.toLocaleDateString('nl-BE', {
