@@ -8,18 +8,49 @@ const supabase = createClient(
 );
 
 export async function handler(event) {
-  const sig = event.headers['stripe-signature'];
-
-  let stripeEvent;
   try {
-    stripeEvent = stripe.webhooks.constructEvent(
-      event.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    return { statusCode: 400, body: `Webhook Error: ${err.message}` };
-  }
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Missing request body' })
+      };
+    }
+
+    const sig = event.headers['stripe-signature'] || event.headers['Stripe-Signature'];
+
+    if (!sig) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Missing stripe-signature header' })
+      };
+    }
+
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      console.error('STRIPE_WEBHOOK_SECRET not configured');
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Webhook secret not configured' })
+      };
+    }
+
+    let stripeEvent;
+    try {
+      stripeEvent = stripe.webhooks.constructEvent(
+        event.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err) {
+      console.error('Invalid webhook signature:', err);
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: `Webhook Error: ${err.message}` })
+      };
+    }
 
   // LAAT DIT STAAN
   if (stripeEvent.type === 'checkout.session.completed') {
@@ -87,5 +118,17 @@ export async function handler(event) {
     }
   }
 
-  return { statusCode: 200, body: 'ok' };
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ received: true })
+    };
+  } catch (err) {
+    console.error('Stripe webhook handler error:', err);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Internal server error' })
+    };
+  }
 }

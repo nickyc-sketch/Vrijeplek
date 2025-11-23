@@ -51,15 +51,19 @@ export async function handler(event) {
       .select('email, zaak, cat, straat, postcode, website, bio, account_status, deposit_enabled, deposit_amount, iban')
       .eq('account_status', 'active');
 
-    if(q){
+    // Sanitize search inputs to prevent injection
+    const sanitizedQ = q ? String(q).trim().substring(0, 100) : '';
+    const sanitizedLoc = loc ? String(loc).trim().substring(0, 100) : '';
+
+    if(sanitizedQ){
       profQuery = profQuery.or(
-        `zaak.ilike.%${q}%,email.ilike.%${q}%`
+        `zaak.ilike.%${sanitizedQ}%,email.ilike.%${sanitizedQ}%`
       );
     }
 
-    if(loc){
+    if(sanitizedLoc){
       profQuery = profQuery.or(
-        `postcode.ilike.%${loc}%,straat.ilike.%${loc}%`
+        `postcode.ilike.%${sanitizedLoc}%,straat.ilike.%${sanitizedLoc}%`
       );
     }
 

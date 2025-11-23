@@ -144,13 +144,19 @@ export async function handler(event) {
       }
     });
 
-    await client
+    // Mark slot as booked BEFORE creating checkout (race condition prevention)
+    const { error: updateErr } = await client
       .from('slots')
       .update({
         status: 'booked',
         booked_at: new Date().toISOString()
       })
       .eq('id', slot.id);
+
+    if (updateErr) {
+      console.error('Failed to mark slot as booked:', updateErr);
+      // Continue anyway - webhook will handle it
+    }
 
     return {
       statusCode: 200,

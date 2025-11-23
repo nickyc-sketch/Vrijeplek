@@ -23,16 +23,17 @@ export default async (req) => {
       bio,
     } = body || {};
 
-    if (!plan) {
+    // Input validation
+    if (!plan || (plan !== 'monthly' && plan !== 'yearly')) {
       return new Response(
-        JSON.stringify({ error: 'Missing plan' }),
+        JSON.stringify({ error: 'Missing or invalid plan. Must be "monthly" or "yearly".' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!email) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
       return new Response(
-        JSON.stringify({ error: 'Missing email' }),
+        JSON.stringify({ error: 'Missing or invalid email address.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -74,22 +75,25 @@ export default async (req) => {
       line_items.unshift({ price: activationPrice, quantity: 1 });
     }
 
+    // Sanitize metadata (Stripe has limits)
+    const metadata = {
+      plan: String(plan).substring(0, 200),
+      company: company ? String(company).substring(0, 200) : '',
+      vat: vat ? String(vat).substring(0, 200) : '',
+      category: category ? String(category).substring(0, 200) : '',
+      phone: phone ? String(phone).substring(0, 200) : '',
+      reviews: reviews ? String(reviews).substring(0, 200) : '',
+      address: address ? String(address).substring(0, 200) : '',
+      bio: bio ? String(bio).substring(0, 200) : '',
+    };
+
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items,
       success_url: successUrl, // uit ENV, bv. login.html?success=1
       cancel_url: cancelUrl,   // uit ENV, bv. signup.html?cancel=1
-      customer_email: email,
-      metadata: {
-        plan,
-        company: company || '',
-        vat: vat || '',
-        category: category || '',
-        phone: phone || '',
-        reviews: reviews || '',
-        address: address || '',
-        bio: bio || '',
-      },
+      customer_email: String(email).trim().toLowerCase(),
+      metadata,
     });
 
     return new Response(

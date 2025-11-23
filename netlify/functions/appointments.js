@@ -4,37 +4,140 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 
 // Tabel: appointments(id uuid pk default uuid_generate_v4(), date text, time text, client text, purpose text, note text)
 
-export default async (req, res) => {
-  try{
-    const action = (req.method==='GET') ? (req.query.action||'list') : (req.body?.action||'');
-    if(action==='list'){
-      const { data, error } = await supabase.from('appointments').select('*').order('date').order('time');
-      if(error) return res.status(400).json({ error:error.message });
-      return res.json(data||[]);
+export async function handler(event) {
+  try {
+    const method = event.httpMethod;
+    const queryParams = event.queryStringParameters || {};
+    const body = event.body ? JSON.parse(event.body) : {};
+
+    const action = method === 'GET' ? (queryParams.action || 'list') : (body.action || '');
+
+    if (action === 'list') {
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*')
+        .order('date')
+        .order('time');
+
+      if (error) {
+        console.error('Appointments list error:', error);
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data || [])
+      };
     }
-    if(action==='publish-slot'){
-      const { date, from, to, desc } = req.body||{};
-      if(!date||!from||!to) return res.status(400).json({ error:'missing_fields' });
-      const { error } = await supabase.from('appointments').insert([{ date, time: from, client:'—', purpose:desc||'', note:'' }]);
-      if(error) return res.status(400).json({ error:error.message });
-      return res.json({ ok:true });
+
+    if (action === 'publish-slot') {
+      const { date, from, to, desc } = body;
+      if (!date || !from || !to) {
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: 'missing_fields' })
+        };
+      }
+
+      const { error } = await supabase
+        .from('appointments')
+        .insert([{ date, time: from, client: '—', purpose: desc || '', note: '' }]);
+
+      if (error) {
+        console.error('Publish slot error:', error);
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ok: true })
+      };
     }
-    if(action==='update'){
-      const { id, date, time, client, purpose, note } = req.body||{};
-      if(!id) return res.status(400).json({ error:'missing_id' });
-      const { error } = await supabase.from('appointments').update({ date, time, client, purpose, note }).eq('id', id);
-      if(error) return res.status(400).json({ error:error.message });
-      return res.json({ ok:true });
+
+    if (action === 'update') {
+      const { id, date, time, client, purpose, note } = body;
+      if (!id) {
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: 'missing_id' })
+        };
+      }
+
+      const { error } = await supabase
+        .from('appointments')
+        .update({ date, time, client, purpose, note })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Update appointment error:', error);
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ok: true })
+      };
     }
-    if(action==='delete'){
-      const { id } = req.body||{};
-      if(!id) return res.status(400).json({ error:'missing_id' });
-      const { error } = await supabase.from('appointments').delete().eq('id', id);
-      if(error) return res.status(400).json({ error:error.message });
-      return res.json({ ok:true });
+
+    if (action === 'delete') {
+      const { id } = body;
+      if (!id) {
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: 'missing_id' })
+        };
+      }
+
+      const { error } = await supabase
+        .from('appointments')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Delete appointment error:', error);
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: error.message })
+        };
+      }
+
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ok: true })
+      };
     }
-    return res.status(400).json({ error:'unknown_action' });
-  }catch(err){
-    return res.status(500).json({ error: err.message });
+
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'unknown_action' })
+    };
+  } catch (err) {
+    console.error('Appointments handler error:', err);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: err.message || 'Internal server error' })
+    };
   }
 }

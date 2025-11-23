@@ -1,32 +1,48 @@
-const { getDb } = require("./_common/db");
-const { requireUser, json } = require("./_common/auth");
+import { createClient } from '@supabase/supabase-js';
 
-exports.handler = async (event, context) => {
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+);
+
+export async function handler(event) {
   try {
     // Alleen GET toestaan
-    if (event.httpMethod !== "GET") {
-      return json(405, { ok: false, error: "Method Not Allowed" }, { Allow: "GET" });
+    if (event.httpMethod !== 'GET') {
+      return {
+        statusCode: 405,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ok: false, error: 'Method Not Allowed' })
+      };
     }
 
-    // user (email/id) ophalen — laat anon toe in dev of met ALLOW_ANON=true
-    const user = await requireUser(event);
+    // Haal slots op uit Supabase
+    const { data, error } = await supabase
+      .from('slots')
+      .select('id, when, status')
+      .order('when', { ascending: true })
+      .limit(1000);
 
-    // query params
-    const params = new URLSearchParams(event.queryStringParameters || {});
-    const businessId = params.get("businessId");
-    if (!businessId) return json(400, { ok: false, error: "Missing businessId" });
+    if (error) {
+      console.error('Slots list error:', error);
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ok: false, error: error.message || 'Database error' })
+      };
+    }
 
-    const db = await getDb();
-    const slots = await db
-      .collection("slots")
-      .find({ businessId })
-      .sort({ start: 1 })
-      .limit(1000)
-      .toArray();
-
-    return json(200, { ok: true, user: { id: user.id, email: user.email || null }, businessId, count: slots.length, slots });
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data || [])
+    };
   } catch (err) {
-    const code = err.statusCode || 500;
-    return json(code, { ok: false, error: err.message || "Server error" });
+    console.error('Slots list handler error:', err);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ok: false, error: err.message || 'Server error' })
+    };
   }
-};
+}

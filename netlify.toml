@@ -4,12 +4,12 @@
 
 # Zorg dat Stripe raw body doorlaat (voor webhook signature)
 [[headers]]
-  for = "/.netlify/functions/webhooks/stripe"
+  for = "/.netlify/functions/stripe-webhook"
   [headers.values]
     Content-Type = "application/json"
 
 # Webhook route
 [[redirects]]
   from = "/webhooks/stripe"
-  to = "/.netlify/functions/webhooks/stripe"
+  to = "/.netlify/functions/stripe-webhook"
   status = 200

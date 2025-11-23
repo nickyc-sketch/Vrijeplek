@@ -61,7 +61,18 @@ export async function handler(event) {
         show_location: false,
         public_calendar: false,
         bank_iban: '',
-        deposit_note: ''
+        deposit_note: '',
+        // New dashboard fields
+        company_name: '',
+        contact_name: '',
+        billing_email: '',
+        phone: '',
+        vat_number: '',
+        invoice_note: '',
+        deposit_enabled: false,
+        deposit_amount: null,
+        bic: '',
+        extra_footer: ''
       };
 
       return { statusCode: 200, headers, body: JSON.stringify(row) };
@@ -77,9 +88,10 @@ export async function handler(event) {
 
       const up = {
         email,
-        zaak: (payload.zaak || '').trim(),
-        telefoon: (payload.telefoon || '').trim(),
-        btw: (payload.btw || '').trim(),
+        // Support both old field names (zaak, telefoon, btw) and new ones (company_name, phone, vat_number)
+        zaak: (payload.zaak || payload.company_name || '').trim(),
+        telefoon: (payload.telefoon || payload.phone || '').trim(),
+        btw: (payload.btw || payload.vat_number || '').trim(),
         cat: (payload.cat || '').trim(),
         straat: (payload.straat || '').trim(),
         postcode: (payload.postcode || '').trim(),
@@ -88,8 +100,19 @@ export async function handler(event) {
         iban: (payload.iban || '').trim(),
         show_location: !!payload.show_location,
         public_calendar: !!payload.public_calendar,
-        bank_iban: (payload.bank_iban || '').trim(),
-        deposit_note: (payload.deposit_note || '').trim()
+        bank_iban: (payload.bank_iban || payload.iban || '').trim(),
+        deposit_note: (payload.deposit_note || payload.invoice_note || payload.extra_footer || '').trim(),
+        // Store new dashboard fields
+        company_name: (payload.company_name || '').trim(),
+        contact_name: (payload.contact_name || '').trim(),
+        billing_email: (payload.billing_email || '').trim(),
+        phone: (payload.phone || '').trim(),
+        vat_number: (payload.vat_number || '').trim(),
+        invoice_note: (payload.invoice_note || '').trim(),
+        deposit_enabled: !!payload.deposit_enabled,
+        deposit_amount: payload.deposit_amount != null ? Number(payload.deposit_amount) : null,
+        bic: (payload.bic || '').trim(),
+        extra_footer: (payload.extra_footer || '').trim()
       };
 
       if (payload.plan) up.plan = String(payload.plan);

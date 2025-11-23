@@ -1,15 +1,62 @@
+import { createClient } from '@supabase/supabase-js';
 
-const fetch = require('node-fetch');
-exports.handler = async (event) => {
-  try{
-    const body = JSON.parse(event.body||'{}');
-    const row = { when: body.when, status: body.status||'Vrij' };
-    const res = await fetch(process.env.SUPABASE_URL + '/rest/v1/slots', {
-      method:'POST',
-      headers:{ 'apikey':process.env.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+process.env.SUPABASE_ANON_KEY, 'Content-Type':'application/json', 'Prefer':'return=representation' },
-      body: JSON.stringify(row)
-    });
-    const data = await res.json();
-    return { statusCode:200, body: JSON.stringify(data) };
-  }catch(e){ return { statusCode:500, body: JSON.stringify({error:e.message})}; }
-};
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+);
+
+export async function handler(event) {
+  try {
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Method Not Allowed' })
+      };
+    }
+
+    const body = JSON.parse(event.body || '{}');
+    const { when, status } = body;
+
+    if (!when) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Missing required field: when' })
+      };
+    }
+
+    const row = {
+      when: String(when).trim(),
+      status: status || 'Vrij'
+    };
+
+    const { data, error } = await supabase
+      .from('slots')
+      .insert([row])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Slots upsert error:', error);
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: error.message || 'Database error' })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data || { ok: true })
+    };
+  } catch (e) {
+    console.error('Slots upsert handler error:', e);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: e.message || 'Internal server error' })
+    };
+  }
+}

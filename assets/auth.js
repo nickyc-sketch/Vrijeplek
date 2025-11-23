@@ -1,12 +1,20 @@
 // Vul je env via Netlify UI: SUPABASE_URL, SUPABASE_ANON_KEY
 // Gebruik op de frontend ALLEEN de ANON key.
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+const SUPABASE_URL = window.ENV?.SUPABASE_URL || window.VRIJEPLEK?.SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = window.ENV?.SUPABASE_ANON_KEY || window.VRIJEPLEK?.SUPABASE_ANON_KEY || '';
 
-export const supa = createClient(
-window.ENV?.SUPABASE_URL || (https://xdmrikvxyeebeusnbzav.supabase.co== 'undefined' ? SUPABASE_URL : ''),
-window.ENV?.SUPABASE_ANON_KEY || (eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbXJpa3Z4eWVlYmV1c25iemF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4Mjc5MjgsImV4cCI6MjA3NzQwMzkyOH0.WmOMDZoFSk9RwQE1lT9yUuOCwsMjZbKVQrtNpBflpB0== 'undefined' ? SUPABASE_ANON_KEY : '')
-)
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
+}
+
+export const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true
+  }
+});
 
 
 export async function requireSession(){

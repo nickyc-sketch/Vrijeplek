@@ -68,22 +68,76 @@ async function startSignup(e){
 }
 
 // Slots CRUD
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 async function syncSlots(){
-  const res = await fetch('/.netlify/functions/slots-list');
-  const data = await res.json();
-  const table = document.getElementById('slotsTable');
-  if (!Array.isArray(data) || !data.length){ table.innerHTML = '<tr><td>Geen slots</td></tr>'; return; }
-  table.innerHTML = data.map(s=>`<tr><td>${s.when}</td><td>${s.status||'Vrij'}</td><td><button class="button" onclick="delSlot('${s.id}')">Verwijder</button></td></tr>`).join('');
+  try {
+    const res = await fetch('/.netlify/functions/slots-list');
+    if (!res.ok) {
+      console.error('Failed to fetch slots:', res.statusText);
+      return;
+    }
+    const data = await res.json();
+    const table = document.getElementById('slotsTable');
+    if (!table) return;
+    if (!Array.isArray(data) || !data.length){
+      table.innerHTML = '<tr><td colspan="3">Geen slots</td></tr>';
+      return;
+    }
+    table.innerHTML = data.map(s => {
+      const id = escapeHtml(String(s.id || ''));
+      const when = escapeHtml(String(s.when || ''));
+      const status = escapeHtml(String(s.status || 'Vrij'));
+      return `<tr><td>${when}</td><td>${status}</td><td><button class="button" onclick="delSlot('${id}')">Verwijder</button></td></tr>`;
+    }).join('');
+  } catch (err) {
+    console.error('Error syncing slots:', err);
+    const table = document.getElementById('slotsTable');
+    if (table) table.innerHTML = '<tr><td colspan="3">Fout bij laden slots</td></tr>';
+  }
 }
 async function addSlot(){
   const when = prompt('Wanneer? (bv. 2025-10-10 14:30)');
-  if (!when) return;
-  await fetch('/.netlify/functions/slots-upsert',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({when, status:'Vrij'})});
-  syncSlots();
+  if (!when || !when.trim()) return;
+  try {
+    const res = await fetch('/.netlify/functions/slots-upsert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ when: when.trim(), status: 'Vrij' })
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      alert('Fout bij toevoegen slot: ' + (error.error || res.statusText));
+      return;
+    }
+    await syncSlots();
+  } catch (err) {
+    console.error('Error adding slot:', err);
+    alert('Fout bij toevoegen slot');
+  }
 }
 async function delSlot(id){
-  await fetch('/.netlify/functions/slots-delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
-  syncSlots();
+  if (!id || !confirm('Weet je zeker dat je dit slot wilt verwijderen?')) return;
+  try {
+    const res = await fetch('/.netlify/functions/slots-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      alert('Fout bij verwijderen slot: ' + (error.error || res.statusText));
+      return;
+    }
+    await syncSlots();
+  } catch (err) {
+    console.error('Error deleting slot:', err);
+    alert('Fout bij verwijderen slot');
+  }
 }
 async function saveProfile(){ alert('Profiel bewaard'); }
 if (location.pathname.endsWith('dashboard.html')){

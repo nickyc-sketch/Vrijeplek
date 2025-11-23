@@ -6,7 +6,20 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function handler(event) {
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return {
+      statusCode: 405,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: "Method Not Allowed" })
+    };
+  }
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.error('Supabase credentials not configured');
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Server configuration error' })
+    };
   }
 
   try {
@@ -17,40 +30,90 @@ export async function handler(event) {
       google_place, is_public
     } = body;
 
-    if (!slug) return { statusCode: 400, body: "Slug is verplicht." };
+    if (!slug) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Slug is verplicht." })
+      };
+    }
 
     // (Auth) Stuur in je frontend het Supabase access token mee als Bearer
-    const auth = event.headers.authorization || "";
+    const auth = event.headers.authorization || event.headers.Authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
 
-    const supa = createClient(
-      supabaseUrl,
-      supabaseServiceKey,
-      token ? { global: { headers: { Authorization: `Bearer ${token}` } } } : {}
-    );
+    if (!token) {
+      return {
+        statusCode: 401,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Niet ingelogd." })
+      };
+    }
+
+    const supa = createClient(supabaseUrl, supabaseServiceKey);
 
     let userId = null;
-    if (token) {
-      const { data: userData } = await supa.auth.getUser(token);
-      userId = userData?.user?.id || null;
+    try {
+      const { data: userData, error: userError } = await supa.auth.getUser(token);
+      if (userError || !userData?.user) {
+        return {
+          statusCode: 401,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Ongeldig token." })
+        };
+      }
+      userId = userData.user.id;
+    } catch (authErr) {
+      console.error('Auth error:', authErr);
+      return {
+        statusCode: 401,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Authenticatie mislukt." })
+      };
     }
-    if (!userId) return { statusCode: 401, body: "Niet ingelogd." };
 
     const payload = {
-      user_id: userId, slug, title, tagline, about,
-      services, phone, website, theme,
-      show_google_reviews, google_place, is_public,
+      user_id: userId,
+      slug: String(slug).trim(),
+      title: title ? String(title).trim() : null,
+      tagline: tagline ? String(tagline).trim() : null,
+      about: about ? String(about).trim() : null,
+      services: Array.isArray(services) ? services : null,
+      phone: phone ? String(phone).trim() : null,
+      website: website ? String(website).trim() : null,
+      theme: theme ? String(theme).trim() : null,
+      show_google_reviews: !!show_google_reviews,
+      google_place: google_place ? String(google_place).trim() : null,
+      is_public: !!is_public,
       updated_at: new Date().toISOString()
     };
 
-    const { error } = await supa
+    const { data, error } = await supa
       .from("sites")
-      .upsert(payload, { onConflict: "user_id,slug" });
+      .upsert(payload, { onConflict: "user_id,slug" })
+      .select()
+      .single();
 
-    if (error) return { statusCode: 400, body: error.message };
-    return { statusCode: 200, body: "OK" };
+    if (error) {
+      console.error('Save site error:', error);
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: error.message || 'Database error' })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ok: true, site: data })
+    };
   } catch (e) {
-    console.error(e);
-    return { statusCode: 500, body: "Server error" };
+    console.error('Save site handler error:', e);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: e.message || "Server error" })
+    };
   }
 }
