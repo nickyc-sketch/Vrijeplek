@@ -1437,7 +1437,8 @@
       };
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initialize dashboard - works whether DOM is already loaded or not
+    function initDashboard() {
       const yearSpan = document.getElementById('year-span');
       if(yearSpan){
         yearSpan.textContent = new Date().getFullYear();
@@ -1816,7 +1817,15 @@ if (logoutBtn){
       renderCalendar();
       updateSelectedLabels();
       loadSlotsForSelectedDate();
-    });
+    }
+
+    // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDashboard);
+    } else {
+      // DOM is already loaded, run immediately
+      initDashboard();
+    }
   </script>
 
 </body>
