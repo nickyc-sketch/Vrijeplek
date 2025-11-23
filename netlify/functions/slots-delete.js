@@ -7,16 +7,21 @@ const supabase = createClient(
 
 export async function handler(event) {
   try {
-    if (event.httpMethod !== 'POST') {
+    // Support both POST (body) and DELETE (query param)
+    let id;
+    if (event.httpMethod === 'DELETE') {
+      const qs = event.queryStringParameters || {};
+      id = qs.id;
+    } else if (event.httpMethod === 'POST') {
+      const body = JSON.parse(event.body || '{}');
+      id = body.id;
+    } else {
       return {
         statusCode: 405,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ error: 'Method Not Allowed' })
       };
     }
-
-    const body = JSON.parse(event.body || '{}');
-    const { id } = body;
 
     if (!id) {
       return {

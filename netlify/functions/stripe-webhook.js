@@ -52,61 +52,67 @@ export async function handler(event) {
       };
     }
 
-  // LAAT DIT STAAN
+  // Handle subscription checkout (signup payment)
   if (stripeEvent.type === 'checkout.session.completed') {
     const session = stripeEvent.data.object;
 
     const email = session.customer_details?.email;
     const subscriptionId = session.subscription;
     const customerId = session.customer;
+    const metadata = session.metadata || {};
 
     if (!email) {
       console.log('Geen e-mail in checkout.session.completed');
-      return { statusCode: 200, body: 'No email on session' };
+      return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ received: true, note: 'No email on session' }) };
     }
 
     const lowerEmail = email.toLowerCase();
 
-    // 1. Zoek Supabase user op basis van email
-    const { data: user, error: userErr } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', lowerEmail)
-      .single();
-
-    if (userErr) {
-      console.log('Fout bij zoeken user:', userErr.message);
+    // Check if this is a subscription (signup) or deposit payment
+    if (metadata.type === 'deposit') {
+      // Handle deposit payment - slot is already marked as booked in create-deposit
+      // Just log it for now, could add booking confirmation email here
+      console.log('Deposit payment completed for slot:', metadata.slot_id);
+      return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ received: true, type: 'deposit' }) };
     }
 
-    if (!user) {
-      console.log('Geen Supabase user gevonden voor', lowerEmail);
-    } else {
-      // 2. Activeer gebruiker in Supabase (users)
-      const { error: updUserErr } = await supabase
-        .from('users')
-        .update({
-          is_active: true,
-          stripe_customer_id: customerId,
-          stripe_subscription_id: subscriptionId,
-          subscribed_at: new Date().toISOString()
-        })
-        .eq('id', user.id);
+    // Handle subscription signup
+    const plan = metadata.plan || 'monthly';
 
-      if (updUserErr) {
-        console.log('Fout bij updaten users:', updUserErr.message);
-      } else {
+    // 1. Try to find Supabase user by email (if users table exists)
+    try {
+      const { data: user, error: userErr } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', lowerEmail)
+        .maybeSingle();
+
+      if (!userErr && user) {
+        // Update user if found
+        await supabase
+          .from('users')
+          .update({
+            is_active: true,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            subscribed_at: new Date().toISOString()
+          })
+          .eq('id', user.id);
         console.log('Gebruiker geactiveerd in users:', lowerEmail);
       }
+    } catch (err) {
+      // users table might not exist, that's okay
+      console.log('Users table not found or error:', err.message);
     }
 
-    // 3. Zet ook het profiel op actief in "profiles"
+    // 2. Always update/activate profile
     const { error: profileErr } = await supabase
       .from('profiles')
       .upsert(
         {
           email: lowerEmail,
           account_status: 'active',
-          plan: 'monthly'
+          plan: plan === 'yearly' ? 'yearly' : 'monthly'
         },
         { onConflict: 'email' }
       );
@@ -114,7 +120,7 @@ export async function handler(event) {
     if (profileErr) {
       console.log('Fout bij upsert profiles:', profileErr.message);
     } else {
-      console.log('Profiel geactiveerd in profiles:', lowerEmail);
+      console.log('Profiel geactiveerd in profiles:', lowerEmail, 'plan:', plan);
     }
   }
 

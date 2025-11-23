@@ -18,8 +18,13 @@ function supa() {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-function baseUrl() {
-  return process.env.APP_BASE_URL || 'http://localhost:8888';
+function baseUrl(event) {
+  return event.headers.origin ||
+    event.headers.referer?.split('/').slice(0, 3).join('/') ||
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    process.env.APP_BASE_URL ||
+    'http://localhost:8888';
 }
 
 export async function handler(event) {
@@ -112,9 +117,10 @@ export async function handler(event) {
 
     // 4) Mét voorschot: Stripe Checkout aanmaken
     const amountCents = Math.round(depositAmount * 100);
+    const origin = baseUrl(event);
 
-    const successUrl = `${baseUrl()}/?booking=success`;
-    const cancelUrl = `${baseUrl()}/?booking=cancel`;
+    const successUrl = `${origin}/payment-success.html?booking=success&slot_id=${slotId}`;
+    const cancelUrl = `${origin}/payment-cancelled.html?booking=cancel&slot_id=${slotId}`;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',

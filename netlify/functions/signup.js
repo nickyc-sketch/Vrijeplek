@@ -12,10 +12,11 @@ const transporter = nodemailer.createTransport({
 });
 
 async function makeCheckoutLink(email, plan){
-  const r = await fetch(`${process.env.SITE_URL}/.netlify/functions/create-checkout`, {
+  const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL || process.env.SITE_URL || 'http://localhost:8888';
+  const r = await fetch(`${siteUrl}/.netlify/functions/create-checkout`, {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ email, plan })
+    body: JSON.stringify({ plan })
   });
   const d = await r.json();
   if(!r.ok) throw new Error(d.error||'checkout_failed');

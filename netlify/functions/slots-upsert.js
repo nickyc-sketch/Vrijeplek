@@ -16,26 +16,51 @@ export async function handler(event) {
     }
 
     const body = JSON.parse(event.body || '{}');
-    const { when, status } = body;
+    const { id, email, date, start, end, description, status, active, places, deposit_required } = body;
 
-    if (!when) {
+    // Support both old format (when) and new format (date, start, end)
+    let slotDate, slotStart, slotEnd;
+    if (body.when) {
+      // Old format: parse "when" field
+      const whenStr = String(body.when).trim();
+      const parts = whenStr.split(/\s+/);
+      slotDate = parts[0] || null;
+      slotStart = parts[1] || null;
+      slotEnd = parts[2] || null;
+    } else {
+      slotDate = date;
+      slotStart = start;
+      slotEnd = end;
+    }
+
+    if (!slotDate || !slotStart || !slotEnd) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Missing required field: when' })
+        body: JSON.stringify({ error: 'Missing required fields: date (or when), start, end' })
       };
     }
 
-    const row = {
-      when: String(when).trim(),
-      status: status || 'Vrij'
+    const upsertData = {
+      email: email ? email.trim().toLowerCase() : null,
+      date: slotDate,
+      from: slotStart,
+      to: slotEnd,
+      desc: description || null,
+      status: status || 'open',
+      active: typeof active === 'boolean' ? active : true,
+      places: places || 1,
+      deposit_required: typeof deposit_required === 'boolean' ? deposit_required : false
     };
 
-    const { data, error } = await supabase
-      .from('slots')
-      .insert([row])
-      .select()
-      .single();
+    let query;
+    if (id) {
+      query = supabase.from('slots').update(upsertData).eq('id', id);
+    } else {
+      query = supabase.from('slots').insert([upsertData]);
+    }
+
+    const { data, error } = await query.select('*');
 
     if (error) {
       console.error('Slots upsert error:', error);

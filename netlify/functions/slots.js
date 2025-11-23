@@ -25,7 +25,11 @@ export async function handler(event) {
       const date = qs.date;
 
       if (!date) {
-        return { statusCode: 400, body: "Missing date" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Missing date parameter" })
+        };
       }
 
       const { data, error } = await supabase
@@ -139,7 +143,11 @@ export async function handler(event) {
       const description = payload.description;
 
       if (!id) {
-        return { statusCode: 400, body: "Missing id" };
+        return {
+          statusCode: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ error: "Missing id parameter" })
+        };
       }
 
       const updateData = {};

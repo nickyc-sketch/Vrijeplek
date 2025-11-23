@@ -45,7 +45,7 @@ async function startSignup(e){
     bio: document.getElementById('bio')?.value || '',
   };
   try{
-    const res = await fetch('/.netlify/functions/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const res = await fetch('/.netlify/functions/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ plan: payload.plan }) });
     const data = await res.json();
     if (data.url){ location.href = data.url; } else alert('Kon geen betaalpagina openen.');
   }catch(err){ alert('Fout bij starten betaling: '+err.message); }

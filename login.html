@@ -440,23 +440,9 @@
       await toggleNav();
       supa.auth.onAuthStateChange(()=>toggleNav());
 
-      // Check if user wants to stay on login page (e.g., if they clicked login button)
-      // Only auto-redirect if they came from another page, not if they explicitly navigated to login
-      const urlParams = new URLSearchParams(window.location.search);
-      const stayOnLogin = urlParams.get('stay') === 'true';
-      
-      if (!stayOnLogin) {
-        // Als er al een sessie is, meteen naar dashboard MET email in de URL
-        const { data: { session } } = await supa.auth.getSession();
-        if (session) {
-          const mail = (session.user?.email || '').trim().toLowerCase();
-          const target = '/dashboard.html' + (mail ? ('?email=' + encodeURIComponent(mail)) : '');
-          // Small delay to let page render first
-          setTimeout(() => {
-            window.location.href = target;
-          }, 100);
-        }
-      }
+      // REMOVED: Auto-redirect when already logged in
+      // Users can now stay on login page even if already logged in
+      // They can manually navigate to dashboard if needed
 
       const form   = document.getElementById('login-form');
       const email  = document.getElementById('login-email');

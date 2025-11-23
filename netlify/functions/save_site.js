@@ -1,6 +1,4 @@
 // netlify/functions/save_site.js
-import { createClient } from "@supabase/supabase-js";
-
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -50,7 +48,8 @@ export async function handler(event) {
       };
     }
 
-    const supa = createClient(supabaseUrl, supabaseServiceKey);
+    const { createClient } = await import('@supabase/supabase-js');
+    const supa = createClient(supabaseUrl, supabaseServiceKey, { auth: { persistSession: false } });
 
     let userId = null;
     try {

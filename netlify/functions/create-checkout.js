@@ -1,21 +1,36 @@
 // netlify/functions/create-checkout.js
 import Stripe from 'stripe';
 
-export const config = { path: '/.netlify/functions/create-checkout' };
+const headers = {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Methods': 'POST,OPTIONS'
+};
 
-export default async (req) => {
+export async function handler(event) {
   try {
-    if (req.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405 });
+    if (event.httpMethod === 'OPTIONS') {
+      return { statusCode: 204, headers, body: '' };
     }
 
-    const { plan } = await req.json();
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers,
+        body: JSON.stringify({ error: 'Method Not Allowed' })
+      };
+    }
 
-    if (!plan) {
-      return new Response(JSON.stringify({ error: 'Missing plan' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
+    const body = JSON.parse(event.body || '{}');
+    const { plan } = body;
+
+    if (!plan || (plan !== 'monthly' && plan !== 'yearly')) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Missing or invalid plan. Must be "monthly" or "yearly".' })
+      };
     }
 
     // ENV keys
@@ -24,48 +39,46 @@ export default async (req) => {
     const priceYearly = process.env.STRIPE_PRICE_YEARLY;
 
     if (!sk || !priceMonthly || !priceYearly) {
-      return new Response(JSON.stringify({ error: 'Missing Stripe ENV vars' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      console.error('Missing Stripe environment variables');
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Missing Stripe ENV vars' })
+      };
     }
 
     const stripe = new Stripe(sk, { apiVersion: '2023-10-16' });
 
-    let priceId;
-    if (plan === 'monthly') priceId = priceMonthly;
-    else if (plan === 'yearly') priceId = priceYearly;
-    else {
-      return new Response(JSON.stringify({ error: 'Invalid plan' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    const priceId = plan === 'monthly' ? priceMonthly : priceYearly;
 
     // Detect site origin
     const origin =
-      req.headers.get('origin') ||
-      process.env.PUBLIC_BASE_URL ||
+      event.headers.origin ||
+      event.headers.referer?.split('/').slice(0, 3).join('/') ||
+      process.env.URL ||
+      process.env.DEPLOY_PRIME_URL ||
       'http://localhost:8888';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${origin}/payment-success.html`,
-      cancel_url: `${origin}/payment-cancelled.html`,
-      metadata: { plan }
+      success_url: `${origin}/geactiveerd.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/aanmelden.html?cancel=1`,
+      metadata: { plan: String(plan).substring(0, 200) }
     });
 
-    return new Response(JSON.stringify({ url: session.url }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ url: session.url })
+    };
 
   } catch (err) {
-    console.error('create-checkout error', err);
-    return new Response(
-      JSON.stringify({ error: String(err) }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error('create-checkout error:', err);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: String(err?.message || err) })
+    };
   }
-};
+}

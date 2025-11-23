@@ -650,10 +650,38 @@
       btn.disabled = true;
 
       try{
+        // Get customer info from user if logged in, otherwise prompt
+        let customerEmail = '';
+        let customerName = '';
+        
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            customerEmail = session.user.email || '';
+            customerName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || '';
+          }
+        } catch (e) {
+          // Not logged in, that's okay
+        }
+
+        // If no email, prompt user
+        if (!customerEmail) {
+          customerEmail = prompt('Voer je e-mailadres in voor de boeking:');
+          if (!customerEmail || !customerEmail.trim()) {
+            bookingMsg.textContent = 'E-mailadres is verplicht voor boeking.';
+            btn.disabled = false;
+            return;
+          }
+        }
+
         const res = await fetch('/.netlify/functions/create-deposit', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ slotId: slotId, customer_email: '', customer_name: '' })
+          body: JSON.stringify({ 
+            slotId: slotId, 
+            customer_email: customerEmail.trim().toLowerCase(), 
+            customer_name: customerName.trim() 
+          })
         });
         const data = await res.json().catch(()=>null);
 
