@@ -1702,26 +1702,52 @@
       }
 
       const settingsForm = document.getElementById('settings-form');
-      if(settingsForm){
-        settingsForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const payload = collectSettingsPayload();
+if(settingsForm){
+  settingsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-          try{
-            await saveProfile(payload);
-            const status = document.getElementById('settings-status');
-            if (status){
-              status.textContent = 'Instellingen opgeslagen';
-              status.style.background = 'rgba(22,163,74,.18)';
-              status.style.borderColor = 'rgba(34,197,94,.7)';
-              status.style.color = '#bbf7d0';
-            }
-            showToast('Instellingen opgeslagen.','success');
-          }catch(err){
-            console.error(err);
-            showToast('Instellingen opslaan mislukt: ' + (err.message || err),'error');
-          }
-        });
+    // <<< BELANGRIJK: email is verplicht voor de backend >>>
+    if(!dashboardEmail){
+      showToast(
+        'Geen e-mailadres gevonden voor dit account. Log opnieuw in via je Vrijeplek-link.',
+        'error'
+      );
+      return;
+    }
+
+    const payload = {
+      email: dashboardEmail,          // <- verplicht veld voor de function
+      ...collectSettingsPayload()
+    };
+
+    try{
+      await saveProfile(payload);
+      const status = document.getElementById('settings-status');
+      if (status){
+        status.textContent = 'Instellingen opgeslagen';
+        status.style.background = 'rgba(22,163,74,.18)';
+        status.style.borderColor = 'rgba(34,197,94,.7)';
+        status.style.color = '#bbf7d0';
+      }
+      showToast('Instellingen opgeslagen.','success');
+    }catch(err){
+      console.error(err);
+      showToast('Instellingen opslaan mislukt: ' + (err.message || err),'error');
+    }
+  });
+
+  // Bij laden: bestaande instellingen ophalen
+  (async () => {
+    try{
+      const profile = await fetchProfile();
+      applyProfileToForm(profile);
+    }catch(err){
+      console.error(err);
+      // geen toast, dashboard mag gewoon laden
+    }
+  })();
+}
+
 
         // Bij laden: bestaande instellingen ophalen
         (async () => {
