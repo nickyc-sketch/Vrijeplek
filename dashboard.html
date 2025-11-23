@@ -1336,17 +1336,17 @@
     }
 
     async function saveProfile(payload){
-      const res = await fetch(API_PROFILE, {
-        method:'PUT',
-        headers:{'Content-Type':'application/json'},
-        credentials:'include',
-        body:JSON.stringify(payload)
-      });
-      if(!res.ok){
-        throw new Error(await res.text());
-      }
-      return res.json();
-    }
+  const res = await fetch(API_PROFILE, {
+    method:'POST',                     // ← WAS PUT
+    headers:{ 'Content-Type':'application/json' },
+    credentials:'include',
+    body:JSON.stringify(payload)
+  });
+  if(!res.ok){
+    throw new Error(await res.text());
+  }
+  return res.json();
+}
 
     function applyProfileToForm(profile){
       if(!profile) return;
