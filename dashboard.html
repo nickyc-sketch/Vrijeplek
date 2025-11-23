@@ -280,6 +280,7 @@
       align-items:flex-start;
       justify-content:space-between;
       gap:1rem;
+      flex-wrap:wrap;
     }
 
     .card-divider{
@@ -489,6 +490,17 @@
       font-size:.78rem;
       padding:.3rem .8rem;
     }
+    .btn-small{
+      padding:.25rem .7rem;
+      font-size:.78rem;
+    }
+    .btn-danger{
+      border-color:rgba(239,68,68,.75);
+      color:#fecaca;
+    }
+    .btn-danger:hover{
+      background:rgba(127,29,29,.75);
+    }
 
     .empty-state{
       border-radius:.9rem;
@@ -505,12 +517,19 @@
       align-items:center;
       gap:.45rem;
       font-size:.82rem;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .calendar-controls .btn-ghost,
+    .calendar-controls .btn-pill{
+      padding:.3rem .7rem;
+      font-size:.78rem;
     }
     .calendar-month{
       display:flex;
       flex-direction:column;
       align-items:flex-start;
-      min-width:96px;
+      min-width:auto;
     }
     .calendar-month span:first-child{
       font-weight:600;
@@ -591,6 +610,44 @@
       color:#e5e7eb;
     }
 
+    .slot-item{
+      border-radius:.9rem;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.7);
+      padding:.7rem .9rem;
+      margin-bottom:.6rem;
+    }
+    .slot-item.is-booked{
+      border-style:dashed;
+      border-color:rgba(234,179,8,.9);
+    }
+    .slot-item-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.75rem;
+    }
+    .slot-item-title{
+      font-weight:600;
+      font-size:.9rem;
+    }
+    .slot-item-desc{
+      font-size:.83rem;
+      margin-top:.15rem;
+      color:rgba(226,232,240,.95);
+    }
+    .slot-meta{
+      font-size:.76rem;
+      color:rgba(148,163,184,.95);
+      margin-top:.25rem;
+    }
+    .slot-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.4rem;
+      margin-top:.5rem;
+    }
+
     .settings-group{
       border-radius:1rem;
       border:1px solid rgba(148,163,184,.5);
@@ -633,6 +690,61 @@
       text-decoration:none;
     }
 
+    /* Toast / popup voor success & errors */
+    .toast{
+      position:fixed;
+      right:1.4rem;
+      bottom:1.4rem;
+      max-width:280px;
+      padding:.7rem .9rem;
+      border-radius:1rem;
+      font-size:.82rem;
+      display:flex;
+      align-items:flex-start;
+      gap:.5rem;
+      border:1px solid transparent;
+      box-shadow:0 18px 40px rgba(15,23,42,.9);
+      background:rgba(15,23,42,.95);
+      color:#e5e7eb;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(10px);
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:80;
+    }
+    .toast.is-visible{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(0);
+    }
+    .toast-icon{
+      width:20px;
+      height:20px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.9rem;
+      font-weight:700;
+      flex-shrink:0;
+    }
+    .toast-success{
+      border-color:rgba(34,197,94,.8);
+      background:linear-gradient(135deg,rgba(22,163,74,.96),rgba(15,118,110,.96));
+    }
+    .toast-success .toast-icon{
+      background:#bbf7d0;
+      color:#14532d;
+    }
+    .toast-error{
+      border-color:rgba(239,68,68,.8);
+      background:linear-gradient(135deg,rgba(185,28,28,.96),rgba(127,29,29,.96));
+    }
+    .toast-error .toast-icon{
+      background:#fee2e2;
+      color:#7f1d1d;
+    }
+
     @media (max-width:960px){
       .calendar-day{
         font-size:0.7rem;
@@ -652,6 +764,10 @@
       .site-main{
         padding:1rem .9rem 1.6rem;
       }
+      .toast{
+        left:.9rem;
+        right:.9rem;
+      }
     }
     @media (max-width:640px){
       .header-actions{
@@ -663,6 +779,9 @@
       }
       .field-group{
         grid-template-columns:1fr;
+      }
+      .calendar-controls{
+        justify-content:flex-start;
       }
     }
   </style>
@@ -826,13 +945,25 @@
                       </label>
                     </div>
 
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="slot-deposit" name="slot_deposit">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Voor dit tijdslot voorschot vragen</span>
+                      </label>
+                      <p class="helper">
+                        Dit volgt je standaard IBAN/voorschotregels uit de instellingen. Handig als sommige vrije plekken
+                        zonder voorschot mogen, en andere niet.
+                      </p>
+                    </div>
+
                     <p class="helper">
                       Voorbeeld: “Vrije plek: tandarts — controle (30 min)” of
                       “Vrije plek: gyproc-offerte ter plaatse (1u)”.
                     </p>
 
                     <div class="form-actions">
-                      <button type="submit" class="btn-primary">
+                      <button type="submit" class="btn-primary" id="slot-submit-btn">
                         ＋ Tijdslot opslaan
                       </button>
                     </div>
@@ -843,7 +974,8 @@
                   <div class="slot-list">
                     <h3>Bestaande tijdstippen op <span data-selected-date-short>–</span></h3>
                     <p class="helper">
-                      Hier zie je alle open tijdstippen voor de gekozen dag. Je zal ze later kunnen activeren/deactiveren.
+                      Hier zie je alle open tijdstippen voor de gekozen dag. Zodra een tijdslot geboekt is,
+                      wordt het gemarkeerd en kun je het niet meer aanpassen.
                     </p>
                     <div class="empty-state" id="slot-empty">
                       <p><strong>Nog geen tijdstippen voor deze dag.</strong></p>
@@ -975,7 +1107,7 @@
                   </fieldset>
 
                   <fieldset class="settings-group">
-                    <legend>Adres</legend>
+                    <legend>Adres & locatie</legend>
                     <div class="field">
                       <label for="street">Straat + nummer</label>
                       <input id="street" name="street" type="text">
@@ -994,6 +1126,23 @@
                       <label for="country">Land</label>
                       <input id="country" name="country" type="text" value="België">
                     </div>
+                    <div class="field-group">
+                      <div class="field">
+                        <label for="business-lat">Breedtegraad (lat)</label>
+                        <input id="business-lat" name="lat" type="text" inputmode="decimal" placeholder="51.00…">
+                      </div>
+                      <div class="field">
+                        <label for="business-lng">Lengtegraad (lng)</label>
+                        <input id="business-lng" name="lng" type="text" inputmode="decimal" placeholder="5.48…">
+                      </div>
+                    </div>
+                    <button type="button" class="btn-ghost" id="geo-btn">
+                      Gebruik mijn huidige locatie
+                    </button>
+                    <p class="helper">
+                      Deze coördinaten worden gebruikt om klanten later “dichtsbijzijnde vrije plekken” te tonen
+                      en te kunnen sorteren op afstand.
+                    </p>
                   </fieldset>
 
                   <fieldset class="settings-group settings-group-muted">
@@ -1039,6 +1188,12 @@
     </footer>
   </div>
 
+  <!-- Toast container (wordt dynamisch gevuld) -->
+  <div id="vp-toast" class="toast" role="status" aria-live="polite" aria-atomic="true" style="display:none;">
+    <div class="toast-icon">✓</div>
+    <div class="toast-text"></div>
+  </div>
+
   <script>
     const API_SLOTS = '/.netlify/functions/slots';
 
@@ -1053,6 +1208,33 @@
       const d = new Date(date.getTime());
       d.setHours(0,0,0,0);
       return d.toISOString().slice(0,10);
+    }
+
+    function showToast(message, type = 'success'){
+      const toast = document.getElementById('vp-toast');
+      if(!toast) return;
+      const icon = toast.querySelector('.toast-icon');
+      const text = toast.querySelector('.toast-text');
+
+      text.textContent = message;
+      toast.classList.remove('toast-success','toast-error','is-visible');
+      toast.style.display = 'flex';
+
+      if(type === 'error'){
+        toast.classList.add('toast-error');
+        if(icon) icon.textContent = '!';
+      }else{
+        toast.classList.add('toast-success');
+        if(icon) icon.textContent = '✓';
+      }
+
+      requestAnimationFrame(() => {
+        toast.classList.add('is-visible');
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('is-visible');
+      }, 3200);
     }
 
     async function fetchSlotsForDate(dateKey){
@@ -1082,6 +1264,36 @@
       return res.json();
     }
 
+    async function updateSlot(payload){
+      const res = await fetch(API_SLOTS, {
+        method:'PUT',
+        headers:{ 'Content-Type':'application/json' },
+        credentials:'include',
+        body:JSON.stringify(payload)
+      });
+      if(!res.ok){
+        throw new Error(await res.text());
+      }
+      return res.json();
+    }
+
+    async function deleteSlot(id){
+      const url = new URL(API_SLOTS, window.location.origin);
+      url.searchParams.set('id', id);
+      const res = await fetch(url.toString(), {
+        method:'DELETE',
+        credentials:'include'
+      });
+      if(!res.ok){
+        throw new Error(await res.text());
+      }
+      try{
+        return await res.json();
+      }catch{
+        return null;
+      }
+    }
+
     function renderSlotList(slotArray, slotListEl, slotEmptyEl){
       if(!slotListEl || !slotEmptyEl) return;
       if(!slotArray || !slotArray.length){
@@ -1098,15 +1310,33 @@
         const start = item.start_time || item.start || '';
         const end = item.end_time || item.end || '';
         const desc = item.description || item.desc || 'Geen omschrijving';
-        const places = item.places || 1;
+        const places = item.places || item.places_count || 1;
         const visible = typeof item.visible === 'boolean' ? item.visible : true;
+        const depositRequired = !!(item.deposit_required || item.with_deposit);
         const visibleText = visible ? 'Zichtbaar op Vrijeplek' : 'Verborgen';
+        const depositText = depositRequired ? 'Voorschot actief' : 'Geen voorschot';
+        const booked = !!(item.is_booked || item.booked || item.status === 'Geboekt' || item.status === 'Bezet');
+        const bookedLabel = booked ? 'Geboekt • niet meer wijzigbaar (server beslist)' : `${places} plaats(en) • ${visibleText} • ${depositText}`;
+        const editDisabled = booked ? 'disabled aria-disabled="true"' : '';
+        const idAttr = item.id || item.slot_id || '';
 
         return `
-          <div class="empty-state">
-            <p><strong>${start} – ${end}</strong></p>
-            <p>${desc}</p>
-            <p class="helper">${places} plaats(en) • ${visibleText}</p>
+          <div class="slot-item ${booked ? 'is-booked' : ''}" data-slot-id="${idAttr}">
+            <div class="slot-item-header">
+              <div>
+                <div class="slot-item-title">${start} – ${end}</div>
+                <div class="slot-item-desc">${desc}</div>
+                <div class="slot-meta">${bookedLabel}</div>
+              </div>
+            </div>
+            <div class="slot-actions">
+              <button type="button" class="btn-ghost btn-small" data-slot-edit="${idAttr}" ${editDisabled}>
+                Aanpassen
+              </button>
+              <button type="button" class="btn-ghost btn-small btn-danger" data-slot-delete="${idAttr}" ${editDisabled}>
+                Verwijderen
+              </button>
+            </div>
           </div>
         `;
       });
@@ -1162,6 +1392,8 @@
       const slotPlaces = document.getElementById('slot-places');
       const slotDesc   = document.getElementById('slot-desc');
       const slotVisible= document.getElementById('slot-visible');
+      const slotDeposit= document.getElementById('slot-deposit');
+      const slotSubmitBtn = document.getElementById('slot-submit-btn');
 
       const grid = document.querySelector('[data-cal-grid]');
       const monthLabel = document.querySelector('[data-cal-month]');
@@ -1175,6 +1407,7 @@
       selected.setHours(0,0,0,0);
 
       const slotsCache = {};
+      let editingSlotId = null;
 
       const monthNames = [
         'januari','februari','maart','april','mei','juni',
@@ -1197,6 +1430,54 @@
         }
       }
 
+      function wireSlotButtonsForDate(dateKey){
+        if(!slotList) return;
+        const slotArray = slotsCache[dateKey] || [];
+
+        slotList.querySelectorAll('[data-slot-edit]').forEach(btn => {
+          const id = btn.getAttribute('data-slot-edit');
+          const slot = slotArray.find(s => (s.id || s.slot_id) === id);
+          if(!slot) return;
+
+          btn.addEventListener('click', () => {
+            editingSlotId = id;
+            slotStart.value  = slot.start_time || slot.start || '';
+            slotEnd.value    = slot.end_time || slot.end || '';
+            slotPlaces.value = slot.places || slot.places_count || 1;
+            slotDesc.value   = slot.description || slot.desc || '';
+            slotVisible.checked = typeof slot.visible === 'boolean' ? slot.visible : true;
+            if(slotDeposit){
+              slotDeposit.checked = !!(slot.deposit_required || slot.with_deposit);
+            }
+            if(slotSubmitBtn){
+              slotSubmitBtn.textContent = 'Tijdslot bijwerken';
+            }
+            showToast('Tijdslot geladen om aan te passen','success');
+            slotForm.scrollIntoView({behavior:'smooth', block:'start'});
+          });
+        });
+
+        slotList.querySelectorAll('[data-slot-delete]').forEach(btn => {
+          const id = btn.getAttribute('data-slot-delete');
+          const slot = slotArray.find(s => (s.id || s.slot_id) === id);
+          if(!slot) return;
+
+          btn.addEventListener('click', async () => {
+            if(btn.disabled) return;
+            const ok = confirm('Weet je zeker dat je dit tijdslot wil verwijderen? Als het al geboekt is, kan de server dit weigeren.');
+            if(!ok) return;
+            try{
+              await deleteSlot(id);
+              showToast('Tijdslot verwijderd','success');
+              await loadSlotsForSelectedDate();
+            }catch(err){
+              console.error(err);
+              showToast('Verwijderen mislukt: ' + (err.message || err),'error');
+            }
+          });
+        });
+      }
+
       async function loadSlotsForSelectedDate(){
         if(!grid || !selected) return;
         const key = formatDateKey(selected);
@@ -1204,9 +1485,10 @@
           const data = await fetchSlotsForDate(key);
           slotsCache[key] = data || [];
           renderSlotList(slotsCache[key], slotList, slotEmpty);
+          wireSlotButtonsForDate(key);
         }catch(err){
           console.error(err);
-          alert('Kon de tijdstippen voor deze dag niet laden. Probeer opnieuw.');
+          showToast('Kon de tijdstippen niet laden: ' + (err.message || err),'error');
         }
       }
 
@@ -1214,8 +1496,12 @@
         if(!grid) return;
         const year = current.getFullYear();
         const month = current.getMonth();
-        monthLabel.textContent = monthNames[month][0].toUpperCase() + monthNames[month].slice(1);
-        yearLabel.textContent = year;
+        if(monthLabel){
+          monthLabel.textContent = monthNames[month][0].toUpperCase() + monthNames[month].slice(1);
+        }
+        if(yearLabel){
+          yearLabel.textContent = year;
+        }
 
         grid.innerHTML = '';
         const firstDay = new Date(year, month, 1);
@@ -1255,11 +1541,11 @@
         }
       }
 
-      document.querySelector('[data-cal-prev]')?.addEventListener('click', async () => {
+      document.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
         current.setMonth(current.getMonth() - 1);
         renderCalendar();
       });
-      document.querySelector('[data-cal-next]')?.addEventListener('click', async () => {
+      document.querySelector('[data-cal-next]')?.addEventListener('click', () => {
         current.setMonth(current.getMonth() + 1);
         renderCalendar();
       });
@@ -1287,6 +1573,7 @@
           const descVal   = slotDesc.value.trim();
           const placesVal = slotPlaces.value ? parseInt(slotPlaces.value, 10) : 1;
           const visibleVal= !!slotVisible.checked;
+          const depositPerSlot = slotDeposit ? !!slotDeposit.checked : false;
 
           if(!startVal || !endVal){
             alert('Vul minstens een start- en einduur in.');
@@ -1295,24 +1582,38 @@
 
           const dateKey = formatDateKey(selected);
 
+          const payloadBase = {
+            date: dateKey,
+            start: startVal,
+            end: endVal,
+            places: placesVal,
+            description: descVal,
+            visible: visibleVal,
+            email: dashboardEmail,
+            deposit_required: depositPerSlot
+          };
+
           try{
-            await createSlot({
-              date: dateKey,
-              start: startVal,
-              end: endVal,
-              places: placesVal,
-              description: descVal,
-              visible: visibleVal,
-              email: dashboardEmail
-            });
+            if(editingSlotId){
+              await updateSlot({ ...payloadBase, id: editingSlotId });
+            }else{
+              await createSlot(payloadBase);
+            }
 
             slotForm.reset();
             slotVisible.checked = true;
+            if(slotDeposit){ slotDeposit.checked = false; }
+            const msg = editingSlotId ? 'Tijdslot bijgewerkt' : 'Tijdslot opgeslagen';
+            editingSlotId = null;
+            if(slotSubmitBtn){
+              slotSubmitBtn.textContent = '＋ Tijdslot opslaan';
+            }
 
+            showToast(msg,'success');
             await loadSlotsForSelectedDate();
           }catch(err){
             console.error(err);
-            alert('Tijdslot kon niet worden opgeslagen: ' + (err.message || err));
+            showToast('Tijdslot kon niet worden opgeslagen: ' + (err.message || err),'error');
           }
         });
       }
@@ -1325,11 +1626,45 @@
 
           const status = document.getElementById('settings-status');
           if (status){
-            status.textContent = 'Instellingen opgeslagen';
+            status.textContent = 'Instellingen opgeslagen (nog lokaal, koppeling naar server volgt)';
             status.style.background = 'rgba(22,163,74,.18)';
             status.style.borderColor = 'rgba(34,197,94,.7)';
             status.style.color = '#bbf7d0';
           }
+          showToast('Instellingen lokaal opgeslagen. Backend-koppeling volgt.','success');
+        });
+      }
+
+      const geoBtn = document.getElementById('geo-btn');
+      if(geoBtn){
+        const latInput = document.getElementById('business-lat');
+        const lngInput = document.getElementById('business-lng');
+
+        geoBtn.addEventListener('click', () => {
+          if(!navigator.geolocation){
+            alert('Locatie wordt niet ondersteund door deze browser.');
+            return;
+          }
+          geoBtn.disabled = true;
+          geoBtn.textContent = 'Locatie ophalen…';
+
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const { latitude, longitude } = pos.coords;
+              if(latInput) latInput.value = latitude.toFixed(6);
+              if(lngInput) lngInput.value = longitude.toFixed(6);
+              geoBtn.textContent = 'Locatie ingevuld ✓';
+              geoBtn.disabled = false;
+              showToast('Locatie ingevuld.','success');
+            },
+            (err) => {
+              console.error(err);
+              alert('Locatie kon niet worden opgehaald. Controleer je browserrechten.');
+              geoBtn.textContent = 'Gebruik mijn huidige locatie';
+              geoBtn.disabled = false;
+            },
+            { enableHighAccuracy:true, timeout:10000 }
+          );
         });
       }
 
