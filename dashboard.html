@@ -1214,21 +1214,21 @@
     // ---------- SLOTS API ----------
 
     async function fetchSlotsForDate(dateKey){
-  const url = new URL(API_SLOTS, window.location.origin);
-  url.searchParams.set('date', dateKey);
-  if (dashboardEmail) {
-    url.searchParams.set('email', dashboardEmail);
-  }
+      const url = new URL(API_SLOTS, window.location.origin);
+      url.searchParams.set('date', dateKey);
+      if (dashboardEmail) {
+        url.searchParams.set('email', dashboardEmail);
+      }
 
-  const res = await fetch(url.toString(), {
-    method: 'GET',
-    credentials: 'include'
-  });
-  if(!res.ok){
-    throw new Error(await res.text());
-  }
-  return res.json();
-}
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if(!res.ok){
+        throw new Error(await res.text());
+      }
+      return res.json();
+    }
     async function createSlot(payload){
       const res = await fetch(API_SLOTS, {
         method: 'POST',
@@ -1324,53 +1324,53 @@
 
     // ---------- PROFIEL / INSTELLINGEN API ----------
 
-  async function fetchProfile(){
-  if (!dashboardEmail) {
-    return null; // of eventueel een foutmelding tonen
-  }
+    async function fetchProfile(){
+      if (!dashboardEmail) {
+        return null; // of eventueel een foutmelding tonen
+      }
 
-  const url = new URL(API_PROFILE, window.location.origin);
-  url.searchParams.set('email', dashboardEmail);
+      const url = new URL(API_PROFILE, window.location.origin);
+      url.searchParams.set('email', dashboardEmail);
 
-  const res = await fetch(url.toString(), {
-    method: 'GET',
-    credentials: 'include'
-  });
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include'
+      });
 
-  if (res.status === 404) {
-    return null;
-  }
-  if (!res.ok) {
-    throw new Error(await res.text());
-  }
-  return res.json();
-}
-
-  async function saveProfile(payload){
-    if (!dashboardEmail) {
-      throw new Error('Geen e-mailadres gevonden');
+      if (res.status === 404) {
+        return null;
+      }
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+      return res.json();
     }
 
-    // Send payload with email - the API will handle field mapping
-    const profilePayload = {
-      email: dashboardEmail,
-      ...payload
-    };
+    async function saveProfile(payload){
+      if (!dashboardEmail) {
+        throw new Error('Geen e-mailadres gevonden');
+      }
 
-    const res = await fetch(API_PROFILE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(profilePayload)
-    });
+      // Send payload with email - the API will handle field mapping
+      const profilePayload = {
+        email: dashboardEmail,
+        ...payload
+      };
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ error: await res.text() }));
-      throw new Error(errorData.error || errorData.details || 'Failed to save profile');
+      const res = await fetch(API_PROFILE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(profilePayload)
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: await res.text() }));
+        throw new Error(errorData.error || errorData.details || 'Failed to save profile');
+      }
+
+      return res.json();
     }
-
-    return res.json();
-  }
 
     function applyProfileToForm(profile){
       if(!profile) return;
@@ -1439,6 +1439,14 @@
 
     // Initialize dashboard - works whether DOM is already loaded or not
     function initDashboard() {
+      console.log('Initializing dashboard...');
+      
+      // Check if DOM is actually ready
+      if (!document.body) {
+        console.error('Document body not ready');
+        return;
+      }
+
       const yearSpan = document.getElementById('year-span');
       if(yearSpan){
         yearSpan.textContent = new Date().getFullYear();
@@ -1808,24 +1816,42 @@
         });
       }
 
-     const logoutBtn = document.getElementById('logout-btn');
-if (logoutBtn){
-  logoutBtn.addEventListener('click', () => {
-    window.location.href = '/logout.html';
-  });
-}
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn){
+        logoutBtn.addEventListener('click', () => {
+          window.location.href = '/logout.html';
+        });
+      }
+      
+      // Initialize calendar and load data
       renderCalendar();
       updateSelectedLabels();
       loadSlotsForSelectedDate();
+      
+      console.log('Dashboard initialized successfully');
     }
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initDashboard);
-    } else {
-      // DOM is already loaded, run immediately
-      initDashboard();
-    }
+    // Use a more robust initialization pattern
+    (function() {
+      function runInit() {
+        try {
+          console.log('Running dashboard init...');
+          initDashboard();
+        } catch (err) {
+          console.error('Dashboard initialization error:', err);
+          console.error('Error stack:', err.stack);
+          alert('Fout bij initialiseren van dashboard: ' + err.message + '. Check de console voor details.');
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runInit);
+      } else {
+        // DOM is already loaded, run immediately but use setTimeout to ensure everything is ready
+        setTimeout(runInit, 0);
+      }
+    })();
   </script>
 
 </body>
