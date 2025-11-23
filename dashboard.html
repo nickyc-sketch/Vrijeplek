@@ -1323,28 +1323,23 @@
 
     // ---------- PROFIEL / INSTELLINGEN API ----------
 
-    async function fetchProfile(){
-      const res = await fetch(API_PROFILE, {
-        method:'GET',
-        credentials:'include'
-      });
-      if(res.status === 404){
-        return null;
-      }
-      if(!res.ok){
-        throw new Error(await res.text());
-      }
-      return res.json();
-    }
+  async function fetchProfile(){
+  if (!dashboardEmail) {
+    return null; // of eventueel een foutmelding tonen
+  }
 
-    async function saveProfile(payload){
-  const res = await fetch(API_PROFILE, {
-    method:'POST',                     // ← WAS PUT
-    headers:{ 'Content-Type':'application/json' },
-    credentials:'include',
-    body:JSON.stringify(payload)
+  const url = new URL(API_PROFILE, window.location.origin);
+  url.searchParams.set('email', dashboardEmail);
+
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    credentials: 'include'
   });
-  if(!res.ok){
+
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
     throw new Error(await res.text());
   }
   return res.json();
