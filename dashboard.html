@@ -1347,7 +1347,24 @@
       slotEmptyEl.style.display = 'none';
       slotListEl.style.display = 'block';
 
-      const rows = slotArray.map(item => {
+      // Maak een lijst van unieke tijdsloten om dubbele weergave te voorkomen.
+      // Sommige API's kunnen per ongeluk dubbele entries teruggeven; we dedupliceren op basis van starttijd, eindtijd en omschrijving.
+      const uniqueSlots = [];
+      const seenKeys = new Set();
+      if (Array.isArray(slotArray)) {
+        slotArray.forEach(item => {
+          const startKey = item.start_time || item.start || '';
+          const endKey   = item.end_time || item.end || '';
+          const descKey  = item.description || item.desc || '';
+          const key = `${startKey}|${endKey}|${descKey}`;
+          if (!seenKeys.has(key)) {
+            seenKeys.add(key);
+            uniqueSlots.push(item);
+          }
+        });
+      }
+
+      const rows = uniqueSlots.map(item => {
         const start = item.start_time || item.start || '';
         const end = item.end_time || item.end || '';
         const desc = item.description || item.desc || 'Geen omschrijving';
