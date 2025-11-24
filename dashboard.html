@@ -1097,7 +1097,7 @@
                         <label for="bic">BIC (optioneel)</label>
                         <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
                       </div>
-                      <div class="field">
+                        <div class="field">
                         <label for="deposit-amount">Standaard voorschotbedrag</label>
                         <div class="input-with-prefix">
                           <span>€</span>
@@ -1217,24 +1217,49 @@
     // ---------- SLOTS API ----------
 
     async function fetchSlotsForDate(dateKey){
-  const url = new URL(API_SLOTS, window.location.origin);
-  url.searchParams.set('date', dateKey);
-  if (dashboardEmail) {
-    url.searchParams.set('email', dashboardEmail);
-  }
+      const url = new URL(API_SLOTS, window.location.origin);
+      url.searchParams.set('date', dateKey);
+      if (dashboardEmail) {
+        url.searchParams.set('email', dashboardEmail);
+      }
 
-  const res = await fetch(url.toString(), {
-    method: 'GET',
-    credentials: 'include'
-  });
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include'
+      });
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => 'Kon de tijdstippen niet laden.');
-    throw new Error(text);
-  }
+      if (!res.ok) {
+        const text = await res.text().catch(() => 'Kon de tijdstippen niet laden.');
+        throw new Error(text);
+      }
 
-  return res.json();
-}
+      return res.json();
+    }
+
+    // Nieuwe createSlot functie om tijdsloten aan te maken
+    async function createSlot(payload){
+      const res = await fetch(API_SLOTS, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        let errorData;
+        try {
+          errorData = await res.json();
+        } catch {
+          const text = await res.text();
+          errorData = { error: text };
+        }
+        throw new Error(
+          errorData.error || errorData.details || 'Tijdslot kon niet worden opgeslagen'
+        );
+      }
+
+      return res.json();
+    }
 
     async function updateSlot(payload){
       const res = await fetch(API_SLOTS, {
@@ -1341,44 +1366,44 @@
     }
 
     async function saveProfile(payload){
-  if (!dashboardEmail) {
-    throw new Error('Geen e-mailadres gevonden');
-  }
+      if (!dashboardEmail) {
+        throw new Error('Geen e-mailadres gevonden');
+      }
 
-  const profilePayload = {
-    email: dashboardEmail,
-    ...payload
-  };
+      // Send payload with email - the API will handle field mapping
+      const profilePayload = {
+        email: dashboardEmail,
+        ...payload
+      };
 
-  const res = await fetch(API_PROFILE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(profilePayload)
-  });
+      const res = await fetch(API_PROFILE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(profilePayload)
+      });
 
-  if (!res.ok) {
-    let errorData;
+      if (!res.ok) {
+        let errorData;
 
-    try {
-      // proberen JSON foutinfo te lezen
-      errorData = await res.json();
-    } catch {
-      // geen geldige JSON → tekst fallback
-      const text = await res.text();
-      errorData = { error: text };
+        try {
+          // proberen JSON foutinfo te lezen
+          errorData = await res.json();
+        } catch {
+          // geen geldige JSON → tekst fallback
+          const text = await res.text();
+          errorData = { error: text };
+        }
+
+        throw new Error(
+          errorData.error ||
+          errorData.details ||
+          'Failed to save profile'
+        );
+      }
+
+      return res.json();
     }
-
-    throw new Error(
-      errorData.error ||
-      errorData.details ||
-      'Failed to save profile'
-    );
-  }
-
-  return res.json();
-}
-
 
     function applyProfileToForm(profile){
       if(!profile) return;
@@ -1838,7 +1863,7 @@
         });
       }
 
-            const settingsForm = document.getElementById('settings-form');
+      const settingsForm = document.getElementById('settings-form');
       if (settingsForm) {
         settingsForm.addEventListener('submit', async (e) => {
           e.preventDefault();
@@ -1984,7 +2009,7 @@
       
       console.log('=== DASHBOARD INIT COMPLETE ===');
       console.log('Tabs:', document.querySelectorAll('.dash-tab').length);
-      console.log('Panels:', document.querySelectorAll('.dash-panel').length);
+      console.log('Panels:', document.queryAll('.dash-panel').length);
       
       // Test that tabs are actually clickable
       const testTabs = document.querySelectorAll('.dash-tab');
@@ -2065,4 +2090,3 @@
 
 </body>
 </html>
-
