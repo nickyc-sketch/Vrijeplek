@@ -6,6 +6,6 @@ export const handler = async (event) => {
   const { user, error } = await getAuthUser(token);
   if (error || !user) return json(401, { error: 'unauth' });
   const supa = getClient(token);
-  const { data: profiel } = await supa.from('profielen').select('*').eq('id', user.id).single();
+  const { data: profiel } = await supa.from('profiles').select('*').eq('id', user.id).single();
   return json(200, { user, profiel: profiel || null });
 };

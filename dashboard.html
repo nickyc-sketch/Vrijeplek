@@ -203,6 +203,8 @@
       border-radius:inherit;
       border:1px solid transparent;
       transition:.18s ease;
+      pointer-events:none;
+      z-index:-1;
     }
     .dash-tab:hover{
       background:rgba(15,118,255,.08);
@@ -1478,11 +1480,13 @@
     // EVENT DELEGATION AS FALLBACK - WORKS EVEN IF DIRECT HANDLERS FAIL
     document.addEventListener('click', function(e) {
       const tab = e.target.closest('.dash-tab');
-      if (tab) {
+      if (tab && !tab.hasAttribute('data-handled')) {
+        tab.setAttribute('data-handled', 'true');
         console.log('Event delegation caught tab click:', tab.getAttribute('data-panel'));
         handleTabClick.call(tab, e);
+        setTimeout(() => tab.removeAttribute('data-handled'), 100);
       }
-    }, true); // Use capture phase
+    }, false); // Bubble phase to avoid interfering with direct handlers
 
     // Initialize dashboard - SIMPLE AND DIRECT
     function initDashboard() {
@@ -1954,7 +1958,10 @@
       allElements.forEach(el => {
         const style = window.getComputedStyle(el);
         // If element has pointer-events: none and is covering tabs area, remove it
-        if (style.pointerEvents === 'none' && style.position === 'absolute' || style.position === 'fixed') {
+        if (
+          style.pointerEvents === 'none' &&
+          (style.position === 'absolute' || style.position === 'fixed')
+        ) {
           const rect = el.getBoundingClientRect();
           const tabsArea = document.querySelector('.dash-tabs');
           if (tabsArea) {

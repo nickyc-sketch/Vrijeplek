@@ -1,11 +1,36 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+async function sendEmail({ to, subject, html }) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS || !to) {
+    console.warn('SMTP not configured or missing recipient, skipping email.');
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: String(process.env.SMTP_SECURE || 'false') === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM || process.env.SMTP_FROM || 'Vrijeplek <no-reply@vrijeplek.be>',
+    to,
+    subject,
+    html,
+  });
+}
 
 export async function handler(event) {
   try {
@@ -70,9 +95,43 @@ export async function handler(event) {
 
     // Check if this is a subscription (signup) or deposit payment
     if (metadata.type === 'deposit') {
-      // Handle deposit payment - slot is already marked as booked in create-deposit
-      // Just log it for now, could add booking confirmation email here
-      console.log('Deposit payment completed for slot:', metadata.slot_id);
+      const slotId = metadata.slot_id;
+      const providerEmail = metadata.provider_email;
+      const klantEmail = metadata.klant_email;
+      const klantNaam = metadata.klant_naam || 'klant';
+
+      try {
+        await supabase
+          .from('slots')
+          .update({ status: 'booked', booked_at: new Date().toISOString() })
+          .eq('id', slotId);
+      } catch (slotErr) {
+        console.error('Failed to update slot after deposit:', slotErr);
+      }
+
+      try {
+        if (klantEmail) {
+          await sendEmail({
+            to: klantEmail,
+            subject: 'Bevestiging van je boeking — Vrijeplek',
+            html: `<p>Beste ${klantNaam},</p>
+                   <p>Je voorschotbetaling is ontvangen en je afspraak is bevestigd.</p>
+                   <p>Tot snel!</p>
+                   <p>Het Vrijeplek-team</p>`
+          });
+        }
+        if (providerEmail) {
+          await sendEmail({
+            to: providerEmail,
+            subject: 'Nieuwe boeking via Vrijeplek',
+            html: `<p>Je hebt een nieuwe boeking ontvangen via Vrijeplek.</p>
+                   <p>Klant: ${klantNaam} (${klantEmail || 'onbekend'})</p>`
+          });
+        }
+      } catch (mailErr) {
+        console.error('Failed to send booking emails:', mailErr);
+      }
+
       return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ received: true, type: 'deposit' }) };
     }
 

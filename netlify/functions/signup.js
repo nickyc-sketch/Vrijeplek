@@ -61,10 +61,20 @@ export async function handler(event) {
       };
     }
 
-    // 2) Accounts status => pending
+    // 2) Profile status => pending
     const { error: accErr } = await supabase
-      .from('accounts')
-      .upsert({ email, plan, status: 'pending', company, btw }, { onConflict: 'email' });
+      .from('profiles')
+      .upsert(
+        {
+          email,
+          plan,
+          account_status: 'pending',
+          company_name: company || null,
+          zaak: company || null,
+          btw: btw || null
+        },
+        { onConflict: 'email' }
+      );
 
     if (accErr) {
       console.error('Account upsert error:', accErr);

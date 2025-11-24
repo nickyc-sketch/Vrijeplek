@@ -1,6 +1,7 @@
 // netlify/functions/create-deposit.js
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 const headers = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -25,6 +26,47 @@ function baseUrl(event) {
     process.env.DEPLOY_PRIME_URL ||
     process.env.APP_BASE_URL ||
     'http://localhost:8888';
+}
+
+async function sendBookingEmails({ klantEmail, klantNaam, providerEmail }) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.warn('SMTP not configured, skipping booking emails.');
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: String(process.env.SMTP_SECURE || 'false') === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+
+  const from = process.env.EMAIL_FROM || process.env.SMTP_FROM || 'Vrijeplek <no-reply@vrijeplek.be>';
+
+  if (klantEmail) {
+    await transporter.sendMail({
+      from,
+      to: klantEmail,
+      subject: 'Bevestiging van je boeking — Vrijeplek',
+      html: `<p>Beste ${klantNaam || 'klant'},</p>
+             <p>Je boeking is bevestigd.</p>
+             <p>Tot snel!</p>
+             <p>Het Vrijeplek-team</p>`
+    });
+  }
+
+  if (providerEmail) {
+    await transporter.sendMail({
+      from,
+      to: providerEmail,
+      subject: 'Nieuwe boeking via Vrijeplek',
+      html: `<p>Je hebt een nieuwe boeking ontvangen via Vrijeplek.</p>
+             <p>Klant: ${klantNaam || klantEmail || 'Onbekend'}</p>`
+    });
+  }
 }
 
 export async function handler(event) {
@@ -103,6 +145,16 @@ export async function handler(event) {
         })
         .eq('id', slot.id);
 
+      try {
+        await sendBookingEmails({
+          klantEmail: customer_email,
+          klantNaam: customer_name,
+          providerEmail
+        });
+      } catch (mailErr) {
+        console.error('Failed to send booking emails (no deposit):', mailErr);
+      }
+
       // eventueel hier in aparte "bookings" tabel schrijven, nu laten we het basic
       return {
         statusCode: 200,
@@ -154,8 +206,8 @@ export async function handler(event) {
     const { error: updateErr } = await client
       .from('slots')
       .update({
-        status: 'booked',
-        booked_at: new Date().toISOString()
+        status: 'pending_deposit',
+        stripe_checkout_session_id: session.id
       })
       .eq('id', slot.id);
 

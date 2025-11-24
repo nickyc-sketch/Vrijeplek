@@ -422,12 +422,14 @@
       const btnMijn = document.getElementById('nav-mijn');
       const btnLogin = document.getElementById('nav-login');
       if (btnMijn) {
-        btnMijn.style.display = 'none';
-        btnMijn.style.visibility = 'hidden';
+        btnMijn.style.setProperty('display', 'none', 'important');
+        btnMijn.style.setProperty('visibility', 'hidden', 'important');
+        btnMijn.style.setProperty('opacity', '0', 'important');
+        btnMijn.style.setProperty('pointer-events', 'none', 'important');
       }
       if (btnLogin) {
-        btnLogin.style.display = 'inline-flex';
-        btnLogin.style.visibility = 'visible';
+        btnLogin.style.setProperty('display', 'inline-flex', 'important');
+        btnLogin.style.setProperty('visibility', 'visible', 'important');
       }
     })();
 
@@ -537,9 +539,14 @@
           return;
         }
 
-        // Succes → dashboard met email in de URL
+        // Succes → nav meteen updaten en daarna doorsturen
+        if (typeof toggleNav === 'function') {
+          await toggleNav();
+        }
         const target = '/dashboard.html?email=' + encodeURIComponent(cleanEmail);
-        window.location.href = target;
+        setTimeout(() => {
+          window.location.href = target;
+        }, 100);
       });
     }).catch(err => {
       console.error('Failed to initialize Supabase:', err);
