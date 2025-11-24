@@ -1227,22 +1227,24 @@
         method: 'GET',
         credentials: 'include'
       });
-      if(!res.ok){
-        throw new Error(await res.text());
-      }
-      return res.json();
-    }
-    async function createSlot(payload){
-      const res = await fetch(API_SLOTS, {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload)
-      });
-      if(!res.ok){
-        throw new Error(await res.text());
-      }
-      return res.json();
+     if (!res.ok) {
+  let errorData;
+
+  try {
+    errorData = await res.json();
+  } catch {
+    const text = await res.text();
+    errorData = { error: text };
+  }
+
+  throw new Error(
+    errorData.error ||
+    errorData.details ||
+    'Failed to save profile'
+  );
+}
+
+return res.json();
     }
 
     async function updateSlot(payload){
