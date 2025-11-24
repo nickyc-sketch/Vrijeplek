@@ -1440,10 +1440,13 @@
 
     // SIMPLE, DIRECT TAB CLICK HANDLER - NO CLONING, NO COMPLEXITY
     function handleTabClick(e) {
-      e.preventDefault();
-      e.stopPropagation();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
       
-      const tab = e.currentTarget;
+      const tab = e ? e.currentTarget : this;
       const target = tab.getAttribute('data-panel');
       
       if (!target) {
@@ -1451,7 +1454,7 @@
         return;
       }
       
-      console.log('Tab clicked:', target);
+      console.log('=== TAB CLICKED ===', target);
       
       // Update active tab
       document.querySelectorAll('.dash-tab').forEach(t => {
@@ -1463,11 +1466,23 @@
       document.querySelectorAll('.dash-panel').forEach(panel => {
         if (panel.id === `panel-${target}`) {
           panel.classList.add('is-visible');
+          console.log('Showing panel:', panel.id);
         } else {
           panel.classList.remove('is-visible');
         }
       });
+      
+      return false;
     }
+    
+    // EVENT DELEGATION AS FALLBACK - WORKS EVEN IF DIRECT HANDLERS FAIL
+    document.addEventListener('click', function(e) {
+      const tab = e.target.closest('.dash-tab');
+      if (tab) {
+        console.log('Event delegation caught tab click:', tab.getAttribute('data-panel'));
+        handleTabClick.call(tab, e);
+      }
+    }, true); // Use capture phase
 
     // Initialize dashboard - SIMPLE AND DIRECT
     function initDashboard() {
@@ -1502,15 +1517,40 @@
         const newTab = tab.cloneNode(true);
         tab.parentNode.replaceChild(newTab, tab);
         
-        // Make absolutely sure it's clickable
-        newTab.style.cssText = 'cursor: pointer !important; pointer-events: auto !important; user-select: none; position: relative; z-index: 10;';
+        // Make absolutely sure it's clickable - FORCE ALL STYLES
+        newTab.style.setProperty('cursor', 'pointer', 'important');
+        newTab.style.setProperty('pointer-events', 'auto', 'important');
+        newTab.style.setProperty('user-select', 'none', 'important');
+        newTab.style.setProperty('position', 'relative', 'important');
+        newTab.style.setProperty('z-index', '999', 'important');
+        newTab.style.setProperty('background', '', 'important');
+        newTab.style.setProperty('opacity', '1', 'important');
         
-        // Attach click handler DIRECTLY
-        newTab.onclick = handleTabClick;
-        newTab.addEventListener('click', handleTabClick, true); // Use capture phase
-        newTab.addEventListener('click', handleTabClick, false); // Use bubble phase
+        // Remove any attributes that might block
+        newTab.removeAttribute('disabled');
+        newTab.removeAttribute('aria-disabled');
         
-        console.log(`Tab ${index} (${newTab.getAttribute('data-panel')}) - handlers attached`);
+        // Attach click handler MULTIPLE WAYS for redundancy
+        newTab.onclick = function(e) {
+          console.log('onclick fired for:', newTab.getAttribute('data-panel'));
+          return handleTabClick.call(this, e);
+        };
+        newTab.addEventListener('click', handleTabClick, true); // Capture
+        newTab.addEventListener('click', handleTabClick, false); // Bubble
+        newTab.addEventListener('mousedown', function(e) {
+          console.log('mousedown on tab:', newTab.getAttribute('data-panel'));
+          e.preventDefault();
+          handleTabClick.call(newTab, e);
+        }, false);
+        
+        // Also make it work with touch events
+        newTab.addEventListener('touchend', function(e) {
+          console.log('touchend on tab:', newTab.getAttribute('data-panel'));
+          e.preventDefault();
+          handleTabClick.call(newTab, e);
+        }, false);
+        
+        console.log(`Tab ${index} (${newTab.getAttribute('data-panel')}) - ALL handlers attached`);
       });
 
       // Panel jump buttons
@@ -1903,18 +1943,48 @@
         el.style.setProperty('cursor', 'pointer', 'important');
         el.style.setProperty('user-select', 'none', 'important');
         el.style.setProperty('position', 'relative', 'important');
-        el.style.setProperty('z-index', '10', 'important');
+        el.style.setProperty('z-index', '999', 'important');
+        el.style.setProperty('opacity', '1', 'important');
+        el.removeAttribute('disabled');
+        el.removeAttribute('aria-disabled');
+      });
+      
+      // REMOVE ANY OVERLAYS THAT MIGHT BLOCK CLICKS
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        const style = window.getComputedStyle(el);
+        // If element has pointer-events: none and is covering tabs area, remove it
+        if (style.pointerEvents === 'none' && style.position === 'absolute' || style.position === 'fixed') {
+          const rect = el.getBoundingClientRect();
+          const tabsArea = document.querySelector('.dash-tabs');
+          if (tabsArea) {
+            const tabsRect = tabsArea.getBoundingClientRect();
+            // Check if overlay is covering tabs
+            if (rect.left < tabsRect.right && rect.right > tabsRect.left &&
+                rect.top < tabsRect.bottom && rect.bottom > tabsRect.top) {
+              console.warn('Removing blocking overlay:', el);
+              el.style.setProperty('pointer-events', 'none', 'important');
+              el.style.setProperty('display', 'none', 'important');
+            }
+          }
+        }
       });
       
       console.log('=== DASHBOARD INIT COMPLETE ===');
       console.log('Tabs:', document.querySelectorAll('.dash-tab').length);
       console.log('Panels:', document.querySelectorAll('.dash-panel').length);
       
-      // Test click on first tab
-      const firstTab = document.querySelector('.dash-tab');
-      if (firstTab) {
-        console.log('First tab:', firstTab.getAttribute('data-panel'), 'Clickable:', firstTab.style.pointerEvents);
-      }
+      // Test that tabs are actually clickable
+      const testTabs = document.querySelectorAll('.dash-tab');
+      testTabs.forEach((tab, i) => {
+        const computed = window.getComputedStyle(tab);
+        console.log(`Tab ${i} (${tab.getAttribute('data-panel')}):`, {
+          pointerEvents: computed.pointerEvents,
+          cursor: computed.cursor,
+          zIndex: computed.zIndex,
+          position: computed.position
+        });
+      });
     }
 
     // MULTIPLE INITIALIZATION ATTEMPTS - BULLETPROOF
@@ -1951,6 +2021,34 @@
     
     // Make handleTabClick globally available as fallback
     window.handleTabClick = handleTabClick;
+    
+    // EMERGENCY FALLBACK - Direct tab switching function
+    window.switchTab = function(panelName) {
+      console.log('Emergency switchTab called for:', panelName);
+      const tab = document.querySelector(`.dash-tab[data-panel="${panelName}"]`);
+      if (tab) {
+        handleTabClick.call(tab, null);
+      }
+    };
+    
+    // Add keyboard shortcuts as backup
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === '1') {
+          e.preventDefault();
+          window.switchTab('afspraken');
+        } else if (e.key === '2') {
+          e.preventDefault();
+          window.switchTab('tijden');
+        } else if (e.key === '3') {
+          e.preventDefault();
+          window.switchTab('website');
+        } else if (e.key === '4') {
+          e.preventDefault();
+          window.switchTab('instellingen');
+        }
+      }
+    });
   </script>
 
 </body>
