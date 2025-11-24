@@ -961,6 +961,19 @@
                       </p>
                     </div>
 
+                    <!-- Deposit amount selection per slot -->
+                    <div class="field slot-deposit-amount" style="display:none;">
+                      <label for="slot-deposit-amount">Voorschotbedrag voor dit tijdslot</label>
+                      <select id="slot-deposit-amount">
+                        <option value="">Kies bedrag…</option>
+                        <option value="15">€15</option>
+                        <option value="30">€30</option>
+                        <option value="50">€50</option>
+                        <option value="custom">Ander bedrag…</option>
+                      </select>
+                      <input type="number" id="slot-deposit-custom" placeholder="Ander bedrag in €" style="display:none; margin-top:0.5rem;" min="0" step="1">
+                    </div>
+
                     <p class="helper">
                       Voorbeeld: “Vrije plek: tandarts — controle (30 min)” of
                       “Vrije plek: gyproc-offerte ter plaatse (1u)”.
@@ -1109,6 +1122,37 @@
                           Het wordt op jouw IBAN gestort; Vrijeplek blijft hier volledig buiten.
                         </p>
                       </div>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="settings-group">
+                    <legend>Reviews &amp; locatie</legend>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Google review tonen</span>
+                      </label>
+                    </div>
+                    <div class="field" id="google-review-field" style="display:none;">
+                      <label for="google-review-url">Google review link</label>
+                      <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
+                    </div>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Locatiegegevens delen</span>
+                      </label>
+                    </div>
+                    <div class="field" id="location-fields" style="display:none;">
+                      <label for="business-lat">Latitude</label>
+                      <input id="business-lat" name="business_lat" type="text" placeholder="51.12345">
+                      <label for="business-lng">Longitude</label>
+                      <input id="business-lng" name="business_lng" type="text" placeholder="4.12345">
+                      <button type="button" class="btn-pill" id="geo-btn" style="margin-top:0.5rem;">Gebruik mijn huidige locatie</button>
                     </div>
                   </fieldset>
 
@@ -1311,7 +1355,9 @@
         const visible = typeof item.visible === 'boolean' ? item.visible : true;
         const depositRequired = !!(item.deposit_required || item.with_deposit);
         const visibleText = visible ? 'Zichtbaar op Vrijeplek' : 'Verborgen';
-        const depositText = depositRequired ? 'Voorschot actief' : 'Geen voorschot';
+        // Toon eventueel het bedrag bij een voorschot
+        const depositAmount = item.deposit_amount || item.depositAmount || null;
+        const depositText = depositRequired ? (depositAmount ? `Voorschot: €${depositAmount}` : 'Voorschot actief') : 'Geen voorschot';
         const booked = !!(item.is_booked || item.booked || item.status === 'Geboekt' || item.status === 'Bezet');
         const bookedLabel = booked ? 'Geboekt • niet meer wijzigbaar (server beslist)' : `${places} plaats(en) • ${visibleText} • ${depositText}`;
         const editDisabled = booked ? 'disabled aria-disabled="true"' : '';
@@ -1428,6 +1474,30 @@
         depositEnabledInput.dispatchEvent(event);
       }
 
+      // Apply Google review settings
+      const googleReviewEnabledInput = document.getElementById('google-review-enabled');
+      if(googleReviewEnabledInput) {
+        googleReviewEnabledInput.checked = !!profile.google_review_enabled;
+        const event = new Event('change');
+        googleReviewEnabledInput.dispatchEvent(event);
+      }
+      if(byId('google-review-url')) {
+        byId('google-review-url').value = profile.google_review_url || '';
+      }
+      // Apply location sharing settings
+      const shareLocationEnabledInput = document.getElementById('share-location-enabled');
+      if(shareLocationEnabledInput) {
+        shareLocationEnabledInput.checked = !!profile.share_location_enabled;
+        const event = new Event('change');
+        shareLocationEnabledInput.dispatchEvent(event);
+      }
+      if(byId('business-lat')) {
+        byId('business-lat').value = profile.business_lat || '';
+      }
+      if(byId('business-lng')) {
+        byId('business-lng').value = profile.business_lng || '';
+      }
+
       const status = document.getElementById('settings-status');
       if(status){
         status.textContent = 'Instellingen opgeslagen';
@@ -1466,7 +1536,13 @@
         iban:           getVal('iban'),
         bic:            getVal('bic'),
         deposit_amount: getNumber('deposit-amount'),
-        extra_footer:   getVal('extra-footer')
+        extra_footer:   getVal('extra-footer'),
+        // Additional settings
+        google_review_enabled: getChecked('google-review-enabled'),
+        google_review_url: getVal('google-review-url'),
+        share_location_enabled: getChecked('share-location-enabled'),
+        business_lat:   getVal('business-lat'),
+        business_lng:   getVal('business-lng')
       };
     }
 
@@ -1545,46 +1621,9 @@
         return;
       }
       
-      // Remove ALL existing listeners and attach fresh ones
-      tabs.forEach((tab, index) => {
-        // Remove any existing listeners by cloning
-        const newTab = tab.cloneNode(true);
-        tab.parentNode.replaceChild(newTab, tab);
-        
-        // Make absolutely sure it's clickable - FORCE ALL STYLES
-        newTab.style.setProperty('cursor', 'pointer', 'important');
-        newTab.style.setProperty('pointer-events', 'auto', 'important');
-        newTab.style.setProperty('user-select', 'none', 'important');
-        newTab.style.setProperty('position', 'relative', 'important');
-        newTab.style.setProperty('z-index', '999', 'important');
-        newTab.style.setProperty('background', '', 'important');
-        newTab.style.setProperty('opacity', '1', 'important');
-        
-        // Remove any attributes that might block
-        newTab.removeAttribute('disabled');
-        newTab.removeAttribute('aria-disabled');
-        
-        // Attach click handler MULTIPLE WAYS for redundancy
-        newTab.onclick = function(e) {
-          console.log('onclick fired for:', newTab.getAttribute('data-panel'));
-          return handleTabClick.call(this, e);
-        };
-        newTab.addEventListener('click', handleTabClick, true); // Capture
-        newTab.addEventListener('click', handleTabClick, false); // Bubble
-        newTab.addEventListener('mousedown', function(e) {
-          console.log('mousedown on tab:', newTab.getAttribute('data-panel'));
-          e.preventDefault();
-          handleTabClick.call(newTab, e);
-        }, false);
-        
-        // Also make it work with touch events
-        newTab.addEventListener('touchend', function(e) {
-          console.log('touchend on tab:', newTab.getAttribute('data-panel'));
-          e.preventDefault();
-          handleTabClick.call(newTab, e);
-        }, false);
-        
-        console.log(`Tab ${index} (${newTab.getAttribute('data-panel')}) - ALL handlers attached`);
+      // Attach a simple click handler to each tab
+      tabs.forEach(tab => {
+        tab.addEventListener('click', handleTabClick);
       });
 
       // Panel jump buttons
@@ -1615,6 +1654,8 @@
         updateDepositState();
       }
 
+      // Additional initialization for toggles will be attached later once DOM elements are defined
+
       // kalender + slots
       const slotForm   = document.getElementById('slot-form');
       const slotList   = document.getElementById('slot-list');
@@ -1626,6 +1667,60 @@
       const slotVisible= document.getElementById('slot-visible');
       const slotDeposit= document.getElementById('slot-deposit');
       const slotSubmitBtn = document.getElementById('slot-submit-btn');
+
+      // Settings toggles for Google review and location
+      const googleReviewToggle = document.getElementById('google-review-enabled');
+      const googleReviewField = document.getElementById('google-review-field');
+      const googleReviewUrl = document.getElementById('google-review-url');
+      const shareLocationToggle = document.getElementById('share-location-enabled');
+      const locationFields = document.getElementById('location-fields');
+
+      // Deposit amount inputs for per-slot deposits
+      const slotDepositAmount = document.getElementById('slot-deposit-amount');
+      const slotDepositCustom = document.getElementById('slot-deposit-custom');
+      const slotDepositGroup = document.querySelector('.slot-deposit-amount');
+
+      // Now that slotDeposit and related elements are defined, attach listeners for deposit UI
+      if (slotDeposit && slotDepositGroup) {
+        slotDeposit.addEventListener('change', () => {
+          if (slotDeposit.checked) {
+            slotDepositGroup.style.display = 'block';
+          } else {
+            slotDepositGroup.style.display = 'none';
+            if (slotDepositAmount) slotDepositAmount.value = '';
+            if (slotDepositCustom) {
+              slotDepositCustom.value = '';
+              slotDepositCustom.style.display = 'none';
+            }
+          }
+        });
+      }
+      if (slotDepositAmount && slotDepositCustom) {
+        slotDepositAmount.addEventListener('change', () => {
+          if (slotDepositAmount.value === 'custom') {
+            slotDepositCustom.style.display = 'block';
+          } else {
+            slotDepositCustom.style.display = 'none';
+          }
+        });
+      }
+
+      // Attach handlers for settings toggles (Google review and location) after elements exist
+      if (googleReviewToggle && googleReviewField) {
+        const updateGoogleReviewVisibility = () => {
+          googleReviewField.style.display = googleReviewToggle.checked ? 'block' : 'none';
+        };
+        googleReviewToggle.addEventListener('change', updateGoogleReviewVisibility);
+        updateGoogleReviewVisibility();
+      }
+
+      if (shareLocationToggle && locationFields) {
+        const updateLocationVisibility = () => {
+          locationFields.style.display = shareLocationToggle.checked ? 'block' : 'none';
+        };
+        shareLocationToggle.addEventListener('change', updateLocationVisibility);
+        updateLocationVisibility();
+      }
 
       const grid = document.querySelector('[data-cal-grid]');
       const monthLabel = document.querySelector('[data-cal-month]');
@@ -1816,8 +1911,21 @@
           const visibleVal= !!slotVisible.checked;
           const depositPerSlot = slotDeposit ? !!slotDeposit.checked : false;
 
+          // Determine deposit amount per slot if deposit is enabled
+          let depositAmountVal = null;
+          if (depositPerSlot) {
+            if (slotDepositAmount && slotDepositAmount.value && slotDepositAmount.value !== 'custom') {
+              const n = parseInt(slotDepositAmount.value, 10);
+              if (!Number.isNaN(n)) depositAmountVal = n;
+            } else if (slotDepositCustom && slotDepositCustom.value) {
+              const n = parseInt(slotDepositCustom.value, 10);
+              if (!Number.isNaN(n)) depositAmountVal = n;
+            }
+          }
+
           if(!startVal || !endVal){
-            alert('Vul minstens een start- en einduur in.');
+            // Toon foutmelding via toast in plaats van een blokkerende alert
+            showToast('Vul minstens een start- en einduur in.', 'error');
             return;
           }
 
@@ -1830,7 +1938,8 @@
             places: placesVal,
             description: descVal,
             visible: visibleVal,
-            deposit_required: depositPerSlot
+            deposit_required: depositPerSlot,
+            deposit_amount: depositAmountVal
           };
 
           // email meesturen indien we hem kennen, maar niet blokkeren als hij ontbreekt
@@ -1967,94 +2076,19 @@
       
       console.log('Dashboard initialized successfully');
       
-      // FORCE ALL INTERACTIVE ELEMENTS TO BE CLICKABLE
-      const allButtons = document.querySelectorAll('button, .dash-tab, [data-panel-jump], .btn-head, .btn-ghost');
-      console.log('Found buttons/tabs:', allButtons.length);
-      
-      allButtons.forEach(el => {
-        // FORCE styles with !important via setProperty
-        el.style.setProperty('pointer-events', 'auto', 'important');
-        el.style.setProperty('cursor', 'pointer', 'important');
-        el.style.setProperty('user-select', 'none', 'important');
-        el.style.setProperty('position', 'relative', 'important');
-        el.style.setProperty('z-index', '999', 'important');
-        el.style.setProperty('opacity', '1', 'important');
-        el.removeAttribute('disabled');
-        el.removeAttribute('aria-disabled');
-      });
-      
-      // REMOVE ANY OVERLAYS THAT MIGHT BLOCK CLICKS
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(el => {
-        const style = window.getComputedStyle(el);
-        // If element has pointer-events: none and is covering tabs area, remove it
-        if (
-          style.pointerEvents === 'none' &&
-          (style.position === 'absolute' || style.position === 'fixed')
-        ) {
-          const rect = el.getBoundingClientRect();
-          const tabsArea = document.querySelector('.dash-tabs');
-          if (tabsArea) {
-            const tabsRect = tabsArea.getBoundingClientRect();
-            // Check if overlay is covering tabs
-            if (rect.left < tabsRect.right && rect.right > tabsRect.left &&
-                rect.top < tabsRect.bottom && rect.bottom > tabsRect.top) {
-              console.warn('Removing blocking overlay:', el);
-              el.style.setProperty('pointer-events', 'none', 'important');
-              el.style.setProperty('display', 'none', 'important');
-            }
-          }
-        }
-      });
-      
       console.log('=== DASHBOARD INIT COMPLETE ===');
       console.log('Tabs:', document.querySelectorAll('.dash-tab').length);
-      console.log('Panels:', document.queryAll('.dash-panel').length);
-      
-      // Test that tabs are actually clickable
-      const testTabs = document.querySelectorAll('.dash-tab');
-      testTabs.forEach((tab, i) => {
-        const computed = window.getComputedStyle(tab);
-        console.log(`Tab ${i} (${tab.getAttribute('data-panel')}):`, {
-          pointerEvents: computed.pointerEvents,
-          cursor: computed.cursor,
-          zIndex: computed.zIndex,
-          position: computed.position
-        });
-      });
+      console.log('Panels:', document.querySelectorAll('.dash-panel').length);
     }
 
-    // MULTIPLE INITIALIZATION ATTEMPTS - BULLETPROOF
-    function forceInit() {
-      console.log('=== FORCE INIT CALLED ===');
-      console.log('Ready state:', document.readyState);
-      console.log('Body exists:', !!document.body);
-      console.log('Tabs exist:', document.querySelectorAll('.dash-tab').length);
-      
+    // INITIALIZE ONCE WHEN DOM IS READY
+    document.addEventListener('DOMContentLoaded', function() {
       try {
         initDashboard();
       } catch (err) {
         console.error('Init error:', err);
-        setTimeout(forceInit, 200);
       }
-    }
-    
-    // Try immediately
-    if (document.readyState === 'complete') {
-      forceInit();
-    } else if (document.readyState === 'interactive') {
-      setTimeout(forceInit, 50);
-    } else {
-      document.addEventListener('DOMContentLoaded', forceInit);
-    }
-    
-    // Fallback attempts
-    setTimeout(forceInit, 200);
-    setTimeout(forceInit, 500);
-    setTimeout(forceInit, 1000);
-    
-    // Also try on window load
-    window.addEventListener('load', forceInit);
+    });
     
     // Make handleTabClick globally available as fallback
     window.handleTabClick = handleTabClick;
