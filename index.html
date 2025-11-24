@@ -47,36 +47,83 @@
       display:flex;
       flex-direction:column;
     }
+    /**
+     * Site header
+     *
+     * Het dashboard gebruikt een half transparant "glas" effect voor de bovenbalk. Om dezelfde
+     * uitstraling te creëren op de homepage is de hoofdbalk nu semi‑transparant met een
+     * lichte blur, waardoor de achtergrond erdoorheen schijnt. De primaire kleuren
+     * (var(--o1)/var(--o2)) blijven aanwezig voor herkenbaarheid, maar met een lagere
+     * opacity zodat de header minder massief oogt. De linkerkant toont het logo zoals in
+     * het dashboard: een ronde mark met een V en een woordmerk met twee regels (merknaam
+     * en tagline). Deze vervangen het oude afbeelding‑logo.
+     */
     header.site-header{
       position:sticky;
       top:0;
       z-index:50;
-      background:linear-gradient(120deg,var(--o1),var(--o2));
-      color:#fff;
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
+      /* Half transparante kleuren gebaseerd op de primaire kleuren */
+      background:linear-gradient(135deg, rgba(26,102,255,.5), rgba(0,86,255,.5));
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(255,255,255,.22);
+      color:#f9fafb;
+      box-shadow:0 4px 20px rgba(0,0,0,.2);
     }
     .header-inner{
       max-width:1200px;
       margin:0 auto;
-      padding:14px 16px;
+      padding:12px 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:16px;
     }
+    /* Logo zoals in het dashboard */
     .brand{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:12px;
       text-decoration:none;
-      color:#fff;
-      font-weight:700;
-      font-size:20px;
+      color:#f9fafb;
     }
-    .brand img{height:38px;}
-    .brand-name{font-weight:800;}
-    .brand-dot{width:7px;height:7px;border-radius:999px;background:#fff;}
-    .header-actions{display:flex;align-items:center;gap:10px;}
+    .brand-mark{
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
+                 radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
+      box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      font-weight:700;
+      color:#fff;
+    }
+    .brand-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand-wordmark span:first-child{
+      font-weight:700;
+      letter-spacing:.02em;
+      font-size:1.05rem;
+      color:#f9fafb;
+      text-transform:none;
+    }
+    .brand-wordmark span:last-child{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(226,232,240,.8);
+    }
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
     .nav-btn{
       display:inline-flex;
       align-items:center;
@@ -86,16 +133,19 @@
       text-decoration:none;
       font-weight:600;
       border:1px solid rgba(255,255,255,.35);
-      color:#fff;
-      background:rgba(255,255,255,.1);
+      color:#f9fafb;
+      background:rgba(255,255,255,.12);
       font-size:13px;
+      transition:background .15s ease;
     }
-    .nav-btn:hover{background:rgba(255,255,255,.2);}
+    .nav-btn:hover{
+      background:rgba(255,255,255,.22);
+    }
     .btn-green{
-      background:linear-gradient(120deg,#16a34a,#0e9f6e);
+      background:linear-gradient(135deg,#16a34a,#0e9f6e);
       border:1px solid rgba(16,185,129,.25);
       color:#fff!important;
-      box-shadow:0 6px 18px rgba(16,185,129,.18);
+      box-shadow:0 6px 18px rgba(16,185,129,.2);
     }
     main{flex:1;}
     /* Zoekenform */
@@ -317,10 +367,12 @@
   <div class="site">
     <header class="site-header">
       <div class="header-inner">
-        <a class="brand" href="/">
-          <img src="img/logo.png" alt="">
-          <span class="brand-name">Vrijeplek</span>
-          <span class="brand-dot"></span>
+        <a class="brand" href="/" aria-label="Vrijeplek home">
+          <div class="brand-mark">V</div>
+          <div class="brand-wordmark">
+            <span>vrijeplek</span>
+            <span>last minute afspreken</span>
+          </div>
         </a>
         <nav class="header-actions">
           <a class="nav-btn" href="/waarom">Waarom Vrijeplek?</a>
