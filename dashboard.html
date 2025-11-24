@@ -1217,35 +1217,24 @@
     // ---------- SLOTS API ----------
 
     async function fetchSlotsForDate(dateKey){
-      const url = new URL(API_SLOTS, window.location.origin);
-      url.searchParams.set('date', dateKey);
-      if (dashboardEmail) {
-        url.searchParams.set('email', dashboardEmail);
-      }
-
-      const res = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include'
-      });
-     if (!res.ok) {
-  let errorData;
-
-  try {
-    errorData = await res.json();
-  } catch {
-    const text = await res.text();
-    errorData = { error: text };
+  const url = new URL(API_SLOTS, window.location.origin);
+  url.searchParams.set('date', dateKey);
+  if (dashboardEmail) {
+    url.searchParams.set('email', dashboardEmail);
   }
 
-  throw new Error(
-    errorData.error ||
-    errorData.details ||
-    'Failed to save profile'
-  );
-}
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    credentials: 'include'
+  });
 
-return res.json();
-    }
+  if (!res.ok) {
+    const text = await res.text().catch(() => 'Kon de tijdstippen niet laden.');
+    throw new Error(text);
+  }
+
+  return res.json();
+}
 
     async function updateSlot(payload){
       const res = await fetch(API_SLOTS, {
@@ -1352,30 +1341,44 @@ return res.json();
     }
 
     async function saveProfile(payload){
-      if (!dashboardEmail) {
-        throw new Error('Geen e-mailadres gevonden');
-      }
+  if (!dashboardEmail) {
+    throw new Error('Geen e-mailadres gevonden');
+  }
 
-      // Send payload with email - the API will handle field mapping
-      const profilePayload = {
-        email: dashboardEmail,
-        ...payload
-      };
+  const profilePayload = {
+    email: dashboardEmail,
+    ...payload
+  };
 
-      const res = await fetch(API_PROFILE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(profilePayload)
-      });
+  const res = await fetch(API_PROFILE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(profilePayload)
+  });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: await res.text() }));
-        throw new Error(errorData.error || errorData.details || 'Failed to save profile');
-      }
+  if (!res.ok) {
+    let errorData;
 
-      return res.json();
+    try {
+      // proberen JSON foutinfo te lezen
+      errorData = await res.json();
+    } catch {
+      // geen geldige JSON → tekst fallback
+      const text = await res.text();
+      errorData = { error: text };
     }
+
+    throw new Error(
+      errorData.error ||
+      errorData.details ||
+      'Failed to save profile'
+    );
+  }
+
+  return res.json();
+}
+
 
     function applyProfileToForm(profile){
       if(!profile) return;
