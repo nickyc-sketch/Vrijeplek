@@ -5,44 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vrijeplek — Last minute? Zoek een afspraak!</title>
 
+  <!-- Google fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=smurf5">
-
+  <!--
+    Deze homepage is gebaseerd op de originele Vrijeplek zoekpagina maar lichter
+    qua achtergrond en afgestemd op de look‑and‑feel van het dashboard. De
+    achtergrond gebruikt een zachte blauwe gradiënt en de result cards staan
+    op een doorschijnend vlak. De ronde categorieknoppen zijn behouden en er
+    is een extra knop voor "Bouw & renovatie" toegevoegd. Bij het zoeken
+    worden de resultaten per categorie gegroepeerd weergegeven onder de
+    zoekbalk.
+  -->
   <style>
     :root{
+      /* Primaire kleuren komen overeen met het dashboard */
       --o1:#1a66ff;
       --o2:#0056ff;
       --ink:#0a2a4a;
-      --line:rgba(26,102,255,.25);
+      --line:rgba(26,102,255,.22);
+      /* Semi transparant wit voor "glas" kaarten */
+      --glass:rgba(255,255,255,.88);
       --glass-b:rgba(26,102,255,.18);
-      --glass:rgba(255,255,255,.78);
     }
-    html,body{height:100%}
+    html, body{height:100%}
     body{
       margin:0;
-      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
       color:var(--ink);
-      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);
+      /* Donkerblauwe achtergrond zoals het dashboard. De centre in het midden wordt lichter gemaakt via de search‑wrap en kaarten. */
+      background:
+        radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
+        radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
+        radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
+      background-attachment:fixed;
     }
-    .site{min-height:100svh; display:flex; flex-direction:column;}
-    main{flex:1}
-
-    .site-header{
+    .site{
+      min-height:100svh;
+      display:flex;
+      flex-direction:column;
+    }
+    header.site-header{
       position:sticky;
       top:0;
       z-index:50;
       background:linear-gradient(120deg,var(--o1),var(--o2));
       color:#fff;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
     }
-    .site-header .inner{
+    .header-inner{
       max-width:1200px;
       margin:0 auto;
-      padding:14px 12px;
+      padding:14px 16px;
       display:flex;
       align-items:center;
+      justify-content:space-between;
       gap:16px;
     }
     .brand{
@@ -53,13 +72,11 @@
       color:#fff;
       font-weight:700;
       font-size:20px;
-      margin-right:auto;
     }
-    .brand img{height:38px}
+    .brand img{height:38px;}
     .brand-name{font-weight:800;}
     .brand-dot{width:7px;height:7px;border-radius:999px;background:#fff;}
-
-    .header-actions{display:flex; align-items:center; gap:10px; margin-left:auto;}
+    .header-actions{display:flex;align-items:center;gap:10px;}
     .nav-btn{
       display:inline-flex;
       align-items:center;
@@ -70,52 +87,41 @@
       font-weight:600;
       border:1px solid rgba(255,255,255,.35);
       color:#fff;
-      background:rgba(255,255,255,.12);
+      background:rgba(255,255,255,.1);
       font-size:13px;
     }
-    .nav-btn:hover{background:rgba(255,255,255,.2)}
+    .nav-btn:hover{background:rgba(255,255,255,.2);}
     .btn-green{
       background:linear-gradient(120deg,#16a34a,#0e9f6e);
       border:1px solid rgba(16,185,129,.25);
       color:#fff!important;
       box-shadow:0 6px 18px rgba(16,185,129,.18);
     }
-
-    .container{max-width:1200px; margin:0 auto; padding:0 12px;}
-
-    .hero{padding:32px 0 8px;}
-    .hero-inner{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      gap:14px;
-    }
-    .hero h1{
-      margin:0;
-      font-size:32px;
-    }
-
+    main{flex:1;}
+    /* Zoekenform */
     .search-wrap{
       width:100%;
-      max-width:920px;
-      margin:10px auto 28px;
-      padding:14px;
+      max-width:960px;
+      margin:20px auto;
+      padding:20px;
       border-radius:16px;
-      background:rgba(255,255,255,.7);
-      border:1px solid var(--line);
-      box-shadow:0 8px 30px rgba(10,27,90,.08);
+      /* Maak de zoekcontainer lichter en minder contrastrijk zodat hij uit het donkere dashboard springt. */
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.2);
+      box-shadow:0 8px 30px rgba(0,0,0,.2);
     }
-    .search{
+    form.search{
       display:grid;
       grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto;
-      gap:10px;
+      gap:12px;
     }
-    .search .field{display:flex; flex-direction:column; gap:6px; text-align:left;}
+    @media(max-width:1024px){form.search{grid-template-columns:1fr 1fr 1fr;}}
+    @media(max-width:720px){form.search{grid-template-columns:1fr;}}
+    .search .field{display:flex;flex-direction:column;gap:6px;text-align:left;}
     .search label{
       font-size:12px;
       font-weight:700;
-      color:#223655;
+      color:#2a4163;
     }
     .search input,
     .search select{
@@ -125,7 +131,7 @@
       background:#fff;
       font-size:13px;
     }
-    .btn{
+    .btn-primary{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -135,18 +141,12 @@
       background:linear-gradient(120deg,var(--o1),var(--o2));
       color:#fff;
       font-weight:700;
-      cursor:pointer;
       font-size:14px;
+      cursor:pointer;
       box-shadow:0 8px 22px rgba(37,99,235,.3);
     }
-    @media(max-width:1024px){
-      .search{grid-template-columns:1fr 1fr 1fr;}
-    }
-    @media(max-width:720px){
-      .search{grid-template-columns:1fr;}
-    }
-
-    .cat-dots{padding:18px 0 0;}
+    /* Categorieknoppen */
+    .cat-dots{padding:20px 0;}
     .cat-dots-row{
       display:flex;
       flex-wrap:wrap;
@@ -170,15 +170,12 @@
       object-fit:cover;
       border-radius:999px;
       border:1px solid var(--line);
-      box-shadow:0 8px 24px rgba(10,27,90,.08);
+      box-shadow:0 8px 24px rgba(10,27,90,.06);
       background:#fff;
     }
-    .catdot span{font-weight:700; font-size:13px;}
-
-    /* Resultatenblok */
-    .results{
-      padding:0 0 40px;
-    }
+    .catdot span{font-weight:700;font-size:13px;}
+    /* Resultaten */
+    .results{padding:0 0 60px;}
     .results-inner{
       max-width:1200px;
       margin:0 auto;
@@ -189,40 +186,49 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
-    .results-head h2{
-      margin:0;
-      font-size:20px;
-    }
-    .results-meta{
-      font-size:13px;
-      color:#5b6b86;
-    }
+    .results-head h2{margin:0;font-size:22px;font-weight:700;color:var(--ink);}
+    .results-meta{font-size:13px;color:#576a8e;}
     .results-list{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+    /* Result grouping by category */
+    .category-group{margin-top:20px;}
+    .category-group h3{
+      margin:0 0 8px;
+      font-size:18px;
+      font-weight:700;
+      color:var(--ink);
+    }
+    .category-group .cards{
       display:flex;
       flex-direction:column;
       gap:12px;
     }
     .result-card{
-      background:var(--glass);
-      border:1px solid var(--glass-b);
+      /* Result kaarten krijgen een lichte achtergrond zodat ze contrasteren met de donkere achtergrond */
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.2);
       border-radius:14px;
-      box-shadow:0 6px 22px rgba(10,27,90,.06);
-      padding:14px 16px 12px;
+      box-shadow:0 6px 22px rgba(0,0,0,.2);
+      padding:16px 18px 14px;
       text-align:left;
     }
-    .result-head{
+    .result-head {
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       gap:10px;
       margin-bottom:6px;
     }
-    .result-title{
+    .result-title {
       font-size:16px;
       font-weight:700;
       margin:0;
+      color:var(--ink);
     }
     .result-cat{
       font-size:11px;
@@ -231,20 +237,19 @@
       border:1px solid rgba(26,102,255,.25);
       background:#fff;
       text-transform:capitalize;
+      color:var(--ink);
     }
     .result-body{
       font-size:13px;
       color:#374151;
       margin-bottom:8px;
     }
-    .result-body .line{
-      margin:2px 0;
-    }
+    .result-body .line{margin:2px 0;}
     .slots-list{
       display:flex;
       flex-wrap:wrap;
       gap:6px;
-      margin:4px 0 0;
+      margin-top:4px;
       padding:0;
       list-style:none;
       font-size:12px;
@@ -253,27 +258,16 @@
       display:inline-flex;
       align-items:center;
       gap:6px;
-      padding:5px 9px;
+      padding:5px 10px;
       border-radius:999px;
       background:#fff;
       border:1px solid rgba(26,102,255,.18);
-      box-shadow:0 2px 6px rgba(15,23,42,.12);
+      box-shadow:0 2px 6px rgba(15,23,42,.08);
       white-space:nowrap;
     }
-    .slot-pill span.date{
-      font-weight:600;
-    }
-    .slot-pill span.time{
-      font-size:11px;
-      color:#4b5563;
-    }
-    .slot-pill.volzet{
-      opacity:.6;
-    }
-    .slot-pill.volzet .slot-book-btn{
-      background:#9ca3af;
-      cursor:default;
-    }
+    .slot-pill.volzet{opacity:.6;}
+    .slot-pill .date{font-weight:600;}
+    .slot-pill .time{font-size:11px;color:#4b5563;}
     .slot-book-btn{
       border:0;
       border-radius:999px;
@@ -285,10 +279,10 @@
       cursor:pointer;
       box-shadow:0 2px 6px rgba(37,99,235,.35);
     }
-
+    /* Footer */
     .site-footer{
       border-top:1px solid var(--line);
-      background:rgba(255,255,255,.8);
+      background:rgba(255,255,255,.85);
     }
     .footer-inner{
       max-width:1200px;
@@ -302,31 +296,30 @@
       font-size:12px;
       color:#4b5563;
     }
-    .footer-nav{display:flex; gap:12px;}
-    .footer-nav a{text-decoration:none; color:#244; font-weight:600;}
+    .footer-nav{display:flex;gap:12px;}
+    .footer-nav a{text-decoration:none;color:#244;font-weight:600;}
   </style>
 </head>
 
 <body>
   <div class="site">
-
     <header class="site-header">
       <div class="header-inner">
-        <a href="index.html" class="brand">
+        <a class="brand" href="/">
           <img src="img/logo.png" alt="">
           <span class="brand-name">Vrijeplek</span>
           <span class="brand-dot"></span>
         </a>
         <nav class="header-actions">
-          <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
-          <a class="nav-btn" href="aanmelden.html">Word lid</a>
-          <a id="nav-login" class="nav-btn" href="login.html">Login</a>
-          <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+          <a class="nav-btn" href="/waarom">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="/aanmelden">Word lid</a>
+          <a class="nav-btn" href="/login" id="nav-login">Login</a>
+          <a class="nav-btn btn-green" href="/dashboard" id="nav-mijn" style="display:none;">Mijn Vrijeplek</a>
         </nav>
       </div>
     </header>
-
     <main>
+      <!-- Categorie knoppen -->
       <section class="cat-dots">
         <div class="container">
           <ul class="cat-dots-row">
@@ -335,188 +328,84 @@
             <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
             <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
             <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
+            <!-- Extra categorieën zoals in de huidige index -->
             <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
             <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
+            <!-- Nieuw: Bouw & renovatie categorie -->
+            <li><a class="catdot" data-cat="bouw" href="#zoeken" title="Bouw & renovatie"><img src="img/cat-bouw.jpg" alt="Bouw & renovatie"><span>Bouw &amp; renovatie</span></a></li>
           </ul>
         </div>
       </section>
-
-      <section class="hero">
-        <div class="container hero-inner">
-          <h1>Last minute? Zoek een afspraak!</h1>
-          <div class="search-wrap">
-            <form id="zoeken" class="search" role="search" aria-label="Zoeken">
-              <div class="field">
-                <label for="q">Welk bedrijf zoek je?</label>
-                <input id="q" name="q" type="search" required>
-              </div>
-              <div class="field">
-                <label for="loc">Locatie</label>
-                <input id="loc" name="loc" type="text" placeholder="Postcode of gemeente">
-              </div>
-              <div class="field">
-                <label for="from">Van</label>
-                <input id="from" name="from" type="date">
-              </div>
-              <div class="field">
-                <label for="to">Tot</label>
-                <input id="to" name="to" type="date">
-              </div>
-              <div class="field">
-                <label for="cat">Categorie</label>
-                <select id="cat" name="cat">
-                  <option value="">Alle categorieën</option>
-                  <option value="horeca">Horeca</option>
-                  <option value="wellness">Wellness</option>
-                  <option value="zorg">Gezondheid</option>
-                  <option value="events">Events</option>
-                  <option value="poetsdiensten">Poetsdiensten</option>
-                  <option value="ramenwasser">Ramenwasser</option>
-                  <option value="dieren">Dieren</option>
-                </select>
-              </div>
-              <button class="btn" type="submit">Zoek</button>
-            </form>
+      <!-- Zoekformulier -->
+      <section class="search-wrap" id="zoeken">
+        <form class="search" id="form">
+          <div class="field">
+            <label for="q">Wat zoek je?</label>
+            <input id="q" name="q" type="text" placeholder="Bedrijf, trefwoord…">
           </div>
-        </div>
+          <div class="field">
+            <label for="loc">Waar?</label>
+            <input id="loc" name="loc" type="text" placeholder="Stad, regio…">
+          </div>
+          <div class="field">
+            <label for="from">Vanaf</label>
+            <input id="from" name="from" type="date">
+          </div>
+          <div class="field">
+            <label for="to">Tot</label>
+            <input id="to" name="to" type="date">
+          </div>
+          <div class="field">
+            <label for="cat">Categorie</label>
+            <select id="cat" name="cat">
+              <option value="">Alle</option>
+              <option value="horeca">Horeca</option>
+              <option value="wellness">Wellness</option>
+              <option value="zorg">Gezondheid</option>
+              <option value="events">Events</option>
+              <option value="huishoudhulp">Huishoudhulp</option>
+              <option value="ramenwasser">Ramenwasser</option>
+              <option value="dieren">Dieren</option>
+              <option value="bouw">Bouw &amp; renovatie</option>
+            </select>
+          </div>
+          <div class="field" style="align-self:end;">
+            <button type="submit" class="btn-primary">Zoek</button>
+          </div>
+        </form>
       </section>
-
-      <!-- Resultaten op dezelfde pagina -->
-      <section id="results" class="results" hidden>
+      <!-- Resultaten -->
+      <section class="results" id="results" hidden>
         <div class="results-inner">
           <div class="results-head">
             <h2 id="results-title">Vrije plekken</h2>
-            <span id="results-meta" class="results-meta"></span>
+            <div class="results-meta" id="results-meta">&nbsp;</div>
           </div>
+          <div id="booking-msg" style="margin-bottom:10px;font-size:13px;color:#14532d;font-weight:600;"></div>
           <div id="results-list" class="results-list"></div>
-          <div id="booking-msg" class="results-meta"></div>
         </div>
       </section>
     </main>
-
     <footer class="site-footer">
       <div class="footer-inner">
-        <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
-        <nav class="footer-nav">
-          <a href="#voorwaarden">Algemene voorwaarden</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#contact">Contact</a>
-        </nav>
+        <span>© <span id="year"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
+        <span class="footer-nav">
+          <a href="/voorwaarden.html">Algemene voorwaarden</a>
+        </span>
       </div>
     </footer>
   </div>
 
   <script>
-  (function(){
-    const catSelect = document.getElementById('cat');
-    document.querySelectorAll('.catdot').forEach(el=>{
-      el.addEventListener('click',()=>{
-        const val = el.dataset.cat || '';
-        if(!catSelect) return;
-        const opt = [...catSelect.options].find(o=>o.value===val);
-        if(opt) opt.selected = true;
-      });
-    });
-    function sync(el){
-      if(!el) return;
-      const set = ()=> el.dataset.hasValue = el.value ? '1' : '';
-      el.addEventListener('change', set);
-      el.addEventListener('input', set);
-      set();
-    }
-    sync(document.getElementById('from'));
-    sync(document.getElementById('to'));
-  })();
-  </script>
+    // Vul automatisch het huidige jaar in de footer
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  <script src="/js/config.js"></script>
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-    // Wait for config to load
-    function initSupabase() {
-      return new Promise((resolve) => {
-        // If config is already loaded, proceed immediately
-        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
-          resolve(createSupabaseClient());
-          return;
-        }
-
-        // Otherwise wait for config-loaded event
-        window.addEventListener('vrijeplek-config-loaded', () => {
-          resolve(createSupabaseClient());
-        }, { once: true });
-
-        // Timeout after 3 seconds
-        setTimeout(() => {
-          resolve(createSupabaseClient());
-        }, 3000);
-      });
-    }
-
-    function createSupabaseClient() {
-      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
-
-      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-        console.error('Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in environment variables.');
-        return null;
-      }
-
-      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth:{ persistSession:true, autoRefreshToken:true }
-      });
-    }
-
-    initSupabase().then(supabase => {
-      if (!supabase) return;
-
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
-
-    async function toggleNav(){
-      if (!btnLogin || !btnMijn) return;
-      
-      try {
-        // Force fresh session check
-        const { data, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Session check error:', error);
-          btnLogin.style.display = 'inline-flex';
-          btnMijn.style.display = 'none';
-          return;
-        }
-        
-        const loggedIn = !!(data?.session?.user);
-        
-        if(loggedIn){
-          btnLogin.style.display = 'none';
-          btnMijn.style.display  = 'inline-flex';
-        }else{
-          btnLogin.style.display = 'inline-flex';
-          btnMijn.style.display  = 'none';
-        }
-      } catch (err) {
-        console.error('Toggle nav error:', err);
-        btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display = 'none';
-      }
-    }
-      await toggleNav();
-      supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event);
-        toggleNav();
-      });
-
-    // ---------- Zoeken op dezelfde pagina + boekingen ----------
-
-    const form   = document.getElementById('zoeken');
-    const qEl    = document.getElementById('q');
-    const locEl  = document.getElementById('loc');
-    const fromEl = document.getElementById('from');
-    const toEl   = document.getElementById('to');
-    const catEl  = document.getElementById('cat');
+    const form    = document.getElementById('form');
+    const qEl     = document.getElementById('q');
+    const locEl   = document.getElementById('loc');
+    const fromEl  = document.getElementById('from');
+    const toEl    = document.getElementById('to');
+    const catEl   = document.getElementById('cat');
 
     const resultsSection = document.getElementById('results');
     const resultsList    = document.getElementById('results-list');
@@ -524,15 +413,17 @@
     const resultsMeta    = document.getElementById('results-meta');
     const bookingMsg     = document.getElementById('booking-msg');
 
+    // Escape HTML to prevent injection
     function escapeHtml(str){
-      return (str || '').replace(/[&<>"']/g, m=>({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      return (str || '').replace(/[&<>"']/g, m => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
       }[m]));
     }
 
+    // Format ISO date as NL (e.g. "ma 03 jan")
     function formatDateNL(iso){
       try{
-        return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE',{
+        return new Date(iso+'T00:00:00').toLocaleDateString('nl-BE', {
           weekday:'short', day:'2-digit', month:'short'
         });
       }catch{
@@ -540,11 +431,11 @@
       }
     }
 
+    // Handle form submission and fetch results
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
-
-      const q   = qEl.value.trim();
-      const loc = locEl.value.trim();
+      const q    = qEl.value.trim();
+      const loc  = locEl.value.trim();
       const from = fromEl.value || '';
       const to   = toEl.value || '';
       const cat  = catEl.value || '';
@@ -562,90 +453,92 @@
           body: JSON.stringify({ q, loc, from, to, cat })
         });
         const data = await r.json().catch(()=>[]);
-
         if(!Array.isArray(data) || !data.length){
           resultsMeta.textContent = 'Geen vrije plekken gevonden met deze filters.';
           resultsList.innerHTML = '';
           return;
         }
-
+        // Groepeer resultaten op categorie, zodat elke categorie apart wordt getoond
+        const groups = {};
+        data.forEach(item => {
+          const catKey = item.cat || 'Onbekend';
+          if(!groups[catKey]) groups[catKey] = [];
+          groups[catKey].push(item);
+        });
+        // Toon het aantal gevonden zaken
         resultsMeta.textContent = `${data.length} zaak/zaak(-en) met vrije momenten gevonden`;
-
         resultsList.innerHTML = '';
-        data.forEach(item=>{
-          const card = document.createElement('article');
-          card.className = 'result-card';
-
-          const title = escapeHtml(item.zaak || item.email || 'Onbekend');
-          const catLabel = item.cat ? escapeHtml(item.cat) : 'Onbekend';
-
-          const addrParts = [];
-          if(item.straat) addrParts.push(escapeHtml(item.straat));
-          if(item.postcode) addrParts.push(escapeHtml(item.postcode));
-          const addr = addrParts.join(' • ');
-
-          const bio = item.bio ? escapeHtml(item.bio) : '';
-
-          const depositEnabled = !!item.deposit_enabled && Number(item.deposit_amount) > 0;
-          const depositAmount  = depositEnabled ? Number(item.deposit_amount) : 0;
-          const depositLabel = depositEnabled
-            ? `Voorschot €${depositAmount.toFixed(0)}`
-            : 'Geen voorschot';
-
-          const head = document.createElement('div');
-          head.className = 'result-head';
-          head.innerHTML = `
-            <h3 class="result-title">${title}</h3>
-            <span class="result-cat">${catLabel}</span>
-          `;
-
-          const body = document.createElement('div');
-          body.className = 'result-body';
-          body.innerHTML = `
-            ${addr ? `<div class="line">${addr}</div>` : ``}
-            ${bio ? `<div class="line">${bio}</div>` : ``}
-            <div class="line" style="font-size:11px;color:#6b7280;">${depositLabel}</div>
-          `;
-
-          const ul = document.createElement('ul');
-          ul.className = 'slots-list';
-
-          const slots = (item.slots || []).slice(0,12);
-          if(!slots.length){
-            ul.innerHTML = `<li class="slot-pill"><span class="time">Geen vrije momenten in deze periode.</span></li>`;
-          }else{
-            slots.forEach(s=>{
-              const li = document.createElement('li');
-              li.className = 'slot-pill';
-              li.dataset.slotId = s.id;
-              li.dataset.depositEnabled = depositEnabled ? '1' : '0';
-              li.dataset.depositAmount  = depositAmount ? String(depositAmount) : '0';
-
-              const dateSpan = document.createElement('span');
-              dateSpan.className = 'date';
-              dateSpan.textContent = formatDateNL(s.date);
-
-              const timeSpan = document.createElement('span');
-              timeSpan.className = 'time';
-              timeSpan.textContent = `${s.from || ''} – ${s.to || ''}`;
-
-              const btn = document.createElement('button');
-              btn.type = 'button';
-              btn.className = 'slot-book-btn';
-              btn.textContent = 'Boek nu';
-              btn.dataset.slotId = s.id;
-
-              li.appendChild(dateSpan);
-              li.appendChild(timeSpan);
-              li.appendChild(btn);
-              ul.appendChild(li);
-            });
-          }
-
-          card.appendChild(head);
-          card.appendChild(body);
-          card.appendChild(ul);
-          resultsList.appendChild(card);
+        Object.keys(groups).sort().forEach(catName => {
+          const section = document.createElement('div');
+          section.className = 'category-group';
+          section.innerHTML = `<h3>${escapeHtml(catName)}</h3>`;
+          const cardsContainer = document.createElement('div');
+          cardsContainer.className = 'cards';
+          groups[catName].forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'result-card';
+            const title     = escapeHtml(item.zaak || item.email || 'Onbekend');
+            const catLabel  = item.cat ? escapeHtml(item.cat) : 'Onbekend';
+            const addrParts = [];
+            if(item.straat) addrParts.push(escapeHtml(item.straat));
+            if(item.postcode) addrParts.push(escapeHtml(item.postcode));
+            const addr = addrParts.join(' • ');
+            const bio  = item.bio ? escapeHtml(item.bio) : '';
+            const depositEnabled = !!item.deposit_enabled && Number(item.deposit_amount) > 0;
+            const depositAmount  = depositEnabled ? Number(item.deposit_amount) : 0;
+            const depositLabel   = depositEnabled ? `Voorschot €${depositAmount.toFixed(0)}` : 'Geen voorschot';
+            // Card head
+            const head = document.createElement('div');
+            head.className = 'result-head';
+            head.innerHTML = `<h3 class="result-title">${title}</h3><span class="result-cat">${catLabel}</span>`;
+            // Card body
+            const body = document.createElement('div');
+            body.className = 'result-body';
+            body.innerHTML = `
+              ${addr ? `<div class="line">${addr}</div>` : ``}
+              ${bio ? `<div class="line">${bio}</div>` : ``}
+              <div class="line" style="font-size:11px;color:#6b7280;">${depositLabel}</div>
+            `;
+            // Slots list
+            const ul = document.createElement('ul');
+            ul.className = 'slots-list';
+            const slots = (item.slots || []).slice(0,12);
+            if(!slots.length){
+              ul.innerHTML = `<li class="slot-pill"><span class="time">Geen vrije momenten in deze periode.</span></li>`;
+            }else{
+              slots.forEach(s => {
+                const li = document.createElement('li');
+                li.className = 'slot-pill';
+                li.dataset.slotId = s.id;
+                li.dataset.depositEnabled = depositEnabled ? '1' : '0';
+                li.dataset.depositAmount  = depositAmount ? String(depositAmount) : '0';
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'date';
+                dateSpan.textContent = formatDateNL(s.date);
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'time';
+                timeSpan.textContent = `${s.from || ''} – ${s.to || ''}`;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'slot-book-btn';
+                btn.textContent = 'Boek nu';
+                btn.dataset.slotId = s.id;
+                // Bewaar deposit info op de button
+                btn.dataset.depositEnabled = depositEnabled ? '1' : '0';
+                btn.dataset.depositAmount  = depositAmount ? String(depositAmount) : '0';
+                li.appendChild(dateSpan);
+                li.appendChild(timeSpan);
+                li.appendChild(btn);
+                ul.appendChild(li);
+              });
+            }
+            card.appendChild(head);
+            card.appendChild(body);
+            card.appendChild(ul);
+            cardsContainer.appendChild(card);
+          });
+          section.appendChild(cardsContainer);
+          resultsList.appendChild(section);
         });
       }catch(err){
         resultsMeta.textContent = 'Zoeken mislukt (server).';
@@ -654,100 +547,80 @@
       }
     });
 
+    // Handelt het boeken van een tijdslot af, inclusief voorschotbetaling
     async function handleBook(btn){
       const pill = btn.closest('.slot-pill');
       if(!pill || pill.classList.contains('volzet')) return;
-
       const slotId = btn.dataset.slotId;
       if(!slotId) return;
-
-      const depositEnabled = pill.dataset.depositEnabled === '1';
-      const depositAmount  = Number(pill.dataset.depositAmount || '0');
-
+      const depositEnabled = btn.dataset.depositEnabled === '1';
+      const depositAmount  = Number(btn.dataset.depositAmount || '0');
       bookingMsg.textContent = depositEnabled
         ? `We bereiden je voorschotbetaling van €${depositAmount.toFixed(0)} voor…`
         : 'Je boeking wordt aangemaakt…';
-
       btn.disabled = true;
-
       try{
-        // Get customer info from user if logged in, otherwise prompt
+        // Vraag e-mailadres op via Supabase sessie of prompt
         let customerEmail = '';
-        let customerName = '';
-        
-        try {
+        let customerName  = '';
+        try{
           const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
+          if(session?.user){
             customerEmail = session.user.email || '';
-            customerName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || '';
+            customerName  = session.user.user_metadata?.full_name || session.user.user_metadata?.name || '';
           }
-        } catch (e) {
-          // Not logged in, that's okay
-        }
-
-        // If no email, prompt user
-        if (!customerEmail) {
+        }catch{}
+        if(!customerEmail){
           customerEmail = prompt('Voer je e-mailadres in voor de boeking:');
-          if (!customerEmail || !customerEmail.trim()) {
+          if(!customerEmail || !customerEmail.trim()){
             bookingMsg.textContent = 'E-mailadres is verplicht voor boeking.';
             btn.disabled = false;
             return;
           }
         }
-
+        // Stuur een request naar de server om een deposit/booking te maken
         const res = await fetch('/.netlify/functions/create-deposit', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ 
-            slotId: slotId, 
-            customer_email: customerEmail.trim().toLowerCase(), 
-            customer_name: customerName.trim() 
+          body: JSON.stringify({
+            slotId: slotId,
+            customer_email: customerEmail.trim().toLowerCase(),
+            customer_name: customerName.trim()
           })
         });
         const data = await res.json().catch(()=>null);
-
         if(!res.ok || !data){
           bookingMsg.textContent = 'Boeking mislukt (server).';
           btn.disabled = false;
           return;
         }
-
         if(data.error){
           bookingMsg.textContent = data.error;
           btn.disabled = false;
           return;
         }
-
         if(data.url){
-          // Stripe / betaalpagina
           bookingMsg.textContent = 'Je wordt doorgestuurd naar de betaalpagina…';
           window.location.href = data.url;
           return;
         }
-
         if(data.ok){
           bookingMsg.textContent = 'Tijdslot geboekt. Je ontvangt een bevestiging.';
           pill.classList.add('volzet');
           btn.textContent = 'Volzet';
           return;
         }
-
-        bookingMsg.textContent = 'Onverwacht antwoord van de server.';
-        btn.disabled = false;
       }catch(err){
+        bookingMsg.textContent = 'Boeking mislukt (client).';
         console.error(err);
-        bookingMsg.textContent = 'Boeking mislukt (verbinding).';
+      }finally{
         btn.disabled = false;
       }
     }
-
-      resultsList.addEventListener('click', (e)=>{
-        const btn = e.target.closest('.slot-book-btn');
-        if(!btn) return;
-        handleBook(btn);
-      });
-    }).catch(err => {
-      console.error('Failed to initialize Supabase:', err);
+    // Eventdelegatie voor alle boekknoppen
+    resultsList.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.slot-book-btn');
+      if(btn) handleBook(btn);
     });
   </script>
 </body>
