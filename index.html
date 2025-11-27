@@ -151,20 +151,24 @@
       padding:0 12px 40px;
     }
 
-    /* LINKS: flexijobs los, vast op pagina */
     .flex-panel{
-      position:absolute;
-      left:-160px;                  /* VERPLAATS HIER: meer of minder links */
-      top:210px;                  /* VERPLAATS HIER: hoger/lager */
-      width:260px;
+  position:absolute;
+  left:-40px;              /* nog iets meer naar links dan nu, pas dit zelf aan naar smaak */
+  top:210px;               /* hoger/lager op de pagina */
+  width:260px;
 
-      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
-      border-radius:18px;
-      padding:14px 14px 16px;
-      border:1px solid rgba(148,163,184,.6);
-      box-shadow:0 20px 50px rgba(15,23,42,.95);
-      color:#e5e7eb;
-    }
+  /* HIER: kolomgevoel */
+  display:flex;
+  flex-direction:column;
+  min-height:480px;        /* maak 520/560 als je ‘m nog hoger wilt */
+
+  background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+  border-radius:18px;
+  padding:14px 14px 16px;
+  border:1px solid rgba(148,163,184,.6);
+  box-shadow:0 20px 50px rgba(15,23,42,.95);
+  color:#e5e7eb;
+}
     .flex-title{
       margin:0 0 4px;
       font-size:15px;
@@ -221,14 +225,15 @@
       min-height:14px;
     }
     .flex-list{
-      margin-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      max-height:420px;
-      overflow:auto;
-      padding-right:4px;
-    }
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;                 
+  max-height:none;       
+  overflow:auto;
+  padding-right:4px;
+}
     .flex-job-card{
       border-radius:12px;
       padding:8px 8px;
