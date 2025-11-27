@@ -180,11 +180,181 @@
       text-shadow:0 1px 3px rgba(0,0,0,.7);
     }
 
-    /* ZOEKKAART - minder “windows”, meer glas */
+    /* LAYOUT: FLEXIJOBS LINKS + ZOEK/RESULTATEN RECHTS */
+    .main-grid{
+      padding:8px 0 40px;
+    }
+    .main-grid-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 12px 40px;
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr);
+      gap:20px;
+      align-items:flex-start;
+    }
+    @media(max-width:900px){
+      .main-grid-inner{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .search-column{
+      min-width:0;
+    }
+
+    /* FLEXIJOBS SIDEBAR */
+    .flex-panel{
+      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+      border-radius:18px;
+      padding:14px 14px 16px;
+      border:1px solid rgba(148,163,184,.6);
+      box-shadow:0 20px 50px rgba(15,23,42,.95);
+      color:#e5e7eb;
+    }
+    .flex-title{
+      margin:0 0 4px;
+      font-size:15px;
+      font-weight:700;
+      color:#e5edff;
+    }
+    .flex-sub{
+      margin:0 0 10px;
+      font-size:12px;
+      color:rgba(191,219,254,.9);
+    }
+    .flex-field{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin-bottom:8px;
+    }
+    .flex-field label{
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(226,232,240,.9);
+    }
+    .flex-field input,
+    .flex-field select{
+      padding:7px 9px;
+      border-radius:9px;
+      border:1px solid rgba(148,163,184,.75);
+      font-size:12px;
+      font-family:inherit;
+      background:rgba(15,23,42,.95);
+      color:#e5edff;
+      outline:none;
+    }
+    .flex-field input::placeholder{
+      color:rgba(148,163,184,.9);
+    }
+    .flex-field input:focus,
+    .flex-field select:focus{
+      border-color:rgba(59,130,246,.95);
+      box-shadow:0 0 0 1px rgba(59,130,246,.7);
+      background:rgba(15,23,42,.98);
+    }
+    .btn-primary-small{
+      padding:7px 12px;
+      font-size:12px;
+      box-shadow:0 10px 26px rgba(37,99,235,.6);
+    }
+    .flex-status{
+      margin-top:8px;
+      font-size:11px;
+      color:rgba(191,219,254,.9);
+      min-height:14px;
+    }
+    .flex-list{
+      margin-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      max-height:420px;
+      overflow:auto;
+      padding-right:4px;
+    }
+    .flex-job-card{
+      border-radius:12px;
+      padding:8px 8px;
+      background:rgba(15,23,42,.98);
+      border:1px solid rgba(148,163,184,.7);
+      display:grid;
+      grid-template-columns:52px minmax(0,1fr);
+      gap:8px;
+      font-size:12px;
+    }
+    .flex-job-thumb{
+      width:52px;
+      height:52px;
+      border-radius:11px;
+      overflow:hidden;
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(15,23,42,1));
+      border:1px solid rgba(148,163,184,.7);
+      flex-shrink:0;
+    }
+    .flex-job-thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .flex-job-main{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .flex-job-name{
+      font-size:12px;
+      font-weight:600;
+      color:#e5edff;
+      margin:0;
+    }
+    .flex-job-role{
+      font-size:11px;
+      color:rgba(191,219,254,.95);
+    }
+    .flex-job-loc{
+      font-size:11px;
+      color:rgba(148,163,184,.95);
+    }
+    .flex-job-actions{
+      margin-top:4px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+    }
+    .flex-badge{
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(129,140,248,.75);
+      background:rgba(15,23,42,.95);
+      color:#e0f2fe;
+      font-size:10px;
+      white-space:nowrap;
+    }
+    .flex-view-btn{
+      border-radius:999px;
+      border:0;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:600;
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#fff;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(37,99,235,.7);
+      white-space:nowrap;
+    }
+
+    /* ZOEKKAART - nu binnen rechterkolom */
     .search-wrap{
       width:100%;
-      max-width:960px;
-      margin:18px auto 24px;
+      margin:6px 0 20px;
       padding:18px 18px 16px;
       border-radius:20px;
       background:radial-gradient(circle at 0 0,rgba(59,130,246,.35),transparent 60%),
@@ -263,14 +433,99 @@
       filter:brightness(1.05);
     }
 
+    /* VACATURE DETAIL (midden) */
+    .vacancy-detail{
+      margin-bottom:18px;
+      display:none;
+    }
+    .vacancy-detail.is-visible{display:block;}
+    .vacancy-card{
+      border-radius:18px;
+      padding:14px 16px 14px;
+      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+      border:1px solid rgba(148,163,184,.65);
+      box-shadow:0 20px 50px rgba(15,23,42,.95);
+      color:#e5e7eb;
+      display:grid;
+      grid-template-columns:110px minmax(0,1fr);
+      gap:14px;
+    }
+    @media(max-width:640px){
+      .vacancy-card{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+    .vacancy-photo{
+      border-radius:14px;
+      overflow:hidden;
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(15,23,42,1));
+      border:1px solid rgba(148,163,184,.8);
+      min-height:90px;
+    }
+    .vacancy-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .vacancy-main{
+      min-width:0;
+    }
+    .vacancy-title{
+      margin:0 0 4px;
+      font-size:16px;
+      font-weight:700;
+      color:#f9fafb;
+    }
+    .vacancy-company{
+      margin:0 0 4px;
+      font-size:13px;
+      color:rgba(191,219,254,.95);
+    }
+    .vacancy-meta{
+      font-size:12px;
+      color:rgba(148,163,184,.95);
+      margin-bottom:8px;
+    }
+    .vacancy-text{
+      font-size:13px;
+      color:rgba(226,232,240,.95);
+      margin-bottom:8px;
+      white-space:pre-line;
+    }
+    .vacancy-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:8px;
+      font-size:11px;
+    }
+    .vacancy-tag{
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(129,140,248,.8);
+      background:rgba(15,23,42,.96);
+      color:#e0f2fe;
+    }
+    .vacancy-contact{
+      font-size:12px;
+      color:rgba(191,219,254,.95);
+      margin-top:4px;
+    }
+    .vacancy-contact a{
+      color:#e0f2fe;
+      text-decoration:none;
+    }
+    .vacancy-contact a:hover{text-decoration:underline;}
+
     /* RESULTATEN */
     .results{
-      padding:4px 0 60px;
+      padding:4px 0 0;
     }
     .results-inner{
       max-width:1200px;
       margin:0 auto;
-      padding:0 12px;
+      padding:0;
     }
     .results-head{
       display:flex;
@@ -567,54 +822,100 @@
         </div>
       </section>
 
-      <!-- Zoekformulier -->
-      <section class="search-wrap" id="zoeken">
-        <form class="search" id="form">
-          <div class="field">
-            <label for="q">Wat zoek je?</label>
-            <input id="q" name="q" type="text" placeholder="Bedrijf, trefwoord…">
-          </div>
-          <div class="field">
-            <label for="loc">Waar?</label>
-            <input id="loc" name="loc" type="text" placeholder="Stad, regio…">
-          </div>
-          <div class="field">
-            <label for="from">Vanaf</label>
-            <input id="from" name="from" type="date">
-          </div>
-          <div class="field">
-            <label for="to">Tot</label>
-            <input id="to" name="to" type="date">
-          </div>
-          <div class="field">
-            <label for="cat">Categorie</label>
-            <select id="cat" name="cat">
-              <option value="">Alle</option>
-              <option value="horeca">Horeca</option>
-              <option value="wellness">Wellness</option>
-              <option value="zorg">Gezondheid</option>
-              <option value="events">Events</option>
-              <option value="huishoudhulp">Huishoudhulp</option>
-              <option value="ramenwasser">Ramenwasser</option>
-              <option value="dieren">Dieren</option>
-              <option value="bouw">Bouw &amp; renovatie</option>
-            </select>
-          </div>
-          <div class="field" style="align-self:end;">
-            <button type="submit" class="btn-primary">Zoek</button>
-          </div>
-        </form>
-      </section>
+      <!-- GRID: LINKS FLEXIJOBS / RECHTS ZOEK + RESULTATEN -->
+      <section class="main-grid">
+        <div class="main-grid-inner">
+          <!-- FLEXIJOBS SIDEBAR -->
+          <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
+            <h2 class="flex-title">Flexijobs in jouw buurt</h2>
+            <p class="flex-sub">
+              Werk je graag bij als flexi? Bekijk welke zaken nu iemand zoeken.
+            </p>
 
-      <!-- Resultaten -->
-      <section class="results" id="results" hidden>
-        <div class="results-inner">
-          <div class="results-head">
-            <h2 id="results-title">Vrije plekken</h2>
-            <div class="results-meta" id="results-meta">&nbsp;</div>
+            <div class="flex-field">
+              <label for="flex-loc">Waar?</label>
+              <input id="flex-loc" type="text" placeholder="Stad, regio…">
+            </div>
+            <div class="flex-field">
+              <label for="flex-cat">Sector</label>
+              <select id="flex-cat">
+                <option value="">Alle sectoren</option>
+                <option value="horeca">Horeca</option>
+                <option value="wellness">Wellness</option>
+                <option value="zorg">Gezondheid</option>
+                <option value="events">Events</option>
+                <option value="huishoudhulp">Huishoudhulp</option>
+                <option value="ramenwasser">Ramenwasser</option>
+                <option value="dieren">Dieren</option>
+                <option value="bouw">Bouw &amp; renovatie</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn-primary btn-primary-small" id="flex-search-btn">
+              Zoek flexijobs
+            </button>
+            <div id="flex-status" class="flex-status"></div>
+            <div id="flex-list" class="flex-list"></div>
+          </aside>
+
+          <!-- RECHTERKANT: ZOEK + VACATURE DETAIL + RESULTATEN -->
+          <div class="search-column">
+            <!-- Zoekformulier -->
+            <section class="search-wrap" id="zoeken">
+              <form class="search" id="form">
+                <div class="field">
+                  <label for="q">Wat zoek je?</label>
+                  <input id="q" name="q" type="text" placeholder="Bedrijf, trefwoord…">
+                </div>
+                <div class="field">
+                  <label for="loc">Waar?</label>
+                  <input id="loc" name="loc" type="text" placeholder="Stad, regio…">
+                </div>
+                <div class="field">
+                  <label for="from">Vanaf</label>
+                  <input id="from" name="from" type="date">
+                </div>
+                <div class="field">
+                  <label for="to">Tot</label>
+                  <input id="to" name="to" type="date">
+                </div>
+                <div class="field">
+                  <label for="cat">Categorie</label>
+                  <select id="cat" name="cat">
+                    <option value="">Alle</option>
+                    <option value="horeca">Horeca</option>
+                    <option value="wellness">Wellness</option>
+                    <option value="zorg">Gezondheid</option>
+                    <option value="events">Events</option>
+                    <option value="huishoudhulp">Huishoudhulp</option>
+                    <option value="ramenwasser">Ramenwasser</option>
+                    <option value="dieren">Dieren</option>
+                    <option value="bouw">Bouw &amp; renovatie</option>
+                  </select>
+                </div>
+                <div class="field" style="align-self:end;">
+                  <button type="submit" class="btn-primary">Zoek</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Vacature detail (gevuld bij 'Bekijk vacature') -->
+            <section class="vacancy-detail" id="vacancy-detail">
+              <div class="vacancy-card" id="vacancy-card"></div>
+            </section>
+
+            <!-- Resultaten -->
+            <section class="results" id="results" hidden>
+              <div class="results-inner">
+                <div class="results-head">
+                  <h2 id="results-title">Vrije plekken</h2>
+                  <div class="results-meta" id="results-meta">&nbsp;</div>
+                </div>
+                <div id="booking-msg"></div>
+                <div id="results-list" class="results-list"></div>
+              </div>
+            </section>
           </div>
-          <div id="booking-msg"></div>
-          <div id="results-list" class="results-list"></div>
         </div>
       </section>
     </main>
@@ -718,7 +1019,7 @@
     });
   </script>
 
-  <!-- Zoek + resultaten + boeken -->
+  <!-- Zoek + resultaten + boeken + flexijobs -->
   <script>
     // Jaar in footer
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -735,6 +1036,9 @@
     const resultsTitle   = document.getElementById('results-title');
     const resultsMeta    = document.getElementById('results-meta');
     const bookingMsg     = document.getElementById('booking-msg');
+
+    const vacancyDetail  = document.getElementById('vacancy-detail');
+    const vacancyCard    = document.getElementById('vacancy-card');
 
     function escapeHtml(str){
       return (str || '').toString().replace(/[&<>"']/g, m => ({
@@ -1041,7 +1345,185 @@
       const btn = e.target.closest('.slot-book-btn');
       if (btn) handleBook(btn);
     });
+
+    /* FLEXIJOBS LOGICA */
+    const flexLocEl    = document.getElementById('flex-loc');
+    const flexCatEl    = document.getElementById('flex-cat');
+    const flexListEl   = document.getElementById('flex-list');
+    const flexStatusEl = document.getElementById('flex-status');
+    const flexSearchBtn= document.getElementById('flex-search-btn');
+
+    async function loadFlexJobs(){
+      if (!flexListEl || !flexStatusEl) return;
+
+      const loc = (flexLocEl?.value || '').trim();
+      const cat = (flexCatEl?.value || '').trim();
+
+      flexStatusEl.textContent = 'Zoeken…';
+      flexListEl.innerHTML = '';
+
+      try{
+        const params = new URLSearchParams();
+        if (loc) params.set('loc', loc);
+        if (cat) params.set('cat', cat);
+        const url = '/.netlify/functions/flexijobs' + (params.toString() ? `?${params.toString()}` : '');
+
+        const res = await fetch(url, { method:'GET' });
+        const data = await res.json().catch(()=>[]);
+
+        if (!Array.isArray(data) || !data.length){
+          flexStatusEl.textContent = 'Geen flexijobs gevonden met deze filters.';
+          flexListEl.innerHTML = '';
+          return;
+        }
+
+        flexStatusEl.textContent = `${data.length} flexijob(s) gevonden`;
+        flexListEl.innerHTML = '';
+
+        data.forEach(job => {
+          const card = document.createElement('article');
+          card.className = 'flex-job-card';
+
+          const photoUrl =
+            job.photo_url ||
+            job.business_photo ||
+            `https://source.unsplash.com/200x200/?${encodeURIComponent(job.sector || 'job')}`;
+
+          const naam  = escapeHtml(job.business_name || job.company || 'Onbekende zaak');
+          const role  = escapeHtml(job.title || job.role || 'Flexijob');
+          const city  = escapeHtml(job.city || '');
+          const pc    = escapeHtml(job.postcode || job.postal || '');
+          const locTxt= (city || pc) ? `${pc} ${city}`.trim() : '';
+
+          const thumb = document.createElement('div');
+          thumb.className = 'flex-job-thumb';
+          thumb.innerHTML = `<img src="${photoUrl}" alt="">`;
+
+          const main = document.createElement('div');
+          main.className = 'flex-job-main';
+
+          const nameEl = document.createElement('p');
+          nameEl.className = 'flex-job-name';
+          nameEl.textContent = naam;
+
+          const roleEl = document.createElement('div');
+          roleEl.className = 'flex-job-role';
+          roleEl.textContent = role;
+
+          const locEl = document.createElement('div');
+          locEl.className = 'flex-job-loc';
+          locEl.textContent = locTxt;
+
+          const actions = document.createElement('div');
+          actions.className = 'flex-job-actions';
+
+          const sectorLabel = job.sector || job.cat || '';
+          if (sectorLabel){
+            const badge = document.createElement('span');
+            badge.className = 'flex-badge';
+            badge.textContent = sectorLabel;
+            actions.appendChild(badge);
+          }
+
+          const viewBtn = document.createElement('button');
+          viewBtn.type = 'button';
+          viewBtn.className = 'flex-view-btn';
+          viewBtn.textContent = 'Bekijk vacature';
+          viewBtn.dataset.jobId = job.id;
+          viewBtn.addEventListener('click', ()=>showFlexJobDetail(job.id));
+
+          actions.appendChild(viewBtn);
+
+          main.appendChild(nameEl);
+          if (role) main.appendChild(roleEl);
+          if (locTxt) main.appendChild(locEl);
+          main.appendChild(actions);
+
+          card.appendChild(thumb);
+          card.appendChild(main);
+          flexListEl.appendChild(card);
+        });
+      }catch(err){
+        console.error(err);
+        flexStatusEl.textContent = 'Flexijobs laden mislukt.';
+        flexListEl.innerHTML = '';
+      }
+    }
+
+    async function showFlexJobDetail(jobId){
+      if (!jobId || !vacancyDetail || !vacancyCard) return;
+
+      vacancyDetail.classList.add('is-visible');
+      vacancyCard.innerHTML = '<div class="vacancy-text">Vacature laden…</div>';
+
+      try{
+        const url = '/.netlify/functions/flexijob?id=' + encodeURIComponent(jobId);
+        const res = await fetch(url, { method:'GET' });
+        const job = await res.json().catch(()=>null);
+
+        if (!res.ok || !job){
+          vacancyCard.innerHTML = '<div class="vacancy-text">Deze vacature kon niet geladen worden.</div>';
+          return;
+        }
+
+        const naam   = escapeHtml(job.business_name || job.company || 'Onbekende zaak');
+        const role   = escapeHtml(job.title || job.role || 'Flexijob');
+        const city   = escapeHtml(job.city || '');
+        const pc     = escapeHtml(job.postcode || job.postal || '');
+        const locTxt = (city || pc) ? `${pc} ${city}`.trim() : '';
+        const hours  = escapeHtml(job.hours || job.schedule || '');
+        const salary = escapeHtml(job.salary || job.pay || '');
+        const descr  = escapeHtml(job.description || job.desc || '');
+
+        const email  = (job.contact_email || job.email || '').trim();
+        const phone  = (job.contact_phone || job.phone || '').trim();
+        const applyUrl = (job.apply_url || '').trim();
+
+        const photoUrl =
+          job.photo_url ||
+          job.business_photo ||
+          `https://source.unsplash.com/400x300/?${encodeURIComponent(job.sector || 'job')}`;
+
+        const tags = [];
+        if (hours) tags.push({ label: hours });
+        if (salary) tags.push({ label: salary });
+        if (job.sector || job.cat) tags.push({ label: job.sector || job.cat });
+
+        vacancyCard.innerHTML = `
+          <div class="vacancy-photo">
+            <img src="${photoUrl}" alt="">
+          </div>
+          <div class="vacancy-main">
+            <h3 class="vacancy-title">${role}</h3>
+            <p class="vacancy-company">${naam}</p>
+            <div class="vacancy-meta">
+              ${locTxt ? `${locTxt}` : ''}
+            </div>
+            ${descr ? `<div class="vacancy-text">${descr}</div>` : ''}
+            ${tags.length ? `
+              <div class="vacancy-tags">
+                ${tags.map(t => `<span class="vacancy-tag">${escapeHtml(t.label)}</span>`).join('')}
+              </div>` : ''}
+            <div class="vacancy-contact">
+              ${email ? `Mail: <a href="mailto:${email}">${email}</a><br>` : ''}
+              ${phone ? `Tel: <a href="tel:${phone}">${phone}</a><br>` : ''}
+              ${applyUrl ? `<a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener">Online reageren</a>` : ''}
+            </div>
+          </div>
+        `;
+
+        vacancyDetail.scrollIntoView({ behavior:'smooth', block:'start' });
+      }catch(err){
+        console.error(err);
+        vacancyCard.innerHTML = '<div class="vacancy-text">Er ging iets mis bij het laden van deze vacature.</div>';
+      }
+    }
+
+    if (flexSearchBtn){
+      flexSearchBtn.addEventListener('click', loadFlexJobs);
+      // eerste load zonder filters
+      loadFlexJobs();
+    }
   </script>
 </body>
 </html>
-
