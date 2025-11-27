@@ -138,31 +138,22 @@
 
     main{flex:1;}
 
-    /* GRID: LINKS FLEXIJOBS / RECHTS (CATEGORIE + ZOEK + RESULTATEN) */
+    /* LAYOUT: LINKS FLEXIJOBS, MIDDEN ZOEK */
     .main-grid{
       padding:18px 0 40px;
     }
-    .main-grid-inner{
+    .flex-shell{
       max-width:1200px;
       margin:0 auto;
       padding:0 12px 40px;
-      display:grid;
-      grid-template-columns:280px minmax(0,1fr);
-      gap:20px;
+      display:flex;
       align-items:flex-start;
     }
-    @media(max-width:900px){
-      .main-grid-inner{
-        grid-template-columns:1fr;
-      }
-    }
 
-    .search-column{
-      min-width:0;
-    }
-
-    /* FLEXIJOBS SIDEBAR */
+    /* LINKS: écht links plakken */
     .flex-panel{
+      flex:0 0 260px;
+      margin-right:48px;
       background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
       border-radius:18px;
       padding:14px 14px 16px;
@@ -309,7 +300,33 @@
       white-space:nowrap;
     }
 
-    /* CATEGORIE BOLLEN (nu in rechterkolom boven de zoekbalk) */
+    /* MIDDEN: zoekspul gecentreerd */
+    .search-column-wrap{
+      flex:1;
+      display:flex;
+      justify-content:center;
+    }
+    .search-column{
+      width:100%;
+      max-width:860px;
+      min-width:0;
+    }
+
+    @media(max-width:900px){
+      .flex-shell{
+        flex-direction:column;
+      }
+      .flex-panel{
+        margin-right:0;
+        margin-bottom:20px;
+        width:100%;
+      }
+      .search-column{
+        max-width:100%;
+      }
+    }
+
+    /* CATEGORIE BOLLEN (in middenkolom) */
     .cat-dots{
       padding:0 0 4px;
       margin-bottom:8px;
@@ -717,8 +734,8 @@
 
     <main>
       <section class="main-grid">
-        <div class="main-grid-inner">
-          <!-- FLEXIJOBS LINKS -->
+        <div class="flex-shell">
+          <!-- LINKS: flexijobs-paneel -->
           <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
             <h2 class="flex-title">Flexijobs in jouw buurt</h2>
             <p class="flex-sub">
@@ -751,72 +768,74 @@
             <div id="flex-list" class="flex-list"></div>
           </aside>
 
-          <!-- ZOEK + CATEGORIE + RESULTATEN IN HET MIDDEN -->
-          <div class="search-column">
-            <!-- Categorie knoppen -->
-            <section class="cat-dots">
-              <ul class="cat-dots-row">
-                <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
-                <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
-                <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
-                <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
-                <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
-                <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
-                <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
-                <li><a class="catdot" data-cat="bouw" href="#zoeken" title="Bouw & renovatie"><img src="img/cat-bouw.jpg" alt="Bouw & renovatie"><span>Bouw &amp; renovatie</span></a></li>
-              </ul>
-            </section>
+          <!-- MIDDEN: categorie-bollen + zoek + resultaten -->
+          <div class="search-column-wrap">
+            <div class="search-column">
+              <!-- Categorie knoppen -->
+              <section class="cat-dots">
+                <ul class="cat-dots-row">
+                  <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
+                  <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
+                  <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
+                  <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
+                  <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
+                  <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
+                  <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
+                  <li><a class="catdot" data-cat="bouw" href="#zoeken" title="Bouw & renovatie"><img src="img/cat-bouw.jpg" alt="Bouw & renovatie"><span>Bouw &amp; renovatie</span></a></li>
+                </ul>
+              </section>
 
-            <!-- Zoekformulier -->
-            <section class="search-wrap" id="zoeken">
-              <form class="search" id="form">
-                <div class="field">
-                  <label for="q">Wat zoek je?</label>
-                  <input id="q" name="q" type="text" placeholder="Bedrijf, trefwoord…">
-                </div>
-                <div class="field">
-                  <label for="loc">Waar?</label>
-                  <input id="loc" name="loc" type="text" placeholder="Stad, regio…">
-                </div>
-                <div class="field">
-                  <label for="from">Vanaf</label>
-                  <input id="from" name="from" type="date">
-                </div>
-                <div class="field">
-                  <label for="to">Tot</label>
-                  <input id="to" name="to" type="date">
-                </div>
-                <div class="field">
-                  <label for="cat">Categorie</label>
-                  <select id="cat" name="cat">
-                    <option value="">Alle</option>
-                    <option value="horeca">Horeca</option>
-                    <option value="wellness">Wellness</option>
-                    <option value="zorg">Gezondheid</option>
-                    <option value="events">Events</option>
-                    <option value="huishoudhulp">Huishoudhulp</option>
-                    <option value="ramenwasser">Ramenwasser</option>
-                    <option value="dieren">Dieren</option>
-                    <option value="bouw">Bouw &amp; renovatie</option>
-                  </select>
-                </div>
-                <div class="field" style="align-self:end;">
-                  <button type="submit" class="btn-primary">Zoek</button>
-                </div>
-              </form>
-            </section>
+              <!-- Zoekformulier -->
+              <section class="search-wrap" id="zoeken">
+                <form class="search" id="form">
+                  <div class="field">
+                    <label for="q">Wat zoek je?</label>
+                    <input id="q" name="q" type="text" placeholder="Bedrijf, trefwoord…">
+                  </div>
+                  <div class="field">
+                    <label for="loc">Waar?</label>
+                    <input id="loc" name="loc" type="text" placeholder="Stad, regio…">
+                  </div>
+                  <div class="field">
+                    <label for="from">Vanaf</label>
+                    <input id="from" name="from" type="date">
+                  </div>
+                  <div class="field">
+                    <label for="to">Tot</label>
+                    <input id="to" name="to" type="date">
+                  </div>
+                  <div class="field">
+                    <label for="cat">Categorie</label>
+                    <select id="cat" name="cat">
+                      <option value="">Alle</option>
+                      <option value="horeca">Horeca</option>
+                      <option value="wellness">Wellness</option>
+                      <option value="zorg">Gezondheid</option>
+                      <option value="events">Events</option>
+                      <option value="huishoudhulp">Huishoudhulp</option>
+                      <option value="ramenwasser">Ramenwasser</option>
+                      <option value="dieren">Dieren</option>
+                      <option value="bouw">Bouw &amp; renovatie</option>
+                    </select>
+                  </div>
+                  <div class="field" style="align-self:end;">
+                    <button type="submit" class="btn-primary">Zoek</button>
+                  </div>
+                </form>
+              </section>
 
-            <!-- Resultaten -->
-            <section class="results" id="results" hidden>
-              <div class="results-inner">
-                <div class="results-head">
-                  <h2 id="results-title">Vrije plekken</h2>
-                  <div class="results-meta" id="results-meta">&nbsp;</div>
+              <!-- Resultaten -->
+              <section class="results" id="results" hidden>
+                <div class="results-inner">
+                  <div class="results-head">
+                    <h2 id="results-title">Vrije plekken</h2>
+                    <div class="results-meta" id="results-meta">&nbsp;</div>
+                  </div>
+                  <div id="booking-msg"></div>
+                  <div id="results-list" class="results-list"></div>
                 </div>
-                <div id="booking-msg"></div>
-                <div id="results-list" class="results-list"></div>
-              </div>
-            </section>
+              </section>
+            </div>
           </div>
         </div>
       </section>
@@ -1292,7 +1311,7 @@
           const role  = escapeHtml(job.title || job.role || 'Flexijob');
           const city  = escapeHtml(job.city || '');
           const pc    = escapeHtml(job.postcode || job.postal || '');
-          const locTxt= (city || pc) ? `${pc} ${city}`.trim() : '';
+          const locTxt= (pc || city) ? `${pc} ${city}`.trim() : '';
 
           const thumb = document.createElement('div');
           thumb.className = 'flex-job-thumb';
@@ -1329,7 +1348,6 @@
           viewBtn.className = 'flex-view-btn';
           viewBtn.textContent = 'Bekijk vacature';
           viewBtn.addEventListener('click', () => {
-            // aparte pagina, zelfde stijl, bv. flexijob.html?id=...
             window.location.href = '/flexijob.html?id=' + encodeURIComponent(job.id);
           });
 
