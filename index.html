@@ -138,51 +138,9 @@
 
     main{flex:1;}
 
-    /* CATEGORIE BOLLEN */
-    .cat-dots{
-      padding:26px 0 4px;
-    }
-    .container{
-      max-width:1200px;
-      margin:0 auto;
-      padding:0 12px;
-    }
-    .cat-dots-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:14px;
-      list-style:none;
-      padding:0;
-      margin:0;
-      justify-content:center;
-    }
-    .catdot{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
-      text-decoration:none;
-      color:#f9fafb;
-    }
-    .catdot img{
-      width:82px;
-      height:82px;
-      object-fit:cover;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.6);
-      box-shadow:0 14px 40px rgba(15,23,42,.9);
-      background:#020617;
-    }
-    .catdot span{
-      font-weight:600;
-      font-size:13px;
-      color:#e5edff;
-      text-shadow:0 1px 3px rgba(0,0,0,.7);
-    }
-
-    /* LAYOUT: FLEXIJOBS LINKS + ZOEK/RESULTATEN RECHTS */
+    /* GRID: LINKS FLEXIJOBS / RECHTS (CATEGORIE + ZOEK + RESULTATEN) */
     .main-grid{
-      padding:8px 0 40px;
+      padding:18px 0 40px;
     }
     .main-grid-inner{
       max-width:1200px;
@@ -351,7 +309,45 @@
       white-space:nowrap;
     }
 
-    /* ZOEKKAART - nu binnen rechterkolom */
+    /* CATEGORIE BOLLEN (nu in rechterkolom boven de zoekbalk) */
+    .cat-dots{
+      padding:0 0 4px;
+      margin-bottom:8px;
+    }
+    .cat-dots-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      list-style:none;
+      padding:0;
+      margin:0;
+      justify-content:center;
+    }
+    .catdot{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:#f9fafb;
+    }
+    .catdot img{
+      width:82px;
+      height:82px;
+      object-fit:cover;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      box-shadow:0 14px 40px rgba(15,23,42,.9);
+      background:#020617;
+    }
+    .catdot span{
+      font-weight:600;
+      font-size:13px;
+      color:#e5edff;
+      text-shadow:0 1px 3px rgba(0,0,0,.7);
+    }
+
+    /* ZOEKKAART */
     .search-wrap{
       width:100%;
       margin:6px 0 20px;
@@ -433,98 +429,12 @@
       filter:brightness(1.05);
     }
 
-    /* VACATURE DETAIL (midden) */
-    .vacancy-detail{
-      margin-bottom:18px;
-      display:none;
-    }
-    .vacancy-detail.is-visible{display:block;}
-    .vacancy-card{
-      border-radius:18px;
-      padding:14px 16px 14px;
-      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
-      border:1px solid rgba(148,163,184,.65);
-      box-shadow:0 20px 50px rgba(15,23,42,.95);
-      color:#e5e7eb;
-      display:grid;
-      grid-template-columns:110px minmax(0,1fr);
-      gap:14px;
-    }
-    @media(max-width:640px){
-      .vacancy-card{
-        grid-template-columns:minmax(0,1fr);
-      }
-    }
-    .vacancy-photo{
-      border-radius:14px;
-      overflow:hidden;
-      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(15,23,42,1));
-      border:1px solid rgba(148,163,184,.8);
-      min-height:90px;
-    }
-    .vacancy-photo img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .vacancy-main{
-      min-width:0;
-    }
-    .vacancy-title{
-      margin:0 0 4px;
-      font-size:16px;
-      font-weight:700;
-      color:#f9fafb;
-    }
-    .vacancy-company{
-      margin:0 0 4px;
-      font-size:13px;
-      color:rgba(191,219,254,.95);
-    }
-    .vacancy-meta{
-      font-size:12px;
-      color:rgba(148,163,184,.95);
-      margin-bottom:8px;
-    }
-    .vacancy-text{
-      font-size:13px;
-      color:rgba(226,232,240,.95);
-      margin-bottom:8px;
-      white-space:pre-line;
-    }
-    .vacancy-tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-bottom:8px;
-      font-size:11px;
-    }
-    .vacancy-tag{
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid rgba(129,140,248,.8);
-      background:rgba(15,23,42,.96);
-      color:#e0f2fe;
-    }
-    .vacancy-contact{
-      font-size:12px;
-      color:rgba(191,219,254,.95);
-      margin-top:4px;
-    }
-    .vacancy-contact a{
-      color:#e0f2fe;
-      text-decoration:none;
-    }
-    .vacancy-contact a:hover{text-decoration:underline;}
-
     /* RESULTATEN */
     .results{
       padding:4px 0 0;
     }
     .results-inner{
-      max-width:1200px;
-      margin:0 auto;
+      margin:0;
       padding:0;
     }
     .results-head{
@@ -806,26 +716,9 @@
     </header>
 
     <main>
-      <!-- Categorie knoppen -->
-      <section class="cat-dots">
-        <div class="container">
-          <ul class="cat-dots-row">
-            <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
-            <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
-            <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
-            <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
-            <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
-            <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
-            <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
-            <li><a class="catdot" data-cat="bouw" href="#zoeken" title="Bouw & renovatie"><img src="img/cat-bouw.jpg" alt="Bouw & renovatie"><span>Bouw &amp; renovatie</span></a></li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- GRID: LINKS FLEXIJOBS / RECHTS ZOEK + RESULTATEN -->
       <section class="main-grid">
         <div class="main-grid-inner">
-          <!-- FLEXIJOBS SIDEBAR -->
+          <!-- FLEXIJOBS LINKS -->
           <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
             <h2 class="flex-title">Flexijobs in jouw buurt</h2>
             <p class="flex-sub">
@@ -858,8 +751,22 @@
             <div id="flex-list" class="flex-list"></div>
           </aside>
 
-          <!-- RECHTERKANT: ZOEK + VACATURE DETAIL + RESULTATEN -->
+          <!-- ZOEK + CATEGORIE + RESULTATEN IN HET MIDDEN -->
           <div class="search-column">
+            <!-- Categorie knoppen -->
+            <section class="cat-dots">
+              <ul class="cat-dots-row">
+                <li><a class="catdot" data-cat="horeca" href="#zoeken" title="Horeca"><img src="img/cat-horeca.jpg" alt="Horeca"><span>Horeca</span></a></li>
+                <li><a class="catdot" data-cat="wellness" href="#zoeken" title="Wellness"><img src="img/cat-wellness.jpg" alt="Wellness"><span>Wellness</span></a></li>
+                <li><a class="catdot" data-cat="zorg" href="#zoeken" title="Gezondheid"><img src="img/cat-gezondheid.jpg" alt="Gezondheid"><span>Gezondheid</span></a></li>
+                <li><a class="catdot" data-cat="events" href="#zoeken" title="Events"><img src="img/cat-events.jpg" alt="Events"><span>Events</span></a></li>
+                <li><a class="catdot" data-cat="huishoudhulp" href="#zoeken" title="Huishoudhulp"><img src="img/cat-huishoudhulp.jpg" alt="Huishoudhulp"><span>Huishoudhulp</span></a></li>
+                <li><a class="catdot" data-cat="ramenwasser" href="#zoeken" title="Ramenwasser"><img src="img/cat-ramenwasser.jpg" alt="Ramenwasser"><span>Ramenwasser</span></a></li>
+                <li><a class="catdot" data-cat="dieren" href="#zoeken" title="Dieren"><img src="img/cat-dieren.jpg" alt="Dieren"><span>Dieren</span></a></li>
+                <li><a class="catdot" data-cat="bouw" href="#zoeken" title="Bouw & renovatie"><img src="img/cat-bouw.jpg" alt="Bouw & renovatie"><span>Bouw &amp; renovatie</span></a></li>
+              </ul>
+            </section>
+
             <!-- Zoekformulier -->
             <section class="search-wrap" id="zoeken">
               <form class="search" id="form">
@@ -897,11 +804,6 @@
                   <button type="submit" class="btn-primary">Zoek</button>
                 </div>
               </form>
-            </section>
-
-            <!-- Vacature detail (gevuld bij 'Bekijk vacature') -->
-            <section class="vacancy-detail" id="vacancy-detail">
-              <div class="vacancy-card" id="vacancy-card"></div>
             </section>
 
             <!-- Resultaten -->
@@ -1036,9 +938,6 @@
     const resultsTitle   = document.getElementById('results-title');
     const resultsMeta    = document.getElementById('results-meta');
     const bookingMsg     = document.getElementById('booking-msg');
-
-    const vacancyDetail  = document.getElementById('vacancy-detail');
-    const vacancyCard    = document.getElementById('vacancy-card');
 
     function escapeHtml(str){
       return (str || '').toString().replace(/[&<>"']/g, m => ({
@@ -1429,8 +1328,10 @@
           viewBtn.type = 'button';
           viewBtn.className = 'flex-view-btn';
           viewBtn.textContent = 'Bekijk vacature';
-          viewBtn.dataset.jobId = job.id;
-          viewBtn.addEventListener('click', ()=>showFlexJobDetail(job.id));
+          viewBtn.addEventListener('click', () => {
+            // aparte pagina, zelfde stijl, bv. flexijob.html?id=...
+            window.location.href = '/flexijob.html?id=' + encodeURIComponent(job.id);
+          });
 
           actions.appendChild(viewBtn);
 
@@ -1447,75 +1348,6 @@
         console.error(err);
         flexStatusEl.textContent = 'Flexijobs laden mislukt.';
         flexListEl.innerHTML = '';
-      }
-    }
-
-    async function showFlexJobDetail(jobId){
-      if (!jobId || !vacancyDetail || !vacancyCard) return;
-
-      vacancyDetail.classList.add('is-visible');
-      vacancyCard.innerHTML = '<div class="vacancy-text">Vacature laden…</div>';
-
-      try{
-        const url = '/.netlify/functions/flexijob?id=' + encodeURIComponent(jobId);
-        const res = await fetch(url, { method:'GET' });
-        const job = await res.json().catch(()=>null);
-
-        if (!res.ok || !job){
-          vacancyCard.innerHTML = '<div class="vacancy-text">Deze vacature kon niet geladen worden.</div>';
-          return;
-        }
-
-        const naam   = escapeHtml(job.business_name || job.company || 'Onbekende zaak');
-        const role   = escapeHtml(job.title || job.role || 'Flexijob');
-        const city   = escapeHtml(job.city || '');
-        const pc     = escapeHtml(job.postcode || job.postal || '');
-        const locTxt = (city || pc) ? `${pc} ${city}`.trim() : '';
-        const hours  = escapeHtml(job.hours || job.schedule || '');
-        const salary = escapeHtml(job.salary || job.pay || '');
-        const descr  = escapeHtml(job.description || job.desc || '');
-
-        const email  = (job.contact_email || job.email || '').trim();
-        const phone  = (job.contact_phone || job.phone || '').trim();
-        const applyUrl = (job.apply_url || '').trim();
-
-        const photoUrl =
-          job.photo_url ||
-          job.business_photo ||
-          `https://source.unsplash.com/400x300/?${encodeURIComponent(job.sector || 'job')}`;
-
-        const tags = [];
-        if (hours) tags.push({ label: hours });
-        if (salary) tags.push({ label: salary });
-        if (job.sector || job.cat) tags.push({ label: job.sector || job.cat });
-
-        vacancyCard.innerHTML = `
-          <div class="vacancy-photo">
-            <img src="${photoUrl}" alt="">
-          </div>
-          <div class="vacancy-main">
-            <h3 class="vacancy-title">${role}</h3>
-            <p class="vacancy-company">${naam}</p>
-            <div class="vacancy-meta">
-              ${locTxt ? `${locTxt}` : ''}
-            </div>
-            ${descr ? `<div class="vacancy-text">${descr}</div>` : ''}
-            ${tags.length ? `
-              <div class="vacancy-tags">
-                ${tags.map(t => `<span class="vacancy-tag">${escapeHtml(t.label)}</span>`).join('')}
-              </div>` : ''}
-            <div class="vacancy-contact">
-              ${email ? `Mail: <a href="mailto:${email}">${email}</a><br>` : ''}
-              ${phone ? `Tel: <a href="tel:${phone}">${phone}</a><br>` : ''}
-              ${applyUrl ? `<a href="${escapeHtml(applyUrl)}" target="_blank" rel="noopener">Online reageren</a>` : ''}
-            </div>
-          </div>
-        `;
-
-        vacancyDetail.scrollIntoView({ behavior:'smooth', block:'start' });
-      }catch(err){
-        console.error(err);
-        vacancyCard.innerHTML = '<div class="vacancy-text">Er ging iets mis bij het laden van deze vacature.</div>';
       }
     }
 
