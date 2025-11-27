@@ -217,6 +217,9 @@
     .dash-tab.is-active::after{
       border-color:rgba(191,219,254,.9);
     }
+    .dash-tab.is-locked{
+      opacity:.55;
+    }
 
     .dash-panels{display:block;}
     .dash-panel{display:none;}
@@ -329,7 +332,8 @@
       color:rgba(226,232,240,.9);
     }
     .field input,
-    .field textarea{
+    .field textarea,
+    .field select{
       border-radius:.75rem;
       border:1px solid rgba(148,163,184,.6);
       background:rgba(15,23,42,.85);
@@ -345,7 +349,8 @@
       font-size:.84rem;
     }
     .field input:focus,
-    .field textarea:focus{
+    .field textarea:focus,
+    .field select:focus{
       border-color:rgba(59,130,246,.9);
       box-shadow:0 0 0 1px rgba(59,130,246,.6);
       background:rgba(15,23,42,.96);
@@ -839,6 +844,11 @@
               <span class="dash-tab-label">Website</span>
               <span class="dash-tab-sub">Jouw Vrijeplek-pagina</span>
             </button>
+            <button class="dash-tab" data-panel="flexijobs">
+              <span class="dash-tab-icon">💼</span>
+              <span class="dash-tab-label">Flexijobs</span>
+              <span class="dash-tab-sub">Vacature voor flexi's</span>
+            </button>
             <button class="dash-tab" data-panel="instellingen">
               <span class="dash-tab-icon">⚙</span>
               <span class="dash-tab-label">Instellingen</span>
@@ -847,7 +857,6 @@
           </aside>
 
           <section class="dash-panels">
-            <!-- AFSPRAKEN -->
             <section class="dash-panel is-visible" id="panel-afspraken">
               <header class="panel-head">
                 <h1>Jouw Vrijeplek</h1>
@@ -872,7 +881,6 @@
               </section>
             </section>
 
-            <!-- OPEN TIJDSTIPPEN -->
             <section class="dash-panel" id="panel-tijden">
               <header class="panel-head">
                 <h1>Open tijdstippen</h1>
@@ -886,7 +894,6 @@
                   <header class="card-header-row">
                     <div>
                       <h2 class="card-title">Kalender</h2>
-                      
                     </div>
                     <div class="calendar-controls">
                       <button type="button" class="btn-ghost" data-cal-prev>‹</button>
@@ -961,7 +968,6 @@
                       </p>
                     </div>
 
-                    <!-- Deposit amount selection per slot -->
                     <div class="field slot-deposit-amount" style="display:none;">
                       <label for="slot-deposit-amount">Voorschotbedrag voor dit tijdslot</label>
                       <select id="slot-deposit-amount">
@@ -1004,7 +1010,6 @@
               </div>
             </section>
 
-            <!-- WEBSITE -->
             <section class="dash-panel" id="panel-website">
               <header class="panel-head">
                 <h1>Website</h1>
@@ -1037,7 +1042,87 @@
               </section>
             </section>
 
-            <!-- INSTELLINGEN -->
+            <section class="dash-panel" id="panel-flexijobs">
+              <header class="panel-head">
+                <h1>Flexijobs</h1>
+                <p class="panel-intro">
+                  Schrijf een vacature voor een flexi of extra hulp in jouw zaak. Ze verschijnt in het Flexijobs-blok op de homepage.
+                </p>
+              </header>
+
+              <section class="card card-soft">
+                <h2 class="card-title">Nieuwe flexijob</h2>
+                <p class="card-subtitle">
+                  Vul de gegevens hieronder in. We tonen enkel de relevante info aan kandidaten.
+                </p>
+
+                <form id="flexjob-form">
+                  <div class="field">
+                    <label for="flex-title">Functie / titel</label>
+                    <input id="flex-title" type="text" placeholder="bv. Flexi medewerker bediening (avond)">
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-sector">Sector</label>
+                      <select id="flex-sector">
+                        <option value="">Kies sector…</option>
+                        <option value="horeca">Horeca</option>
+                        <option value="wellness">Wellness</option>
+                        <option value="zorg">Gezondheid</option>
+                        <option value="events">Events</option>
+                        <option value="huishoudhulp">Huishoudhulp</option>
+                        <option value="ramenwasser">Ramenwasser</option>
+                        <option value="dieren">Dieren</option>
+                        <option value="bouw">Bouw &amp; renovatie</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="flex-location">Locatie</label>
+                      <input id="flex-location" type="text" placeholder="Stad of regio">
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-hours">Uren / momenten</label>
+                      <input id="flex-hours" type="text" placeholder="bv. Vrijdag- en zaterdagavond, 18u–23u">
+                    </div>
+                    <div class="field">
+                      <label for="flex-pay">Verloning (optioneel)</label>
+                      <input id="flex-pay" type="text" placeholder="bv. Volgens barema, maaltijdcheques…">
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-contact-name">Contactpersoon</label>
+                      <input id="flex-contact-name" type="text" placeholder="Naam contactpersoon">
+                    </div>
+                    <div class="field">
+                      <label for="flex-contact-email">E-mail</label>
+                      <input id="flex-contact-email" type="email" placeholder="mail@voorbeeld.be">
+                    </div>
+                    <div class="field">
+                      <label for="flex-contact-phone">Telefoon / GSM</label>
+                      <input id="flex-contact-phone" type="tel" placeholder="GSM-nummer voor kandidaten">
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="flex-description">Omschrijving</label>
+                    <textarea id="flex-description" rows="4" placeholder="Vertel kort wat je zoekt, wat de flexi zal doen en wat je aanbiedt."></textarea>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">Vacature publiceren</button>
+                  </div>
+                </form>
+
+                <p class="helper" id="flexjob-status" style="margin-top:.75rem;"></p>
+              </section>
+            </section>
+
             <section class="dash-panel" id="panel-instellingen">
               <header class="panel-head">
                 <h1>Instellingen &amp; facturatie</h1>
@@ -1110,7 +1195,7 @@
                         <label for="bic">BIC (optioneel)</label>
                         <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
                       </div>
-                        <div class="field">
+                      <div class="field">
                         <label for="deposit-amount">Standaard voorschotbedrag</label>
                         <div class="input-with-prefix">
                           <span>€</span>
@@ -1144,16 +1229,32 @@
                       <label class="switch">
                         <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
                         <span class="switch-slider"></span>
-                        <span class="switch-label">Locatiegegevens delen</span>
+                        <span class="switch-label">Toon je locatie met een speld op de kaart</span>
                       </label>
                     </div>
-                    <div class="field" id="location-fields" style="display:none;">
-                      <label for="business-lat">Latitude</label>
-                      <input id="business-lat" name="business_lat" type="text" placeholder="51.12345">
-                      <label for="business-lng">Longitude</label>
-                      <input id="business-lng" name="business_lng" type="text" placeholder="4.12345">
-                      <button type="button" class="btn-pill" id="geo-btn" style="margin-top:0.5rem;">Gebruik mijn huidige locatie</button>
+
+                    <div class="field-group" id="location-fields" style="display:none; margin-top:0.35rem;">
+                      <div class="field">
+                        <label for="business-street">Straat &amp; nr</label>
+                        <input id="business-street" name="business_street" type="text" placeholder="Stationsstraat 12">
+                      </div>
+                      <div class="field">
+                        <label for="business-postcode">Postcode</label>
+                        <input id="business-postcode" name="business_postcode" type="text" placeholder="1000">
+                      </div>
+                      <div class="field">
+                        <label for="business-city">Gemeente / stad</label>
+                        <input id="business-city" name="business_city" type="text" placeholder="Brussel">
+                      </div>
+                      <div class="field">
+                        <label>&nbsp;</label>
+                        <button type="button" class="btn-pill" id="geo-btn" style="margin-top:0.5rem;">Gebruik mijn huidige locatie</button>
+                        <p class="helper">We tonen enkel een speld op de kaart, geen volledig adres.</p>
+                      </div>
                     </div>
+
+                    <input id="business-lat" name="business_lat" type="hidden">
+                    <input id="business-lng" name="business_lng" type="hidden">
                   </fieldset>
 
                   <fieldset class="settings-group settings-group-muted">
@@ -1199,7 +1300,6 @@
     </footer>
   </div>
 
-  <!-- Toast -->
   <div id="vp-toast" class="toast" role="status" aria-live="polite" aria-atomic="true" style="display:none;">
     <div class="toast-icon">✓</div>
     <div class="toast-text"></div>
@@ -1207,7 +1307,6 @@
 
   <script src="/js/config.js?v=2"></script>
   <script>
-    // -------- EMAIL VANUIT URL OF LOCALSTORAGE (optioneel, mag ontbreken) ----------
     console.log('Dashboard script loading...');
     const urlParams = new URLSearchParams(window.location.search);
     let dashboardEmail = urlParams.get('email')
@@ -1224,6 +1323,9 @@
 
     const API_SLOTS   = '/.netlify/functions/slots';
     const API_PROFILE = '/.netlify/functions/profile';
+    const API_FLEXJOBS = '/.netlify/functions/flexijobs';
+
+    window.vpProfileReady = window.vpProfileReady || false;
 
     function formatDateKey(date){
       const d = new Date(date.getTime());
@@ -1258,8 +1360,6 @@
       }, 3200);
     }
 
-    // ---------- SLOTS API ----------
-
     async function fetchSlotsForDate(dateKey){
       const url = new URL(API_SLOTS, window.location.origin);
       url.searchParams.set('date', dateKey);
@@ -1280,7 +1380,6 @@
       return res.json();
     }
 
-    // Nieuwe createSlot functie om tijdsloten aan te maken
     async function createSlot(payload){
       const res = await fetch(API_SLOTS, {
         method: 'POST',
@@ -1347,8 +1446,6 @@
       slotEmptyEl.style.display = 'none';
       slotListEl.style.display = 'block';
 
-      // Maak een lijst van unieke tijdsloten om dubbele weergave te voorkomen.
-      // Sommige API's kunnen per ongeluk dubbele entries teruggeven; we dedupliceren op basis van starttijd, eindtijd en omschrijving.
       const uniqueSlots = [];
       const seenKeys = new Set();
       if (Array.isArray(slotArray)) {
@@ -1372,7 +1469,6 @@
         const visible = typeof item.visible === 'boolean' ? item.visible : true;
         const depositRequired = !!(item.deposit_required || item.with_deposit);
         const visibleText = visible ? 'Zichtbaar op Vrijeplek' : 'Verborgen';
-        // Toon eventueel het bedrag bij een voorschot
         const depositAmount = item.deposit_amount || item.depositAmount || null;
         const depositText = depositRequired ? (depositAmount ? `Voorschot: €${depositAmount}` : 'Voorschot actief') : 'Geen voorschot';
         const booked = !!(item.is_booked || item.booked || item.status === 'Geboekt' || item.status === 'Bezet');
@@ -1404,11 +1500,9 @@
       slotListEl.innerHTML = rows.join('');
     }
 
-    // ---------- PROFIEL / INSTELLINGEN API ----------
-
     async function fetchProfile(){
       if (!dashboardEmail) {
-        return null; // of eventueel een foutmelding tonen
+        return null;
       }
 
       const url = new URL(API_PROFILE, window.location.origin);
@@ -1433,7 +1527,6 @@
         throw new Error('Geen e-mailadres gevonden');
       }
 
-      // Send payload with email - the API will handle field mapping
       const profilePayload = {
         email: dashboardEmail,
         ...payload
@@ -1450,10 +1543,8 @@
         let errorData;
 
         try {
-          // proberen JSON foutinfo te lezen
           errorData = await res.json();
         } catch {
-          // geen geldige JSON → tekst fallback
           const text = await res.text();
           errorData = { error: text };
         }
@@ -1468,11 +1559,54 @@
       return res.json();
     }
 
+    function computeProfileReadyFromDom(){
+      const requiredIds = [
+        'company-name',
+        'contact-name',
+        'billing-email',
+        'phone',
+        'vat-number',
+        'business-street',
+        'business-postcode',
+        'business-city'
+      ];
+      for(const id of requiredIds){
+        const el = document.getElementById(id);
+        if(!el || !el.value || !el.value.trim()){
+          return false;
+        }
+      }
+      const depositToggle = document.getElementById('deposit-enabled');
+      if (depositToggle && depositToggle.checked) {
+        const iban = document.getElementById('iban');
+        const depAmount = document.getElementById('deposit-amount');
+        if (!iban || !iban.value.trim()) return false;
+        if (!depAmount || !depAmount.value.trim() || Number(depAmount.value) <= 0) return false;
+      }
+      return true;
+    }
+
+    function updateFeatureLockUI(){
+      window.vpProfileReady = !!computeProfileReadyFromDom();
+      const needsProfileTabs = document.querySelectorAll('.dash-tab[data-panel="tijden"], .dash-tab[data-panel="flexijobs"]');
+      needsProfileTabs.forEach(tab=>{
+        if(window.vpProfileReady){
+          tab.classList.remove('is-locked');
+          tab.removeAttribute('title');
+        }else{
+          tab.classList.add('is-locked');
+          tab.setAttribute('title','Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.');
+        }
+      });
+    }
+
     function applyProfileToForm(profile){
-      if(!profile) return;
+      if(!profile) {
+        updateFeatureLockUI();
+        return;
+      }
       const byId = (id) => document.getElementById(id);
 
-      // Support both new field names and legacy field names
       if(byId('company-name'))  byId('company-name').value  = profile.company_name || profile.zaak || '';
       if(byId('contact-name'))  byId('contact-name').value  = profile.contact_name || '';
       if(byId('billing-email')) byId('billing-email').value = profile.billing_email || '';
@@ -1484,6 +1618,12 @@
       if(byId('deposit-amount'))byId('deposit-amount').value= profile.deposit_amount ?? '';
       if(byId('extra-footer'))  byId('extra-footer').value  = profile.extra_footer || '';
 
+      if(byId('business-street'))   byId('business-street').value   = profile.business_street || profile.straat || '';
+      if(byId('business-postcode')) byId('business-postcode').value = profile.business_postcode || profile.postcode || '';
+      if(byId('business-city'))     byId('business-city').value     = profile.business_city || profile.plaats || profile.gemeente || '';
+      if(byId('business-lat'))      byId('business-lat').value      = profile.business_lat || '';
+      if(byId('business-lng'))      byId('business-lng').value      = profile.business_lng || '';
+
       const depositEnabledInput = document.getElementById('deposit-enabled');
       if(depositEnabledInput){
         depositEnabledInput.checked = !!profile.deposit_enabled;
@@ -1491,7 +1631,6 @@
         depositEnabledInput.dispatchEvent(event);
       }
 
-      // Apply Google review settings
       const googleReviewEnabledInput = document.getElementById('google-review-enabled');
       if(googleReviewEnabledInput) {
         googleReviewEnabledInput.checked = !!profile.google_review_enabled;
@@ -1501,18 +1640,12 @@
       if(byId('google-review-url')) {
         byId('google-review-url').value = profile.google_review_url || '';
       }
-      // Apply location sharing settings
+
       const shareLocationEnabledInput = document.getElementById('share-location-enabled');
       if(shareLocationEnabledInput) {
         shareLocationEnabledInput.checked = !!profile.share_location_enabled;
         const event = new Event('change');
         shareLocationEnabledInput.dispatchEvent(event);
-      }
-      if(byId('business-lat')) {
-        byId('business-lat').value = profile.business_lat || '';
-      }
-      if(byId('business-lng')) {
-        byId('business-lng').value = profile.business_lng || '';
       }
 
       const status = document.getElementById('settings-status');
@@ -1522,6 +1655,21 @@
         status.style.borderColor = 'rgba(34,197,94,.7)';
         status.style.color = '#bbf7d0';
       }
+
+      const flexContactName = document.getElementById('flex-contact-name');
+      if (flexContactName && !flexContactName.value) {
+        flexContactName.value = profile.contact_name || '';
+      }
+      const flexContactEmail = document.getElementById('flex-contact-email');
+      if (flexContactEmail && !flexContactEmail.value) {
+        flexContactEmail.value = profile.billing_email || dashboardEmail || '';
+      }
+      const flexContactPhone = document.getElementById('flex-contact-phone');
+      if (flexContactPhone && !flexContactPhone.value) {
+        flexContactPhone.value = profile.phone || '';
+      }
+
+      updateFeatureLockUI();
     }
 
     function collectSettingsPayload(){
@@ -1554,16 +1702,17 @@
         bic:            getVal('bic'),
         deposit_amount: getNumber('deposit-amount'),
         extra_footer:   getVal('extra-footer'),
-        // Additional settings
         google_review_enabled: getChecked('google-review-enabled'),
         google_review_url: getVal('google-review-url'),
         share_location_enabled: getChecked('share-location-enabled'),
-        business_lat:   getVal('business-lat'),
-        business_lng:   getVal('business-lng')
+        business_street:   getVal('business-street'),
+        business_postcode: getVal('business-postcode'),
+        business_city:     getVal('business-city'),
+        business_lat:      getVal('business-lat'),
+        business_lng:      getVal('business-lng')
       };
     }
 
-    // SIMPLE, DIRECT TAB CLICK HANDLER - NO CLONING, NO COMPLEXITY
     function handleTabClick(e) {
       if (e) {
         e.preventDefault();
@@ -1580,14 +1729,27 @@
       }
       
       console.log('=== TAB CLICKED ===', target);
+
+      if ((target === 'tijden' || target === 'flexijobs') && !window.vpProfileReady) {
+        showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
+        const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
+        if (settingsTab) {
+          document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
+          settingsTab.classList.add('is-active');
+          document.querySelectorAll('.dash-panel').forEach(panel => {
+            panel.classList.remove('is-visible');
+          });
+          const settingsPanel = document.getElementById('panel-instellingen');
+          if (settingsPanel) settingsPanel.classList.add('is-visible');
+        }
+        return false;
+      }
       
-      // Update active tab
       document.querySelectorAll('.dash-tab').forEach(t => {
         t.classList.remove('is-active');
       });
       tab.classList.add('is-active');
       
-      // Show/hide panels
       document.querySelectorAll('.dash-panel').forEach(panel => {
         if (panel.id === `panel-${target}`) {
           panel.classList.add('is-visible');
@@ -1600,7 +1762,6 @@
       return false;
     }
     
-    // EVENT DELEGATION AS FALLBACK - WORKS EVEN IF DIRECT HANDLERS FAIL
     document.addEventListener('click', function(e) {
       const tab = e.target.closest('.dash-tab');
       if (tab && !tab.hasAttribute('data-handled')) {
@@ -1609,26 +1770,22 @@
         handleTabClick.call(tab, e);
         setTimeout(() => tab.removeAttribute('data-handled'), 100);
       }
-    }, false); // Bubble phase to avoid interfering with direct handlers
+    }, false);
 
-    // Initialize dashboard - SIMPLE AND DIRECT
     function initDashboard() {
       console.log('=== DASHBOARD INIT START ===');
       
-      // Check if DOM is ready
       if (!document.body) {
         console.error('Document body not ready');
         setTimeout(initDashboard, 100);
         return;
       }
 
-      // Year span
       const yearSpan = document.getElementById('year-span');
       if(yearSpan){
         yearSpan.textContent = new Date().getFullYear();
       }
 
-      // TABS - SIMPLE DIRECT ATTACHMENT
       const tabs = document.querySelectorAll('.dash-tab');
       console.log('Found tabs:', tabs.length);
       
@@ -1638,12 +1795,10 @@
         return;
       }
       
-      // Attach a simple click handler to each tab
       tabs.forEach(tab => {
         tab.addEventListener('click', handleTabClick);
       });
 
-      // Panel jump buttons
       document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
         btn.style.cssText = 'cursor: pointer !important; pointer-events: auto !important;';
         btn.onclick = function(e) {
@@ -1666,14 +1821,12 @@
           } else {
             depositBlock.classList.add('is-disabled');
           }
+          updateFeatureLockUI();
         };
         depositToggle.addEventListener('change', updateDepositState);
         updateDepositState();
       }
 
-      // Additional initialization for toggles will be attached later once DOM elements are defined
-
-      // kalender + slots
       const slotForm   = document.getElementById('slot-form');
       const slotList   = document.getElementById('slot-list');
       const slotEmpty  = document.getElementById('slot-empty');
@@ -1685,19 +1838,15 @@
       const slotDeposit= document.getElementById('slot-deposit');
       const slotSubmitBtn = document.getElementById('slot-submit-btn');
 
-      // Settings toggles for Google review and location
       const googleReviewToggle = document.getElementById('google-review-enabled');
       const googleReviewField = document.getElementById('google-review-field');
-      const googleReviewUrl = document.getElementById('google-review-url');
       const shareLocationToggle = document.getElementById('share-location-enabled');
       const locationFields = document.getElementById('location-fields');
 
-      // Deposit amount inputs for per-slot deposits
       const slotDepositAmount = document.getElementById('slot-deposit-amount');
       const slotDepositCustom = document.getElementById('slot-deposit-custom');
       const slotDepositGroup = document.querySelector('.slot-deposit-amount');
 
-      // Now that slotDeposit and related elements are defined, attach listeners for deposit UI
       if (slotDeposit && slotDepositGroup) {
         slotDeposit.addEventListener('change', () => {
           if (slotDeposit.checked) {
@@ -1722,7 +1871,6 @@
         });
       }
 
-      // Attach handlers for settings toggles (Google review and location) after elements exist
       if (googleReviewToggle && googleReviewField) {
         const updateGoogleReviewVisibility = () => {
           googleReviewField.style.display = googleReviewToggle.checked ? 'block' : 'none';
@@ -1733,7 +1881,7 @@
 
       if (shareLocationToggle && locationFields) {
         const updateLocationVisibility = () => {
-          locationFields.style.display = shareLocationToggle.checked ? 'block' : 'none';
+          locationFields.style.display = shareLocationToggle.checked ? 'grid' : 'none';
         };
         shareLocationToggle.addEventListener('change', updateLocationVisibility);
         updateLocationVisibility();
@@ -1800,7 +1948,23 @@
             slotDesc.value   = slot.description || slot.desc || '';
             slotVisible.checked = typeof slot.visible === 'boolean' ? slot.visible : true;
             if(slotDeposit){
-              slotDeposit.checked = !!(slot.deposit_required || slot.with_deposit);
+              const hasDeposit = !!(slot.deposit_required || slot.with_deposit);
+              slotDeposit.checked = hasDeposit;
+              if (slotDepositGroup) {
+                slotDepositGroup.style.display = hasDeposit ? 'block' : 'none';
+              }
+              if (slotDepositAmount) {
+                const depAmount = slot.deposit_amount || slot.depositAmount || null;
+                if (depAmount) {
+                  slotDepositAmount.value = String(depAmount);
+                } else {
+                  slotDepositAmount.value = '';
+                }
+              }
+              if (slotDepositCustom) {
+                slotDepositCustom.value = '';
+                slotDepositCustom.style.display = 'none';
+              }
             }
             if(slotSubmitBtn){
               slotSubmitBtn.textContent = 'Tijdslot bijwerken';
@@ -1916,8 +2080,15 @@
         slotForm.addEventListener('submit', async (e) => {
           e.preventDefault();
 
+          if(!window.vpProfileReady){
+            showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
+            const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
+            if (settingsTab) settingsTab.click();
+            return;
+          }
+
           if(!selected){
-            alert('Kies eerst een datum in de kalender.');
+            showToast('Kies eerst een datum in de kalender.','error');
             return;
           }
 
@@ -1928,7 +2099,6 @@
           const visibleVal= !!slotVisible.checked;
           const depositPerSlot = slotDeposit ? !!slotDeposit.checked : false;
 
-          // Determine deposit amount per slot if deposit is enabled
           let depositAmountVal = null;
           if (depositPerSlot) {
             if (slotDepositAmount && slotDepositAmount.value && slotDepositAmount.value !== 'custom') {
@@ -1941,8 +2111,7 @@
           }
 
           if(!startVal || !endVal){
-            // Toon foutmelding via toast in plaats van een blokkerende alert
-            showToast('Vul minstens een start- en einduur in.', 'error');
+            showToast('Vul minstens een start- en einduur in.','error');
             return;
           }
 
@@ -1959,7 +2128,6 @@
             deposit_amount: depositAmountVal
           };
 
-          // email meesturen indien we hem kennen, maar niet blokkeren als hij ontbreekt
           if(dashboardEmail){
             payloadBase.email = dashboardEmail;
           }
@@ -1973,7 +2141,15 @@
 
             slotForm.reset();
             slotVisible.checked = true;
-            if(slotDeposit){ slotDeposit.checked = false; }
+            if(slotDeposit){ 
+              slotDeposit.checked = false;
+              if (slotDepositGroup) slotDepositGroup.style.display = 'none';
+              if (slotDepositAmount) slotDepositAmount.value = '';
+              if (slotDepositCustom){
+                slotDepositCustom.value = '';
+                slotDepositCustom.style.display = 'none';
+              }
+            }
             const msg = editingSlotId ? 'Tijdslot bijgewerkt' : 'Tijdslot opgeslagen';
             editingSlotId = null;
             if(slotSubmitBtn){
@@ -1994,7 +2170,6 @@
         settingsForm.addEventListener('submit', async (e) => {
           e.preventDefault();
 
-          // email is verplicht voor de backend
           if (!dashboardEmail) {
             showToast(
               'Geen e-mailadres gevonden voor dit account. Log opnieuw in via je Vrijeplek-link.',
@@ -2004,7 +2179,7 @@
           }
 
           const payload = {
-            email: dashboardEmail,          // verplicht veld voor de function
+            email: dashboardEmail,
             ...collectSettingsPayload()
           };
 
@@ -2017,6 +2192,7 @@
               status.style.borderColor = 'rgba(34,197,94,.7)';
               status.style.color = '#bbf7d0';
             }
+            updateFeatureLockUI();
             showToast('Instellingen opgeslagen.','success');
           } catch (err) {
             console.error(err);
@@ -2024,18 +2200,15 @@
           }
         });
 
-        // Bij laden: bestaande instellingen ophalen
         (async () => {
           try {
             const profile = await fetchProfile();
             applyProfileToForm(profile);
           } catch (err) {
             console.error(err);
-            // geen toast, dashboard mag gewoon laden
           }
         })();
       }
-
 
       const geoBtn = document.getElementById('geo-btn');
       if(geoBtn){
@@ -2070,7 +2243,80 @@
         });
       }
 
-      // Logout button - DIRECT AND SIMPLE
+      const flexForm = document.getElementById('flexjob-form');
+      const flexStatus = document.getElementById('flexjob-status');
+
+      if (flexForm) {
+        const flexTitleEl = document.getElementById('flex-title');
+        const flexSectorEl = document.getElementById('flex-sector');
+        const flexLocEl = document.getElementById('flex-location');
+        const flexHoursEl = document.getElementById('flex-hours');
+        const flexPayEl = document.getElementById('flex-pay');
+        const flexContactNameEl = document.getElementById('flex-contact-name');
+        const flexContactEmailEl = document.getElementById('flex-contact-email');
+        const flexContactPhoneEl = document.getElementById('flex-contact-phone');
+        const flexDescEl = document.getElementById('flex-description');
+
+        flexForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          if (!window.vpProfileReady) {
+            showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
+            const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
+            if (settingsTab) settingsTab.click();
+            return;
+          }
+
+          const title = flexTitleEl.value.trim();
+          const description = flexDescEl.value.trim();
+
+          if (!title || !description) {
+            showToast('Vul minstens een titel en omschrijving in voor je vacature.','error');
+            return;
+          }
+
+          const payload = {
+            title,
+            sector: flexSectorEl.value.trim() || '',
+            location: flexLocEl.value.trim() || '',
+            hours: flexHoursEl.value.trim() || '',
+            pay: flexPayEl.value.trim() || '',
+            contact_name: flexContactNameEl.value.trim() || '',
+            contact_email: flexContactEmailEl.value.trim() || '',
+            contact_phone: flexContactPhoneEl.value.trim() || '',
+            description,
+            owner_email: dashboardEmail || ''
+          };
+
+          try {
+            if (flexStatus) flexStatus.textContent = 'Bezig met opslaan…';
+            const res = await fetch(API_FLEXJOBS, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(payload)
+            });
+            const data = await res.json().catch(() => null);
+            if (!res.ok || (data && data.error)) {
+              const msg = data && data.error ? data.error : 'Vacature kon niet worden opgeslagen.';
+              showToast(msg,'error');
+              if (flexStatus) flexStatus.textContent = msg;
+              return;
+            }
+            showToast('Vacature opgeslagen en doorgestuurd naar de homepage.','success');
+            if (flexStatus) flexStatus.textContent = 'Vacature gepubliceerd. Je kunt later opnieuw een job aanmaken of aanpassen.';
+            flexForm.reset();
+            const profile = {};
+            applyProfileToForm(profile);
+          } catch (err) {
+            console.error(err);
+            const msg = 'Opslaan van vacature mislukt.';
+            showToast(msg,'error');
+            if (flexStatus) flexStatus.textContent = msg;
+          }
+        });
+      }
+
       const logoutBtn = document.getElementById('logout-btn');
       if (logoutBtn){
         logoutBtn.style.cssText = 'cursor: pointer !important; pointer-events: auto !important; position: relative; z-index: 10;';
@@ -2086,19 +2332,17 @@
         console.error('Logout button not found!');
       }
       
-      // Initialize calendar and load data
       renderCalendar();
       updateSelectedLabels();
       loadSlotsForSelectedDate();
+      updateFeatureLockUI();
       
       console.log('Dashboard initialized successfully');
-      
       console.log('=== DASHBOARD INIT COMPLETE ===');
       console.log('Tabs:', document.querySelectorAll('.dash-tab').length);
       console.log('Panels:', document.querySelectorAll('.dash-panel').length);
     }
 
-    // INITIALIZE ONCE WHEN DOM IS READY
     document.addEventListener('DOMContentLoaded', function() {
       try {
         initDashboard();
@@ -2107,10 +2351,8 @@
       }
     });
     
-    // Make handleTabClick globally available as fallback
     window.handleTabClick = handleTabClick;
     
-    // EMERGENCY FALLBACK - Direct tab switching function
     window.switchTab = function(panelName) {
       console.log('Emergency switchTab called for:', panelName);
       const tab = document.querySelector(`.dash-tab[data-panel="${panelName}"]`);
@@ -2119,7 +2361,6 @@
       }
     };
     
-    // Add keyboard shortcuts as backup
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey || e.metaKey) {
         if (e.key === '1') {
@@ -2132,6 +2373,9 @@
           e.preventDefault();
           window.switchTab('website');
         } else if (e.key === '4') {
+          e.preventDefault();
+          window.switchTab('flexijobs');
+        } else if (e.key === '5') {
           e.preventDefault();
           window.switchTab('instellingen');
         }
