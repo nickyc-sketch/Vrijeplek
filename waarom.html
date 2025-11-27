@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Waarom Vrijeplek — Vul je agenda zonder commissie</title>
-  <meta name="description" content="Waarom Vrijeplek? Minder lege uren, meer omzet. €19,95/maand of €180/jaar (3 maanden gratis). Last-minute slots omzetten in klanten — zonder commissie.">
+  <meta name="description" content="Vrijeplek helpt je lege uren vullen zonder commissie. Zet last-minute tijd om in omzet met een simpel abonnement — jij blijft baas over je agenda.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,73 +12,583 @@
   <link rel="stylesheet" href="styles.css?v=ocean">
 
   <style>
-    /* Pagina-specifiek: rustiger compositie, minder kaders */
-    :root{ --ink:#0a2a4a; --line:rgba(26,102,255,.25); }
-    body{ background:linear-gradient(180deg,#e9f2ff,#f6f9ff); color:var(--ink); }
+    :root{
+      --ink:#071a33;
+      --ink-soft:#3a4b6a;
+      --accent:#1a66ff;
+      --accent-soft:rgba(26,102,255,.14);
+      --accent-strong:#0056ff;
+      --shell:#f4f6ff;
+      --card:rgba(255,255,255,.96);
+      --line:rgba(26,102,255,.16);
+      --success:#0e9f6e;
+      --danger:#dc2626;
+    }
 
-    .wrap{ max-width:1100px; margin:0 auto; padding:0 12px; }
+    body{
+      background:
+        radial-gradient(circle at 0% 0%, rgba(26,102,255,.20), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(45,212,191,.18), transparent 55%),
+        linear-gradient(180deg,#e9f2ff,#f6f9ff 45%, #eef3ff);
+      color:var(--ink);
+    }
 
-    /* Hero section: 1 heldere boodschap + 2 CTA’s */
-    .why-hero{ padding:54px 0 24px; text-align:center; position:relative; }
-    .why-hero h1{ font-size:clamp(28px,3.2vw,44px); margin:0 0 10px; }
-    .why-hero p.lead{ max-width:880px; margin:0 auto; font-size:clamp(15px,1.5vw,18px); opacity:.92; }
-    .cta-row{ margin-top:18px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
-    .btn{ display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:999px; font-weight:800; text-decoration:none; }
-    .btn-primary{ background:linear-gradient(120deg,#1a66ff,#0056ff); color:#fff; border:1px solid rgba(26,102,255,.35); box-shadow:0 12px 26px rgba(17,49,170,.22); }
-    .btn-ghost{ background:rgba(255,255,255,.65); color:#0a2a4a; border:1px solid var(--line); }
+    .wrap{ max-width:1120px; margin:0 auto; padding:0 16px; }
 
-    /* Plan badges */
-    .plan-note{ font-size:12px; font-weight:800; padding:4px 10px; border-radius:999px; border:1px solid rgba(26,102,255,.25); background:#fff; color:#0a2a4a; }
-    .save{ color:#0e9f6e; font-weight:800; }
+    /* HEADER wordt gestyled via global stylesheet */
 
-    /* Flow-strip: 3 grote stappen zonder kaarten */
-    .flow{ padding:28px 0 8px; }
-    .flow-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    @media(max-width:900px){ .flow-row{ grid-template-columns:1fr; } }
-    .step{ padding:16px 14px; border-radius:16px; border:1px solid rgba(26,102,255,.18); background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7)); box-shadow:0 8px 26px rgba(10,27,90,.08); }
-    .numb{ width:36px; height:36px; border-radius:999px; display:inline-grid; place-items:center; font-weight:800; color:#fff; background:linear-gradient(120deg,#1a66ff,#0056ff); box-shadow:0 6px 18px rgba(10,27,90,.18); }
-    .step h3{ margin:10px 0 6px; font-size:18px; }
-    .muted{ color:#3a4b6a; font-size:14px; }
+    main{ padding-top:18px; }
 
-    /* Value strip: 2 kolommen met rustige vlakken */
-    .value{ padding:22px 0; }
-    .value-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; }
-    @media(max-width:980px){ .value-grid{ grid-template-columns:1fr; } }
+    /* HERO ----------------------------------------------------- */
+    .hero{
+      padding:40px 0 28px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.3fr 1.1fr;
+      gap:26px;
+      align-items:center;
+    }
+    @media(max-width:900px){
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    .hero-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid var(--accent-soft);
+      background:rgba(255,255,255,.85);
+      box-shadow:0 6px 18px rgba(15,23,42,.06);
+      margin-bottom:10px;
+    }
+    .hero-eyebrow span.badge{
+      padding:2px 8px;
+      border-radius:999px;
+      background:rgba(14,159,110,.12);
+      color:var(--success);
+      font-size:10px;
+    }
+    .hero h1{
+      font-size:clamp(30px,3.3vw,42px);
+      line-height:1.08;
+      margin:0 0 10px;
+    }
+    .hero-lead{
+      font-size:clamp(14px,1.45vw,17px);
+      color:var(--ink-soft);
+      max-width:560px;
+      margin:0 0 14px;
+    }
+    .hero-pricing{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:0 0 16px;
+      font-size:13px;
+    }
+    .hero-pill{
+      padding:5px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--accent-soft);
+      font-weight:700;
+    }
+    .hero-pill strong{ font-weight:800; }
+    .hero-pill-save{ color:var(--success); font-weight:800; }
 
-    .panel{ padding:18px; border-radius:16px; border:1px solid rgba(26,102,255,.18); background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.78)); box-shadow:0 8px 26px rgba(10,27,90,.08); }
-    .panel h4{ margin:0 0 8px; font-size:18px; }
-    .list{ margin:6px 0 0 18px; }
-    .list li{ margin:4px 0; }
+    .cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 18px;
+      border-radius:999px;
+      font-weight:800;
+      text-decoration:none;
+      font-size:14px;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+    .btn-primary{
+      background:linear-gradient(130deg,var(--accent),var(--accent-strong));
+      color:#fff;
+      border-color:rgba(26,102,255,.4);
+      box-shadow:0 14px 30px rgba(17,49,170,.25);
+    }
+    .btn-primary span{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:13px;
+      margin-left:6px;
+    }
+    .btn-ghost{
+      background:rgba(255,255,255,.9);
+      color:var(--ink);
+      border-color:var(--accent-soft);
+      box-shadow:0 8px 20px rgba(15,23,42,.06);
+    }
 
-    /* Mini ROI kalkulator – 1 blok, geen extra toeters */
-    .roi p{ margin:6px 0 10px; font-size:14px; color:#1f2a44; }
-    .roi input{ width:100%; padding:10px; border-radius:10px; border:1px solid var(--line); }
-    .ribbon{ margin-top:12px; padding:10px 12px; border:1px dashed rgba(26,102,255,.35); border-radius:12px; background:linear-gradient(90deg,rgba(14,165,233,.10),rgba(14,116,144,.10)); font-weight:700; }
+    .hero-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      font-size:11px;
+      color:var(--ink-soft);
+      margin-top:6px;
+    }
+    .meta-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.4);
+      background:rgba(255,255,255,.9);
+      font-weight:600;
+    }
+    .meta-dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--success);
+      box-shadow:0 0 0 4px rgba(16,185,129,.35);
+    }
 
-    /* Proof */
-    .proof{ padding:16px 0 8px; }
-    .chips{ display:flex; gap:8px; flex-wrap:wrap; }
-    .chip{ border:1px solid rgba(26,102,255,.25); background:#fff; border-radius:999px; padding:6px 10px; font-weight:700; font-size:12px; }
+    /* HERO – SIDE CARD (fake dashboard preview) */
+    .hero-side{
+      position:relative;
+    }
+    .hero-card{
+      border-radius:22px;
+      border:1px solid var(--accent-soft);
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.18),transparent 60%),
+                 radial-gradient(circle at 100% 0,rgba(16,185,129,.18),transparent 55%),
+                 var(--card);
+      padding:18px 16px 16px;
+      box-shadow:0 18px 45px rgba(15,23,42,.26);
+    }
+    .hero-card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      font-size:12px;
+      color:#0f172a;
+    }
+    .hero-card-title{
+      font-weight:800;
+      display:flex;
+      flex-direction:column;
+    }
+    .hero-card-title small{ font-weight:600; opacity:.75; }
+    .hero-status-pill{
+      padding:4px 9px;
+      border-radius:999px;
+      background:rgba(22,163,74,.12);
+      color:var(--success);
+      font-weight:700;
+      font-size:11px;
+    }
 
-    /* FAQ – accordeon, weinig visuele ruis */
-    .faq{ padding:22px 0 10px; }
-    details{ border-top:1px solid rgba(26,102,255,.18); padding:10px 0; }
+    .hero-card-metrics{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:12px;
+      font-size:11px;
+    }
+    .mini-card{
+      border-radius:14px;
+      padding:9px 8px;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(148,163,184,.35);
+    }
+    .mini-label{
+      font-size:10px;
+      font-weight:600;
+      color:var(--ink-soft);
+      margin-bottom:4px;
+    }
+    .mini-value{
+      font-size:15px;
+      font-weight:800;
+    }
+    .mini-tag{
+      display:inline-flex;
+      justify-content:flex-start;
+      align-items:center;
+      gap:4px;
+      font-size:10px;
+      color:var(--success);
+      margin-top:3px;
+    }
+
+    .hero-card-slots{
+      border-radius:16px;
+      border:1px dashed rgba(148,163,184,.6);
+      padding:10px 10px 8px;
+      background:rgba(15,23,42,.04);
+    }
+    .slot-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-size:11px;
+      padding:5px 0;
+    }
+    .slot-row + .slot-row{
+      border-top:1px dashed rgba(148,163,184,.5);
+    }
+    .slot-left{
+      display:flex;
+      flex-direction:column;
+    }
+    .slot-time{ font-weight:700; }
+    .slot-meta{ font-size:10px; color:var(--ink-soft); }
+    .slot-btn{
+      padding:5px 9px;
+      border-radius:999px;
+      border:none;
+      font-size:10px;
+      font-weight:700;
+      cursor:pointer;
+      background:linear-gradient(120deg,#22c55e,#16a34a);
+      color:#fff;
+      box-shadow:0 8px 14px rgba(22,163,74,.45);
+    }
+    .slot-btn.secondary{
+      background:rgba(15,23,42,.9);
+      box-shadow:none;
+    }
+
+    .hero-card-foot{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:8px;
+      font-size:10px;
+      color:var(--ink-soft);
+    }
+    .hero-card-foot strong{ font-weight:800; }
+
+    /* SECTIONS -------------------------------------------------- */
+    section{
+      padding:20px 0;
+    }
+
+    .section-title{
+      font-size:18px;
+      font-weight:800;
+      margin:0 0 6px;
+    }
+    .section-kicker{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:700;
+      color:var(--accent-strong);
+      margin-bottom:4px;
+    }
+    .section-intro{
+      font-size:13px;
+      color:var(--ink-soft);
+      margin:0 0 10px;
+      max-width:640px;
+    }
+
+    /* Waarom Vrijeplek */
+    .why-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+    @media(max-width:900px){
+      .why-grid{ grid-template-columns:1fr; }
+    }
+    .why-card{
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:var(--card);
+      box-shadow:0 10px 26px rgba(15,23,42,.10);
+      padding:14px 14px 12px;
+    }
+    .why-icon{
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      border:1px solid var(--accent-soft);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      margin-bottom:6px;
+      background:#eef2ff;
+    }
+    .why-card h3{
+      margin:0 0 4px;
+      font-size:15px;
+    }
+    .why-card p{
+      margin:0;
+      font-size:13px;
+      color:var(--ink-soft);
+    }
+
+    /* Flow */
+    .flow-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-top:10px;
+    }
+    @media(max-width:900px){
+      .flow-grid{ grid-template-columns:1fr; }
+    }
+    .step-card{
+      border-radius:18px;
+      border:1px dashed var(--accent-soft);
+      background:rgba(255,255,255,.94);
+      padding:14px 14px 12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .step-badge{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      background:linear-gradient(140deg,var(--accent),var(--accent-strong));
+      color:#fff;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:13px;
+      font-weight:800;
+      box-shadow:0 10px 25px rgba(37,99,235,.45);
+      margin-bottom:6px;
+    }
+    .step-card h3{
+      margin:0 0 4px;
+      font-size:15px;
+    }
+    .step-card p{
+      margin:0;
+      font-size:13px;
+      color:var(--ink-soft);
+    }
+
+    /* Doelgroepen / chips */
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:#fff;
+      font-size:12px;
+      font-weight:600;
+      color:#0f172a;
+    }
+
+    /* ROI blok */
+    .roi-wrap{
+      display:grid;
+      grid-template-columns:1.4fr 1fr;
+      gap:18px;
+      align-items:flex-start;
+    }
+    @media(max-width:900px){
+      .roi-wrap{ grid-template-columns:1fr; }
+    }
+    .roi-card{
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:var(--card);
+      padding:16px 15px 14px;
+      box-shadow:0 12px 30px rgba(15,23,42,.14);
+    }
+    .roi-card h3{
+      margin:0 0 6px;
+      font-size:16px;
+    }
+    .roi-card p{
+      margin:4px 0;
+      font-size:13px;
+      color:var(--ink-soft);
+    }
+    .roi-card ul{
+      margin:4px 0 0 18px;
+      padding:0;
+      font-size:13px;
+    }
+    .roi-card li{ margin:3px 0; }
+
+    .roi-form label{
+      font-size:12px;
+      font-weight:700;
+      display:block;
+      margin:6px 0 4px;
+    }
+    .roi-form input{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      font-size:13px;
+      outline:none;
+      background:#f9fafb;
+    }
+    .roi-form input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(37,99,235,.25);
+      background:#fff;
+    }
+    .ribbon{
+      margin-top:10px;
+      padding:10px 11px;
+      border-radius:12px;
+      border:1px dashed rgba(37,99,235,.6);
+      background:linear-gradient(90deg,rgba(14,165,233,.12),rgba(37,99,235,.08));
+      font-weight:700;
+      font-size:13px;
+    }
+    .ribbon small{
+      display:block;
+      font-size:11px;
+      font-weight:600;
+      color:var(--ink-soft);
+      margin-top:3px;
+    }
+
+    /* Vergelijking */
+    .compare{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    @media(max-width:900px){
+      .compare{ grid-template-columns:1fr; }
+    }
+    .compare-card{
+      border-radius:18px;
+      padding:14px 14px 12px;
+      border:1px solid var(--line);
+      background:var(--card);
+    }
+    .compare-card h3{
+      margin:0 0 6px;
+      font-size:15px;
+    }
+    .compare-list{
+      margin:4px 0 0 18px;
+      padding:0;
+      font-size:13px;
+    }
+    .compare-list li{ margin:3px 0; }
+    .compare-bad{ color:var(--danger); font-weight:700; }
+    .compare-good{ color:var(--success); font-weight:700; }
+
+    /* FAQ */
+    .faq{
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:var(--card);
+      padding:12px 14px 10px;
+      box-shadow:0 10px 26px rgba(15,23,42,.08);
+      margin-top:8px;
+    }
+    details{
+      border-top:1px solid rgba(148,163,184,.45);
+      padding:8px 0;
+    }
     details:first-of-type{ border-top:none; }
-    summary{ font-weight:800; cursor:pointer; }
-    details p{ margin:8px 0 0; color:#3a4b6a; }
+    summary{
+      cursor:pointer;
+      font-weight:700;
+      font-size:13px;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    summary::after{
+      content:'+';
+      float:right;
+      font-weight:800;
+      font-size:14px;
+      opacity:.55;
+    }
+    details[open] summary::after{
+      content:'–';
+    }
+    details p{
+      margin:6px 0 0;
+      font-size:13px;
+      color:var(--ink-soft);
+    }
 
-    /* Foot CTA */
-    .foot-cta{ text-align:center; padding:36px 0 46px; }
-    .foot-cta h2{ margin:0 0 10px; font-size:clamp(20px,2.4vw,28px); }
-    .mini{ color:#4a5a78; font-size:13px; }
+    /* Slot CTA */
+    .foot-cta{
+      text-align:center;
+      padding:30px 0 40px;
+    }
+    .foot-cta h2{
+      margin:0 0 10px;
+      font-size:clamp(20px,2.4vw,26px);
+    }
+    .foot-cta p{
+      margin:0 0 14px;
+      font-size:13px;
+      color:var(--ink-soft);
+    }
+
+    /* Privacy & contact anchors (voor footer-links) */
+    .meta-section{
+      padding:10px 0 18px;
+      border-top:1px solid rgba(148,163,184,.35);
+      font-size:12px;
+      color:var(--ink-soft);
+    }
+    .meta-section h3{
+      font-size:13px;
+      margin:0 0 4px;
+    }
+    .meta-section p{
+      margin:0 0 4px;
+    }
+    .meta-section a{
+      color:var(--accent-strong);
+      text-decoration:underline;
+      text-decoration-thickness:1px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER (zelfde structuur als index; zonder ‘Hoe werkt het?’) -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
-      <a href="index.html" class="brand"><img src="img/logo.png" alt=""><span class="brand-name">Vrijeplek</span><span class="brand-dot"></span></a>
+      <a href="index.html" class="brand">
+        <img src="img/logo.png" alt="">
+        <span class="brand-name">Vrijeplek</span>
+        <span class="brand-dot"></span>
+      </a>
       <nav class="header-actions">
         <a class="nav-btn" href="waarom.html" aria-current="page">Waarom Vrijeplek?</a>
         <a class="nav-btn" href="aanmelden.html">Word lid</a>
@@ -89,111 +599,334 @@
   </header>
 
   <main>
-    <!-- HERO -->
-    <section class="why-hero">
+    <!-- HERO --------------------------------------------------- -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="hero-eyebrow">
+            Minder lege uren, meer omzet
+            <span class="badge">Geen commissie</span>
+          </div>
+          <h1>Vul je lege momenten zonder afhankelijk te zijn van een platform dat mee snoept.</h1>
+          <p class="hero-lead">
+            Vrijeplek laat je alleen die gaten publiceren die je wil opvullen. Mensen dichtbij zien je vrije plek, vragen aan en jij beslist met één klik. 
+            <strong>Abonnement, geen commissie.</strong>
+          </p>
+          <div class="hero-pricing">
+            <div class="hero-pill">
+              <strong>€19,95/maand</strong> — maandelijks opzegbaar
+            </div>
+            <div class="hero-pill">
+              <span class="hero-pill-save">€180/jaar</span> — 3 maanden gratis
+            </div>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="aanmelden.html?plan=monthly">
+              Start maandelijks
+              <span>→</span>
+            </a>
+            <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">
+              Bespaar met jaarplan
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <span class="meta-chip">
+              <span class="meta-dot"></span>
+              Jij blijft baas over je agenda
+            </span>
+            <span class="meta-chip">Geen commissie, geen verborgen kosten</span>
+            <span class="meta-chip">Gemaakt voor solo’s & kleine teams</span>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-card" aria-hidden="true">
+            <div class="hero-card-header">
+              <div class="hero-card-title">
+                <span>Vandaag • Vrije plekken</span>
+                <small>Werkruimte van Nicky Cuypers</small>
+              </div>
+              <span class="hero-status-pill">Slots live · 3</span>
+            </div>
+
+            <div class="hero-card-metrics">
+              <div class="mini-card">
+                <div class="mini-label">Deze week gevuld</div>
+                <div class="mini-value">87%</div>
+                <div class="mini-tag">+5 vrije plekken geboekt</div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-label">Extra omzet via Vrijeplek</div>
+                <div class="mini-value">€720</div>
+                <div class="mini-tag">Zonder commissie</div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-label">Gem. per boeking</div>
+                <div class="mini-value">€60</div>
+                <div class="mini-tag">2 lege uren/week gevuld</div>
+              </div>
+            </div>
+
+            <div class="hero-card-slots">
+              <div class="slot-row">
+                <div class="slot-left">
+                  <span class="slot-time">Vandaag · 14:00 – 16:00</span>
+                  <span class="slot-meta">Gevraagd door iemand op 1,5 km</span>
+                </div>
+                <button class="slot-btn">Bevestig</button>
+              </div>
+              <div class="slot-row">
+                <div class="slot-left">
+                  <span class="slot-time">Morgen · 09:30 – 11:00</span>
+                  <span class="slot-meta">Nieuw: via Vrijeplek</span>
+                </div>
+                <button class="slot-btn secondary">Bekijk</button>
+              </div>
+              <div class="slot-row">
+                <div class="slot-left">
+                  <span class="slot-time">Vrijdag · 18:00 – 19:00</span>
+                  <span class="slot-meta">Laatste moment • premium tarief</span>
+                </div>
+                <button class="slot-btn">Bevestig</button>
+              </div>
+            </div>
+
+            <div class="hero-card-foot">
+              <span>Alleen gepubliceerd wat jij wil vullen.</span>
+              <span><strong>Geen commissie.</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAAROM VRIJEplek --------------------------------------- -->
+    <section>
       <div class="wrap">
-        <h1>Geen lege uren meer. Zet last-minute tijd om in omzet.</h1>
-        <p class="lead">
-          Vrijeplek laat je <strong>alleen de gaten</strong> publiceren die je wil vullen. Klanten dichtbij zien die momenten en vragen aan.
-          <strong>Jij</strong> bevestigt. <em>Geen commissie.</em><br>
-          <span class="plan-note">Kies: €19,95/maand of <span class="save">€180/jaar (3 maanden gratis)</span></span>
+        <div class="section-kicker">Waarom Vrijeplek?</div>
+        <h2 class="section-title">Omdat lege uren wél iets kosten.</h2>
+        <p class="section-intro">
+          Je hebt een praktijk, atelier, studio of andere dienst. Je agenda is niet leeg, maar er zitten altijd wel gaten in.
+          Vrijeplek helpt je net die momenten vullen, zonder je hele manier van werken om te gooien.
         </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="aanmelden.html?plan=monthly">Start maandelijks — €19,95</a>
-          <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">Besparen: Jaarplan €180</a>
+
+        <div class="why-grid">
+          <article class="why-card">
+            <div class="why-icon">🕒</div>
+            <h3>Vul alleen de gaten die je wil vullen</h3>
+            <p>Je publiceert uitsluitend die momenten die anders leeg blijven. Geen “alles-of-niets”-online agenda, maar extra omzet op jouw voorwaarden.</p>
+          </article>
+
+          <article class="why-card">
+            <div class="why-icon">📍</div>
+            <h3>Bereik mensen in de buurt in boekmodus</h3>
+            <p>Niet zomaar bereik zoals op social media, maar mensen die <em>nu</em> iets zoeken in jouw buurt. Ze zien je vrije plek en vragen aan.</p>
+          </article>
+
+          <article class="why-card">
+            <div class="why-icon">✅</div>
+            <h3>Jij bevestigt, geen commissie</h3>
+            <p>Een aanvraag binnen? Jij bevestigt met één klik in je dashboard. Geen procenten, geen “service fee” op elke afspraak — gewoon een helder abonnement.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- 3-STAPPEN FLOW -->
-    <section class="flow">
+    <!-- FLOW: ZO WERKT HET ------------------------------------- -->
+    <section>
       <div class="wrap">
-        <div class="flow-row">
-          <div class="step">
-            <span class="numb">1</span>
-            <h3>Publiceer enkel wat je wil opvullen</h3>
-            <p class="muted">Kies een datum en tijd, zet online, klaar. Je blijft 100% baas over je agenda.</p>
-          </div>
-          <div class="step">
-            <span class="numb">2</span>
-            <h3>Word gevonden door “nu-zoekers”</h3>
-            <p class="muted">Mensen in je buurt die vandaag/tijdelijk vrij zoeken, zien jouw slot meteen.</p>
-          </div>
-          <div class="step">
-            <span class="numb">3</span>
-            <h3>Bevestig met één klik</h3>
-            <p class="muted">Aanvraag binnen? Jij bevestigt of weigert. Geen percentage, geen gedoe.</p>
-          </div>
+        <div class="section-kicker">Zo werkt het</div>
+        <h2 class="section-title">In drie stappen van leeg uur naar betaalde afspraak.</h2>
+
+        <div class="flow-grid">
+          <article class="step-card">
+            <div class="step-badge">1</div>
+            <h3>Publiceer je vrije plek</h3>
+            <p>Kies in je Vrijeplek-dashboard een dag, tijdslot en wat je aanbiedt. Publiceer je vrije plek met een paar klikken. Je blijft 100% baas over je agenda.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-badge">2</div>
+            <h3>Klanten dichtbij zien jouw moment</h3>
+            <p>In plaats van eindeloos scrollen door opties zien mensen meteen wat er in de buurt vrij is. Ze vragen aan, jij krijgt een melding.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-badge">3</div>
+            <h3>Jij bevestigt of weigert</h3>
+            <p>Je beslist met één klik. Bevestigd? Dan staat het netjes in je Vrijeplek-dashboard en in de mailbox van de klant. Geen percentages per boeking.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- VALUE: LINKS VERLIES, RECHTS ROI -->
-    <section class="value">
-      <div class="wrap value-grid">
-        <div class="panel">
-          <h4>Wat kost niets doen je?</h4>
-          <ul class="list">
-            <li>1 leeg uur per week × €60 = <strong>€240/mnd</strong> verlies</li>
-            <li>Op jaarbasis: <strong>€2.880</strong> die wegloopt</li>
-            <li>Vrijeplek kost <strong>€19,95/mnd</strong> of <strong>€180/jaar</strong> (3 maanden gratis). Één extra afspraak en je zit positief.</li>
+    <!-- DOELGROEP ---------------------------------------------- -->
+    <section>
+      <div class="wrap">
+        <div class="section-kicker">Voor wie?</div>
+        <h2 class="section-title">Vrijeplek is ideaal als je werkt met afspraken.</h2>
+        <p class="section-intro">
+          Denk aan ruimtes, sessies of diensten waar je makkelijk één extra moment kunt inboeken zonder je hele planning te slopen.
+        </p>
+        <div class="chip-row">
+          <span class="chip">Therapeuten & coaches</span>
+          <span class="chip">Praktijkruimtes & gedeelde werkplekken</span>
+          <span class="chip">Creatieve studio’s & ateliers</span>
+          <span class="chip">Yoga- & pilateslessen</span>
+          <span class="chip">Workshops & micro-events</span>
+          <span class="chip">Freelancers met consult-momenten</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROI / WAT LEVERT HET OP -------------------------------- -->
+    <section>
+      <div class="wrap roi-wrap">
+        <div class="roi-card">
+          <h3>Wat kost één leeg uur je eigenlijk?</h3>
+          <p>
+            Reken even mee. Eén leeg uur per week lijkt weinig, maar op jaarbasis loopt dat serieus op.
+          </p>
+          <ul>
+            <li>1 leeg uur/week × €60 = <strong>€240 / maand</strong></li>
+            <li>Op jaarbasis is dat <strong>€2.880</strong> die gewoon wegloopt</li>
+            <li>Vrijeplek kost <strong>€19,95/mnd</strong> of <strong>€180/jaar</strong> (3 maanden gratis)</li>
           </ul>
+          <p style="margin-top:8px;">
+            Met één extra afspraak per maand zit je al positief. Alles daarboven is pure marge.
+          </p>
         </div>
-        <div class="panel roi">
-          <h4>Snelle ROI-schatting</h4>
-          <p>Gemiddelde waarde per afspraak (€)</p>
+
+        <div class="roi-card roi-form">
+          <h3>Snelle ROI-schatting voor jouw praktijk</h3>
+          <label for="val">Gemiddelde waarde per afspraak (€)</label>
           <input id="val" type="number" min="1" value="60">
-          <p style="margin-top:8px">Extra afspraken per maand via Vrijeplek</p>
+
+          <label for="amt">Extra afspraken per maand via Vrijeplek</label>
           <input id="amt" type="number" min="0" value="2">
-          <div class="ribbon" id="roi">Verwachte extra omzet: €120 / mnd • ROI: 502%</div>
-          <p class="mini">Kost: €19,95/mnd — geen commissie.</p>
+
+          <div class="ribbon" id="roi">
+            Verwachte extra omzet: €120 / mnd • ROI: 502%
+            <small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- PROOF -->
-    <section class="proof">
+    <!-- VERGELIJKING ------------------------------------------- -->
+    <section>
       <div class="wrap">
-        <div class="chips">
-          <span class="chip">Geen commissie</span>
-          <span class="chip">GDPR-proof</span>
-          <span class="chip">Jij bevestigt</span>
-          <span class="chip">Werkt voor lokaal & services</span>
+        <div class="section-kicker">Anders dan “klassieke platforms”</div>
+        <h2 class="section-title">Vrijeplek is géén marktplaats die jouw omzet afroomt.</h2>
+
+        <div class="compare">
+          <article class="compare-card">
+            <h3>Traditionele boekingsplatformen</h3>
+            <ul class="compare-list">
+              <li><span class="compare-bad">Commissie op elke boeking</span> — je staat je marge af.</li>
+              <li>Lange lijsten, keuzestress voor de klant.</li>
+              <li>Je volledige agenda online of geen zichtbaarheid.</li>
+              <li>Vaak onduidelijke servicekosten (“bokingskosten”).</li>
+              <li>Moeilijk om “nee” te zeggen zonder schuldgevoel.</li>
+            </ul>
+          </article>
+
+          <article class="compare-card">
+            <h3>Vrijeplek</h3>
+            <ul class="compare-list">
+              <li><span class="compare-good">Geen commissie</span> — gewoon een helder abonnement.</li>
+              <li>Alleen de gaten die jij wil opvullen komen online.</li>
+              <li>Gemaakt voor mensen die nu iets zoeken in de buurt.</li>
+              <li>Transparant voor jou én de klant.</li>
+              <li>Je behoudt de regie: jij bevestigt, jij beslist.</li>
+            </ul>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- FAQ (kort en to the point) -->
-    <section class="faq">
+    <!-- FAQ ----------------------------------------------------- -->
+    <section>
       <div class="wrap">
-        <details>
-          <summary>“Ik heb al klanten via Instagram.”</summary>
-          <p>Top. Instagram is bereik. Vrijeplek vangt mensen in <em>boekmodus</em>: “nu, in mijn buurt”. Het werkt complementair.</p>
-        </details>
-        <details>
-          <summary>“€19,95/maand — is dat het waard?”</summary>
-          <p>Één extra afspraak per maand en je zit al positief. Alles daarboven is pure marge. Liever besparen? Jaarplan is €180 (3 maanden gratis).</p>
-        </details>
-        <details>
-          <summary>“Geeft dit extra werk?”</summary>
-          <p>Neen. Je publiceert enkel wat je wil opvullen. Aanvragen bevestig je met één klik.</p>
-        </details>
-        <details>
-          <summary>“Wat als het niets oplevert?”</summary>
-          <p>Dan stop je. Maandelijks opzegbaar, geen kleine lettertjes.</p>
-        </details>
+        <div class="section-kicker">Veelgestelde vragen</div>
+        <h2 class="section-title">“Heb ik dit echt nodig?” en andere eerlijke vragen.</h2>
+        <div class="faq">
+          <details>
+            <summary>“Ik krijg al klanten via Instagram, is dit dan niet dubbel?”</summary>
+            <p>
+              Instagram is perfect voor zichtbaarheid, maar niet iedereen die je volgt zit op hetzelfde moment in boekmodus.
+              Vrijeplek vangt mensen op die <em>nu</em> actief iets zoeken en meteen een vrij moment willen boeken.
+            </p>
+          </details>
+          <details>
+            <summary>“€19,95/maand — is dat het waard?”</summary>
+            <p>
+              Met één extra afspraak per maand zit je al positief. Met het jaarplan krijg je meteen drie maanden gratis.
+              Blijft het stil? Dan stop je gewoon — geen kleine lettertjes.
+            </p>
+          </details>
+          <details>
+            <summary>“Moet ik mijn hele agenda via Vrijeplek laten lopen?”</summary>
+            <p>
+              Nee. Vrijeplek is juist bedoeld voor je lege plekken. Je kunt perfect blijven werken zoals nu en enkel
+              de gaten aanvullen via Vrijeplek.
+            </p>
+          </details>
+          <details>
+            <summary>“Is het GDPR-proof?”</summary>
+            <p>
+              Ja. Vrijeplek is gebouwd met privacy in het achterhoofd. Klantgegevens worden enkel gebruikt in functie van de reservatie
+              en niet doorverkocht.
+            </p>
+          </details>
+          <details>
+            <summary>“Wat als ik merk dat het niets voor mij is?”</summary>
+            <p>
+              Dan is dat waardevolle informatie. Je abonnement is maandelijks opzegbaar; het jaarplan is voordeliger als je zeker bent dat je er vol voor gaat.
+            </p>
+          </details>
+        </div>
       </div>
     </section>
 
-    <!-- SLOT-CTA -->
+    <!-- SLOT-CTA ----------------------------------------------- -->
     <section class="foot-cta">
       <div class="wrap">
-        <h2>Test maandelijks of pak meteen 3 maanden gratis met het jaarplan.</h2>
-        <p class="mini">Draai verliesaversie om in je voordeel.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="aanmelden.html?plan=monthly">Maandelijks — €19,95</a>
-          <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">Jaarplan — €180 (3 mnd gratis)</a>
+        <h2>Keer lege uren om in voorspelbare extra omzet.</h2>
+        <p>Start maandelijks of kies meteen voor drie maanden gratis met het jaarplan.</p>
+        <div class="cta-row" style="justify-content:center;">
+          <a class="btn btn-primary" href="aanmelden.html?plan=monthly">
+            Start met maandabonnement
+          </a>
+          <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">
+            Jaarplan — €180 (3 maanden gratis)
+          </a>
         </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY & CONTACT ANCHORS (voor footer-links) ---------- -->
+    <section class="meta-section" id="privacy">
+      <div class="wrap">
+        <h3>Privacy</h3>
+        <p>
+          Vrijeplek gaat zorgvuldig om met gegevens van zowel aanbieders als klanten.
+          Wil je weten hoe? Lees onze privacy- en cookie-informatie in detail in je dashboard of neem contact met ons op.
+        </p>
+      </div>
+    </section>
+
+    <section class="meta-section" id="contact">
+      <div class="wrap">
+        <h3>Contact</h3>
+        <p>
+          Vragen over Vrijeplek, samenwerken of pers? Stuur ons een bericht via het contactformulier of mail ons.
+        </p>
+        <p>
+          <a href="mailto:info@vrijeplek.be">info@vrijeplek.be</a>
+        </p>
       </div>
     </section>
   </main>
@@ -209,21 +942,26 @@
     </div>
   </footer>
 
-  <!-- Mini scripts -->
+  <!-- ROI script -->
   <script>
-    // ROI berekening (kost = 19,95)
     const val = document.getElementById('val');
     const amt = document.getElementById('amt');
     const roi = document.getElementById('roi');
-    function fmt(n){ return (Math.round(n*100)/100).toLocaleString('nl-BE'); }
+
+    function fmt(n){
+      return (Math.round(n*100)/100).toLocaleString('nl-BE');
+    }
+
     function calc(){
-      const v = Math.max(0, Number(val.value||0));
-      const a = Math.max(0, Number(amt.value||0));
+      const v = Math.max(0, Number(val.value || 0));
+      const a = Math.max(0, Number(amt.value || 0));
       const extra = v * a;
       const cost = 19.95;
-      const roiPct = extra>0 ? ((extra - cost)/cost)*100 : -100;
-      roi.textContent = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`;
+      const roiPct = extra > 0 ? ((extra - cost)/cost)*100 : -100;
+      roi.innerHTML = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`
+        + '<small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>';
     }
+
     val.addEventListener('input', calc);
     amt.addEventListener('input', calc);
     calc();
@@ -263,20 +1001,20 @@
     initSupabase().then(supabase => {
       if (!supabase) return;
 
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn  = document.getElementById('nav-mijn');
 
-    async function toggleNav(){
-      const { data:{ session } } = await supabase.auth.getSession();
-      const loggedIn = !!session?.user;
-      if(loggedIn){
-        btnLogin.style.display = 'none';
-        btnMijn.style.display  = 'inline-flex';
-      }else{
-        btnLogin.style.display = 'inline-flex';
-        btnMijn.style.display  = 'none';
+      async function toggleNav(){
+        const { data:{ session } } = await supabase.auth.getSession();
+        const loggedIn = !!session?.user;
+        if(loggedIn){
+          btnLogin.style.display = 'none';
+          btnMijn.style.display  = 'inline-flex';
+        }else{
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display  = 'none';
+        }
       }
-    }
       await toggleNav();
       supabase.auth.onAuthStateChange(()=>toggleNav());
     }).catch(err => console.error('Supabase init error:', err));
