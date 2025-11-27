@@ -138,14 +138,13 @@
 
     main{flex:1;}
 
-    /* LAYOUT: flexijobs mag NIET de rest beïnvloeden */
     .main-grid{
       padding:18px 0 40px;
     }
 
-    /* container waarop we de absolute flexbox baseren */
+    
     .flex-shell{
-      position:relative;          /* <– belangrijk voor absolute positionering van flex-panel */
+      position:relative;          /
       max-width:1200px;
       margin:0 auto;
       padding:0 12px 40px;
@@ -153,11 +152,11 @@
 
     .flex-panel{
   position:absolute;
-  left:-40px;              /* nog iets meer naar links dan nu, pas dit zelf aan naar smaak */
-  top:210px;               /* hoger/lager op de pagina */
+  left:-240px;              
+  top:210px;              
   width:260px;
 
-  /* HIER: kolomgevoel */
+  
   display:flex;
   flex-direction:column;
   min-height:480px;        /* maak 520/560 als je ‘m nog hoger wilt */
@@ -168,6 +167,20 @@
   border:1px solid rgba(148,163,184,.6);
   box-shadow:0 20px 50px rgba(15,23,42,.95);
   color:#e5e7eb;
+}
+    .flex-badge-top{
+  display:inline-block;
+  margin-bottom:8px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(56,189,248,.16);
+  border:1px solid rgba(56,189,248,.3);
+  color:#e0f2fe;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  backdrop-filter:blur(4px);
 }
     .flex-title{
       margin:0 0 4px;
@@ -741,7 +754,8 @@
         <div class="flex-shell">
           <!-- LINKS: flexijobs-paneel, nu echt los -->
           <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
-            <h2 class="flex-title">Flexijobs in jouw buurt</h2>
+            <div class="flex-badge-top">Zie ook</div>
+<h2 class="flex-title">Flexijobs in jouw buurt</h2>
             <p class="flex-sub">
               Werk je graag bij als flexi? Bekijk welke zaken nu iemand zoeken.
             </p>
