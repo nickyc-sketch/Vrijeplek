@@ -238,4 +238,604 @@
       letter-spacing: .12em;
       font-weight: 700;
       opacity: .7;
-      margin-bottom:
+      margin-bottom: 4px;
+    }
+    .why-section-intro {
+      margin: 0 0 12px;
+      font-size: 13px;
+      max-width: 650px;
+      opacity: .9;
+    }
+
+    /* Waarom-blokken */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .why-card {
+      border-radius: 16px;
+      padding: 12px 13px 10px;
+      border: 1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 20px rgba(15,23,42,.05);
+      font-size: 13px;
+    }
+    .why-card h3 {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
+    .why-card p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    /* Flow-stappen */
+    .why-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 8px;
+    }
+    @media (max-width: 900px) {
+      .why-flow {
+        grid-template-columns: 1fr;
+      }
+    }
+    .why-step {
+      border-radius: 16px;
+      padding: 12px 13px 10px;
+      border: 1px dashed rgba(0,0,0,.08);
+      background: rgba(255,255,255,.96);
+      font-size: 13px;
+    }
+    .why-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      background: #1a66ff;
+      color: #fff;
+    }
+    .why-step h3 {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
+    .why-step p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    /* Target chips */
+    .why-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .why-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.96);
+      font-weight: 600;
+    }
+
+    /* ROI / vergelijking */
+    .why-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, .9fr);
+      gap: 18px;
+    }
+    @media (max-width: 900px) {
+      .why-split {
+        grid-template-columns: 1fr;
+      }
+    }
+    .why-panel {
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+      font-size: 13px;
+    }
+    .why-panel h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+    .why-panel p {
+      margin: 0 0 8px;
+      opacity: .9;
+    }
+    .why-panel ul {
+      margin: 4px 0 0 18px;
+      padding: 0;
+    }
+    .why-panel li {
+      margin: 4px 0;
+    }
+
+    .why-form label {
+      font-size: 12px;
+      font-weight: 700;
+      display: block;
+      margin: 6px 0 4px;
+    }
+    .why-form input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,.08);
+      font-size: 13px;
+      outline: none;
+      background: #f9fafb;
+    }
+    .why-form input:focus {
+      border-color: #1a66ff;
+      box-shadow: 0 0 0 1px rgba(26,102,255,.2);
+      background: #fff;
+    }
+    .why-ribbon {
+      margin-top: 9px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(26,102,255,.4);
+      background: rgba(219,234,254,.7);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .why-ribbon small {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 3px;
+      opacity: .9;
+    }
+
+    .why-compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .why-compare {
+        grid-template-columns: 1fr;
+      }
+    }
+    .why-bad {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+    .why-good {
+      color: #15803d;
+      font-weight: 700;
+    }
+
+    /* FAQ */
+    .why-faq {
+      border-radius: 18px;
+      padding: 10px 14px 8px;
+      border: 1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 20px rgba(15,23,42,.05);
+      font-size: 13px;
+    }
+    .why-faq details {
+      border-top: 1px solid rgba(0,0,0,.06);
+      padding: 8px 0;
+    }
+    .why-faq details:first-of-type {
+      border-top: none;
+    }
+    .why-faq summary {
+      cursor: pointer;
+      font-weight: 700;
+      list-style: none;
+    }
+    .why-faq summary::-webkit-details-marker {
+      display: none;
+    }
+
+    /* Slot CTA */
+    .why-foot-cta {
+      text-align: center;
+      padding: 30px 0 40px;
+    }
+    .why-foot-cta h2 {
+      margin: 0 0 8px;
+      font-size: clamp(20px, 2.4vw, 26px);
+    }
+    .why-foot-cta p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      opacity: .85;
+    }
+    .why-foot-cta .why-hero-ctas {
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER – exact dezelfde structuur als homepage/dashboard -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <img src="img/logo.png" alt="">
+        <span class="brand-name">Vrijeplek</span>
+        <span class="brand-dot"></span>
+      </a>
+      <nav class="header-actions">
+        <a class="nav-btn" href="waarom.html" aria-current="page">Waarom Vrijeplek?</a>
+        <a class="nav-btn" href="aanmelden.html">Word lid</a>
+        <a id="nav-login" class="nav-btn" href="login.html">Login</a>
+        <a id="nav-mijn" class="nav-btn btn-green" href="dashboard.html" style="display:none;">Mijn Vrijeplek</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="why-shell">
+
+      <!-- HERO -->
+      <section class="why-hero">
+        <div>
+          <div class="why-eyebrow">
+            Minder lege uren, meer rust in je omzet
+            <span>Geen commissie</span>
+          </div>
+          <h1>Vul alleen de gaten in je agenda — op jouw voorwaarden.</h1>
+          <p class="why-hero-lead">
+            Vrijeplek is er voor de momenten waar nu nog niets staat. Je publiceert alleen de vrije plekken die je wil opvullen,
+            wordt gevonden door mensen dichtbij en bevestigt zelf met één klik. Geen percentage, geen gedoe.
+          </p>
+
+          <div class="why-pricing">
+            <div class="why-pill"><strong>€19,95/maand</strong> — maandelijks opzegbaar</div>
+            <div class="why-pill"><strong>€180/jaar</strong> — 3 maanden gratis</div>
+          </div>
+
+          <div class="why-hero-ctas">
+            <a class="btn btn-primary" href="aanmelden.html?plan=monthly">Start met maandelijks</a>
+            <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">Besparen met jaarplan</a>
+          </div>
+
+          <div class="why-meta">
+            <span>Werkt naast je huidige systeem</span>
+            <span>Gemaakt voor solo’s & kleine teams</span>
+            <span>Jij houdt controle over elke boeking</span>
+          </div>
+        </div>
+
+        <aside class="why-hero-card" aria-hidden="true">
+          <div class="why-hero-card-head">
+            <div class="why-hero-card-title">
+              Vandaag · vrije plekken
+              <small>Werkruimte van Nicky Cuypers</small>
+            </div>
+            <div class="why-hero-status">3 slots live</div>
+          </div>
+
+          <div class="why-hero-metrics">
+            <div class="why-mini">
+              <div class="why-mini-label">Deze week gevuld</div>
+              <div class="why-mini-value">87%</div>
+              <div class="why-mini-extra">+5 plekken via Vrijeplek</div>
+            </div>
+            <div class="why-mini">
+              <div class="why-mini-label">Extra omzet</div>
+              <div class="why-mini-value">€720</div>
+              <div class="why-mini-extra">Zonder commissie</div>
+            </div>
+            <div class="why-mini">
+              <div class="why-mini-label">Gem. per boeking</div>
+              <div class="why-mini-value">€60</div>
+              <div class="why-mini-extra">2 lege uren/week gevuld</div>
+            </div>
+          </div>
+
+          <div class="why-hero-slots">
+            <div class="why-slot-row">
+              <div class="why-slot-main">
+                <span class="why-slot-time">Vandaag · 14:00 – 16:00</span>
+                <span class="why-slot-meta">Aanvraag van iemand op 1,5 km</span>
+              </div>
+              <button class="why-slot-btn primary">Bevestig</button>
+            </div>
+            <div class="why-slot-row">
+              <div class="why-slot-main">
+                <span class="why-slot-time">Morgen · 09:30 – 11:00</span>
+                <span class="why-slot-meta">Nieuw · via Vrijeplek</span>
+              </div>
+              <button class="why-slot-btn secondary">Bekijk</button>
+            </div>
+            <div class="why-slot-row">
+              <div class="why-slot-main">
+                <span class="why-slot-time">Vrijdag · 18:00 – 19:00</span>
+                <span class="why-slot-meta">Laatste moment · premium tarief</span>
+              </div>
+              <button class="why-slot-btn primary">Bevestig</button>
+            </div>
+          </div>
+
+          <div class="why-hero-foot">
+            <span>Alleen wat jij online zet, wordt boekbaar.</span>
+            <span><strong>Geen commissie.</strong></span>
+          </div>
+        </aside>
+      </section>
+
+      <!-- WAAROM VRIJEplek -->
+      <section class="why-section">
+        <div class="why-section-kicker">Waarom Vrijeplek?</div>
+        <h2 class="why-section-title">Omdat lege uren je meer kosten dan een abonnement.</h2>
+        <p class="why-section-intro">
+          Je agenda is niet leeg, maar er zitten altijd gaten in je week. Die uren zijn onzichtbaar voor klanten — tot je ze via
+          Vrijeplek zichtbaar maakt voor mensen die nu iets zoeken in je buurt.
+        </p>
+
+        <div class="why-grid">
+          <article class="why-card">
+            <h3>Alleen de gaten die jij kiest</h3>
+            <p>Geen volledige online agenda die alles openzet. Je publiceert enkel wat je wil opvullen, op momenten die voor jou werken.</p>
+          </article>
+          <article class="why-card">
+            <h3>Gevonden door mensen in boekmodus</h3>
+            <p>Waar social media vooral bereik geeft, toont Vrijeplek je beschikbaarheid aan mensen die klaar zijn om te boeken.</p>
+          </article>
+          <article class="why-card">
+            <h3>Abonnement in plaats van commissie</h3>
+            <p>Je weet op voorhand wat het kost. Geen surprise “service fee” of percentage per boeking — wat binnenkomt is voor jou.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- FLOW -->
+      <section class="why-section">
+        <div class="why-section-kicker">Zo werkt het</div>
+        <h2 class="why-section-title">Van leeg uur naar betaalde afspraak in drie stappen.</h2>
+
+        <div class="why-flow">
+          <article class="why-step">
+            <div class="why-step-num">1</div>
+            <h3>Publiceer je vrije plek</h3>
+            <p>In je Vrijeplek-dashboard kies je een dag, tijdslot en wat je aanbiedt. Zet het online in een paar klikken.</p>
+          </article>
+          <article class="why-step">
+            <div class="why-step-num">2</div>
+            <h3>Klanten dichtbij zien jouw moment</h3>
+            <p>Mensen in de buurt die nu willen boeken, zien je vrije plek en doen een aanvraag. Je krijgt een melding.</p>
+          </article>
+          <article class="why-step">
+            <div class="why-step-num">3</div>
+            <h3>Jij bevestigt of weigert</h3>
+            <p>Je beslist zelf. Bevestig je? Dan krijgt de klant een duidelijke bevestigingsmail en staat alles in je dashboard.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- VOOR WIE -->
+      <section class="why-section">
+        <div class="why-section-kicker">Voor wie?</div>
+        <h2 class="why-section-title">Ideaal als je met afspraken of sessies werkt.</h2>
+        <p class="why-section-intro">
+          Vrijeplek werkt het best voor mensen die makkelijk één extra sessie of blok kunnen inplannen zonder hun hele planning
+          om te gooien.
+        </p>
+        <div class="why-chips">
+          <span class="why-chip">Therapeuten & coaches</span>
+          <span class="why-chip">Praktijkruimtes & gedeelde werkplekken</span>
+          <span class="why-chip">Creatieve studio’s & ateliers</span>
+          <span class="why-chip">Yoga- & pilateslessen</span>
+          <span class="why-chip">Workshops & micro-events</span>
+          <span class="why-chip">Freelancers met consult-momenten</span>
+        </div>
+      </section>
+
+      <!-- ROI & VERGELIJKING -->
+      <section class="why-section">
+        <div class="why-split">
+          <div class="why-panel">
+            <h3>Wat kost één leeg uur per week je op jaarbasis?</h3>
+            <p>Een leeg uur voelt klein, tot je het doortrekt:</p>
+            <ul>
+              <li>1 leeg uur/week × €60 = <strong>€240 per maand</strong></li>
+              <li>Op jaarbasis: <strong>€2.880</strong> die gewoon wegloopt</li>
+              <li>Vrijeplek kost <strong>€19,95/mnd</strong> of <strong>€180/jaar</strong> (3 maanden gratis)</li>
+            </ul>
+            <p style="margin-top:6px;">Met één extra afspraak per maand zit je al positief. Alles daarboven is marge.</p>
+          </div>
+
+          <div class="why-panel why-form">
+            <h3>Bereken snel je eigen Vrijeplek-ROI</h3>
+            <label for="val">Gemiddelde waarde per afspraak (€)</label>
+            <input id="val" type="number" min="1" value="60">
+
+            <label for="amt">Extra afspraken per maand via Vrijeplek</label>
+            <input id="amt" type="number" min="0" value="2">
+
+            <div class="why-ribbon" id="roi">
+              Verwachte extra omzet: €120 / mnd • ROI: 502%
+              <small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="why-section">
+        <div class="why-section-kicker">Andere platforms</div>
+        <h2 class="why-section-title">Vrijeplek is géén marktplaats die van je marge leeft.</h2>
+
+        <div class="why-compare">
+          <div class="why-panel">
+            <h3>Traditionele boekingsplatformen</h3>
+            <ul>
+              <li><span class="why-bad">Commissie op elke boeking</span> — je staat een stuk van je uur weg.</li>
+              <li>Lange lijsten en keuzestress voor klanten.</li>
+              <li>Je hele agenda online of geen zichtbaarheid.</li>
+              <li>Onzichtbare “service fees” richting klant.</li>
+            </ul>
+          </div>
+          <div class="why-panel">
+            <h3>Vrijeplek</h3>
+            <ul>
+              <li><span class="why-good">Geen commissie</span> — vast bedrag per maand.</li>
+              <li>Alleen de gaten die jij kiest, komen online.</li>
+              <li>Gemaakt voor mensen in directe boekmodus.</li>
+              <li>Transparant voor jou én je klant.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="why-section">
+        <div class="why-section-kicker">Veelgestelde vragen</div>
+        <h2 class="why-section-title">Twijfels die we vaak horen.</h2>
+
+        <div class="why-faq">
+          <details>
+            <summary>“Ik krijg al klanten via Instagram, is dit niet dubbel?”</summary>
+            <p>Instagram is ideaal voor zichtbaarheid en vertrouwen. Vrijeplek sluit daarop aan, maar focust op mensen die nu willen boeken en meteen een vrij moment willen.</p>
+          </details>
+          <details>
+            <summary>“Moet ik alles via Vrijeplek laten lopen?”</summary>
+            <p>Nee. Je gebruikt Vrijeplek als extra kanaal voor lege plekken. Je huidige manier van plannen kan gewoon blijven bestaan.</p>
+          </details>
+          <details>
+            <summary>“€19,95/maand — wat als het niets oplevert?”</summary>
+            <p>Dan stop je. Het maandplan kun je maandelijks opzeggen. Het jaarplan kies je als je weet dat je structureel gaten in je agenda wil vullen.</p>
+          </details>
+          <details>
+            <summary>“Is het GDPR-proof?”</summary>
+            <p>Vrijeplek is gebouwd met privacy in het achterhoofd. Gegevens worden enkel gebruikt in functie van de reservatie en niet doorverkocht.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- SLOT CTA -->
+      <section class="why-foot-cta">
+        <h2>Keer lege uren om in voorspelbare extra omzet.</h2>
+        <p>Start laagdrempelig met een maandabonnement of bespaar door meteen voor het jaarplan te gaan.</p>
+        <div class="why-hero-ctas">
+          <a class="btn btn-primary" href="aanmelden.html?plan=monthly">Start maandelijks — €19,95</a>
+          <a class="btn btn-ghost" href="aanmelden.html?plan=yearly">Jaarplan — €180 (3 maanden gratis)</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
+      <nav class="footer-nav">
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Optioneel: aparte privacy/contact-sectie als anker (basic tekst) -->
+  <section id="privacy" style="padding:12px 16px; font-size:12px; opacity:.8;">
+    <div class="why-shell">
+      <strong>Privacy</strong><br>
+      We gaan zorgvuldig om met gegevens van zowel klanten als aanbieders. Details vind je in je account en voorwaarden.
+    </div>
+  </section>
+  <section id="contact" style="padding:0 16px 20px; font-size:12px; opacity:.8;">
+    <div class="why-shell">
+      <strong>Contact</strong><br>
+      Vragen of interesse? Mail ons via <a href="mailto:info@vrijeplek.be">info@vrijeplek.be</a>.
+    </div>
+  </section>
+
+  <!-- ROI script -->
+  <script>
+    const val = document.getElementById('val');
+    const amt = document.getElementById('amt');
+    const roi = document.getElementById('roi');
+
+    function fmt(n){
+      return (Math.round(n*100)/100).toLocaleString('nl-BE');
+    }
+
+    function calc(){
+      const v = Math.max(0, Number(val.value||0));
+      const a = Math.max(0, Number(amt.value||0));
+      const extra = v * a;
+      const cost = 19.95;
+      const roiPct = extra>0 ? ((extra - cost)/cost)*100 : -100;
+      roi.innerHTML = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`
+        + '<small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>';
+    }
+    val.addEventListener('input', calc);
+    amt.addEventListener('input', calc);
+    calc();
+  </script>
+
+  <script src="/js/config.js"></script>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    function initSupabase() {
+      return new Promise((resolve) => {
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
+
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once: true });
+
+        setTimeout(() => resolve(createSupabaseClient()), 3000);
+      });
+    }
+
+    function createSupabaseClient() {
+      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
+      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials not configured.');
+        return null;
+      }
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
+    }
+
+    initSupabase().then(supabase => {
+      if (!supabase) return;
+
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn  = document.getElementById('nav-mijn');
+
+      async function toggleNav(){
+        const { data:{ session } } = await supabase.auth.getSession();
+        const loggedIn = !!session?.user;
+        if(loggedIn){
+          btnLogin.style.display = 'none';
+          btnMijn.style.display  = 'inline-flex';
+        }else{
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display  = 'none';
+        }
+      }
+      await toggleNav();
+      supabase.auth.onAuthStateChange(()=>toggleNav());
+    }).catch(err => console.error('Supabase init error:', err));
+  </script>
+</body>
+</html>
