@@ -75,7 +75,16 @@
     <p>Je bent succesvol uitgelogd van Vrijeplek.</p>
     <button class="btn-home" onclick="window.location.href='/'">Terug naar home</button>
   </div>
-
+<script>
+  localStorage.removeItem('vp_email');   // <---- CRUCIAAL
+  if (window.supabase) {
+    window.supabase.auth.signOut().finally(() => {
+      window.location.href = "/";       // terug naar home
+    });
+  } else {
+    window.location.href = "/";
+  }
+</script>
   <script>
     // Maak lokaal opgeslagen e-mailadres ongedaan om volledig uit te loggen
     try {
