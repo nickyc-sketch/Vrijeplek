@@ -138,180 +138,29 @@
 
     main{flex:1;}
 
-    /* LAYOUT: FLEXIJOBS LOS LINKS, MIDDEN = CENTER-SHELL */
+    /* ---------- HERO + ZOEK (GEHEEL GECENTREERD) ---------- */
+
     .main-grid{
-      padding:18px 0 40px;
+      padding:18px 0 8px;
     }
-    .main-grid-inner{
+    .hero-inner{
       max-width:1200px;
       margin:0 auto;
-      padding:0 12px 40px;
-      position:relative;
+      padding:0 12px 12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
-
-    .center-shell{
+    .search-column{
       width:100%;
       max-width:960px;
       margin:0 auto;
     }
 
-    /* LINKS: flexijobs-paneel, absoluut t.o.v. main-grid-inner */
-    .flex-panel{
-      position:absolute;
-      top:0;
-      left:12px; /* zelfde inset als content */
-      width:260px;
-      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
-      border-radius:18px;
-      padding:14px 14px 16px;
-      border:1px solid rgba(148,163,184,.6);
-      box-shadow:0 20px 50px rgba(15,23,42,.95);
-      color:#e5e7eb;
-      z-index:10;
-    }
-    .flex-title{
-      margin:0 0 4px;
-      font-size:15px;
-      font-weight:700;
-      color:#e5edff;
-    }
-    .flex-sub{
-      margin:0 0 10px;
-      font-size:12px;
-      color:rgba(191,219,254,.9);
-    }
-    .flex-field{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      margin-bottom:8px;
-    }
-    .flex-field label{
-      font-size:11px;
-      font-weight:600;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:rgba(226,232,240,.9);
-    }
-    .flex-field input,
-    .flex-field select{
-      padding:7px 9px;
-      border-radius:9px;
-      border:1px solid rgba(148,163,184,.75);
-      font-size:12px;
-      font-family:inherit;
-      background:rgba(15,23,42,.95);
-      color:#e5edff;
-      outline:none;
-    }
-    .flex-field input::placeholder{
-      color:rgba(148,163,184,.9);
-    }
-    .flex-field input:focus,
-    .flex-field select:focus{
-      border-color:rgba(59,130,246,.95);
-      box-shadow:0 0 0 1px rgba(59,130,246,.7);
-      background:rgba(15,23,42,.98);
-    }
-    .btn-primary-small{
-      padding:7px 12px;
-      font-size:12px;
-      box-shadow:0 10px 26px rgba(37,99,235,.6);
-    }
-    .flex-status{
-      margin-top:8px;
-      font-size:11px;
-      color:rgba(191,219,254,.9);
-      min-height:14px;
-    }
-    .flex-list{
-      margin-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      max-height:420px;
-      overflow:auto;
-      padding-right:4px;
-    }
-    .flex-job-card{
-      border-radius:12px;
-      padding:8px 8px;
-      background:rgba(15,23,42,.98);
-      border:1px solid rgba(148,163,184,.7);
-      display:grid;
-      grid-template-columns:52px minmax(0,1fr);
-      gap:8px;
-      font-size:12px;
-    }
-    .flex-job-thumb{
-      width:52px;
-      height:52px;
-      border-radius:11px;
-      overflow:hidden;
-      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(15,23,42,1));
-      border:1px solid rgba(148,163,184,.7);
-      flex-shrink:0;
-    }
-    .flex-job-thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .flex-job-main{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .flex-job-name{
-      font-size:12px;
-      font-weight:600;
-      color:#e5edff;
-      margin:0;
-    }
-    .flex-job-role{
-      font-size:11px;
-      color:rgba(191,219,254,.95);
-    }
-    .flex-job-loc{
-      font-size:11px;
-      color:rgba(148,163,184,.95);
-    }
-    .flex-job-actions{
-      margin-top:4px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:6px;
-      font-size:11px;
-    }
-    .flex-badge{
-      padding:2px 7px;
-      border-radius:999px;
-      border:1px solid rgba(129,140,248,.75);
-      background:rgba(15,23,42,.95);
-      color:#e0f2fe;
-      font-size:10px;
-      white-space:nowrap;
-    }
-    .flex-view-btn{
-      border-radius:999px;
-      border:0;
-      padding:4px 9px;
-      font-size:11px;
-      font-weight:600;
-      background:linear-gradient(135deg,var(--o1),var(--o2));
-      color:#fff;
-      cursor:pointer;
-      box-shadow:0 4px 12px rgba(37,99,235,.7);
-      white-space:nowrap;
-    }
-
-    /* CATEGORIE BOLLEN (in center-shell) */
+    /* CATEGORIE BOLLEN (boven de zoekkaart, in het midden) */
     .cat-dots{
-      padding:12px 0 4px;
-      margin-bottom:8px;
+      padding:0 0 8px;
+      margin-bottom:6px;
     }
     .cat-dots-row{
       display:flex;
@@ -346,10 +195,10 @@
       text-shadow:0 1px 3px rgba(0,0,0,.7);
     }
 
-    /* ZOEKKAART */
+    /* ZOEKKAART - in het midden van de pagina */
     .search-wrap{
       width:100%;
-      margin:6px 0 20px;
+      margin:6px auto 20px;
       padding:18px 18px 16px;
       border-radius:20px;
       background:radial-gradient(circle at 0 0,rgba(59,130,246,.35),transparent 60%),
@@ -428,12 +277,14 @@
       filter:brightness(1.05);
     }
 
-    /* RESULTATEN */
+    /* RESULTATEN (ook gecentreerd onder de zoekkaart) */
     .results{
       padding:4px 0 0;
     }
     .results-inner{
-      margin:0;
+      width:100%;
+      max-width:960px;
+      margin:0 auto;
       padding:0;
     }
     .results-head{
@@ -472,6 +323,7 @@
       gap:12px;
     }
 
+    /* Resultaatkaart */
     .result-card{
       display:grid;
       grid-template-columns:120px minmax(0,1fr);
@@ -650,6 +502,180 @@
       font-size:13px;
     }
 
+    /* ---------- FLEXIJOBS-BLOK ALS EXTRA, LINKS EN LAGER ---------- */
+
+    .flexjobs-section{
+      padding:24px 0 40px;
+    }
+    .flexjobs-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 12px;
+      display:flex;
+      justify-content:flex-start;
+    }
+
+    .flex-panel{
+      width:260px;
+      background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+      border-radius:18px;
+      padding:14px 14px 16px;
+      border:1px solid rgba(148,163,184,.6);
+      box-shadow:0 20px 50px rgba(15,23,42,.95);
+      color:#e5e7eb;
+    }
+    .flex-title{
+      margin:0 0 4px;
+      font-size:15px;
+      font-weight:700;
+      color:#e5edff;
+    }
+    .flex-sub{
+      margin:0 0 10px;
+      font-size:12px;
+      color:rgba(191,219,254,.9);
+    }
+    .flex-field{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin-bottom:8px;
+    }
+    .flex-field label{
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(226,232,240,.9);
+    }
+    .flex-field input,
+    .flex-field select{
+      padding:7px 9px;
+      border-radius:9px;
+      border:1px solid rgba(148,163,184,.75);
+      font-size:12px;
+      font-family:inherit;
+      background:rgba(15,23,42,.95);
+      color:#e5edff;
+      outline:none;
+    }
+    .flex-field input::placeholder{
+      color:rgba(148,163,184,.9);
+    }
+    .flex-field input:focus,
+    .flex-field select:focus{
+      border-color:rgba(59,130,246,.95);
+      box-shadow:0 0 0 1px rgba(59,130,246,.7);
+      background:rgba(15,23,42,.98);
+    }
+    .btn-primary-small{
+      padding:7px 12px;
+      font-size:12px;
+      box-shadow:0 10px 26px rgba(37,99,235,.6);
+    }
+    .flex-status{
+      margin-top:8px;
+      font-size:11px;
+      color:rgba(191,219,254,.9);
+      min-height:14px;
+    }
+    .flex-list{
+      margin-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      max-height:420px;
+      overflow:auto;
+      padding-right:4px;
+    }
+    .flex-job-card{
+      border-radius:12px;
+      padding:8px 8px;
+      background:rgba(15,23,42,.98);
+      border:1px solid rgba(148,163,184,.7);
+      display:grid;
+      grid-template-columns:52px minmax(0,1fr);
+      gap:8px;
+      font-size:12px;
+    }
+    .flex-job-thumb{
+      width:52px;
+      height:52px;
+      border-radius:11px;
+      overflow:hidden;
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(15,23,42,1));
+      border:1px solid rgba(148,163,184,.7);
+      flex-shrink:0;
+    }
+    .flex-job-thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .flex-job-main{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .flex-job-name{
+      font-size:12px;
+      font-weight:600;
+      color:#e5edff;
+      margin:0;
+    }
+    .flex-job-role{
+      font-size:11px;
+      color:rgba(191,219,254,.95);
+    }
+    .flex-job-loc{
+      font-size:11px;
+      color:rgba(148,163,184,.95);
+    }
+    .flex-job-actions{
+      margin-top:4px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+    }
+    .flex-badge{
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(129,140,248,.75);
+      background:rgba(15,23,42,.95);
+      color:#e0f2fe;
+      font-size:10px;
+      white-space:nowrap;
+    }
+    .flex-view-btn{
+      border-radius:999px;
+      border:0;
+      padding:4px 9px;
+      font-size:11px;
+      font-weight:600;
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#fff;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(37,99,235,.7);
+      white-space:nowrap;
+    }
+
+    @media(max-width:900px){
+      .hero-inner{
+        padding:0 12px 4px;
+      }
+      .flexjobs-inner{
+        justify-content:center;
+      }
+      .flex-panel{
+        width:100%;
+        max-width:360px;
+      }
+    }
+
     /* FOOTER in dashboard-stijl */
     .site-footer{
       border-top:1px solid rgba(15,23,42,.9);
@@ -680,19 +706,6 @@
       font-size:12px;
     }
     .footer-nav a:hover{text-decoration:underline;}
-
-    /* MOBIEL: flex-kaart gewoon onder elkaar, niet absolute */
-    @media(max-width:900px){
-      .flex-panel{
-        position:static;
-        width:100%;
-        max-width:360px;
-        margin:0 auto 20px;
-      }
-      .main-grid-inner{
-        padding-bottom:24px;
-      }
-    }
 
     @media(max-width:640px){
       .header-inner{
@@ -727,43 +740,10 @@
     </header>
 
     <main>
+      <!-- HERO: categorie-bollen + zoekkaart, mooi gecentreerd -->
       <section class="main-grid">
-        <div class="main-grid-inner">
-          <!-- LINKS: flexijobs-paneel, los van de rest -->
-          <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
-            <h2 class="flex-title">Flexijobs in jouw buurt</h2>
-            <p class="flex-sub">
-              Werk je graag bij als flexi? Bekijk welke zaken nu iemand zoeken.
-            </p>
-
-            <div class="flex-field">
-              <label for="flex-loc">Waar?</label>
-              <input id="flex-loc" type="text" placeholder="Stad, regio…">
-            </div>
-            <div class="flex-field">
-              <label for="flex-cat">Sector</label>
-              <select id="flex-cat">
-                <option value="">Alle sectoren</option>
-                <option value="horeca">Horeca</option>
-                <option value="wellness">Wellness</option>
-                <option value="zorg">Gezondheid</option>
-                <option value="events">Events</option>
-                <option value="huishoudhulp">Huishoudhulp</option>
-                <option value="ramenwasser">Ramenwasser</option>
-                <option value="dieren">Dieren</option>
-                <option value="bouw">Bouw &amp; renovatie</option>
-              </select>
-            </div>
-
-            <button type="button" class="btn-primary btn-primary-small" id="flex-search-btn">
-              Zoek flexijobs
-            </button>
-            <div id="flex-status" class="flex-status"></div>
-            <div id="flex-list" class="flex-list"></div>
-          </aside>
-
-          <!-- MIDDEN: categorie-bollen + zoek + resultaten, mooi gecentreerd -->
-          <div class="center-shell">
+        <div class="hero-inner">
+          <div class="search-column">
             <!-- Categorie knoppen -->
             <section class="cat-dots">
               <ul class="cat-dots-row">
@@ -831,6 +811,43 @@
           </div>
         </div>
       </section>
+
+      <!-- FLEXIJOBS: apart blok, lager en links -->
+      <section class="flexjobs-section">
+        <div class="flexjobs-inner">
+          <aside class="flex-panel" aria-label="Flexijobs" id="flex-panel">
+            <h2 class="flex-title">Flexijobs in jouw buurt</h2>
+            <p class="flex-sub">
+              Werk je graag bij als flexi? Bekijk welke zaken nu iemand zoeken.
+            </p>
+
+            <div class="flex-field">
+              <label for="flex-loc">Waar?</label>
+              <input id="flex-loc" type="text" placeholder="Stad, regio…">
+            </div>
+            <div class="flex-field">
+              <label for="flex-cat">Sector</label>
+              <select id="flex-cat">
+                <option value="">Alle sectoren</option>
+                <option value="horeca">Horeca</option>
+                <option value="wellness">Wellness</option>
+                <option value="zorg">Gezondheid</option>
+                <option value="events">Events</option>
+                <option value="huishoudhulp">Huishoudhulp</option>
+                <option value="ramenwasser">Ramenwasser</option>
+                <option value="dieren">Dieren</option>
+                <option value="bouw">Bouw &amp; renovatie</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn-primary btn-primary-small" id="flex-search-btn">
+              Zoek flexijobs
+            </button>
+            <div id="flex-status" class="flex-status"></div>
+            <div id="flex-list" class="flex-list"></div>
+          </aside>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -887,6 +904,7 @@
 
     supaPromise.then(async (supa) => {
       if (!supa) return;
+      // beschikbaar maken voor de niet-module script
       window.supabase = supa;
 
       const btnLogin = document.getElementById('nav-login');
@@ -1049,6 +1067,7 @@
               ? `/site.html?id=${encodeURIComponent(item.site_id)}`
               : (item.website || '');
 
+            // thumb
             const thumb = document.createElement('div');
             thumb.className = 'result-thumb';
             thumb.innerHTML = `
@@ -1056,6 +1075,7 @@
               <div class="thumb-tag"><span class="thumb-dot"></span><span>Nu beschikbaar</span></div>
             `;
 
+            // main
             const main = document.createElement('div');
             main.className = 'result-main';
 
@@ -1102,6 +1122,7 @@
 
             body.appendChild(actions);
 
+            // Slots
             const ul = document.createElement('ul');
             ul.className = 'slots-list';
             const slots = (item.slots || []).slice(0,12);
@@ -1158,6 +1179,7 @@
       }
     });
 
+    // Boeken
     async function handleBook(btn){
       const pill = btn.closest('.slot-pill');
       if (!pill || pill.classList.contains('volzet')) return;
@@ -1167,7 +1189,7 @@
       const depositEnabled = btn.dataset.depositEnabled === '1';
       const depositAmount  = Number(btn.dataset.depositAmount || '0');
 
-      bookingMsg.style.color = 'var(--ok)';
+      bookingMsg.style.color = depositEnabled ? 'var(--ok)' : 'var(--ok)';
       bookingMsg.textContent = depositEnabled
         ? `We bereiden je voorschotbetaling van €${depositAmount.toFixed(0)} voor…`
         : 'Je boeking wordt aangemaakt…';
@@ -1315,9 +1337,9 @@
           roleEl.className = 'flex-job-role';
           roleEl.textContent = role;
 
-          const locEl2 = document.createElement('div');
-          locEl2.className = 'flex-job-loc';
-          locEl2.textContent = locTxt;
+          const locEl = document.createElement('div');
+          locEl.className = 'flex-job-loc';
+          locEl.textContent = locTxt;
 
           const actions = document.createElement('div');
           actions.className = 'flex-job-actions';
@@ -1342,7 +1364,7 @@
 
           main.appendChild(nameEl);
           if (role) main.appendChild(roleEl);
-          if (locTxt) main.appendChild(locEl2);
+          if (locTxt) main.appendChild(locEl);
           main.appendChild(actions);
 
           card.appendChild(thumb);
@@ -1358,6 +1380,7 @@
 
     if (flexSearchBtn){
       flexSearchBtn.addEventListener('click', loadFlexJobs);
+      // eerste load zonder filters
       loadFlexJobs();
     }
   </script>
