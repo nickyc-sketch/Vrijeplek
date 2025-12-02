@@ -145,12 +145,6 @@
       backdrop-filter:blur(10px);
       text-decoration:none;
     }
-    .btn-head-primary{
-      border:none;
-      background:linear-gradient(135deg,var(--o1),var(--o2));
-      color:#fff;
-      box-shadow:0 10px 30px rgba(15,118,255,.4);
-    }
 
     .site-main{
       flex:1;
@@ -351,7 +345,8 @@
       font-size:.8rem;
       color:rgba(226,232,240,.9);
     }
-    .field input{
+    .field input,
+    .field select{
       border-radius:.75rem;
       border:1px solid rgba(148,163,184,.6);
       background:rgba(15,23,42,.85);
@@ -364,7 +359,8 @@
       color:rgba(148,163,184,.8);
       font-size:.8rem;
     }
-    .field input:focus{
+    .field input:focus,
+    .field select:focus{
       border-color:rgba(59,130,246,.9);
       box-shadow:0 0 0 1px rgba(59,130,246,.6);
       background:rgba(15,23,42,.96);
@@ -432,6 +428,113 @@
       .site-main{padding:1.1rem .9rem 1.6rem;}
       .why-shell{gap:1rem;}
     }
+
+    /* Modal in Vrijeplek-stijl */
+    .plan-modal-backdrop{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:1rem;
+      background:rgba(15,23,42,.92);
+      z-index:60;
+    }
+    .plan-modal-backdrop.show{
+      display:flex;
+    }
+    .plan-modal{
+      width:100%;
+      max-width:520px;
+      border-radius:1.1rem;
+      background:linear-gradient(135deg,rgba(15,23,42,.98),rgba(15,23,42,.96));
+      border:1px solid rgba(148,163,184,.7);
+      box-shadow:0 28px 80px rgba(0,0,0,.9);
+      padding:1.1rem 1.25rem 1.2rem;
+      color:#e5e7eb;
+      position:relative;
+    }
+    .plan-modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.75rem;
+      margin-bottom:.6rem;
+    }
+    .plan-modal-title{
+      margin:0;
+      font-size:1.1rem;
+      color:#e5edff;
+    }
+    .plan-modal-sub{
+      margin:.1rem 0 .4rem;
+      font-size:.86rem;
+      color:rgba(191,219,254,.9);
+    }
+    .plan-badge{
+      display:inline-flex;
+      padding:.2rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      font-size:.78rem;
+      color:rgba(226,232,240,.9);
+      background:rgba(15,23,42,.7);
+    }
+    .plan-modal-close{
+      border:none;
+      background:transparent;
+      color:rgba(148,163,184,.9);
+      font-size:1rem;
+      cursor:pointer;
+    }
+    .plan-form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.6rem;
+      margin-top:.3rem;
+    }
+    @media (max-width:520px){
+      .plan-form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    .terms-row{
+      margin-top:.25rem;
+      font-size:.78rem;
+      color:rgba(226,232,240,.9);
+      display:flex;
+      gap:.5rem;
+      align-items:flex-start;
+    }
+    .terms-row input{
+      margin-top:.12rem;
+      accent-color:#1d4ed8;
+    }
+    .terms-row a{
+      color:#60a5fa;
+      text-decoration:underline;
+    }
+    .plan-modal-footer{
+      margin-top:.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:.3rem;
+    }
+    .plan-btn-primary{
+      width:100%;
+      justify-content:center;
+    }
+    .plan-msg{
+      min-height:1rem;
+      font-size:.8rem;
+      text-align:left;
+    }
+    .plan-msg.error{color:var(--danger);}
+    .plan-msg.ok{color:var(--ok);}
+    .plan-note-small{
+      font-size:.78rem;
+      color:rgba(148,163,184,.95);
+    }
   </style>
 </head>
 
@@ -462,9 +565,6 @@
           <a class="btn-head" href="/login.html">
             Login
           </a>
-          <a class="btn-head btn-head-primary" href="/aanmelden.html">
-            Word lid
-          </a>
         </div>
       </div>
     </header>
@@ -490,10 +590,10 @@
           </div>
 
           <div class="why-hero-actions">
-            <button id="btn-monthly-top" class="btn-primary" type="button">
+            <button class="btn-primary" type="button" id="cta-monthly-top">
               Start met maandabonnement — €19,95
             </button>
-            <button id="btn-yearly-top" class="btn-ghost" type="button">
+            <button class="btn-ghost" type="button" id="cta-yearly-top">
               Jaarplan — €180 (3 maanden gratis)
             </button>
           </div>
@@ -631,10 +731,10 @@
           </p>
 
           <div class="why-hero-actions">
-            <button id="btn-monthly-bottom" class="btn-primary" type="button">
+            <button class="btn-primary" type="button" id="cta-monthly-bottom">
               Start met maandabonnement
             </button>
-            <button id="btn-yearly-bottom" class="btn-ghost" type="button">
+            <button class="btn-ghost" type="button" id="cta-yearly-bottom">
               Jaarplan — €180 (3 maanden gratis)
             </button>
           </div>
@@ -651,50 +751,115 @@
     </footer>
   </div>
 
-  <script>
-    const btnMonthlyTop   = document.getElementById('btn-monthly-top');
-    const btnYearlyTop    = document.getElementById('btn-yearly-top');
-    const btnMonthlyBottom= document.getElementById('btn-monthly-bottom');
-    const btnYearlyBottom = document.getElementById('btn-yearly-bottom');
+  <!-- MODAL: account + gegevens vóór betaling -->
+  <div class="plan-modal-backdrop" id="plan-modal-backdrop" aria-hidden="true">
+    <div class="plan-modal" role="dialog" aria-modal="true" aria-labelledby="plan-modal-title">
+      <div class="plan-modal-header">
+        <div>
+          <span class="plan-badge" id="plan-badge">Maandabonnement</span>
+          <h2 class="plan-modal-title" id="plan-modal-title">Account aanmaken voor je abonnement</h2>
+          <p class="plan-modal-sub" id="plan-modal-sub">
+            Vul je gegevens in. Daarna ga je naar de betaalpagina. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.
+          </p>
+        </div>
+        <button class="plan-modal-close" type="button" id="plan-modal-close" aria-label="Sluiten">✕</button>
+      </div>
 
-    async function startCheckout(plan){
-      try{
-        const res = await fetch('/.netlify/functions/create-checkout',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({ plan:plan })
-        });
-        if(!res.ok){
-          alert('Kon betaalpagina niet starten. Probeer later opnieuw.');
-          return;
-        }
-        const data = await res.json();
-        if(data && data.url){
-          window.location.href = data.url;
-        }else{
-          alert('Geen betaal-URL ontvangen.');
-        }
-      }catch(err){
-        console.error(err);
-        alert('Netwerkfout bij starten van betaling.');
-      }
-    }
+      <form id="plan-form" novalidate>
+        <input type="hidden" id="plan-field" value="monthly">
 
-    function bindPlanButton(el, plan){
-      if(!el) return;
-      el.addEventListener('click', function(e){
-        e.preventDefault();
-        startCheckout(plan);
-      });
-    }
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-name">Naam</label>
+            <input id="pf-name" type="text" required placeholder="Volledige naam">
+          </div>
+          <div class="field">
+            <label for="pf-company">Bedrijfsnaam</label>
+            <input id="pf-company" type="text" placeholder="Naam van je zaak">
+          </div>
+        </div>
 
-    bindPlanButton(btnMonthlyTop, 'monthly');
-    bindPlanButton(btnYearlyTop, 'yearly');
-    bindPlanButton(btnMonthlyBottom, 'monthly');
-    bindPlanButton(btnYearlyBottom, 'yearly');
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-email">E-mail</label>
+            <input id="pf-email" type="email" required placeholder="naam@voorbeeld.be">
+          </div>
+          <div class="field">
+            <label for="pf-phone">Telefoon</label>
+            <input id="pf-phone" type="tel" placeholder="+32 ...">
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-password">Wachtwoord</label>
+            <input id="pf-password" type="password" required minlength="6" placeholder="Min. 6 tekens">
+          </div>
+          <div class="field">
+            <label for="pf-password2">Herhaal wachtwoord</label>
+            <input id="pf-password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord">
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-btw">BTW-nummer</label>
+            <input id="pf-btw" type="text" required placeholder="BE0123456789">
+          </div>
+          <div class="field">
+            <label for="pf-cat">Categorie</label>
+            <select id="pf-cat">
+              <option value="">Kies</option>
+              <option value="horeca">Horeca</option>
+              <option value="wellness">Wellness</option>
+              <option value="zorg">Gezondheid</option>
+              <option value="events">Events</option>
+              <option value="huishoudhulp">Huishoudhulp</option>
+              <option value="ramenwasser">Ramenwasser</option>
+              <option value="dieren">Dieren</option>
+              <option value="bouw">Bouw &amp; renovatie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-straat">Straat + nr.</label>
+            <input id="pf-straat" type="text" placeholder="Bergstraat 1">
+          </div>
+          <div class="field">
+            <label for="pf-postcode">Postcode & gemeente</label>
+            <input id="pf-postcode" type="text" placeholder="3500 Hasselt">
+          </div>
+        </div>
+
+        <div class="terms-row">
+          <input type="checkbox" id="pf-terms" required>
+          <label for="pf-terms">
+            Ik ga akkoord met de <a href="/voorwaarden.html" target="_blank" rel="noopener">algemene voorwaarden</a>.
+          </label>
+        </div>
+
+        <div class="plan-modal-footer">
+          <button type="submit" class="btn-primary plan-btn-primary" id="plan-submit">
+            Verder naar betalen
+          </button>
+          <div class="plan-msg" id="plan-msg"></div>
+          <p class="plan-note-small">
+            Je betaalt pas nadat je gegevens zijn bevestigd. BTW-nummer moet geldig zijn voor we de betaling starten.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
     const yearSpan = document.getElementById('year-span');
-    if(yearSpan){
+    if (yearSpan) {
       yearSpan.textContent = new Date().getFullYear();
     }
 
@@ -715,11 +880,240 @@
       roi.innerHTML = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`
         + '<small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>';
     }
-
     val.addEventListener('input', calc);
     amt.addEventListener('input', calc);
     calc();
+
+    function isValidBEVat(raw){
+      const digits = (raw || '').replace(/\D/g,'');
+      if (digits.length !== 10) return false;
+      const base = parseInt(digits.slice(0,8),10);
+      const check = parseInt(digits.slice(8),10);
+      if (isNaN(base) || isNaN(check)) return false;
+      const calcCheck = 97 - (base % 97);
+      return check === calcCheck;
+    }
+
+    function createSupabaseClient(){
+      const SUPABASE_URL =
+        window.VRIJEPLEK?.SUPABASE_URL ||
+        window.ENV?.SUPABASE_URL ||
+        '';
+      const SUPABASE_ANON_KEY =
+        window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+        window.ENV?.SUPABASE_ANON_KEY ||
+        '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials ontbreken op waarom-pagina.');
+        return null;
+      }
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+      });
+    }
+
+    async function initSupabase(){
+      return new Promise((resolve)=>{
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once:true });
+        setTimeout(()=>resolve(createSupabaseClient()), 3000);
+      });
+    }
+
+    const modalBackdrop = document.getElementById('plan-modal-backdrop');
+    const modalClose    = document.getElementById('plan-modal-close');
+    const planBadge     = document.getElementById('plan-badge');
+    const planTitle     = document.getElementById('plan-modal-title');
+    const planSub       = document.getElementById('plan-modal-sub');
+    const planField     = document.getElementById('plan-field');
+    const planForm      = document.getElementById('plan-form');
+    const planMsg       = document.getElementById('plan-msg');
+    const planSubmit    = document.getElementById('plan-submit');
+
+    const ctaMonthlyTop    = document.getElementById('cta-monthly-top');
+    const ctaYearlyTop     = document.getElementById('cta-yearly-top');
+    const ctaMonthlyBottom = document.getElementById('cta-monthly-bottom');
+    const ctaYearlyBottom  = document.getElementById('cta-yearly-bottom');
+
+    function openPlanModal(plan){
+      if (!modalBackdrop) return;
+      planField.value = plan === 'yearly' ? 'yearly' : 'monthly';
+
+      if (plan === 'yearly') {
+        planBadge.textContent = 'Jaarplan — €180/jaar';
+        planTitle.textContent = 'Account aanmaken voor je jaarabonnement';
+        planSub.textContent   = 'Vul je gegevens in. Daarna ga je naar de betaalpagina voor het jaarplan. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.';
+      } else {
+        planBadge.textContent = 'Maandabonnement — €19,95/mnd';
+        planTitle.textContent = 'Account aanmaken voor je maandabonnement';
+        planSub.textContent   = 'Vul je gegevens in. Daarna ga je naar de betaalpagina voor het maandplan. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.';
+      }
+
+      planMsg.textContent = '';
+      planMsg.className = 'plan-msg';
+      modalBackdrop.classList.add('show');
+      modalBackdrop.setAttribute('aria-hidden','false');
+    }
+
+    function closePlanModal(){
+      if (!modalBackdrop) return;
+      modalBackdrop.classList.remove('show');
+      modalBackdrop.setAttribute('aria-hidden','true');
+    }
+
+    if (modalClose) {
+      modalClose.addEventListener('click', closePlanModal);
+    }
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', (e)=>{
+        if (e.target === modalBackdrop) closePlanModal();
+      });
+    }
+
+    function bindCta(el, plan){
+      if (!el) return;
+      el.addEventListener('click', (e)=>{
+        e.preventDefault();
+        openPlanModal(plan);
+      });
+    }
+
+    bindCta(ctaMonthlyTop, 'monthly');
+    bindCta(ctaYearlyTop, 'yearly');
+    bindCta(ctaMonthlyBottom, 'monthly');
+    bindCta(ctaYearlyBottom, 'yearly');
+
+    planForm?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if (!planMsg || !planSubmit) return;
+
+      planMsg.textContent = '';
+      planMsg.className = 'plan-msg';
+
+      const name      = document.getElementById('pf-name').value.trim();
+      const company   = document.getElementById('pf-company').value.trim();
+      const email     = document.getElementById('pf-email').value.trim().toLowerCase();
+      const phone     = document.getElementById('pf-phone').value.trim();
+      const pass      = document.getElementById('pf-password').value.trim();
+      const pass2     = document.getElementById('pf-password2').value.trim();
+      const btw       = document.getElementById('pf-btw').value.trim();
+      const cat       = document.getElementById('pf-cat').value;
+      const straat    = document.getElementById('pf-straat').value.trim();
+      const postcode  = document.getElementById('pf-postcode').value.trim();
+      const termsOK   = document.getElementById('pf-terms').checked;
+      const plan      = planField.value === 'yearly' ? 'yearly' : 'monthly';
+
+      if (!name || !email || !pass || !pass2) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Vul minstens naam, e-mail en wachtwoord in.';
+        return;
+      }
+      if (pass.length < 6) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Wachtwoord moet minstens 6 tekens lang zijn.';
+        return;
+      }
+      if (pass !== pass2) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Wachtwoorden komen niet overeen.';
+        return;
+      }
+      if (!btw || !isValidBEVat(btw)) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'BTW-nummer lijkt niet geldig. Controleer je Belgische BTW-nummer.';
+        return;
+      }
+      if (!termsOK) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
+        return;
+      }
+
+      planSubmit.disabled = true;
+      planSubmit.textContent = 'Account aanmaken…';
+
+      try{
+        const supa = await initSupabase();
+        if (!supa) {
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Configuratiefout. Probeer de pagina te herladen.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        const redirectBase = window.location.origin || 'https://vrijeplek.be';
+        const { error } = await supa.auth.signUp({
+          email,
+          password: pass,
+          options:{
+            data:{
+              display_name: name,
+              bedrijf: company,
+              telefoon: phone,
+              btw: btw,
+              cat: cat,
+              straat: straat,
+              postcode: postcode
+            },
+            emailRedirectTo: `${redirectBase}/bedankt.html`
+          }
+        });
+
+        if (error) {
+          planMsg.classList.add('error');
+          planMsg.textContent = error.message.includes('already')
+            ? 'Er bestaat al een account met dit e-mailadres. Log in via de login-knop.'
+            : 'Registratie mislukt: ' + error.message;
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        planMsg.classList.remove('error');
+        planMsg.classList.add('ok');
+        planMsg.textContent = 'Account aangemaakt. Bevestigingsmail verstuurd. We laden de betaalpagina…';
+        planSubmit.textContent = 'Betaalpagina laden…';
+
+        const res = await fetch('/.netlify/functions/create-checkout',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ plan })
+        });
+
+        if (!res.ok) {
+          planMsg.classList.remove('ok');
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Account is aangemaakt, maar de betaalpagina kon niet worden gestart. Probeer zo dadelijk opnieuw of contacteer ons.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        const data = await res.json().catch(()=>null);
+        if (data && data.url) {
+          window.location.href = data.url;
+        } else {
+          planMsg.classList.remove('ok');
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Geen betaal-URL ontvangen. Probeer later opnieuw.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+        }
+      }catch(err){
+        console.error(err);
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Er ging iets mis bij het aanmaken van je account of de betaling. Probeer later opnieuw.';
+        planSubmit.disabled = false;
+        planSubmit.textContent = 'Verder naar betalen';
+      }
+    });
   </script>
 </body>
 </html>
-
