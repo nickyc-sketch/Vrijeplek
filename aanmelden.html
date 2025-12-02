@@ -1,509 +1,648 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Word lid — Vrijeplek.be</title>
+  <title>Aanmelden — Vrijeplek</title>
   <meta name="description" content="Maak gratis een account aan op Vrijeplek. Activeer daarna je maandelijks of jaarlijks plan en vul je agenda zonder commissie.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=ocean7">
 
   <style>
-    .auth-wrap {
-      margin-top: 24px;
+    :root{
+      --ink:#0a2a4a;
+      --muted:#5b6b86;
+      --line:rgba(26,102,255,.25);
+      --accent:#1a66ff;
+      --accent2:#0056ff;
+      --danger:#ff3b3b;
+      --ok:#059669;
     }
 
-    .signup-hero {
-      padding: 8px 0 10px;
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,#e9f2ff,#f6f9ff);
+      color:var(--ink);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
     }
 
-    .signup-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-      gap: 24px;
-      align-items: flex-start;
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 12px;
     }
 
-    @media (max-width: 960px) {
-      .signup-grid {
-        grid-template-columns: 1fr;
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(180deg,rgba(248,251,255,.96),rgba(248,251,255,.86));
+      border-bottom:1px solid rgba(26,102,255,.15);
+    }
+    .header-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+    }
+    .brand img{height:34px;}
+    .brand-name{font-weight:800;color:var(--ink);}
+    .brand-dot{width:6px;height:6px;border-radius:999px;background:linear-gradient(120deg,#1a66ff,#0056ff);}
+    .header-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .nav-btn{
+      padding:7px 13px;
+      border-radius:999px;
+      border:1px solid rgba(26,102,255,.22);
+      font-size:13px;
+      text-decoration:none;
+      color:var(--ink);
+      background:rgba(255,255,255,.9);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:600;
+    }
+    .nav-btn[aria-current="page"]{
+      border-color:rgba(26,102,255,.6);
+      box-shadow:0 0 0 1px rgba(26,102,255,.12);
+    }
+    .btn-green{
+      border-color:rgba(16,185,129,.7);
+      color:#065f46;
+      background:rgba(209,250,229,.9);
+    }
+
+    main{
+      flex:1;
+      padding:32px 0 34px;
+    }
+
+    .signup-hero{
+      padding:32px 0 10px;
+    }
+    .signup-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:26px;
+      align-items:flex-start;
+    }
+    @media(max-width:960px){
+      .signup-grid{
+        grid-template-columns:1fr;
       }
     }
 
-    .signup-copy h1 {
-      margin: 0 0 10px;
-      font-size: clamp(24px, 2.4vw, 30px);
+    .signup-copy h1{
+      margin:0 0 10px;
+      font-size:clamp(24px,2.6vw,32px);
+    }
+    .signup-copy p.lead{
+      margin:0 0 12px;
+      font-size:14px;
+      color:var(--muted);
+      max-width:480px;
+    }
+    .plan-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px;
+      font-weight:700;
+      margin-top:6px;
+    }
+    .plan-pill span{font-weight:800;}
+    .save{color:#0e9f6e;}
+
+    .steps-list{
+      margin:14px 0 0;
+      padding-left:16px;
+      font-size:13px;
+      color:#3a4b6a;
+    }
+    .steps-list li{margin:4px 0;}
+
+    .mini-note{
+      margin-top:10px;
+      font-size:12px;
+      color:#6b7280;
     }
 
-    .signup-copy p.lead {
-      margin: 0 0 12px;
-      font-size: 14px;
-      color: #64748b;
-      max-width: 480px;
+    .signup-card{
+      padding:18px 18px 20px;
+      border-radius:18px;
+      border:1px solid rgba(26,102,255,.18);
+      background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(255,255,255,.9));
+      box-shadow:0 10px 30px rgba(15,23,42,.12);
+    }
+    .signup-card h2{
+      margin:0 0 8px;
+      font-size:18px;
+    }
+    .signup-card p.sub{
+      margin:0 0 14px;
+      font-size:13px;
+      color:var(--muted);
     }
 
-    .plan-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: #f8fafc;
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 6px;
+    form{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      font-size:13px;
     }
-
-    .plan-pill span {
-      font-weight: 800;
+    .field label{
+      display:block;
+      font-weight:600;
+      margin-bottom:3px;
     }
-
-    .steps-list {
-      margin: 14px 0 0;
-      padding-left: 18px;
-      font-size: 13px;
-      color: #475569;
-    }
-
-    .steps-list li {
-      margin: 4px 0;
-    }
-
-    .mini-note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .form-panel {
-      padding: 18px 18px 20px;
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: #ffffff;
-    }
-
-    .form-panel h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .form-panel p.sub {
-      margin: 0 0 14px;
-      font-size: 13px;
-      color: #64748b;
-    }
-
-    .signup-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 13px;
-    }
-
-    .field label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-
     .field input,
-    .field select {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      font-family: inherit;
-      font-size: 13px;
-      background: #f8fafc;
-      color: #0f172a;
+    .field select{
+      width:100%;
+      padding:9px 11px;
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,.8);
+      font-family:inherit;
+      font-size:13px;
+      background:rgba(248,250,252,.8);
+      color:var(--ink);
+    }
+    .field input::placeholder{
+      color:#9ca3af;
+    }
+    .field select option{color:#111827;}
+
+    .two{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:540px){
+      .two{grid-template-columns:1fr;}
     }
 
-    .field input::placeholder {
-      color: #9ca3af;
+    .terms-row{
+      margin-top:4px;
+    }
+    .terms-label{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      font-size:12px;
+      color:#4b5563;
+      cursor:pointer;
+    }
+    .terms-label input{
+      margin-top:2px;
+      accent-color:#1a66ff;
+    }
+    .terms-label a{
+      color:#1a66ff;
+      text-decoration:underline;
     }
 
-    .two {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:6px;
+      padding:11px 16px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(120deg,var(--accent),var(--accent2));
+      color:#fff;
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(37,99,235,.35);
+      transition:.2s;
+      width:100%;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 30px rgba(37,99,235,.45);
     }
 
-    @media (max-width: 540px) {
-      .two {
-        grid-template-columns: 1fr;
-      }
+    #msg{
+      min-height:18px;
+      font-size:12px;
+      margin-top:4px;
+      text-align:center;
+    }
+    .error{color:var(--danger);font-weight:600;}
+    .ok{color:var(--ok);font-weight:600;}
+
+    .form-footnote{
+      margin-top:6px;
+      font-size:11px;
+      color:#6b7280;
+      text-align:center;
     }
 
-    .terms-row {
-      margin-top: 4px;
+    footer.site-footer{
+      border-top:1px solid rgba(148,163,184,.5);
+      margin-top:auto;
     }
+    .site-footer .footer-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:14px 12px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      font-size:12px;
+      color:#6b7280;
+    }
+    .footer-nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .footer-nav a{
+      color:#6b7280;
+      text-decoration:none;
+      font-size:12px;
+    }
+    .footer-nav a:hover{text-decoration:underline;}
 
-    .terms-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 12px;
-      color: #4b5563;
-      cursor: pointer;
-    }
-
-    .terms-label input {
-      margin-top: 2px;
-      accent-color: #1d4ed8;
-    }
-
-    .terms-label a {
-      color: #1d4ed8;
-      text-decoration: underline;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 6px;
-      padding: 11px 16px;
-      border-radius: 999px;
-      border: none;
-      background: #1d4ed8;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.05);
-    }
-
-    #msg {
-      min-height: 18px;
-      font-size: 12px;
-      margin-top: 4px;
-      text-align: center;
-    }
-
-    #msg.error {
-      color: #dc2626;
-      font-weight: 600;
-    }
-
-    #msg.ok {
-      color: #059669;
-      font-weight: 600;
-    }
-
-    .form-footnote {
-      margin-top: 6px;
-      font-size: 11px;
-      color: #6b7280;
-      text-align: center;
-    }
-
-    #plan-note strong {
-      font-weight: 800;
-    }
+    #plan-note strong{font-weight:800;}
   </style>
 </head>
 
 <body>
-<div class="container">
-  <header class="header">
-    <div class="brand">
-      <div class="logo"></div>
-      Vrijeplek<span style="color:#64748b">.be</span>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">
+        <img src="img/logo.png" alt="Vrijeplek logo">
+        <span class="brand-name">Vrijeplek</span><span class="brand-dot"></span>
+      </a>
+      <nav class="header-actions">
+        <a class="nav-btn" href="/waarom.html">Waarom Vrijeplek?</a>
+        <a class="nav-btn" href="/login.html" id="nav-login">Login</a>
+        <a class="nav-btn btn-green" href="/dashboard.html" id="nav-mijn" style="display:none;">Mijn Vrijeplek</a>
+      </nav>
     </div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="voor-bedrijven.html">Voor bedrijven</a>
-      <a href="login.html" class="button ghost" id="nav-login">Login</a>
-      <a href="dashboard.html" class="button ghost" id="nav-mijn" style="display:none">Mijn Vrijeplek</a>
-      <a href="aanmelden.html" class="cta" aria-current="page">Word lid</a>
-    </nav>
   </header>
 
-  <div class="wrap auth-wrap">
-    <main>
-      <section class="signup-hero">
-        <div class="card">
-          <div class="signup-grid">
-            <div class="signup-copy">
-              <div class="kicker">Word lid</div>
-              <h1>Word lid van Vrijeplek in 2 stappen.</h1>
-              <p class="lead">
-                Eerst maak je <strong>gratis</strong> een account. Daarna kies je in je dashboard
-                of je maandelijks of jaarlijks wil activeren. Je betaalt pas als je je plan activeert.
-              </p>
+  <main>
+    <section class="signup-hero">
+      <div class="wrap signup-grid">
+        <div class="signup-copy">
+          <h1>Word lid van Vrijeplek in 2 stappen.</h1>
+          <p class="lead">
+            Eerst maak je <strong>gratis</strong> een account. Daarna kies je in je dashboard
+            of je maandelijks of jaarlijks wil activeren. Je betaalt pas als je je plan activeert.
+          </p>
 
-              <div id="plan-note" class="plan-pill">
-                <span>Stap 2-plannen:</span>
-                <div>Maandelijks €19,95 • Jaarplan €180 (3 mnd gratis)</div>
-              </div>
-
-              <ul class="steps-list">
-                <li><strong>Stap 1:</strong> vul hieronder je gegevens in en bevestig via e-mail.</li>
-                <li><strong>Stap 2:</strong> log in, activeer je plan en zet je eerste vrije plekken online.</li>
-                <li>Maandelijks opzegbaar. Geen commissie per boeking.</li>
-              </ul>
-
-              <p class="mini-note">
-                Tip: gebruik hetzelfde e-mailadres als voor je facturatie, dan loopt alles netjes samen.
-              </p>
-            </div>
-
-            <div class="form-panel">
-              <h2>Account aanmaken</h2>
-              <p class="sub">Account is gratis. Abonnement kies en activeer je later in je dashboard.</p>
-
-              <form id="signup-form" class="signup-form" novalidate>
-                <div class="two">
-                  <div class="field">
-                    <label for="name">Naam</label>
-                    <input id="name" type="text" required placeholder="Volledige naam">
-                  </div>
-                  <div class="field">
-                    <label for="company">Bedrijfsnaam</label>
-                    <input id="company" type="text" placeholder="Naam van je zaak">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label for="email">E-mail</label>
-                  <input id="email" type="email" required placeholder="naam@voorbeeld.be">
-                </div>
-
-                <div class="two">
-                  <div class="field">
-                    <label for="password">Wachtwoord</label>
-                    <input id="password" type="password" required minlength="6" placeholder="Min. 6 tekens">
-                  </div>
-                  <div class="field">
-                    <label for="password2">Herhaal wachtwoord</label>
-                    <input id="password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord">
-                  </div>
-                </div>
-
-                <div class="two">
-                  <div class="field">
-                    <label for="phone">Telefoon</label>
-                    <input id="phone" type="tel" placeholder="+32 ...">
-                  </div>
-                  <div class="field">
-                    <label for="btw">BTW-nummer</label>
-                    <input id="btw" type="text" placeholder="BE0123456789">
-                  </div>
-                </div>
-
-                <div class="two">
-                  <div class="field">
-                    <label for="cat">Categorie</label>
-                    <select id="cat" required>
-                      <option value="">Kies</option>
-                      <option value="horeca">Horeca</option>
-                      <option value="wellness">Wellness</option>
-                      <option value="zorg">Gezondheid</option>
-                      <option value="events">Events</option>
-                      <option value="poetsdiensten">Poetsdiensten</option>
-                      <option value="ramenwasser">Ramenwasser</option>
-                      <option value="dieren">Dieren</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="postcode">Postcode & gemeente</label>
-                    <input id="postcode" type="text" placeholder="3500 Hasselt">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label for="straat">Straat + nr.</label>
-                  <input id="straat" type="text" placeholder="Bergstraat 1">
-                </div>
-
-                <div class="field terms-row">
-                  <label class="terms-label">
-                    <input id="terms" type="checkbox" required>
-                    <span>Ik ga akkoord met de
-                      <a href="terms.html" target="_blank">algemene voorwaarden</a>.
-                    </span>
-                  </label>
-                </div>
-
-                <button type="submit" class="btn-primary">Account aanmaken</button>
-                <div id="msg"></div>
-                <p class="form-footnote">
-                  Na je registratie sturen we een bevestigingsmail. Daarna kun je inloggen en je abonnement activeren.
-                </p>
-              </form>
-            </div>
+          <div id="plan-note" class="plan-pill">
+            <span>Stap 2-plannen:</span>
+            <div>Maandelijks €19,95 • Jaarplan €180 (3 mnd gratis)</div>
           </div>
+
+          <ul class="steps-list">
+            <li><strong>Stap 1:</strong> vul hieronder je gegevens in en bevestig via e-mail.</li>
+            <li><strong>Stap 2:</strong> log in, activeer je plan en zet je eerste vrije plekken online.</li>
+            <li>Maandelijks opzegbaar. Geen commissie per boeking.</li>
+          </ul>
+
+          <p class="mini-note">
+            Tip: gebruik hetzelfde e-mailadres als voor je facturatie, dan loopt alles netjes samen.
+          </p>
         </div>
-      </section>
-    </main>
-  </div>
 
-  <footer class="footer">
-    © <span id="year">2025</span> Vrijeplek.be ·
-    <a href="terms.html">Algemene voorwaarden</a>
+        <div class="signup-card">
+          <h2>Account aanmaken</h2>
+          <p class="sub">Account is gratis. Abonnement kies en activeer je later in je dashboard.</p>
+
+          <form id="signup-form" novalidate>
+            <div class="two">
+              <div class="field">
+                <label for="name">Naam</label>
+                <input id="name" type="text" required placeholder="Volledige naam">
+              </div>
+              <div class="field">
+                <label for="company">Bedrijfsnaam</label>
+                <input id="company" type="text" placeholder="Naam van je zaak">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input id="email" type="email" required placeholder="naam@voorbeeld.be">
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label for="password">Wachtwoord</label>
+                <input id="password" type="password" required minlength="6" placeholder="Min. 6 tekens">
+              </div>
+              <div class="field">
+                <label for="password2">Herhaal wachtwoord</label>
+                <input id="password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord">
+              </div>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label for="phone">Telefoon</label>
+                <input id="phone" type="tel" placeholder="+32 ...">
+              </div>
+              <div class="field">
+                <label for="btw">BTW-nummer</label>
+                <input id="btw" type="text" placeholder="BE0123456789" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="peppol">Peppol-ID (voor facturatie)</label>
+              <input id="peppol" type="text" placeholder="bv. 0208:BE0123456789">
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label for="cat">Categorie</label>
+                <select id="cat" required>
+                  <option value="">Kies</option>
+                  <option value="horeca">Horeca</option>
+                  <option value="wellness">Wellness</option>
+                  <option value="zorg">Gezondheid</option>
+                  <option value="events">Events</option>
+                  <option value="poetsdiensten">Poetsdiensten</option>
+                  <option value="ramenwasser">Ramenwasser</option>
+                  <option value="dieren">Dieren</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="postcode">Postcode & gemeente</label>
+                <input id="postcode" type="text" placeholder="3500 Hasselt">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="straat">Straat + nr.</label>
+              <input id="straat" type="text" placeholder="Bergstraat 1">
+            </div>
+
+            <div class="field terms-row">
+              <label class="terms-label">
+                <input id="terms" type="checkbox" required>
+                <span>Ik ga akkoord met de
+                  <a href="voorwaarden.html" target="_blank">algemene voorwaarden</a>.
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn">Account aanmaken</button>
+            <div id="msg"></div>
+            <p class="form-footnote">
+              Na je registratie sturen we een bevestigingsmail. Daarna kun je inloggen en je abonnement activeren.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2025 Vrijeplek. Alle rechten voorbehouden.</p>
+      <nav class="footer-nav">
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
   </footer>
-</div>
 
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-<script src="/js/config.js"></script>
+  <!-- Supabase UMD (fallback) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
 
-<script defer>
-  window.addEventListener('DOMContentLoaded', function () {
-    var form     = document.getElementById('signup-form');
-    var msg      = document.getElementById('msg');
-    var planNote = document.getElementById('plan-note');
-    var btnLogin = document.getElementById('nav-login');
-    var btnMijn  = document.getElementById('nav-mijn');
+  <!-- Config met SUPABASE_URL / ANON_KEY -->
+  <script src="/js/config.js"></script>
 
-    if (planNote) {
-      var params = new URLSearchParams(window.location.search);
-      var plan   = params.get('plan');
-      if (plan === 'monthly') {
-        planNote.innerHTML =
-          '<span>Gekozen plan:</span> ' +
-          '<div><strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.</div>';
-      } else if (plan === 'yearly') {
-        planNote.innerHTML =
-          '<span>Gekozen plan:</span> ' +
-          '<div><strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.</div>';
+  <!-- Signup + nav + BTW/Peppol + plan-highlight -->
+  <script defer>
+    window.addEventListener('DOMContentLoaded', () => {
+      const form      = document.getElementById('signup-form');
+      const msg       = document.getElementById('msg');
+      const planNote  = document.getElementById('plan-note');
+      const btnLogin  = document.getElementById('nav-login');
+      const btnMijn   = document.getElementById('nav-mijn');
+
+      // Plan tonen op basis van ?plan=
+      if (planNote) {
+        const params = new URLSearchParams(window.location.search);
+        const plan = params.get('plan');
+        if (plan === 'monthly') {
+          planNote.innerHTML = '<span>Gekozen plan:</span> <div><strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.</div>';
+        } else if (plan === 'yearly') {
+          planNote.innerHTML = '<span>Gekozen plan:</span> <div><strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.</div>';
+        }
       }
-    }
 
-    function createSupabaseClient() {
-      var SUPABASE_URL =
-        (window.VRIJEPLEK && window.VRIJEPLEK.SUPABASE_URL) ||
-        (window.ENV && window.ENV.SUPABASE_URL) ||
-        '';
-      var SUPABASE_ANON_KEY =
-        (window.VRIJEPLEK && window.VRIJEPLEK.SUPABASE_ANON_KEY) ||
-        (window.ENV && window.ENV.SUPABASE_ANON_KEY) ||
-        '';
-
-      if (!SUPABASE_URL || !SUPABASE_ANON_KEY ||
-          !window.supabase || !window.supabase.createClient) {
-        console.error('Supabase/config niet geladen');
-        return null;
+      function normalizeBEVat(btw) {
+        return (btw || '').replace(/\s+/g, '').toUpperCase();
       }
-      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
 
-    var client = createSupabaseClient();
-
-    if (!client) {
-      if (msg) {
-        msg.className = 'error';
-        msg.textContent = 'Configuratiefout. Herlaad de pagina.';
+      function isValidBEVat(btw) {
+        btw = normalizeBEVat(btw);
+        if (!btw.startsWith('BE')) return false;
+        const digits = btw.slice(2);
+        return /^\d{10}$/.test(digits);
       }
-      return;
-    }
 
-    function toggleNav() {
-      if (!btnLogin || !btnMijn) return;
+      const PEPPOL_SCHEME = '0208'; // tijdelijk; later afstemmen met je Peppol-provider
 
-      client.auth.getSession()
-        .then(function (result) {
-          var data  = result.data;
-          var error = result.error;
+      function suggestPeppolIdFromVat(btw) {
+        const norm = normalizeBEVat(btw);
+        const digits = norm.slice(2);
+        return `${PEPPOL_SCHEME}:BE${digits}`;
+      }
 
-          if (error) {
-            console.error('Session check error:', error);
-            btnLogin.style.display = 'inline-flex';
-            btnMijn.style.display  = 'none';
+      function createSupabaseClient() {
+        const SUPABASE_URL =
+          window.VRIJEPLEK?.SUPABASE_URL ||
+          window.ENV?.SUPABASE_URL || '';
+        const SUPABASE_ANON_KEY =
+          window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+          window.ENV?.SUPABASE_ANON_KEY || '';
+
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+          console.error('Supabase/config niet geladen');
+          return null;
+        }
+
+        return import('https://esm.sh/@supabase/supabase-js@2').then(({ createClient }) => {
+          return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        });
+      }
+
+      function initSupabase() {
+        return new Promise((resolve) => {
+          if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+            resolve(createSupabaseClient());
             return;
           }
 
-          var loggedIn = !!(data && data.session && data.session.user);
+          window.addEventListener('vrijeplek-config-loaded', () => {
+            resolve(createSupabaseClient());
+          }, { once: true });
 
-          if (loggedIn) {
-            btnLogin.style.display = 'none';
-            btnMijn.style.display  = 'inline-flex';
-          } else {
-            btnLogin.style.display = 'inline-flex';
-            btnMijn.style.display  = 'none';
-          }
-        })
-        .catch(function (err) {
-          console.error('Toggle nav error:', err);
-          btnLogin.style.display = 'inline-flex';
-          btnMijn.style.display  = 'none';
+          setTimeout(() => resolve(createSupabaseClient()), 3000);
         });
-    }
-
-    toggleNav();
-    client.auth.onAuthStateChange(function () {
-      toggleNav();
-    });
-
-    if (!form || !msg) return;
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      msg.className = '';
-      msg.textContent = 'Even geduld…';
-
-      var name  = document.getElementById('name').value.trim();
-      var email = document.getElementById('email').value.trim().toLowerCase();
-      var pass  = document.getElementById('password').value.trim();
-      var pass2 = document.getElementById('password2').value.trim();
-
-      if (pass !== pass2) {
-        msg.className = 'error';
-        msg.textContent = 'Wachtwoorden komen niet overeen.';
-        return;
       }
 
-      if (!document.getElementById('terms').checked) {
-        msg.className = 'error';
-        msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
-        return;
-      }
-
-      client.auth.signUp({
-        email: email,
-        password: pass,
-        options: {
-          data: {
-            display_name: name,
-            bedrijf: document.getElementById('company').value.trim(),
-            telefoon: document.getElementById('phone').value.trim(),
-            btw: document.getElementById('btw').value.trim(),
-            cat: document.getElementById('cat').value,
-            straat: document.getElementById('straat').value.trim(),
-            postcode: document.getElementById('postcode').value.trim()
-          },
-          emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
-        }
-      })
-      .then(function (result) {
-        var error = result.error;
-
-        if (error) {
-          msg.className = 'error';
-          msg.textContent = error.message.indexOf('already') !== -1
-            ? 'Er bestaat al een account met dit e-mailadres.'
-            : 'Registratie mislukt: ' + error.message;
+      initSupabase().then(clientPromise => {
+        if (!clientPromise) {
+          if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
           return;
         }
 
-        msg.className = 'ok';
-        msg.textContent = 'Bevestigingsmail verstuurd. Controleer je inbox of spam.';
-      })
-      .catch(function (err) {
-        console.error(err);
-        msg.className = 'error';
-        msg.textContent = 'Netwerkfout. Probeer opnieuw.';
+        clientPromise.then(client => {
+          if (!client) {
+            if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
+            return;
+          }
+
+          async function toggleNav(){
+            if (!btnLogin || !btnMijn) return;
+
+            try {
+              const { data, error } = await client.auth.getSession();
+              if (error) {
+                console.error('Session check error:', error);
+                btnLogin.style.display = 'inline-flex';
+                btnMijn.style.display  = 'none';
+                return;
+              }
+
+              const loggedIn = !!(data?.session?.user);
+              if (loggedIn) {
+                btnLogin.style.display = 'none';
+                btnMijn.style.display  = 'inline-flex';
+              } else {
+                btnLogin.style.display = 'inline-flex';
+                btnMijn.style.display  = 'none';
+              }
+            } catch (err) {
+              console.error('Toggle nav error:', err);
+              btnLogin.style.display = 'inline-flex';
+              btnMijn.style.display  = 'none';
+            }
+          }
+
+          toggleNav();
+          client.auth.onAuthStateChange(() => {
+            toggleNav();
+          });
+
+          if (!form || !msg) return;
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            msg.className = '';
+            msg.textContent = 'Even geduld…';
+
+            const name   = document.getElementById('name').value.trim();
+            const email  = document.getElementById('email').value.trim().toLowerCase();
+            const pass   = document.getElementById('password').value.trim();
+            const pass2  = document.getElementById('password2').value.trim();
+            const btwEl  = document.getElementById('btw');
+            const peppEl = document.getElementById('peppol');
+
+            if (pass !== pass2){
+              msg.className='error';
+              msg.textContent='Wachtwoorden komen niet overeen.';
+              return;
+            }
+            if (!document.getElementById('terms').checked){
+              msg.className='error';
+              msg.textContent='Je moet akkoord gaan met de voorwaarden.';
+              return;
+            }
+
+            const rawBtw = btwEl.value.trim();
+            if (!isValidBEVat(rawBtw)) {
+              msg.className = 'error';
+              msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
+              return;
+            }
+
+            if (peppEl && !peppEl.value.trim()) {
+              peppEl.value = suggestPeppolIdFromVat(rawBtw);
+            }
+
+            const normalizedBtw  = normalizeBEVat(rawBtw);
+            const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
+
+            try{
+              const { error } = await client.auth.signUp({
+                email,
+                password: pass,
+                options:{
+                  data:{
+                    display_name: name,
+                    bedrijf: document.getElementById('company').value.trim(),
+                    telefoon: document.getElementById('phone').value.trim(),
+                    btw: normalizedBtw,
+                    peppol_id: peppolIdToSave,
+                    cat: document.getElementById('cat').value,
+                    straat: document.getElementById('straat').value.trim(),
+                    postcode: document.getElementById('postcode').value.trim()
+                  },
+                  emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
+                }
+              });
+
+              if (error) {
+                msg.className='error';
+                msg.textContent = error.message.includes('already')
+                  ? 'Er bestaat al een account met dit e-mailadres.'
+                  : 'Registratie mislukt: ' + error.message;
+                return;
+              }
+
+              msg.className='ok';
+              msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
+            } catch(err){
+              console.error(err);
+              msg.className='error';
+              msg.textContent='Netwerkfout. Probeer opnieuw.';
+            }
+          });
+        }).catch(err => {
+          console.error('Supabase init error:', err);
+          if (msg) msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
+        });
+      }).catch(err => {
+        console.error('Config load error:', err);
+        if (msg) msg.textContent = 'Configuratie fout. Herlaad de pagina.';
       });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
