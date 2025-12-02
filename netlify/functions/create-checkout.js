@@ -63,7 +63,7 @@ export async function handler(event) {
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/geactiveerd.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/aanmelden.html?cancel=1`,
+      cancel_url: `${origin}/waarom.html?cancel=1`,
       metadata: { plan: String(plan).substring(0, 200) }
     });
 
