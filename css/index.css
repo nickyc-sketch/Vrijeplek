@@ -1,0 +1,429 @@
+/* -------------------------------------------------- */
+/* BASIS VARIABELEN                                    */
+/* -------------------------------------------------- */
+:root {
+  --o1:#1a66ff;
+  --o2:#0056ff;
+  --ink:#0a2a4a;
+  --line:rgba(26,102,255,.22);
+  --glass:rgba(255,255,255,.9);
+  --glass-soft:rgba(255,255,255,.82);
+  --danger:#e11d48;
+  --ok:#15803d;
+}
+
+/* -------------------------------------------------- */
+/* BODY + SITE                                         */
+/* -------------------------------------------------- */
+html, body {
+  height:100%;
+}
+
+body {
+  margin:0;
+  font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color:var(--ink);
+
+  background:
+    radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
+    radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
+    radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
+  background-attachment:fixed;
+}
+
+.site { 
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+}
+
+main { flex:1; }
+
+/* -------------------------------------------------- */
+/* HEADER                                               */
+/* -------------------------------------------------- */
+
+header.site-header {
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:linear-gradient(135deg,rgba(11,15,30,.95),rgba(11,15,30,.7));
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(148,163,184,.4);
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+
+.header-inner {
+  max-width:1200px;
+  margin:0 auto;
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:#e5edff;
+}
+
+.brand-mark {
+  width:32px; height:32px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
+    radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+  font-weight:700;
+  color:#fff;
+}
+
+.brand-wordmark {
+  display:flex;
+  flex-direction:column;
+  line-height:1.05;
+}
+
+.brand-wordmark span:first-child {
+  font-weight:700;
+  letter-spacing:.02em;
+  font-size:1.05rem;
+  color:#f9fafb;
+}
+
+.brand-wordmark span:last-child {
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:rgba(226,232,240,.8);
+}
+
+.header-actions {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.nav-btn {
+  display:inline-flex;
+  align-items:center;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:600;
+  text-decoration:none;
+  font-size:13px;
+  border:1px solid rgba(148,163,184,.6);
+  background:rgba(15,23,42,.7);
+  color:#e5edff;
+}
+
+.nav-btn:hover {
+  background:rgba(15,23,42,.95);
+  transform:translateY(-1px);
+}
+
+.btn-green {
+  background:linear-gradient(135deg,#16a34a,#0f766e);
+  color:#eafff2;
+}
+
+/* -------------------------------------------------- */
+/* LAYOUT WRAPPER                                      */
+/* -------------------------------------------------- */
+
+.main-grid {
+  padding:18px 0 40px;
+}
+
+.page-container {
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 12px;
+  display:flex;
+  align-items:flex-start;
+  gap:32px;
+}
+
+/* -------------------------------------------------- */
+/* FLEXIJOBS PANEL (DESKTOP)                           */
+/* -------------------------------------------------- */
+
+.flex-panel {
+  position:relative;
+  width:260px;
+  min-height:480px;
+  flex-shrink:0;
+
+  background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+  border-radius:18px;
+  padding:14px;
+  border:1px solid rgba(148,163,184,.6);
+  box-shadow:0 20px 50px rgba(15,23,42,.95);
+  color:#e5e7eb;
+}
+
+.flex-badge-top {
+  padding:4px 10px;
+  font-size:11px;
+  border-radius:999px;
+  background:rgba(56,189,248,.16);
+  border:1px solid rgba(56,189,248,.3);
+  color:#e0f2fe;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.flex-title {
+  margin:4px 0;
+  font-size:15px;
+  font-weight:700;
+  color:#e5edff;
+}
+
+.flex-sub {
+  font-size:12px;
+  color:rgba(191,219,254,.9);
+  margin-bottom:10px;
+}
+
+.flex-field {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-bottom:10px;
+}
+
+.flex-field label {
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  color:rgba(226,232,240,.9);
+}
+
+.flex-field input,
+.flex-field select {
+  padding:7px 9px;
+  border-radius:9px;
+  background:rgba(15,23,42,.95);
+  border:1px solid rgba(148,163,184,.7);
+  color:#e5edff;
+}
+
+.flex-status {
+  margin-top:8px;
+  font-size:11px;
+  color:rgba(191,219,254,.9);
+}
+
+.flex-list {
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* -------------------------------------------------- */
+/* FLEXIJOB CARDS                                      */
+/* -------------------------------------------------- */
+
+.flex-job-card {
+  border-radius:12px;
+  padding:8px;
+  background:rgba(15,23,42,.98);
+  border:1px solid rgba(148,163,184,.7);
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:8px;
+}
+
+.flex-job-thumb {
+  width:52px;
+  height:52px;
+  border-radius:11px;
+  overflow:hidden;
+  border:1px solid rgba(148,163,184,.7);
+}
+
+.flex-job-thumb img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.flex-job-main {
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.flex-job-name { font-weight:600; font-size:12px; color:#e5edff; }
+.flex-job-role { font-size:11px; color:rgba(191,219,254,.95); }
+.flex-job-loc  { font-size:11px; color:rgba(148,163,184,.95); }
+
+.flex-badge {
+  padding:2px 7px;
+  border-radius:999px;
+  border:1px solid rgba(129,140,248,.75);
+  background:rgba(15,23,42,.95);
+  color:#e0f2fe;
+  font-size:10px;
+}
+
+.flex-view-btn {
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--o1),var(--o2));
+  padding:4px 9px;
+  font-size:11px;
+  color:white;
+}
+
+/* -------------------------------------------------- */
+/* ZOEK & MIDDENKOLOM                                  */
+/* -------------------------------------------------- */
+.search-column {
+  flex:1;
+  min-width:0;
+}
+
+/* Categorie bollen */
+.cat-dots-row {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.catdot {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:#f9fafb;
+}
+
+.catdot img {
+  width:82px; height:82px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.6);
+  object-fit:cover;
+  box-shadow:0 14px 40px rgba(15,23,42,.9);
+}
+
+.catdot span {
+  font-weight:600;
+  font-size:13px;
+}
+
+/* Zoek wrap */
+.search-wrap {
+  width:100%;
+  margin:6px 0 20px;
+  padding:18px;
+  border-radius:20px;
+
+  background:
+    radial-gradient(circle at 0 0,rgba(59,130,246,.35),transparent 60%),
+    radial-gradient(circle at 100% 0,rgba(56,189,248,.32),transparent 50%),
+    rgba(15,23,42,.88);
+
+  border:1px solid rgba(191,219,254,.35);
+  box-shadow:0 22px 60px rgba(15,23,42,.9);
+}
+
+/* Zoekformulier GRID FIX */
+.search {
+  display:grid;
+  grid-template-columns:1.2fr 1fr .8fr .8fr 1fr auto;
+  gap:12px;
+  align-items:end;
+}
+
+/* Responsive grid fixes voor tablets */
+@media(max-width:1024px){
+  .search {
+    grid-template-columns:1fr 1fr 1fr;
+  }
+}
+
+/* Smartphones */
+@media(max-width:720px){
+  .search {
+    grid-template-columns:1fr;
+  }
+}
+
+/* -------------------------------------------------- */
+/* ZOEK RESULTAAT                                      */
+/* -------------------------------------------------- */
+.results { padding-top:4px; }
+
+.results-head h2 {
+  margin:0;
+  font-size:20px;
+  color:#e5edff;
+}
+
+.result-card {
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:14px;
+  padding:12px 14px;
+
+  background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(15,23,42,.9));
+  border-radius:16px;
+  border:1px solid rgba(148,163,184,.6);
+  box-shadow:0 18px 45px rgba(15,23,42,.9);
+}
+
+@media(max-width:700px){
+  .result-card { grid-template-columns:1fr; }
+}
+
+/* -------------------------------------------------- */
+/* RESPONSIVE — FLEXIJOBS NAAR ONDER BIJ ≤1100px      */
+/* -------------------------------------------------- */
+
+@media(max-width:1100px){
+  .page-container {
+    flex-direction:column;
+  }
+
+  .flex-panel {
+    width:100%;
+    max-width:350px;
+    margin:0 auto;
+  }
+}
+
+@media(max-width:640px){
+  .header-inner { padding:10px; }
+}
+
+/* -------------------------------------------------- */
+/* FOOTER                                              */
+/* -------------------------------------------------- */
+.site-footer {
+  border-top:1px solid rgba(15,23,42,.9);
+  background:
+    radial-gradient(circle at 50% -60%,rgba(59,130,246,.35),transparent 65%),
+    rgba(2,6,23,.96);
+}
+
+.footer-inner {
+  max-width:1200px;
+  margin:0 auto;
+  padding:14px 12px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
