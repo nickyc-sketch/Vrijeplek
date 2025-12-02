@@ -833,6 +833,11 @@
           </div>
         </div>
 
+        <div class="field">
+          <label for="pf-peppol">Peppol-ID (voor facturatie)</label>
+          <input id="pf-peppol" type="text" placeholder="bv. 0208:BE0123456789">
+        </div>
+
         <div class="terms-row">
           <input type="checkbox" id="pf-terms" required>
           <label for="pf-terms">
@@ -853,6 +858,7 @@
     </div>
   </div>
 
+  <!-- Config met SUPABASE_URL / ANON_KEY -->
   <script src="/js/config.js"></script>
 
   <script type="module">
@@ -872,6 +878,7 @@
     }
 
     function calc(){
+      if (!val || !amt || !roi) return;
       const v = Math.max(0, Number(val.value||0));
       const a = Math.max(0, Number(amt.value||0));
       const extra = v * a;
@@ -880,18 +887,36 @@
       roi.innerHTML = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`
         + '<small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>';
     }
-    val.addEventListener('input', calc);
-    amt.addEventListener('input', calc);
-    calc();
+    if (val && amt) {
+      val.addEventListener('input', calc);
+      amt.addEventListener('input', calc);
+      calc();
+    }
 
-    function isValidBEVat(raw){
-      const digits = (raw || '').replace(/\D/g,'');
+    function normalizeBEVat(btw) {
+      return (btw || '').replace(/\s+/g, '').toUpperCase();
+    }
+
+    // Echte BE-BTW check met controlegetal
+    function isValidBEVat(btw) {
+      const norm = normalizeBEVat(btw);
+      if (!norm.startsWith('BE')) return false;
+      const digits = norm.slice(2).replace(/\D/g,'');
       if (digits.length !== 10) return false;
       const base = parseInt(digits.slice(0,8),10);
       const check = parseInt(digits.slice(8),10);
       if (isNaN(base) || isNaN(check)) return false;
       const calcCheck = 97 - (base % 97);
       return check === calcCheck;
+    }
+
+    const PEPPOL_SCHEME = '0208';
+
+    function suggestPeppolIdFromVat(btw) {
+      const norm = normalizeBEVat(btw);
+      const digits = norm.slice(2).replace(/\D/g,'');
+      if (digits.length !== 10) return '';
+      return `${PEPPOL_SCHEME}:BE${digits}`;
     }
 
     function createSupabaseClient(){
@@ -1002,10 +1027,11 @@
       const phone     = document.getElementById('pf-phone').value.trim();
       const pass      = document.getElementById('pf-password').value.trim();
       const pass2     = document.getElementById('pf-password2').value.trim();
-      const btw       = document.getElementById('pf-btw').value.trim();
+      const btwRaw    = document.getElementById('pf-btw').value.trim();
       const cat       = document.getElementById('pf-cat').value;
       const straat    = document.getElementById('pf-straat').value.trim();
       const postcode  = document.getElementById('pf-postcode').value.trim();
+      const peppEl    = document.getElementById('pf-peppol');
       const termsOK   = document.getElementById('pf-terms').checked;
       const plan      = planField.value === 'yearly' ? 'yearly' : 'monthly';
 
@@ -1024,7 +1050,7 @@
         planMsg.textContent = 'Wachtwoorden komen niet overeen.';
         return;
       }
-      if (!btw || !isValidBEVat(btw)) {
+      if (!btwRaw || !isValidBEVat(btwRaw)) {
         planMsg.classList.add('error');
         planMsg.textContent = 'BTW-nummer lijkt niet geldig. Controleer je Belgische BTW-nummer.';
         return;
@@ -1034,6 +1060,16 @@
         planMsg.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
         return;
       }
+
+      if (peppEl && !peppEl.value.trim()) {
+        const suggested = suggestPeppolIdFromVat(btwRaw);
+        if (suggested) {
+          peppEl.value = suggested;
+        }
+      }
+
+      const normalizedBtw  = normalizeBEVat(btwRaw);
+      const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
 
       planSubmit.disabled = true;
       planSubmit.textContent = 'Account aanmaken…';
@@ -1057,7 +1093,8 @@
               display_name: name,
               bedrijf: company,
               telefoon: phone,
-              btw: btw,
+              btw: normalizedBtw,
+              peppol_id: peppolIdToSave,
               cat: cat,
               straat: straat,
               postcode: postcode
