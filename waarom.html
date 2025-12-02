@@ -341,7 +341,6 @@
       background:rgba(15,23,42,.7);
     }
 
-    /* ROI inputs (zelfde stijl als dashboard-form fields) */
     .field{
       display:flex;
       flex-direction:column;
@@ -491,12 +490,12 @@
           </div>
 
           <div class="why-hero-actions">
-            <a class="btn-primary" href="/aanmelden.html?plan=monthly">
+            <button id="btn-monthly-top" class="btn-primary" type="button">
               Start met maandabonnement — €19,95
-            </a>
-            <a class="btn-ghost" href="/aanmelden.html?plan=yearly">
+            </button>
+            <button id="btn-yearly-top" class="btn-ghost" type="button">
               Jaarplan — €180 (3 maanden gratis)
-            </a>
+            </button>
           </div>
 
           <p class="why-hero-meta">
@@ -632,12 +631,12 @@
           </p>
 
           <div class="why-hero-actions">
-            <a class="btn-primary" href="/aanmelden.html?plan=monthly">
+            <button id="btn-monthly-bottom" class="btn-primary" type="button">
               Start met maandabonnement
-            </a>
-            <a class="btn-ghost" href="/aanmelden.html?plan=yearly">
+            </button>
+            <button id="btn-yearly-bottom" class="btn-ghost" type="button">
               Jaarplan — €180 (3 maanden gratis)
-            </a>
+            </button>
           </div>
         </section>
 
@@ -653,13 +652,52 @@
   </div>
 
   <script>
-    // jaar in footer
+    const btnMonthlyTop   = document.getElementById('btn-monthly-top');
+    const btnYearlyTop    = document.getElementById('btn-yearly-top');
+    const btnMonthlyBottom= document.getElementById('btn-monthly-bottom');
+    const btnYearlyBottom = document.getElementById('btn-yearly-bottom');
+
+    async function startCheckout(plan){
+      try{
+        const res = await fetch('/.netlify/functions/create-checkout',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ plan:plan })
+        });
+        if(!res.ok){
+          alert('Kon betaalpagina niet starten. Probeer later opnieuw.');
+          return;
+        }
+        const data = await res.json();
+        if(data && data.url){
+          window.location.href = data.url;
+        }else{
+          alert('Geen betaal-URL ontvangen.');
+        }
+      }catch(err){
+        console.error(err);
+        alert('Netwerkfout bij starten van betaling.');
+      }
+    }
+
+    function bindPlanButton(el, plan){
+      if(!el) return;
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        startCheckout(plan);
+      });
+    }
+
+    bindPlanButton(btnMonthlyTop, 'monthly');
+    bindPlanButton(btnYearlyTop, 'yearly');
+    bindPlanButton(btnMonthlyBottom, 'monthly');
+    bindPlanButton(btnYearlyBottom, 'yearly');
+
     const yearSpan = document.getElementById('year-span');
     if(yearSpan){
       yearSpan.textContent = new Date().getFullYear();
     }
 
-    // ROI-script (zelfde logica als eerdere pagina)
     const val = document.getElementById('val');
     const amt = document.getElementById('amt');
     const roi = document.getElementById('roi');
@@ -684,3 +722,4 @@
   </script>
 </body>
 </html>
+
