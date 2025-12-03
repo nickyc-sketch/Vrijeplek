@@ -216,6 +216,148 @@
 
 <script src="/js/config.js"></script>
 <script src="/js/index-logic.js?v=4"></script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+  // Zelfde supabase-init als op loginpagina
+  function initSupabase() {
+    return new Promise((resolve) => {
+      // Als config al geladen is → direct client maken
+      if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+        resolve(createSupabaseClient());
+        return;
+      }
+
+      // Anders wachten op het event van config.js
+      window.addEventListener('vrijeplek-config-loaded', () => {
+        resolve(createSupabaseClient());
+      }, { once: true });
+
+      // Fallback na 3 seconden
+      setTimeout(() => {
+        resolve(createSupabaseClient());
+      }, 3000);
+    });
+  }
+
+  function createSupabaseClient() {
+    const SUPABASE_URL =
+      window.VRIJEPLEK?.SUPABASE_URL ||
+      window.ENV?.SUPABASE_URL || '';
+    const SUPABASE_ANON_KEY =
+      window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+      window.ENV?.SUPABASE_ANON_KEY || '';
+
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.error('Supabase credentials niet geconfigureerd (homepage).');
+      return null;
+    }
+
+    return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+    });
+  }
+
+  // Initieel: “Mijn Vrijeplek” verstoppen tot we weten of er een sessie is
+  (function () {
+    const btnMijn  = document.getElementById('nav-mijn');
+    const btnLogin = document.getElementById('nav-login');
+
+    if (btnMijn) {
+      btnMijn.style.setProperty('display', 'none', 'important');
+      btnMijn.style.setProperty('visibility', 'hidden', 'important');
+      btnMijn.style.setProperty('opacity', '0', 'important');
+      btnMijn.style.setProperty('pointer-events', 'none', 'important');
+    }
+    if (btnLogin) {
+      btnLogin.style.setProperty('display', 'inline-flex', 'important');
+      btnLogin.style.setProperty('visibility', 'visible', 'important');
+    }
+  })();
+
+  const supaPromise = initSupabase();
+
+  supaPromise.then(async (supa) => {
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
+
+    if (!btnLogin || !btnMijn) {
+      console.warn('Nav-buttons niet gevonden op homepage.');
+      return;
+    }
+
+    if (!supa) {
+      // Geen Supabase → dan gewoon Login tonen
+      btnLogin.style.display = 'inline-flex';
+      btnLogin.style.visibility = 'visible';
+      btnMijn.style.display = 'none';
+      btnMijn.style.visibility = 'hidden';
+      return;
+    }
+
+    async function toggleNav() {
+      try {
+        const { data, error } = await supa.auth.getSession();
+
+        if (error) {
+          console.error('Session check error (index):', error);
+          btnLogin.style.display = 'inline-flex';
+          btnLogin.style.visibility = 'visible';
+          btnMijn.style.display = 'none';
+          btnMijn.style.visibility = 'hidden';
+          return;
+        }
+
+        const session = data?.session || null;
+        const hasValidSession = !!(session?.user?.id);
+        const sessionExpired = session?.expires_at
+          ? (new Date(session.expires_at * 1000) < new Date())
+          : false;
+
+        const loggedIn = hasValidSession && !sessionExpired;
+
+        if (loggedIn) {
+          // Ingelogd → groene “Mijn Vrijeplek” tonen
+          btnLogin.style.display = 'none';
+          btnLogin.style.visibility = 'hidden';
+          btnMijn.style.display = 'inline-flex';
+          btnMijn.style.visibility = 'visible';
+        } else {
+          // Niet ingelogd → gewone Login tonen
+          btnLogin.style.display = 'inline-flex';
+          btnLogin.style.visibility = 'visible';
+          btnMijn.style.display = 'none';
+          btnMijn.style.visibility = 'hidden';
+        }
+      } catch (err) {
+        console.error('Toggle nav error (index):', err);
+        btnLogin.style.display = 'inline-flex';
+        btnLogin.style.visibility = 'visible';
+        btnMijn.style.display = 'none';
+        btnMijn.style.visibility = 'hidden';
+      }
+    }
+
+    // Eerste check bij load
+    await toggleNav();
+
+    // Luisteren naar wijzigingen in login‑status
+    supa.auth.onAuthStateChange(() => {
+      toggleNav();
+    });
+  }).catch((err) => {
+    console.error('Failed to initialize Supabase op index:', err);
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
+    if (btnLogin) {
+      btnLogin.style.display = 'inline-flex';
+      btnLogin.style.visibility = 'visible';
+    }
+    if (btnMijn) {
+      btnMijn.style.display = 'none';
+      btnMijn.style.visibility = 'hidden';
+    }
+  });
+</script>
 </body>
 </html>
