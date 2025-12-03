@@ -1139,14 +1139,32 @@
                 <form id="settings-form" class="settings-form">
                   <fieldset class="settings-group">
                     <legend>Bedrijf</legend>
+
                     <div class="field">
                       <label for="company-name">Bedrijfsnaam</label>
                       <input id="company-name" name="company_name" type="text" autocomplete="organization">
                     </div>
+
                     <div class="field">
                       <label for="contact-name">Naam contactpersoon</label>
                       <input id="contact-name" name="contact_name" type="text">
                     </div>
+
+                    <div class="field-group">
+                      <div class="field">
+                        <label for="business-street">Straat &amp; nr</label>
+                        <input id="business-street" name="business_street" type="text" placeholder="Stationsstraat 12">
+                      </div>
+                      <div class="field">
+                        <label for="business-postcode">Postcode</label>
+                        <input id="business-postcode" name="business_postcode" type="text" placeholder="1000">
+                      </div>
+                      <div class="field">
+                        <label for="business-city">Gemeente / stad</label>
+                        <input id="business-city" name="business_city" type="text" placeholder="Brussel">
+                      </div>
+                    </div>
+
                     <div class="field">
                       <label for="billing-email">E-mailadres voor facturen</label>
                       <input id="billing-email" name="billing_email" type="email" autocomplete="email">
@@ -1210,33 +1228,33 @@
                     </div>
                   </fieldset>
 
-                 <fieldset class="settings-group">
-  <legend>Reviews &amp; locatie</legend>
+                  <fieldset class="settings-group">
+                    <legend>Reviews &amp; locatie</legend>
 
-  <div class="field">
-    <label class="switch">
-      <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
-      <span class="switch-slider"></span>
-      <span class="switch-label">Google review tonen</span>
-    </label>
-  </div>
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Google review tonen</span>
+                      </label>
+                    </div>
 
-  <div class="field" id="google-review-field" style="display:none;">
-    <label for="google-review-url">Google review link</label>
-    <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
-  </div>
+                    <div class="field" id="google-review-field" style="display:none;">
+                      <label for="google-review-url">Google review link</label>
+                      <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
+                    </div>
 
-  <div class="field">
-    <label class="switch">
-      <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
-      <span class="switch-slider"></span>
-      <span class="switch-label">Toon je locatie met een speld op de kaart</span>
-    </label>
-    <p class="helper">
-      We gebruiken het adres dat aan je account gekoppeld is. Wanneer dit aan staat, tonen we een speld op de kaart bij jouw profiel.
-    </p>
-  </div>
-</fieldset>
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Toon je locatie met een speld op de kaart</span>
+                      </label>
+                      <p class="helper">
+                        We gebruiken het adres dat aan je account gekoppeld is. Wanneer dit aan staat, tonen we een speld op de kaart bij jouw profiel.
+                      </p>
+                    </div>
+                  </fieldset>
 
                   <fieldset class="settings-group settings-group-muted">
                     <legend>Vrijeplek facturatiegegevens</legend>
@@ -1602,8 +1620,6 @@
       if(byId('business-street'))   byId('business-street').value   = profile.business_street || profile.straat || '';
       if(byId('business-postcode')) byId('business-postcode').value = profile.business_postcode || profile.postcode || '';
       if(byId('business-city'))     byId('business-city').value     = profile.business_city || profile.plaats || profile.gemeente || '';
-      if(byId('business-lat'))      byId('business-lat').value      = profile.business_lat || '';
-      if(byId('business-lng'))      byId('business-lng').value      = profile.business_lng || '';
 
       const depositEnabledInput = document.getElementById('deposit-enabled');
       if(depositEnabledInput){
@@ -1625,8 +1641,6 @@
       const shareLocationEnabledInput = document.getElementById('share-location-enabled');
       if(shareLocationEnabledInput) {
         shareLocationEnabledInput.checked = !!profile.share_location_enabled;
-        const event = new Event('change');
-        shareLocationEnabledInput.dispatchEvent(event);
       }
 
       const status = document.getElementById('settings-status');
@@ -1688,9 +1702,7 @@
         share_location_enabled: getChecked('share-location-enabled'),
         business_street:   getVal('business-street'),
         business_postcode: getVal('business-postcode'),
-        business_city:     getVal('business-city'),
-        business_lat:      getVal('business-lat'),
-        business_lng:      getVal('business-lng')
+        business_city:     getVal('business-city')
       };
     }
 
@@ -1821,8 +1833,6 @@
 
       const googleReviewToggle = document.getElementById('google-review-enabled');
       const googleReviewField = document.getElementById('google-review-field');
-      const shareLocationToggle = document.getElementById('share-location-enabled');
-      const locationFields = document.getElementById('location-fields');
 
       const slotDepositAmount = document.getElementById('slot-deposit-amount');
       const slotDepositCustom = document.getElementById('slot-deposit-custom');
@@ -1858,14 +1868,6 @@
         };
         googleReviewToggle.addEventListener('change', updateGoogleReviewVisibility);
         updateGoogleReviewVisibility();
-      }
-
-      if (shareLocationToggle && locationFields) {
-        const updateLocationVisibility = () => {
-          locationFields.style.display = shareLocationToggle.checked ? 'grid' : 'none';
-        };
-        shareLocationToggle.addEventListener('change', updateLocationVisibility);
-        updateLocationVisibility();
       }
 
       const grid = document.querySelector('[data-cal-grid]');
@@ -2189,39 +2191,6 @@
             console.error(err);
           }
         })();
-      }
-
-      const geoBtn = document.getElementById('geo-btn');
-      if(geoBtn){
-        const latInput = document.getElementById('business-lat');
-        const lngInput = document.getElementById('business-lng');
-
-        geoBtn.addEventListener('click', () => {
-          if(!navigator.geolocation){
-            alert('Locatie wordt niet ondersteund door deze browser.');
-            return;
-          }
-          geoBtn.disabled = true;
-          geoBtn.textContent = 'Locatie ophalen…';
-
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              const { latitude, longitude } = pos.coords;
-              if(latInput) latInput.value = latitude.toFixed(6);
-              if(lngInput) lngInput.value = longitude.toFixed(6);
-              geoBtn.textContent = 'Locatie ingevuld ✓';
-              geoBtn.disabled = false;
-              showToast('Locatie ingevuld.','success');
-            },
-            (err) => {
-              console.error(err);
-              alert('Locatie kon niet worden opgehaald. Controleer je browserrechten.');
-              geoBtn.textContent = 'Gebruik mijn huidige locatie';
-              geoBtn.disabled = false;
-            },
-            { enableHighAccuracy:true, timeout:10000 }
-          );
-        });
       }
 
       const flexForm = document.getElementById('flexjob-form');
