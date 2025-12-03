@@ -219,27 +219,6 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-  // Zelfde supabase-init als op loginpagina
-  function initSupabase() {
-    return new Promise((resolve) => {
-      // Als config al geladen is → direct client maken
-      if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
-        resolve(createSupabaseClient());
-        return;
-      }
-
-      // Anders wachten op het event van config.js
-      window.addEventListener('vrijeplek-config-loaded', () => {
-        resolve(createSupabaseClient());
-      }, { once: true });
-
-      // Fallback na 3 seconden
-      setTimeout(() => {
-        resolve(createSupabaseClient());
-      }, 3000);
-    });
-  }
-
   function createSupabaseClient() {
     const SUPABASE_URL =
       window.VRIJEPLEK?.SUPABASE_URL ||
@@ -254,110 +233,110 @@
     }
 
     return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        storage: localStorage,
+      },
     });
   }
 
-  // Initieel: “Mijn Vrijeplek” verstoppen tot we weten of er een sessie is
-  (function () {
-    const btnMijn  = document.getElementById('nav-mijn');
-    const btnLogin = document.getElementById('nav-login');
+  function initSupabase() {
+    return new Promise((resolve) => {
+      // Config al geladen?
+      if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+        resolve(createSupabaseClient());
+        return;
+      }
 
-    if (btnMijn) {
-      btnMijn.style.setProperty('display', 'none', 'important');
-      btnMijn.style.setProperty('visibility', 'hidden', 'important');
-      btnMijn.style.setProperty('opacity', '0', 'important');
-      btnMijn.style.setProperty('pointer-events', 'none', 'important');
-    }
-    if (btnLogin) {
-      btnLogin.style.setProperty('display', 'inline-flex', 'important');
-      btnLogin.style.setProperty('visibility', 'visible', 'important');
-    }
-  })();
+      // Wachten op event van config.js
+      window.addEventListener(
+        'vrijeplek-config-loaded',
+        () => {
+          resolve(createSupabaseClient());
+        },
+        { once: true },
+      );
 
-  const supaPromise = initSupabase();
+      // Fallback na 3 seconden
+      setTimeout(() => {
+        resolve(createSupabaseClient());
+      }, 3000);
+    });
+  }
 
-  supaPromise.then(async (supa) => {
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
+  const btnLogin = document.getElementById('nav-login');
+  const btnMijn  = document.getElementById('nav-mijn');
 
-    if (!btnLogin || !btnMijn) {
-      console.warn('Nav-buttons niet gevonden op homepage.');
-      return;
-    }
+  function showLogin() {
+    if (!btnLogin || !btnMijn) return;
+    btnLogin.style.display = 'inline-flex';
+    btnLogin.style.visibility = 'visible';
 
+    btnMijn.style.display = 'none';
+    btnMijn.style.visibility = 'hidden';
+    btnMijn.style.opacity = '0';
+    btnMijn.style.pointerEvents = 'none';
+  }
+
+  function showMijn() {
+    if (!btnLogin || !btnMijn) return;
+    btnLogin.style.display = 'none';
+    btnLogin.style.visibility = 'hidden';
+
+    btnMijn.style.display = 'inline-flex';
+    btnMijn.style.visibility = 'visible';
+    btnMijn.style.opacity = '1';
+    btnMijn.style.pointerEvents = 'auto';
+  }
+
+  (async () => {
+    // Start: gewoon "Login" tonen (zoals je HTML)
+    showLogin();
+
+    const supa = await initSupabase();
     if (!supa) {
-      // Geen Supabase → dan gewoon Login tonen
-      btnLogin.style.display = 'inline-flex';
-      btnLogin.style.visibility = 'visible';
-      btnMijn.style.display = 'none';
-      btnMijn.style.visibility = 'hidden';
+      showLogin();
       return;
     }
 
-    async function toggleNav() {
+    async function updateFromSession() {
       try {
         const { data, error } = await supa.auth.getSession();
 
         if (error) {
           console.error('Session check error (index):', error);
-          btnLogin.style.display = 'inline-flex';
-          btnLogin.style.visibility = 'visible';
-          btnMijn.style.display = 'none';
-          btnMijn.style.visibility = 'hidden';
+          showLogin();
           return;
         }
 
         const session = data?.session || null;
         const hasValidSession = !!(session?.user?.id);
-        const sessionExpired = session?.expires_at
-          ? (new Date(session.expires_at * 1000) < new Date())
+        const expired = session?.expires_at
+          ? new Date(session.expires_at * 1000) < new Date()
           : false;
 
-        const loggedIn = hasValidSession && !sessionExpired;
-
-        if (loggedIn) {
-          // Ingelogd → groene “Mijn Vrijeplek” tonen
-          btnLogin.style.display = 'none';
-          btnLogin.style.visibility = 'hidden';
-          btnMijn.style.display = 'inline-flex';
-          btnMijn.style.visibility = 'visible';
+        if (hasValidSession && !expired) {
+          // Ingelogd → groene “Mijn Vrijeplek”
+          showMijn();
         } else {
-          // Niet ingelogd → gewone Login tonen
-          btnLogin.style.display = 'inline-flex';
-          btnLogin.style.visibility = 'visible';
-          btnMijn.style.display = 'none';
-          btnMijn.style.visibility = 'hidden';
+          // Niet (meer) ingelogd
+          showLogin();
         }
       } catch (err) {
         console.error('Toggle nav error (index):', err);
-        btnLogin.style.display = 'inline-flex';
-        btnLogin.style.visibility = 'visible';
-        btnMijn.style.display = 'none';
-        btnMijn.style.visibility = 'hidden';
+        showLogin();
       }
     }
 
-    // Eerste check bij load
-    await toggleNav();
+    // Eerste check bij laden
+    await updateFromSession();
 
-    // Luisteren naar wijzigingen in login‑status
+    // Op veranderingen in loginstatus reageren
     supa.auth.onAuthStateChange(() => {
-      toggleNav();
+      updateFromSession();
     });
-  }).catch((err) => {
-    console.error('Failed to initialize Supabase op index:', err);
-    const btnLogin = document.getElementById('nav-login');
-    const btnMijn  = document.getElementById('nav-mijn');
-    if (btnLogin) {
-      btnLogin.style.display = 'inline-flex';
-      btnLogin.style.visibility = 'visible';
-    }
-    if (btnMijn) {
-      btnMijn.style.display = 'none';
-      btnMijn.style.visibility = 'hidden';
-    }
-  });
+  })();
 </script>
 </body>
 </html>
