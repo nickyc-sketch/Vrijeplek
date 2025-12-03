@@ -1210,52 +1210,33 @@
                     </div>
                   </fieldset>
 
-                  <fieldset class="settings-group">
-                    <legend>Reviews &amp; locatie</legend>
+                 <fieldset class="settings-group">
+  <legend>Reviews &amp; locatie</legend>
 
-                    <div class="field">
-                      <label class="switch">
-                        <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
-                        <span class="switch-slider"></span>
-                        <span class="switch-label">Google review tonen</span>
-                      </label>
-                    </div>
-                    <div class="field" id="google-review-field" style="display:none;">
-                      <label for="google-review-url">Google review link</label>
-                      <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
-                    </div>
+  <div class="field">
+    <label class="switch">
+      <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
+      <span class="switch-slider"></span>
+      <span class="switch-label">Google review tonen</span>
+    </label>
+  </div>
 
-                    <div class="field">
-                      <label class="switch">
-                        <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
-                        <span class="switch-slider"></span>
-                        <span class="switch-label">Toon je locatie met een speld op de kaart</span>
-                      </label>
-                    </div>
+  <div class="field" id="google-review-field" style="display:none;">
+    <label for="google-review-url">Google review link</label>
+    <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
+  </div>
 
-                    <div class="field-group" id="location-fields" style="display:none; margin-top:0.35rem;">
-                      <div class="field">
-                        <label for="business-street">Straat &amp; nr</label>
-                        <input id="business-street" name="business_street" type="text" placeholder="Stationsstraat 12">
-                      </div>
-                      <div class="field">
-                        <label for="business-postcode">Postcode</label>
-                        <input id="business-postcode" name="business_postcode" type="text" placeholder="1000">
-                      </div>
-                      <div class="field">
-                        <label for="business-city">Gemeente / stad</label>
-                        <input id="business-city" name="business_city" type="text" placeholder="Brussel">
-                      </div>
-                      <div class="field">
-                        <label>&nbsp;</label>
-                        <button type="button" class="btn-pill" id="geo-btn" style="margin-top:0.5rem;">Gebruik mijn huidige locatie</button>
-                        <p class="helper">We tonen enkel een speld op de kaart, geen volledig adres.</p>
-                      </div>
-                    </div>
-
-                    <input id="business-lat" name="business_lat" type="hidden">
-                    <input id="business-lng" name="business_lng" type="hidden">
-                  </fieldset>
+  <div class="field">
+    <label class="switch">
+      <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
+      <span class="switch-slider"></span>
+      <span class="switch-label">Toon je locatie met een speld op de kaart</span>
+    </label>
+    <p class="helper">
+      We gebruiken het adres dat aan je account gekoppeld is. Wanneer dit aan staat, tonen we een speld op de kaart bij jouw profiel.
+    </p>
+  </div>
+</fieldset>
 
                   <fieldset class="settings-group settings-group-muted">
                     <legend>Vrijeplek facturatiegegevens</legend>
