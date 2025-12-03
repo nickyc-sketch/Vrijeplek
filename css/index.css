@@ -427,3 +427,57 @@ header.site-header {
   flex-wrap:wrap;
   gap:10px;
 }
+.booking-modal[hidden] { display:none; }
+.booking-modal{
+  position:fixed;
+  inset:0;
+  z-index:60;
+}
+.booking-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(15,23,42,.8);
+  backdrop-filter:blur(8px);
+}
+.booking-dialog{
+  position:absolute;
+  inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  max-width:420px;
+  width:90%;
+  background:rgba(15,23,42,.95);
+  border-radius:1.2rem;
+  border:1px solid rgba(148,163,184,.5);
+  box-shadow:0 22px 60px rgba(15,23,42,.9);
+  padding:1.2rem 1.4rem 1.4rem;
+  color:#e5e7eb;
+}
+.booking-close{
+  position:absolute;
+  top:.6rem;
+  right:.7rem;
+  border:none;
+  background:none;
+  color:rgba(148,163,184,.9);
+  font-size:1.2rem;
+  cursor:pointer;
+}
+.booking-slot-summary{
+  font-size:.88rem;
+  color:rgba(191,219,254,.9);
+  margin:.3rem 0 .8rem;
+}
+.deposit-block{
+  border-radius:.9rem;
+  border:1px solid rgba(250,204,21,.7);
+  background:rgba(250,204,21,.06);
+  padding:.7rem .9rem;
+  font-size:.86rem;
+}
+.deposit-details{
+  list-style:none;
+  padding:0;
+  margin:.4rem 0 .2rem;
+  font-size:.84rem;
+}
+.deposit-details li + li{margin-top:.15rem;}
