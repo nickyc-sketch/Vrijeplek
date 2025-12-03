@@ -1214,16 +1214,16 @@
                         <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
                       </div>
                       <div class="field">
-                        <label for="deposit-amount">Standaard voorschotbedrag</label>
-                        <div class="input-with-prefix">
-                          <span>€</span>
-                          <input id="deposit-amount" name="deposit_amount" type="number" min="0" step="1"
-                            placeholder="bv. 20">
-                        </div>
-                        <p class="helper">
-                          Dit is het bedrag dat de klant vooraf betaalt bij een online boeking.
-                          Het wordt op jouw IBAN gestort; Vrijeplek blijft hier volledig buiten.
-                        </p>
+                        <label for="deposit-amount">Voorschotbedrag (optioneel)</label>
+<div class="input-with-prefix">
+  <span>€</span>
+  <input id="deposit-amount" name="deposit_amount" type="number" min="0" step="1"
+    placeholder="Laat leeg als je per tijdslot een bedrag kiest">
+</div>
+<p class="helper">
+  Dit bedrag wordt gebruikt wanneer je <strong>geen specifiek voorschotbedrag per tijdslot</strong kiest.
+  Laat het leeg als je alleen met vaste bedragen per tijdslot wil werken (bv. €15/€30/€50).
+</p>
                       </div>
                     </div>
                   </fieldset>
