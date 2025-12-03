@@ -11,6 +11,59 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/index.css?v=4">
+  <style>
+    /* Tijdelijke homepage-fixes zodat alles weer leesbaar en netjes is */
+
+    /* Blauwe knoppen (Zoek, Zoek flexijobs, …) */
+    .btn-primary,
+    .btn-primary.btn-primary-small,
+    .search-btn,
+    #flex-search-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      border-radius: 4px;
+      border: none;
+      background: #1b75d0; /* kies hier je exacte blauw indien nodig */
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-primary.btn-primary-small {
+      padding: 0.5rem 1.1rem;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary:hover,
+    .search-btn:hover,
+    #flex-search-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    /* 'Wat zoek je / Waar / Vanaf / Tot / Categorie' + Flexijobs-labels */
+    .search .field label,
+    .flex-field label {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Footer-tekst en links wit i.p.v. paars */
+    .site-footer,
+    .site-footer a {
+      color: #fff;
+    }
+
+    .site-footer a {
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 
 <body>
