@@ -481,3 +481,53 @@ header.site-header {
   font-size:.84rem;
 }
 .deposit-details li + li{margin-top:.15rem;}
+/* -------------------------------
+   Zoekresultaten wit & leesbaar
+   ------------------------------- */
+
+/* Titel van de zaak */
+.result-card h3,
+.result-head h3 {
+  color: #ffffff !important;
+}
+
+/* Metavelden (stad, categorie) */
+.result-meta span {
+  color: #cbd5e1 !important; /* lichtgrijs */
+}
+
+/* Slot kaarten */
+.slot-card,
+.slot-card-full {
+  color: #ffffff !important;
+  background: rgba(30, 41, 59, 0.6) !important; /* blauwgrijs transparant */
+  border: 1px solid rgba(148,163,184,0.25) !important;
+}
+
+/* Datum / tijd */
+.slot-title,
+.slot-time {
+  color: #ffffff !important;
+}
+
+/* Slot omschrijving */
+.slot-desc {
+  color: #e2e8f0 !important;
+}
+
+/* Meta-informatie (plaatsen, voorschot) */
+.slot-meta span {
+  color: #cbd5e1 !important;
+}
+
+/* "Volzet"-badge */
+.slot-badge {
+  background: #7f1d1d !important;
+  color: #fee2e2 !important;
+}
+
+/* Zoekresultaten status, bovenaan */
+#results-title,
+#results-meta {
+  color: #ffffff !important;
+}
