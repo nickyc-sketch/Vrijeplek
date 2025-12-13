@@ -1194,10 +1194,12 @@
     window.vpProfileReady = window.vpProfileReady || false;
 
     function formatDateKey(date){
-      const d = new Date(date.getTime());
-      d.setHours(0,0,0,0);
-      return d.toISOString().slice(0,10);
-    }
+  const d = new Date(date);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
     function showToast(message, type = 'success'){
       const toast = document.getElementById('vp-toast');
@@ -1303,9 +1305,9 @@
     // Render helpers
     // ---------------------------
     function isBookedSlot(item){
-      const st = String(item.status || '').toLowerCase();
-      return st === 'booked' || st === 'pending_deposit' || !!item.booked_at;
-    }
+  const st = String(item.status || '').toLowerCase();
+  return st === 'booked' || st === 'pending_deposit';
+}
 
     function renderSlotList(slotArray, slotListEl, slotEmptyEl){
       if(!slotListEl || !slotEmptyEl) return;
