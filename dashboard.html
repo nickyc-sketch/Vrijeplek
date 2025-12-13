@@ -2091,9 +2091,9 @@
 
     // keyboard shortcuts
     window.switchTab = function(panelName) {
-      const tab = document.querySelector(\`.dash-tab[data-panel="\${panelName}"]\`);
-      if (tab) tab.click();
-    };
+  const tab = document.querySelector(`.dash-tab[data-panel="${panelName}"]`);
+  if (tab) tab.click();
+};
 
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey || e.metaKey) {
