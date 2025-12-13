@@ -5,241 +5,197 @@ const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, serviceKey);
 
-function json(statusCode, payload){
-  return {
-    statusCode,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  };
-}
+const json = (statusCode, payload) => ({
+  statusCode,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload),
+});
 
-function mapRow(row){
-  return {
-    id: row.id,
-    email: row.email,
-    date: row.date,
-    start: row.from,
-    end: row.to,
-    description: row.desc,
-    booked_at: row.booked_at,
-    active: row.active,
-    status: row.status,
-  };
-}
-
-function normalizeStatus(status){
-  const s = (status || "").toLowerCase();
-  if (s === "booked" || s === "geboekt" || s === "bezet") return "booked";
-  if (s === "pending_deposit") return "pending_deposit";
+const normalizeStatus = (s) => {
+  const v = String(s || "").toLowerCase();
+  if (v === "booked" || v === "geboekt" || v === "bezet") return "booked";
+  if (v === "pending_deposit") return "pending_deposit";
   return "open";
-}
+};
+
+const mapRow = (row) => ({
+  id: row.id,
+  email: row.email,
+  date: row.date,
+  start: row.from,
+  end: row.to,
+  description: row.desc,
+  booked_at: row.booked_at,
+  active: row.active,
+  status: normalizeStatus(row.status),
+});
 
 export async function handler(event) {
   try {
     if (!supabaseUrl || !serviceKey) {
-      return json(500, { error: "Supabase env not configured" });
+      return json(500, { error: "Supabase not configured" });
     }
 
     const method = event.httpMethod;
-    const qs     = event.queryStringParameters || {};
+    const qs = event.queryStringParameters || {};
 
-    // --------------------------------
+    // ======================
     // GET
-    // 1) Oud: /slots?date=YYYY-MM-DD (& optioneel email)
-    // 2) Nieuw: /slots?email=...&from=YYYY-MM-DD&to=YYYY-MM-DD&status=open,booked&split=1
-    // --------------------------------
+    // ======================
     if (method === "GET") {
-      const date = (qs.date || "").trim(); // YYYY-MM-DD
+      const date = (qs.date || "").trim();
       const email = (qs.email || "").trim().toLowerCase();
-      const statusRaw = (qs.status || "").trim(); // "open,booked"
-      const dateFrom = (qs.from || "").trim();
-      const dateTo = (qs.to || "").trim();
-      const split = (qs.split || "").trim() === "1";
+      const from = (qs.from || "").trim();
+      const to = (qs.to || "").trim();
+      const split = qs.split === "1";
 
-      // 1) Per datum (backward compatible)
+      // ---- per dag (kalender)
       if (date) {
         let q = supabase
           .from("slots")
-          .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+          .select('id,email,date,"from","to","desc",booked_at,status,active')
           .eq("date", date)
           .eq("active", true)
           .order("from", { ascending: true });
 
-        if (email) {
-          q = q.eq("email", email);
-        }
+        if (email) q = q.eq("email", email);
 
         const { data, error } = await q;
+        if (error) return json(500, { error: error.message });
 
-        if (error) {
-          console.error("slots GET error:", error);
-          return json(500, { error: "DB error (get): " + error.message });
-        }
-
-        const mapped = (data || []).map(mapRow);
-        return json(200, mapped);
+        return json(200, (data || []).map(mapRow));
       }
 
-      // 2) Lijst voor provider (dashboard)
-      if (!email) {
-        return json(400, { error: "Missing date parameter OR email parameter" });
-      }
+      // ---- dashboard lijst
+      if (!email) return json(400, { error: "email required" });
 
       let q = supabase
         .from("slots")
-        .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+        .select('id,email,date,"from","to","desc",booked_at,status,active')
         .eq("email", email)
         .eq("active", true)
         .order("date", { ascending: true })
         .order("from", { ascending: true });
 
-      if (statusRaw) {
-        const statuses = statusRaw.split(",").map(s => s.trim()).filter(Boolean);
-        if (statuses.length === 1) q = q.eq("status", statuses[0]);
-        else q = q.in("status", statuses);
-      }
-
-      if (dateFrom) q = q.gte("date", dateFrom);
-      if (dateTo)   q = q.lte("date", dateTo);
+      if (from) q = q.gte("date", from);
+      if (to) q = q.lte("date", to);
 
       const { data, error } = await q;
-
-      if (error) {
-        console.error("slots GET list error:", error);
-        return json(500, { error: "DB error (list): " + error.message });
-      }
+      if (error) return json(500, { error: error.message });
 
       const mapped = (data || []).map(mapRow);
 
-      // ✅ split=1 -> { booked:[], open:[] }
-      if (split) {
-        const booked = [];
-        const open = [];
+      if (!split) return json(200, mapped);
 
-        for (const item of mapped) {
-          const st = normalizeStatus(item.status);
-          if (st === "booked" || st === "pending_deposit") booked.push(item);
-          else open.push(item);
-        }
+      const booked = [];
+      const open = [];
 
-        return json(200, { booked, open });
+      for (const s of mapped) {
+        if (s.status === "booked" || s.status === "pending_deposit") booked.push(s);
+        else open.push(s);
       }
 
-      return json(200, mapped);
+      return json(200, { booked, open });
     }
 
-    // --------------------------------
-    // POST /slots
-    // body: { email, date, start, end, description }
-    // --------------------------------
+    // ======================
+    // POST → nieuw slot
+    // ======================
     if (method === "POST") {
-      let payload;
-      try {
-        payload = JSON.parse(event.body || "{}");
-      } catch {
-        return json(400, { error: "Bad JSON" });
+      const body = JSON.parse(event.body || "{}");
+
+      if (!body.date || !body.start || !body.end) {
+        return json(400, { error: "missing fields" });
+      }
+      if (body.start >= body.end) {
+        return json(400, { error: "start must be before end" });
       }
 
-      const email       = (payload.email || "").trim().toLowerCase() || null;
-      const date        = payload.date;
-      const start       = payload.start || null;
-      const end         = payload.end || null;
-      const description = (payload.description || "").trim();
-
-      if (!date || !start || !end) {
-        return json(400, { error: "Missing fields" });
-      }
-
-      const insertData = {
-        email,
-        date,
-        from: start,
-        to: end,
-        desc: description,
-        active: true,
+      const insert = {
+        email: (body.email || "").trim().toLowerCase(),
+        date: body.date,
+        from: body.start,
+        to: body.end,
+        desc: (body.description || "").trim(),
         status: "open",
+        active: true,
       };
 
-      const { error } = await supabase.from("slots").insert([insertData]);
-
-      if (error) {
-        console.error("slots POST error:", error);
-        return json(500, { error: "DB error (create): " + error.message });
-      }
+      const { error } = await supabase.from("slots").insert([insert]);
+      if (error) return json(500, { error: error.message });
 
       return json(200, { ok: true });
     }
 
-    // --------------------------------
-    // PUT /slots
-    // body: { id, start?, end?, description? }
-    // --------------------------------
+    // ======================
+    // PUT → update slot
+    // ======================
     if (method === "PUT") {
-      let payload;
-      try {
-        payload = JSON.parse(event.body || "{}");
-      } catch {
-        return json(400, { error: "Bad JSON" });
-      }
+      const body = JSON.parse(event.body || "{}");
+      if (!body.id) return json(400, { error: "id required" });
 
-      const id          = payload.id;
-      const start       = payload.start;
-      const end         = payload.end;
-      const description = payload.description;
-
-      if (!id) {
-        return json(400, { error: "Missing id parameter" });
-      }
-
-      const updateData = {};
-      if (start !== undefined)       updateData.from  = start;
-      if (end !== undefined)         updateData.to    = end;
-      if (description !== undefined) updateData.desc  = description;
-
-      if (Object.keys(updateData).length === 0) {
-        return json(400, { error: "Nothing to update" });
-      }
-
-      const { error } = await supabase
+      const { data: existing } = await supabase
         .from("slots")
-        .update(updateData)
-        .eq("id", id);
+        .select("status,booked_at")
+        .eq("id", body.id)
+        .single();
 
-      if (error) {
-        console.error("slots PUT error:", error);
-        return json(500, { error: "DB error (update): " + error.message });
+      if (!existing) return json(404, { error: "slot not found" });
+
+      const st = normalizeStatus(existing.status);
+      if (st !== "open") {
+        return json(403, { error: "slot is booked" });
       }
+
+      const update = {};
+      if (body.start) update.from = body.start;
+      if (body.end) update.to = body.end;
+      if (body.description !== undefined) update.desc = body.description;
+
+      if (!Object.keys(update).length) {
+        return json(400, { error: "nothing to update" });
+      }
+
+      const { error } = await supabase.from("slots").update(update).eq("id", body.id);
+      if (error) return json(500, { error: error.message });
 
       return json(200, { ok: true });
     }
 
-    // --------------------------------
-    // DELETE /slots?id=...
-    // --------------------------------
+    // ======================
+    // DELETE → soft delete
+    // ======================
     if (method === "DELETE") {
       const id = (qs.id || "").trim();
+      if (!id) return json(400, { error: "id required" });
 
-      if (!id) {
-        return json(400, { error: "Missing id" });
+      const { data: existing } = await supabase
+        .from("slots")
+        .select("status")
+        .eq("id", id)
+        .single();
+
+      if (!existing) return json(404, { error: "slot not found" });
+
+      const st = normalizeStatus(existing.status);
+      if (st !== "open") {
+        return json(403, { error: "slot is booked" });
       }
 
       const { error } = await supabase
         .from("slots")
-        .delete()
+        .update({ active: false })
         .eq("id", id);
 
-      if (error) {
-        console.error("slots DELETE error:", error);
-        return json(500, { error: "DB error (delete): " + error.message });
-      }
+      if (error) return json(500, { error: error.message });
 
       return json(200, { ok: true });
     }
 
-    return json(405, { error: "Method not allowed" });
+    return json(405, { error: "method not allowed" });
 
   } catch (err) {
-    console.error("slots handler crash:", err);
-    return json(500, { error: "Server error", message: err.message });
+    console.error(err);
+    return json(500, { error: "server error", message: err.message });
   }
 }
