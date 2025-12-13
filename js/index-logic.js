@@ -1,4 +1,5 @@
-// js/index-logic.js
+
+console.log("INDEX LOGIC JS V6 LOADED");
 
 function esc(s) {
   return String(s ?? '')
