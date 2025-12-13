@@ -53,7 +53,6 @@ export async function handler(event) {
         'company_name',
         'zaak',
         'cat',
-        'cat_label',
         'business_city',
         'gemeente',
         'plaats',
