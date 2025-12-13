@@ -537,69 +537,124 @@ header.site-header {
 /* -------------------------------------------------- */
 /* BOOKING MODAL                                      */
 /* -------------------------------------------------- */
-.booking-modal[hidden] {
-  display:none;
-}
+.booking-modal[hidden] { display:none; }
 
-.booking-modal {
+.booking-modal{
   position:fixed;
   inset:0;
-  z-index:60;
+  z-index:2000; /* ✅ hoger dan header + alles */
 }
 
-.booking-backdrop {
+.booking-backdrop{
   position:absolute;
   inset:0;
-  background:rgba(15,23,42,.8);
-  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
 }
 
-.booking-dialog {
-  position:absolute;
-  inset:50% auto auto 50%;
-  transform:translate(-50%,-50%);
-  max-width:420px;
-  width:90%;
-  background:rgba(15,23,42,.95);
-  border-radius:1.2rem;
-  border:1px solid rgba(148,163,184,.5);
-  box-shadow:0 22px 60px rgba(15,23,42,.9);
-  padding:1.2rem 1.4rem 1.4rem;
+/* Box */
+.booking-dialog{
+  position:relative;
+  width:min(560px, calc(100% - 28px));
+  margin: 6vh auto;
+  background:
+    radial-gradient(circle at 0 0, rgba(59,130,246,.22), transparent 55%),
+    radial-gradient(circle at 100% 0, rgba(56,189,248,.18), transparent 55%),
+    rgba(15,23,42,.94);
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,.6);
+  padding:18px 18px 16px;
   color:#e5e7eb;
 }
 
-.booking-close {
+/* Headings */
+.booking-dialog h2,
+.booking-dialog h3{
+  color:#f9fafb;
+  margin:0 0 .5rem;
+}
+
+/* Close button */
+.booking-close{
   position:absolute;
-  top:.6rem;
-  right:.7rem;
-  border:none;
-  background:none;
-  color:rgba(148,163,184,.9);
-  font-size:1.2rem;
+  top:10px; right:12px;
+  width:38px; height:38px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(15,23,42,.6);
+  color:#fff;
+  font-size:22px;
   cursor:pointer;
 }
+.booking-close:hover{ background:rgba(15,23,42,.9); }
 
-.booking-slot-summary {
+/* Summary text */
+.booking-slot-summary{
   font-size:.88rem;
   color:rgba(191,219,254,.9);
-  margin:.3rem 0 .8rem;
+  margin:.2rem 0 1rem;
 }
 
-.deposit-block {
-  border-radius:.9rem;
-  border:1px solid rgba(250,204,21,.7);
-  background:rgba(250,204,21,.06);
-  padding:.7rem .9rem;
-  font-size:.86rem;
+/* Actions row */
+.booking-dialog .form-actions{
+  display:flex;
+  gap:.6rem;
+  justify-content:flex-end;
+  margin-top:.9rem;
 }
 
-.deposit-details {
+/* ✅ Annuleren = rood (danger) */
+.booking-dialog .btn-ghost,
+#booking-cancel-btn{
+  border-radius:999px;
+  padding:.55rem 1.05rem;
+  border:1px solid rgba(239,68,68,.65);
+  background:rgba(127,29,29,.25);
+  color:#fecaca;
+  cursor:pointer;
+  font-weight:700;
+}
+.booking-dialog .btn-ghost:hover,
+#booking-cancel-btn:hover{
+  background:rgba(127,29,29,.45);
+  border-color:rgba(239,68,68,.9);
+}
+
+/* ✅ Confirm button blijft je blauwe stijl */
+.booking-dialog .btn-primary,
+#booking-submit-btn,
+#booking-done-btn{
+  border-radius:999px;
+  padding:.55rem 1.1rem;
+  border:none;
+  background:linear-gradient(135deg,var(--o1),var(--o2));
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 12px 34px rgba(37,99,235,.45);
+}
+.booking-dialog .btn-primary:disabled,
+#booking-submit-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+/* Deposit block (als je het nog gebruikt) */
+.deposit-block{
+  border-radius:1rem;
+  border:1px solid rgba(250,204,21,.6);
+  background:rgba(250,204,21,.08);
+  padding:.8rem .95rem;
+  color:#fde68a;
+}
+.deposit-details{
   list-style:none;
   padding:0;
-  margin:.4rem 0 .2rem;
-  font-size:.84rem;
+  margin:.5rem 0 0;
+  font-size:.85rem;
+  color:rgba(255,255,255,.9);
 }
+.deposit-details li + li{ margin-top:.2rem; }
 
-.deposit-details li + li {
-  margin-top:.15rem;
-}
+  
