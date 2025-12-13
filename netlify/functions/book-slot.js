@@ -38,14 +38,37 @@ export async function handler(event) {
       return json(400, { error: "bad_json" });
     }
 
+    // --- basis velden ---
     const slot_id = String(body.slot_id || "").trim();
     const name = String(body.name || "").trim();
     const email = String(body.email || "").trim();
     const phone = String(body.phone || "").trim();
     const notes = String(body.notes || "").trim();
 
+    // --- extra velden ---
+    const gender = body.gender == null ? null : String(body.gender || "").trim();
+    const birth_year_raw = body.birth_year == null ? null : String(body.birth_year || "").trim();
+    const street = body.street == null ? null : String(body.street || "").trim();
+    const zip = body.zip == null ? null : String(body.zip || "").trim();
+    const city = body.city == null ? null : String(body.city || "").trim();
+    const terms_ok = body.terms_ok === true;
+
     if (!slot_id || !name || !email || !phone) {
       return json(400, { error: "missing_fields" });
+    }
+    if (!terms_ok) {
+      return json(400, { error: "terms_required" });
+    }
+
+    // birth year sanity (optioneel)
+    let birth_year = null;
+    if (birth_year_raw) {
+      const n = Number(birth_year_raw);
+      const thisYear = new Date().getFullYear();
+      if (!Number.isInteger(n) || n < 1900 || n > thisYear) {
+        return json(400, { error: "invalid_birth_year" });
+      }
+      birth_year = n;
     }
 
     // 1) slot ophalen
@@ -107,8 +130,7 @@ export async function handler(event) {
       });
     }
 
-    // 4) booking bewaren (optioneel maar sterk aangeraden)
-    // Als je de bookings-tabel nog niet hebt, maak ze aan met SQL hieronder.
+    // 4) booking bewaren
     const bookingRow = {
       slot_id,
       provider_email: providerEmail,
@@ -117,19 +139,27 @@ export async function handler(event) {
       customer_phone: phone,
       notes: notes || null,
       status: newStatus,
+
+      // extra velden
+      gender: gender || null,
+      birth_year,
+      street: street || null,
+      zip: zip || null,
+      city: city || null,
+      terms_ok: true,
     };
 
-    // Niet laten crashen als tabel nog niet bestaat:
     const { error: insErr } = await db.from("bookings").insert([bookingRow]);
-    // insErr negeren als tabel ontbreekt:
-    // (je ziet het wel in Netlify logs)
     if (insErr) {
       console.warn("bookings insert failed:", insErr.message);
     }
 
     // 5) response voor frontend
     if (depositActive) {
-      const message = `VP-${slot_id.slice(0, 8)}-${email.replace(/[^a-z0-9]/gi, "").slice(0, 10)}`.toUpperCase();
+      const message = `VP-${slot_id.slice(0, 8)}-${email
+        .replace(/[^a-z0-9]/gi, "")
+        .slice(0, 10)}`.toUpperCase();
+
       return json(200, {
         ok: true,
         status: newStatus,
