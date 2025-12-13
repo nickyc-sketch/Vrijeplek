@@ -1601,14 +1601,18 @@
       if(!el || !el.value || !el.value.trim()) return false;
     }
     const depositToggle = document.getElementById('deposit-enabled');
-    if (depositToggle && depositToggle.checked) {
-      const iban = document.getElementById('iban');
-      const depAmount = document.getElementById('deposit-amount');
-      if (!iban || !iban.value.trim()) return false;
-      if (!depAmount || !depAmount.value.trim() || Number(depAmount.value) <= 0) return false;
-    }
-    return true;
+if (depositToggle && depositToggle.checked) {
+  const iban = document.getElementById('iban');
+  const depAmount = document.getElementById('deposit-amount');
+
+  if (!iban || !iban.value.trim()) return false;
+
+  // deposit_amount MAG leeg zijn
+  if (depAmount && depAmount.value.trim()) {
+    if (Number(depAmount.value) <= 0) return false;
   }
+}
+
 
   function updateFeatureLockUI(){
     window.vpProfileReady = !!computeProfileReadyFromDom();
