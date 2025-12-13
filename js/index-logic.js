@@ -339,8 +339,8 @@ async function vpHandleBookingSubmit(e) {
   e.preventDefault();
   if (!vpCurrentSlotId) return;
 
-  const form = e.target;
-  const name = (form.name?.value || '').trim();
+    const form = e.target;
+    const name = (form.name?.value || '').trim();
   const email = (form.email?.value || '').trim();
   const phone = (form.phone?.value || '').trim();
   const notes = (form.notes?.value || '').trim();
@@ -362,6 +362,14 @@ async function vpHandleBookingSubmit(e) {
   const prof = slot ? vpSearchState.profilesByEmail[(slot.email || '').toLowerCase()] || {} : {};
 
   const payload = { slot_id: vpCurrentSlotId, name, email, phone, notes };
+  const termsOk = !!form.terms?.checked;
+  if (!termsOk) {
+  if (errorEl) {
+    errorEl.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
+    errorEl.style.display = 'block';
+  }
+  return;
+}
 
   if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Bezig met boeken…'; }
 
