@@ -47,7 +47,7 @@ export async function handler(event) {
 
     // 1) Profielen ophalen (active OF leeg)
     let profQuery = supa
-      .from('profiles')
+     .from('profiles_api')
       .select([
         'email',
         'company_name',
