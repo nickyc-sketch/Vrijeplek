@@ -5,123 +5,139 @@ const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, serviceKey);
 
+function json(statusCode, payload){
+  return {
+    statusCode,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  };
+}
+
+function mapRow(row){
+  return {
+    id: row.id,
+    email: row.email,
+    date: row.date,
+    start: row.from,
+    end: row.to,
+    description: row.desc,
+    booked_at: row.booked_at,
+    active: row.active,
+    status: row.status,
+  };
+}
+
+function normalizeStatus(status){
+  const s = (status || "").toLowerCase();
+  if (s === "booked" || s === "geboekt" || s === "bezet") return "booked";
+  if (s === "pending_deposit") return "pending_deposit";
+  return "open";
+}
+
 export async function handler(event) {
   try {
     if (!supabaseUrl || !serviceKey) {
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "Supabase env not configured" })
-      };
+      return json(500, { error: "Supabase env not configured" });
     }
 
     const method = event.httpMethod;
     const qs     = event.queryStringParameters || {};
 
-  // --------------------------------
-// GET /slots?date=YYYY-MM-DD
-// of: GET /slots?email=...&status=open,booked&from=YYYY-MM-DD&to=YYYY-MM-DD
-// --------------------------------
-if (method === "GET") {
-  const date = qs.date;
-  const email = (qs.email || "").trim().toLowerCase();
-  const statusRaw = (qs.status || "").trim();     // bv "open,booked"
-  const dateFrom = (qs.from || "").trim();        // YYYY-MM-DD
-  const dateTo = (qs.to || "").trim();            // YYYY-MM-DD
+    // --------------------------------
+    // GET
+    // 1) Oud: /slots?date=YYYY-MM-DD (& optioneel email)
+    // 2) Nieuw: /slots?email=...&from=YYYY-MM-DD&to=YYYY-MM-DD&status=open,booked&split=1
+    // --------------------------------
+    if (method === "GET") {
+      const date = (qs.date || "").trim(); // YYYY-MM-DD
+      const email = (qs.email || "").trim().toLowerCase();
+      const statusRaw = (qs.status || "").trim(); // "open,booked"
+      const dateFrom = (qs.from || "").trim();
+      const dateTo = (qs.to || "").trim();
+      const split = (qs.split || "").trim() === "1";
 
-  // 1) Oud gedrag (per datum) behouden
-  if (date) {
-    const { data, error } = await supabase
-      .from("slots")
-      .select('id, email, date, "from", "to", "desc", booked_at, status, active')
-      .eq("date", date);
+      // 1) Per datum (backward compatible)
+      if (date) {
+        let q = supabase
+          .from("slots")
+          .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+          .eq("date", date)
+          .eq("active", true)
+          .order("from", { ascending: true });
 
-    if (error) {
-      console.error("slots GET error:", error);
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "DB error (get): " + error.message })
-      };
+        if (email) {
+          q = q.eq("email", email);
+        }
+
+        const { data, error } = await q;
+
+        if (error) {
+          console.error("slots GET error:", error);
+          return json(500, { error: "DB error (get): " + error.message });
+        }
+
+        const mapped = (data || []).map(mapRow);
+        return json(200, mapped);
+      }
+
+      // 2) Lijst voor provider (dashboard)
+      if (!email) {
+        return json(400, { error: "Missing date parameter OR email parameter" });
+      }
+
+      let q = supabase
+        .from("slots")
+        .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+        .eq("email", email)
+        .eq("active", true)
+        .order("date", { ascending: true })
+        .order("from", { ascending: true });
+
+      if (statusRaw) {
+        const statuses = statusRaw.split(",").map(s => s.trim()).filter(Boolean);
+        if (statuses.length === 1) q = q.eq("status", statuses[0]);
+        else q = q.in("status", statuses);
+      }
+
+      if (dateFrom) q = q.gte("date", dateFrom);
+      if (dateTo)   q = q.lte("date", dateTo);
+
+      const { data, error } = await q;
+
+      if (error) {
+        console.error("slots GET list error:", error);
+        return json(500, { error: "DB error (list): " + error.message });
+      }
+
+      const mapped = (data || []).map(mapRow);
+
+      // ✅ split=1 -> { booked:[], open:[] }
+      if (split) {
+        const booked = [];
+        const open = [];
+
+        for (const item of mapped) {
+          const st = normalizeStatus(item.status);
+          if (st === "booked" || st === "pending_deposit") booked.push(item);
+          else open.push(item);
+        }
+
+        return json(200, { booked, open });
+      }
+
+      return json(200, mapped);
     }
 
-    const mapped = (data || [])
-      .map((row) => ({
-        id: row.id,
-        email: row.email,
-        date: row.date,
-        start: row.from,
-        end: row.to,
-        description: row.desc,
-        booked_at: row.booked_at,
-        active: row.active,
-        status: row.status,
-      }))
-      .sort((a, b) => (a.start || "").localeCompare(b.start || ""));
-
-    return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(mapped) };
-  }
-
-  // 2) Nieuw gedrag: lijst voor provider (dashboard)
-  if (!email) {
-    return {
-      statusCode: 400,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: "Missing date parameter OR email parameter" })
-    };
-  }
-
-  let q = supabase
-    .from("slots")
-    .select('id, email, date, "from", "to", "desc", booked_at, status, active')
-    .eq("email", email);
-
-  if (statusRaw) {
-    const statuses = statusRaw.split(",").map(s => s.trim()).filter(Boolean);
-    if (statuses.length === 1) q = q.eq("status", statuses[0]);
-    else q = q.in("status", statuses);
-  }
-
-  if (dateFrom) q = q.gte("date", dateFrom);
-  if (dateTo) q = q.lte("date", dateTo);
-
-  const { data, error } = await q;
-
-  if (error) {
-    console.error("slots GET list error:", error);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: "DB error (list): " + error.message })
-    };
-  }
-
-  const mapped = (data || [])
-    .map((row) => ({
-      id: row.id,
-      email: row.email,
-      date: row.date,
-      start: row.from,
-      end: row.to,
-      description: row.desc,
-      booked_at: row.booked_at,
-      active: row.active,
-      status: row.status,
-    }))
-    .sort((a, b) => {
-      if ((a.date || "") === (b.date || "")) return (a.start || "").localeCompare(b.start || "");
-      return (a.date || "").localeCompare(b.date || "");
-    });
-
-  return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(mapped) };
-}
-
+    // --------------------------------
+    // POST /slots
+    // body: { email, date, start, end, description }
+    // --------------------------------
     if (method === "POST") {
       let payload;
       try {
         payload = JSON.parse(event.body || "{}");
       } catch {
-        return { statusCode: 400, body: "Bad JSON" };
+        return json(400, { error: "Bad JSON" });
       }
 
       const email       = (payload.email || "").trim().toLowerCase() || null;
@@ -131,11 +147,7 @@ if (method === "GET") {
       const description = (payload.description || "").trim();
 
       if (!date || !start || !end) {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Missing fields" })
-        };
+        return json(400, { error: "Missing fields" });
       }
 
       const insertData = {
@@ -152,22 +164,14 @@ if (method === "GET") {
 
       if (error) {
         console.error("slots POST error:", error);
-        return {
-          statusCode: 500,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "DB error (create): " + error.message })
-        };
+        return json(500, { error: "DB error (create): " + error.message });
       }
 
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ok: true }),
-      };
+      return json(200, { ok: true });
     }
 
     // --------------------------------
-    // PUT /slots   (tijdslot bijwerken)
+    // PUT /slots
     // body: { id, start?, end?, description? }
     // --------------------------------
     if (method === "PUT") {
@@ -175,11 +179,7 @@ if (method === "GET") {
       try {
         payload = JSON.parse(event.body || "{}");
       } catch {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Bad JSON" })
-        };
+        return json(400, { error: "Bad JSON" });
       }
 
       const id          = payload.id;
@@ -188,11 +188,7 @@ if (method === "GET") {
       const description = payload.description;
 
       if (!id) {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Missing id parameter" })
-        };
+        return json(400, { error: "Missing id parameter" });
       }
 
       const updateData = {};
@@ -201,11 +197,7 @@ if (method === "GET") {
       if (description !== undefined) updateData.desc  = description;
 
       if (Object.keys(updateData).length === 0) {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Nothing to update" })
-        };
+        return json(400, { error: "Nothing to update" });
       }
 
       const { error } = await supabase
@@ -215,32 +207,20 @@ if (method === "GET") {
 
       if (error) {
         console.error("slots PUT error:", error);
-        return {
-          statusCode: 500,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "DB error (update): " + error.message })
-        };
+        return json(500, { error: "DB error (update): " + error.message });
       }
 
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ok: true }),
-      };
+      return json(200, { ok: true });
     }
 
     // --------------------------------
     // DELETE /slots?id=...
     // --------------------------------
     if (method === "DELETE") {
-      const id = qs.id;
+      const id = (qs.id || "").trim();
 
       if (!id) {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Missing id" })
-        };
+        return json(400, { error: "Missing id" });
       }
 
       const { error } = await supabase
@@ -250,35 +230,16 @@ if (method === "GET") {
 
       if (error) {
         console.error("slots DELETE error:", error);
-        return {
-          statusCode: 500,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "DB error (delete): " + error.message })
-        };
+        return json(500, { error: "DB error (delete): " + error.message });
       }
 
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ok: true }),
-      };
+      return json(200, { ok: true });
     }
 
-    // --------------------------------
-    // ALLES ANDERS → 405
-    // --------------------------------
-    return {
-      statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: "Method not allowed" })
-    };
+    return json(405, { error: "Method not allowed" });
 
   } catch (err) {
     console.error("slots handler crash:", err);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: "Server error", message: err.message })
-    };
+    return json(500, { error: "Server error", message: err.message });
   }
 }
