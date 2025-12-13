@@ -73,18 +73,17 @@ export async function handler(event) {
     const sanitizedQ = q ? String(q).trim().substring(0, 100) : '';
     const sanitizedLoc = loc ? String(loc).trim().substring(0, 100) : '';
 
-    if(sanitizedQ){
-      // ✅ zoek ook op company_name
-      profQuery = profQuery.or(
-        `company_name.ilike.%${sanitizedQ}%,zaak.ilike.%${sanitizedQ}%,email.ilike.%${sanitizedQ}%`
-      );
-    }
-
-    if(sanitizedLoc){
-      profQuery = profQuery.or(
-        `business_city.ilike.%${sanitizedLoc}%,gemeente.ilike.%${sanitizedLoc}%,plaats.ilike.%${sanitizedLoc}%,business_postcode.ilike.%${sanitizedLoc}%,postcode.ilike.%${sanitizedLoc}%,business_street.ilike.%${sanitizedLoc}%,straat.ilike.%${sanitizedLoc}%`
-      );
-    }
+    if (sanitizedQ) {
+  profQuery = profQuery.or(
+    [
+      `company_name.ilike.%${sanitizedQ}%`,
+      `zaak.ilike.%${sanitizedQ}%`,
+      `email.ilike.%${sanitizedQ}%`,
+      `bio.ilike.%${sanitizedQ}%`,
+      `website.ilike.%${sanitizedQ}%`
+    ].join(',')
+  );
+}
 
     if(cat){
       profQuery = profQuery.eq('cat', cat);
