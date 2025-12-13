@@ -677,6 +677,16 @@
       margin-bottom:.4rem;
     }
 
+    /* ✅ NIEUW: 2-kolommen afspraken */
+    .appointments-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:1rem;
+    }
+    @media (max-width:960px){
+      .appointments-grid{ grid-template-columns:1fr; }
+    }
+
     .site-footer{
       padding:1rem 1.5rem 1.4rem;
       border-top:1px solid rgba(15,23,42,.8);
@@ -877,7 +887,19 @@
                   </button>
                 </div>
 
-                <div id="appointments-list" style="display:none;"></div>
+                <!-- ✅ NIEUW: 2 kolommen -->
+                <div class="appointments-grid" id="appointments-grid" style="display:none;">
+                  <div>
+                    <h3 style="margin:0 0 .6rem;">Geboekte afspraken</h3>
+                    <div class="empty-state" id="booked-empty">Nog geen geboekte afspraken.</div>
+                    <div id="booked-list"></div>
+                  </div>
+                  <div>
+                    <h3 style="margin:0 0 .6rem;">Open tijdstippen</h3>
+                    <div class="empty-state" id="open-empty">Nog geen open tijdstippen.</div>
+                    <div id="open-list"></div>
+                  </div>
+                </div>
               </section>
             </section>
 
@@ -954,30 +976,6 @@
                         <span class="switch-slider"></span>
                         <span class="switch-label">Zichtbaar op Vrijeplek</span>
                       </label>
-                    </div>
-
-                    <div class="field">
-                      <label class="switch">
-                        <input type="checkbox" id="slot-deposit" name="slot_deposit">
-                        <span class="switch-slider"></span>
-                        <span class="switch-label">Voor dit tijdslot voorschot vragen</span>
-                      </label>
-                      <p class="helper">
-                        Dit volgt je standaard IBAN/voorschotregels uit de instellingen. Handig als sommige vrije plekken
-                        zonder voorschot mogen, en andere niet.
-                      </p>
-                    </div>
-
-                    <div class="field slot-deposit-amount" style="display:none;">
-                      <label for="slot-deposit-amount">Voorschotbedrag voor dit tijdslot</label>
-                      <select id="slot-deposit-amount">
-                        <option value="">Kies bedrag…</option>
-                        <option value="15">€15</option>
-                        <option value="30">€30</option>
-                        <option value="50">€50</option>
-                        <option value="custom">Ander bedrag…</option>
-                      </select>
-                      <input type="number" id="slot-deposit-custom" placeholder="Ander bedrag in €" style="display:none; margin-top:0.5rem;" min="0" step="1">
                     </div>
 
                     <p class="helper">
@@ -1213,17 +1211,27 @@
                         <label for="bic">BIC (optioneel)</label>
                         <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
                       </div>
+
+                      <!-- ✅ NIEUW: vaste voorschot-keuze -->
                       <div class="field">
-                        <label for="deposit-amount">Voorschotbedrag (optioneel)</label>
-<div class="input-with-prefix">
-  <span>€</span>
-  <input id="deposit-amount" name="deposit_amount" type="number" min="0" step="1"
-    placeholder="Laat leeg als je per tijdslot een bedrag kiest">
-</div>
-<p class="helper">
-  Dit bedrag wordt gebruikt wanneer je <strong>geen specifiek voorschotbedrag per tijdslot</strong kiest.
-  Laat het leeg als je alleen met vaste bedragen per tijdslot wil werken (bv. €15/€30/€50).
-</p>
+                        <label for="deposit-amount-select">Voorschotbedrag (optioneel)</label>
+
+                        <select id="deposit-amount-select">
+                          <option value="">Kies bedrag…</option>
+                          <option value="15">€15</option>
+                          <option value="25">€25</option>
+                          <option value="50">€50</option>
+                          <option value="custom">Ander bedrag…</option>
+                        </select>
+
+                        <div class="input-with-prefix" id="deposit-amount-custom-wrap" style="display:none; margin-top:.5rem;">
+                          <span>€</span>
+                          <input id="deposit-amount-custom" type="number" min="0" step="1" placeholder="Ander bedrag">
+                        </div>
+
+                        <p class="helper" style="margin-top:.4rem;">
+                          Dit is het vaste voorschot dat je klant betaalt bij online boeking.
+                        </p>
                       </div>
                     </div>
                   </fieldset>
@@ -1466,12 +1474,11 @@
         const desc = item.description || item.desc || 'Geen omschrijving';
         const places = item.places || item.places_count || 1;
         const visible = typeof item.visible === 'boolean' ? item.visible : true;
-        const depositRequired = !!(item.deposit_required || item.with_deposit);
         const visibleText = visible ? 'Zichtbaar op Vrijeplek' : 'Verborgen';
-        const depositAmount = item.deposit_amount || item.depositAmount || null;
-        const depositText = depositRequired ? (depositAmount ? `Voorschot: €${depositAmount}` : 'Voorschot actief') : 'Geen voorschot';
         const booked = !!(item.is_booked || item.booked || item.status === 'Geboekt' || item.status === 'Bezet');
-        const bookedLabel = booked ? 'Geboekt • niet meer wijzigbaar (server beslist)' : `${places} plaats(en) • ${visibleText} • ${depositText}`;
+        const bookedLabel = booked
+          ? 'Geboekt • niet meer wijzigbaar (server beslist)'
+          : `${places} plaats(en) • ${visibleText}`;
         const editDisabled = booked ? 'disabled aria-disabled="true"' : '';
         const idAttr = item.id || item.slot_id || '';
 
@@ -1575,33 +1582,45 @@
           return false;
         }
       }
+
       const depositToggle = document.getElementById('deposit-enabled');
       if (depositToggle && depositToggle.checked) {
         const iban = document.getElementById('iban');
-        const depAmount = document.getElementById('deposit-amount');
+        const depSelect = document.getElementById('deposit-amount-select');
+        const depCustom = document.getElementById('deposit-amount-custom');
+
         if (!iban || !iban.value.trim()) return false;
-        if (!depAmount || !depAmount.value.trim() || Number(depAmount.value) <= 0) return false;
+
+        let amount = 0;
+        if (depSelect) {
+          if (depSelect.value === 'custom') {
+            amount = depCustom && depCustom.value.trim() ? Number(depCustom.value) : 0;
+          } else {
+            amount = depSelect.value ? Number(depSelect.value) : 0;
+          }
+        }
+        if (!amount || amount <= 0) return false;
       }
+
       return true;
     }
 
     function updateFeatureLockUI(){
-  window.vpProfileReady = !!computeProfileReadyFromDom();
+      window.vpProfileReady = !!computeProfileReadyFromDom();
 
-  // Kalender (tijden) is altijd toegankelijk. Alleen Flexijobs locken.
-  const needsProfileTabs = document.querySelectorAll('.dash-tab[data-panel="flexijobs"]');
+      // Kalender (tijden) is altijd toegankelijk. Alleen Flexijobs locken.
+      const needsProfileTabs = document.querySelectorAll('.dash-tab[data-panel="flexijobs"]');
 
-  needsProfileTabs.forEach(tab=>{
-    if(window.vpProfileReady){
-      tab.classList.remove('is-locked');
-      tab.removeAttribute('title');
-    }else{
-      tab.classList.add('is-locked');
-      tab.setAttribute('title','Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.');
+      needsProfileTabs.forEach(tab=>{
+        if(window.vpProfileReady){
+          tab.classList.remove('is-locked');
+          tab.removeAttribute('title');
+        }else{
+          tab.classList.add('is-locked');
+          tab.setAttribute('title','Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.');
+        }
+      });
     }
-  });
-}
-
 
     function applyProfileToForm(profile){
       if(!profile) {
@@ -1618,7 +1637,6 @@
       if(byId('invoice-note'))  byId('invoice-note').value  = profile.invoice_note || profile.deposit_note || '';
       if(byId('iban'))          byId('iban').value          = profile.iban || profile.bank_iban || '';
       if(byId('bic'))           byId('bic').value           = profile.bic || '';
-      if(byId('deposit-amount'))byId('deposit-amount').value= profile.deposit_amount ?? '';
       if(byId('extra-footer'))  byId('extra-footer').value  = profile.extra_footer || '';
 
       if(byId('business-street'))   byId('business-street').value   = profile.business_street || profile.straat || '';
@@ -1630,6 +1648,27 @@
         depositEnabledInput.checked = !!profile.deposit_enabled;
         const event = new Event('change');
         depositEnabledInput.dispatchEvent(event);
+      }
+
+      // ✅ nieuw deposit select invullen
+      const sel = document.getElementById('deposit-amount-select');
+      const cus = document.getElementById('deposit-amount-custom');
+      const cusWrap = document.getElementById('deposit-amount-custom-wrap');
+      if (sel) {
+        const v = profile.deposit_amount;
+        if (v === 15 || v === 25 || v === 50) {
+          sel.value = String(v);
+          if (cus) cus.value = '';
+          if (cusWrap) cusWrap.style.display = 'none';
+        } else if (v && Number(v) > 0) {
+          sel.value = 'custom';
+          if (cus) cus.value = String(v);
+          if (cusWrap) cusWrap.style.display = 'flex';
+        } else {
+          sel.value = '';
+          if (cus) cus.value = '';
+          if (cusWrap) cusWrap.style.display = 'none';
+        }
       }
 
       const googleReviewEnabledInput = document.getElementById('google-review-enabled');
@@ -1676,18 +1715,24 @@
         const el = document.getElementById(id);
         return el ? el.value.trim() : '';
       };
-      const getNumber = (id) => {
-        const el = document.getElementById(id);
-        if(!el) return null;
-        const v = el.value.trim();
-        if(!v) return null;
-        const n = Number(v);
-        return Number.isNaN(n) ? null : n;
-      };
       const getChecked = (id) => {
         const el = document.getElementById(id);
         return el ? !!el.checked : false;
       };
+
+      const deposit_amount = (() => {
+        const sel = document.getElementById('deposit-amount-select');
+        const cus = document.getElementById('deposit-amount-custom');
+        if (!sel) return null;
+        if (sel.value === 'custom') {
+          const v = cus ? cus.value.trim() : '';
+          const n = v ? Number(v) : null;
+          return Number.isFinite(n) ? n : null;
+        }
+        if (!sel.value) return null;
+        const n = Number(sel.value);
+        return Number.isFinite(n) ? n : null;
+      })();
 
       return {
         company_name:   getVal('company-name'),
@@ -1699,7 +1744,7 @@
         deposit_enabled:getChecked('deposit-enabled'),
         iban:           getVal('iban'),
         bic:            getVal('bic'),
-        deposit_amount: getNumber('deposit-amount'),
+        deposit_amount,
         extra_footer:   getVal('extra-footer'),
         google_review_enabled: getChecked('google-review-enabled'),
         google_review_url: getVal('google-review-url'),
@@ -1716,64 +1761,138 @@
         e.stopPropagation();
         e.stopImmediatePropagation();
       }
-      
+
       const tab = e ? e.currentTarget : this;
       const target = tab.getAttribute('data-panel');
-      
+
       if (!target) {
         console.error('Tab has no data-panel attribute');
         return;
       }
-      
+
       console.log('=== TAB CLICKED ===', target);
 
       if (target === 'flexijobs' && !window.vpProfileReady) {
-      showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
+        showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
         const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
         if (settingsTab) {
           document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
           settingsTab.classList.add('is-active');
-          document.querySelectorAll('.dash-panel').forEach(panel => {
-            panel.classList.remove('is-visible');
-          });
+          document.querySelectorAll('.dash-panel').forEach(panel => panel.classList.remove('is-visible'));
           const settingsPanel = document.getElementById('panel-instellingen');
           if (settingsPanel) settingsPanel.classList.add('is-visible');
         }
         return false;
       }
-      
-      document.querySelectorAll('.dash-tab').forEach(t => {
-        t.classList.remove('is-active');
-      });
+
+      document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
       tab.classList.add('is-active');
-      
+
       document.querySelectorAll('.dash-panel').forEach(panel => {
         if (panel.id === `panel-${target}`) {
           panel.classList.add('is-visible');
-          console.log('Showing panel:', panel.id);
         } else {
           panel.classList.remove('is-visible');
         }
       });
-      
+
+      // ✅ als je naar afspraken tab gaat, refresh
+      if (target === 'afspraken') {
+        loadAppointments();
+      }
+
       return false;
     }
-    
+
     document.addEventListener('click', function(e) {
       const tab = e.target.closest('.dash-tab');
       if (tab && !tab.hasAttribute('data-handled')) {
         tab.setAttribute('data-handled', 'true');
-        console.log('Event delegation caught tab click:', tab.getAttribute('data-panel'));
         handleTabClick.call(tab, e);
         setTimeout(() => tab.removeAttribute('data-handled'), 100);
       }
     }, false);
 
+    // ✅ NIEUW: afspraken laden (scan komende 60 dagen)
+    async function loadAppointments(){
+      if (!dashboardEmail) return;
+
+      const empty = document.getElementById('appointments-empty');
+      const grid = document.getElementById('appointments-grid');
+      const bookedList = document.getElementById('booked-list');
+      const openList = document.getElementById('open-list');
+      const bookedEmpty = document.getElementById('booked-empty');
+      const openEmpty = document.getElementById('open-empty');
+
+      const today = new Date(); today.setHours(0,0,0,0);
+
+      const all = [];
+      for (let i = 0; i <= 60; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const key = formatDateKey(d);
+
+        try{
+          const daySlots = await fetchSlotsForDate(key);
+          (daySlots || []).forEach(s => {
+            // als backend email filtert is dit al ok, maar dubbel veilig:
+            if ((s.email || '').toLowerCase() === (dashboardEmail || '').toLowerCase() || !s.email) {
+              all.push(s);
+            }
+          });
+        }catch(e){
+          // niet crashen
+        }
+      }
+
+      const normalizeStatus = (s) => {
+        const st = (s.status || '').toLowerCase();
+        if (st === 'booked' || st === 'geboekt' || st === 'bezet') return 'booked';
+        if (st === 'pending_deposit') return 'pending_deposit';
+        if (s.is_booked || s.booked) return 'booked';
+        return 'open';
+      };
+
+      const booked = all.filter(s => ['booked','pending_deposit'].includes(normalizeStatus(s)));
+      const open = all.filter(s => normalizeStatus(s) === 'open');
+
+      const sorter = (a,b) => {
+        const ad = (a.date || '').localeCompare(b.date || '');
+        if (ad !== 0) return ad;
+        return (a.start_time || a.start || '').localeCompare(b.start_time || b.start || '');
+      };
+      booked.sort(sorter);
+      open.sort(sorter);
+
+      const itemHtml = (s) => {
+        const date = s.date || '';
+        const start = s.start_time || s.start || '';
+        const end = s.end_time || s.end || '';
+        const desc = s.description || s.desc || 'Geen omschrijving';
+        const st = normalizeStatus(s);
+        const label = (st === 'pending_deposit') ? 'Wacht op voorschot' : (st === 'booked' ? 'Geboekt' : 'Open');
+
+        return `
+          <div class="slot-item ${st !== 'open' ? 'is-booked' : ''}">
+            <div class="slot-item-title">${date} • ${start} – ${end}</div>
+            <div class="slot-item-desc">${desc}</div>
+            <div class="slot-meta">${label}</div>
+          </div>
+        `;
+      };
+
+      if (empty) empty.style.display = 'none';
+      if (grid) grid.style.display = 'grid';
+
+      if (bookedEmpty) bookedEmpty.style.display = booked.length ? 'none' : 'block';
+      if (openEmpty) openEmpty.style.display = open.length ? 'none' : 'block';
+
+      if (bookedList) bookedList.innerHTML = booked.map(itemHtml).join('');
+      if (openList) openList.innerHTML = open.map(itemHtml).join('');
+    }
+
     function initDashboard() {
-      console.log('=== DASHBOARD INIT START ===');
-      
       if (!document.body) {
-        console.error('Document body not ready');
         setTimeout(initDashboard, 100);
         return;
       }
@@ -1784,31 +1903,24 @@
       }
 
       const tabs = document.querySelectorAll('.dash-tab');
-      console.log('Found tabs:', tabs.length);
-      
       if (tabs.length === 0) {
-        console.error('NO TABS FOUND! Retrying in 200ms...');
         setTimeout(initDashboard, 200);
         return;
       }
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', handleTabClick);
-      });
+
+      tabs.forEach(tab => tab.addEventListener('click', handleTabClick));
 
       document.querySelectorAll('[data-panel-jump="tijden"]').forEach(btn => {
-        btn.style.cssText = 'cursor: pointer !important; pointer-events: auto !important;';
         btn.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
           const targetTab = document.querySelector('.dash-tab[data-panel="tijden"]');
-          if (targetTab) {
-            targetTab.click();
-          }
+          if (targetTab) targetTab.click();
         };
         btn.addEventListener('click', btn.onclick, false);
       });
 
+      // deposit blok disable/enable
       const depositToggle = document.getElementById('deposit-enabled');
       const depositBlock = document.querySelector('[data-deposit-block]');
       if (depositToggle && depositBlock) {
@@ -1824,6 +1936,25 @@
         updateDepositState();
       }
 
+      // ✅ deposit select custom show/hide
+      const depSelect = document.getElementById('deposit-amount-select');
+      const depCustomWrap = document.getElementById('deposit-amount-custom-wrap');
+      const depCustom = document.getElementById('deposit-amount-custom');
+      if (depSelect && depCustomWrap && depCustom) {
+        const sync = () => {
+          if (depSelect.value === 'custom') {
+            depCustomWrap.style.display = 'flex';
+          } else {
+            depCustomWrap.style.display = 'none';
+            depCustom.value = '';
+          }
+          updateFeatureLockUI();
+        };
+        depSelect.addEventListener('change', sync);
+        depCustom.addEventListener('input', sync);
+        sync();
+      }
+
       const slotForm   = document.getElementById('slot-form');
       const slotList   = document.getElementById('slot-list');
       const slotEmpty  = document.getElementById('slot-empty');
@@ -1832,39 +1963,10 @@
       const slotPlaces = document.getElementById('slot-places');
       const slotDesc   = document.getElementById('slot-desc');
       const slotVisible= document.getElementById('slot-visible');
-      const slotDeposit= document.getElementById('slot-deposit');
       const slotSubmitBtn = document.getElementById('slot-submit-btn');
 
       const googleReviewToggle = document.getElementById('google-review-enabled');
       const googleReviewField = document.getElementById('google-review-field');
-
-      const slotDepositAmount = document.getElementById('slot-deposit-amount');
-      const slotDepositCustom = document.getElementById('slot-deposit-custom');
-      const slotDepositGroup = document.querySelector('.slot-deposit-amount');
-
-      if (slotDeposit && slotDepositGroup) {
-        slotDeposit.addEventListener('change', () => {
-          if (slotDeposit.checked) {
-            slotDepositGroup.style.display = 'block';
-          } else {
-            slotDepositGroup.style.display = 'none';
-            if (slotDepositAmount) slotDepositAmount.value = '';
-            if (slotDepositCustom) {
-              slotDepositCustom.value = '';
-              slotDepositCustom.style.display = 'none';
-            }
-          }
-        });
-      }
-      if (slotDepositAmount && slotDepositCustom) {
-        slotDepositAmount.addEventListener('change', () => {
-          if (slotDepositAmount.value === 'custom') {
-            slotDepositCustom.style.display = 'block';
-          } else {
-            slotDepositCustom.style.display = 'none';
-          }
-        });
-      }
 
       if (googleReviewToggle && googleReviewField) {
         const updateGoogleReviewVisibility = () => {
@@ -1934,25 +2036,7 @@
             slotPlaces.value = slot.places || slot.places_count || 1;
             slotDesc.value   = slot.description || slot.desc || '';
             slotVisible.checked = typeof slot.visible === 'boolean' ? slot.visible : true;
-            if(slotDeposit){
-              const hasDeposit = !!(slot.deposit_required || slot.with_deposit);
-              slotDeposit.checked = hasDeposit;
-              if (slotDepositGroup) {
-                slotDepositGroup.style.display = hasDeposit ? 'block' : 'none';
-              }
-              if (slotDepositAmount) {
-                const depAmount = slot.deposit_amount || slot.depositAmount || null;
-                if (depAmount) {
-                  slotDepositAmount.value = String(depAmount);
-                } else {
-                  slotDepositAmount.value = '';
-                }
-              }
-              if (slotDepositCustom) {
-                slotDepositCustom.value = '';
-                slotDepositCustom.style.display = 'none';
-              }
-            }
+
             if(slotSubmitBtn){
               slotSubmitBtn.textContent = 'Tijdslot bijwerken';
             }
@@ -1974,6 +2058,7 @@
               await deleteSlot(id);
               showToast('Tijdslot verwijderd','success');
               await loadSlotsForSelectedDate();
+              await loadAppointments();
             }catch(err){
               console.error(err);
               showToast('Verwijderen mislukt: ' + (err.message || err),'error');
@@ -2066,7 +2151,7 @@
       if(slotForm){
         slotForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-        if(!selected){
+          if(!selected){
             showToast('Kies eerst een datum in de kalender.','error');
             return;
           }
@@ -2076,18 +2161,6 @@
           const descVal   = slotDesc.value.trim();
           const placesVal = slotPlaces.value ? parseInt(slotPlaces.value, 10) : 1;
           const visibleVal= !!slotVisible.checked;
-          const depositPerSlot = slotDeposit ? !!slotDeposit.checked : false;
-
-          let depositAmountVal = null;
-          if (depositPerSlot) {
-            if (slotDepositAmount && slotDepositAmount.value && slotDepositAmount.value !== 'custom') {
-              const n = parseInt(slotDepositAmount.value, 10);
-              if (!Number.isNaN(n)) depositAmountVal = n;
-            } else if (slotDepositCustom && slotDepositCustom.value) {
-              const n = parseInt(slotDepositCustom.value, 10);
-              if (!Number.isNaN(n)) depositAmountVal = n;
-            }
-          }
 
           if(!startVal || !endVal){
             showToast('Vul minstens een start- en einduur in.','error');
@@ -2102,9 +2175,7 @@
             end: endVal,
             places: placesVal,
             description: descVal,
-            visible: visibleVal,
-            deposit_required: depositPerSlot,
-            deposit_amount: depositAmountVal
+            visible: visibleVal
           };
 
           if(dashboardEmail){
@@ -2120,15 +2191,7 @@
 
             slotForm.reset();
             slotVisible.checked = true;
-            if(slotDeposit){ 
-              slotDeposit.checked = false;
-              if (slotDepositGroup) slotDepositGroup.style.display = 'none';
-              if (slotDepositAmount) slotDepositAmount.value = '';
-              if (slotDepositCustom){
-                slotDepositCustom.value = '';
-                slotDepositCustom.style.display = 'none';
-              }
-            }
+
             const msg = editingSlotId ? 'Tijdslot bijgewerkt' : 'Tijdslot opgeslagen';
             editingSlotId = null;
             if(slotSubmitBtn){
@@ -2137,6 +2200,7 @@
 
             showToast(msg,'success');
             await loadSlotsForSelectedDate();
+            await loadAppointments();
           }catch(err){
             console.error(err);
             showToast('Tijdslot kon niet worden opgeslagen: ' + (err.message || err),'error');
@@ -2265,28 +2329,19 @@
 
       const logoutBtn = document.getElementById('logout-btn');
       if (logoutBtn){
-        logoutBtn.style.cssText = 'cursor: pointer !important; pointer-events: auto !important; position: relative; z-index: 10;';
         logoutBtn.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
-          console.log('Logout clicked');
           window.location.href = '/logout.html';
         };
         logoutBtn.addEventListener('click', logoutBtn.onclick, false);
-        console.log('Logout button handler attached');
-      } else {
-        console.error('Logout button not found!');
       }
-      
+
       renderCalendar();
       updateSelectedLabels();
       loadSlotsForSelectedDate();
+      loadAppointments(); // ✅ init afspraken
       updateFeatureLockUI();
-      
-      console.log('Dashboard initialized successfully');
-      console.log('=== DASHBOARD INIT COMPLETE ===');
-      console.log('Tabs:', document.querySelectorAll('.dash-tab').length);
-      console.log('Panels:', document.querySelectorAll('.dash-panel').length);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -2296,17 +2351,16 @@
         console.error('Init error:', err);
       }
     });
-    
+
     window.handleTabClick = handleTabClick;
-    
+
     window.switchTab = function(panelName) {
-      console.log('Emergency switchTab called for:', panelName);
       const tab = document.querySelector(`.dash-tab[data-panel="${panelName}"]`);
       if (tab) {
         handleTabClick.call(tab, null);
       }
     };
-    
+
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey || e.metaKey) {
         if (e.key === '1') {
