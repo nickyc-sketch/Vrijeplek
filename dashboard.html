@@ -1580,7 +1580,12 @@
       let errorData;
       try { errorData = await res.json(); }
       catch { errorData = { error: await res.text() }; }
-      throw new Error(errorData.error || errorData.details || 'Failed to save profile');
+     throw new Error(
+  errorData.details ||   // ✅ eerst details tonen
+  errorData.error   ||
+  'Failed to save profile'
+);
+
     }
 
     return res.json();
