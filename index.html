@@ -338,84 +338,79 @@
     });
   })();
 </script>
-  <!-- BOOKING MODAL -->
-<div id="booking-modal" class="booking-modal" hidden>
-  <div class="booking-backdrop"></div>
-  <div class="booking-dialog" role="dialog" aria-modal="true" aria-labelledby="booking-title">
-    <button type="button" class="booking-close" id="booking-close-btn" aria-label="Sluiten">×</button>
-
-    <div id="booking-step-form">
-      <h2 id="booking-title">Boeking bevestigen</h2>
-     <p id="booking-slot-summary" class="booking-slot-summary"></p>
-
-<p class="helper" style="margin-bottom:0.8rem;">
-  Vul je gegevens in om deze afspraak aan te vragen.
-  De zaak bevestigt je boeking na betaling van het voorschot.
-</p>
-
-      <form id="booking-form" class="booking-form">
-        <div class="field">
-          <label for="bk-name">Naam</label>
-          <input id="bk-name" name="name" type="text" required placeholder="Naam en voornaam">
-        </div>
-        <div class="field">
-          <label for="bk-email">E-mailadres</label>
-          <input id="bk-email" name="email" type="email" required placeholder="jij@example.com">
-        </div>
-        <div class="field">
-          <label for="bk-phone">Telefoon / GSM</label>
-          <input id="bk-phone" name="phone" type="tel" required placeholder="GSM-nummer voor bevestiging">
-        </div>
-        <div class="field">
-          <label for="bk-notes">Extra info (optioneel)</label>
-          <textarea id="bk-notes" name="notes" rows="2" placeholder="Bv. korte toelichting, voorkeur, ..."></textarea>
-        </div>
-
-        <p class="helper" id="booking-deposit-hint" style="display:none;">
-  Voor deze afspraak wordt een voorschot gevraagd.
-  Je betaalt veilig online. De zaak bevestigt daarna je boeking.
-</p>
-        <div class="form-actions">
-          <button type="button" class="btn-ghost" id="booking-cancel-btn">Annuleren</button>
-          <button type="submit" class="btn-primary" id="booking-submit-btn">
-            Boeking bevestigen
-          </button>
-        </div>
-
-        <p class="helper" id="booking-error" style="display:none; color:#fecaca;"></p>
-      </form>
-    </div>
-
-    <div id="booking-step-confirm" style="display:none;">
-      <h2>Boeking ontvangen ✅</h2>
-<p id="booking-confirm-text">
-  Bedankt! Je aanvraag is goed ontvangen.
-  Je ontvangt zo meteen een bevestigingsmail met alle details van je afspraak.
-</p>
-
-      <div id="booking-deposit-block" class="deposit-block" style="display:none; margin-top:1rem;">
-        <h3>Voorschot betalen</h3>
-        <p id="deposit-text"></p>
-        <ul class="deposit-details">
-          <li><strong>IBAN:</strong> <span id="deposit-iban"></span></li>
-          <li><strong>BIC:</strong> <span id="deposit-bic"></span></li>
-          <li><strong>Bedrag:</strong> <span id="deposit-amount"></span></li>
-          <li><strong>Mededeling:</strong> <span id="deposit-message"></span></li>
-        </ul>
-        <p class="helper">
-          Gebruik deze gegevens in je banking app om het voorschot over te schrijven.
-          De handelaar koppelt je betaling aan de mededeling.
-        </p>
-      </div>
-
-      <div class="form-actions" style="margin-top:1rem;">
-        <button type="button" class="btn-primary" id="booking-done-btn">
-          Sluiten
-        </button>
-      </div>
-    </div>
+<form id="booking-form" class="booking-form">
+  <div class="field">
+    <label for="bk-name">Naam</label>
+    <input id="bk-name" name="name" type="text" required placeholder="Naam en voornaam">
   </div>
-</div>
 
-</body>
-</html>
+  <div class="field">
+    <label for="bk-gender">Man / Vrouw</label>
+    <select id="bk-gender" name="gender" required>
+      <option value="" selected>Kies…</option>
+      <option value="man">Man</option>
+      <option value="vrouw">Vrouw</option>
+      <option value="x">X / anders</option>
+      <option value="zeg_ik_liever_niet">Zeg ik liever niet</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="bk-birth-year">Geboortejaar</label>
+    <input id="bk-birth-year" name="birth_year" type="number" inputmode="numeric"
+           min="1900" max="2025" placeholder="bv. 1992" required>
+  </div>
+
+  <div class="field">
+    <label for="bk-street">Adres</label>
+    <input id="bk-street" name="street" type="text" placeholder="Straat + nummer" required>
+  </div>
+
+  <div class="field">
+    <label for="bk-zip">Postcode</label>
+    <input id="bk-zip" name="zip" type="text" inputmode="numeric" placeholder="bv. 2000" required>
+  </div>
+
+  <div class="field">
+    <label for="bk-city">Gemeente</label>
+    <input id="bk-city" name="city" type="text" placeholder="bv. Antwerpen" required>
+  </div>
+
+  <div class="field">
+    <label for="bk-email">E-mailadres</label>
+    <input id="bk-email" name="email" type="email" required placeholder="jij@example.com">
+  </div>
+
+  <div class="field">
+    <label for="bk-phone">Telefoon / GSM</label>
+    <input id="bk-phone" name="phone" type="tel" required placeholder="GSM-nummer voor bevestiging">
+  </div>
+
+  <div class="field">
+    <label for="bk-notes">Extra info (optioneel)</label>
+    <textarea id="bk-notes" name="notes" rows="2" placeholder="Bv. korte toelichting, voorkeur, ..."></textarea>
+  </div>
+
+  <div class="field" style="margin-top:0.5rem;">
+    <label style="display:flex; gap:.6rem; align-items:flex-start; font-weight:600;">
+      <input type="checkbox" name="terms" id="bk-terms" required style="margin-top:.25rem;">
+      <span>
+        Ik ga akkoord met de <a href="/voorwaarden.html" target="_blank" rel="noopener">algemene voorwaarden</a>.
+      </span>
+    </label>
+  </div>
+
+  <p class="helper" id="booking-deposit-hint" style="display:none;">
+    Voor deze afspraak wordt een voorschot gevraagd.
+    Je betaalt veilig online. De zaak bevestigt daarna je boeking.
+  </p>
+
+  <div class="form-actions">
+    <button type="button" class="btn-ghost" id="booking-cancel-btn">Annuleren</button>
+    <button type="submit" class="btn-primary" id="booking-submit-btn">
+      Boeking bevestigen
+    </button>
+  </div>
+
+  <p class="helper" id="booking-error" style="display:none; color:#fecaca;"></p>
+</form>
