@@ -45,25 +45,45 @@ export async function handler(event) {
     const dateFrom = from || todayISO();
     const dateTo   = to   || null;
 
-    // 1) Profielen (actief) ophalen
+    // 1) Profielen ophalen (active OF leeg)
     let profQuery = supa
       .from('profiles')
-      .select('email, zaak, cat, straat, postcode, website, bio, account_status, deposit_enabled, deposit_amount, iban')
-      .eq('account_status', 'active');
+      .select([
+        'email',
+        'company_name',
+        'zaak',
+        'cat',
+        'cat_label',
+        'business_city',
+        'gemeente',
+        'plaats',
+        'business_street',
+        'straat',
+        'business_postcode',
+        'postcode',
+        'website',
+        'bio',
+        'account_status',
+        'deposit_enabled',
+        'deposit_amount',
+        'iban',
+        'bic'
+      ].join(','))
+      .or('account_status.eq.active,account_status.is.null');
 
-    // Sanitize search inputs to prevent injection
     const sanitizedQ = q ? String(q).trim().substring(0, 100) : '';
     const sanitizedLoc = loc ? String(loc).trim().substring(0, 100) : '';
 
     if(sanitizedQ){
+      // ✅ zoek ook op company_name
       profQuery = profQuery.or(
-        `zaak.ilike.%${sanitizedQ}%,email.ilike.%${sanitizedQ}%`
+        `company_name.ilike.%${sanitizedQ}%,zaak.ilike.%${sanitizedQ}%,email.ilike.%${sanitizedQ}%`
       );
     }
 
     if(sanitizedLoc){
       profQuery = profQuery.or(
-        `postcode.ilike.%${sanitizedLoc}%,straat.ilike.%${sanitizedLoc}%`
+        `business_city.ilike.%${sanitizedLoc}%,gemeente.ilike.%${sanitizedLoc}%,plaats.ilike.%${sanitizedLoc}%,business_postcode.ilike.%${sanitizedLoc}%,postcode.ilike.%${sanitizedLoc}%,business_street.ilike.%${sanitizedLoc}%,straat.ilike.%${sanitizedLoc}%`
       );
     }
 
@@ -71,90 +91,40 @@ export async function handler(event) {
       profQuery = profQuery.eq('cat', cat);
     }
 
-    const { data: profiles, error: profErr } = await profQuery.limit(50);
+    const { data: profiles, error: profErr } = await profQuery.limit(80);
 
     if(profErr){
-      return {
-        statusCode:500,
-        headers,
-        body:JSON.stringify({ error:'profiles_failed', details:profErr.message })
-      };
+      return { statusCode:500, headers, body:JSON.stringify({ error:'profiles_failed', details:profErr.message }) };
     }
 
     if(!profiles || !profiles.length){
-      return { statusCode:200, headers, body:JSON.stringify([]) };
+      return { statusCode:200, headers, body:JSON.stringify({ profiles: [], slots: [] }) };
     }
 
     const emails = profiles
       .map(p => (p.email || '').toLowerCase())
       .filter(Boolean);
 
-    // 2) Slots ophalen / filteren
+    // 2) Slots ophalen (open)
     let slotQuery = supa
       .from('slots')
-      .select('id, email, date, from, to, desc, status')
+      .select('id, email, date, "from", "to", "desc", status, booked_at, active')
       .in('email', emails)
-      .eq('status', 'open'); // alleen open slots
+      .eq('active', true)
+      .eq('status', 'open');
 
-    if(dateFrom){
-      slotQuery = slotQuery.gte('date', dateFrom);
-    }
-    if(dateTo){
-      slotQuery = slotQuery.lte('date', dateTo);
-    }
+    if(dateFrom) slotQuery = slotQuery.gte('date', dateFrom);
+    if(dateTo)   slotQuery = slotQuery.lte('date', dateTo);
 
     const { data: slots, error: slotErr } = await slotQuery;
 
     if(slotErr){
-      return {
-        statusCode:500,
-        headers,
-        body:JSON.stringify({ error:'slots_failed', details:slotErr.message })
-      };
+      return { statusCode:500, headers, body:JSON.stringify({ error:'slots_failed', details:slotErr.message }) };
     }
 
-    const grouped = {};
-    (slots || []).forEach(s => {
-      const key = (s.email || '').toLowerCase();
-      if(!key) return;
-      (grouped[key] ||= []).push(s);
-    });
+    return { statusCode:200, headers, body:JSON.stringify({ profiles, slots: (slots || []) }) };
 
-    Object.values(grouped).forEach(arr => {
-      arr.sort((a,b)=>{
-        if(a.date === b.date){
-          return (a.from || '').localeCompare(b.from || '');
-        }
-        return (a.date || '').localeCompare(b.date || '');
-      });
-    });
-
-    const results = profiles
-      .map(p => {
-        const key = (p.email || '').toLowerCase();
-        const userSlots = grouped[key] || [];
-        return {
-          email: p.email,
-          zaak: p.zaak,
-          cat: p.cat,
-          straat: p.straat,
-          postcode: p.postcode,
-          website: p.website,
-          bio: p.bio,
-          deposit_enabled: p.deposit_enabled,
-          deposit_amount: p.deposit_amount,
-          iban: p.iban,
-          slots: userSlots
-        };
-      })
-      .filter(r => r.slots && r.slots.length);
-
-    return { statusCode:200, headers, body:JSON.stringify(results) };
   }catch(e){
-    return {
-      statusCode:500,
-      headers,
-      body:JSON.stringify({ error:'server_error', message:String(e?.message || e) })
-    };
+    return { statusCode:500, headers, body:JSON.stringify({ error:'server_error', message:String(e?.message || e) }) };
   }
 }
