@@ -1586,18 +1586,22 @@
     }
 
     function updateFeatureLockUI(){
-      window.vpProfileReady = !!computeProfileReadyFromDom();
-      const needsProfileTabs = document.querySelectorAll('.dash-tab[data-panel="tijden"], .dash-tab[data-panel="flexijobs"]');
-      needsProfileTabs.forEach(tab=>{
-        if(window.vpProfileReady){
-          tab.classList.remove('is-locked');
-          tab.removeAttribute('title');
-        }else{
-          tab.classList.add('is-locked');
-          tab.setAttribute('title','Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.');
-        }
-      });
+  window.vpProfileReady = !!computeProfileReadyFromDom();
+
+  // Kalender (tijden) is altijd toegankelijk. Alleen Flexijobs locken.
+  const needsProfileTabs = document.querySelectorAll('.dash-tab[data-panel="flexijobs"]');
+
+  needsProfileTabs.forEach(tab=>{
+    if(window.vpProfileReady){
+      tab.classList.remove('is-locked');
+      tab.removeAttribute('title');
+    }else{
+      tab.classList.add('is-locked');
+      tab.setAttribute('title','Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.');
     }
+  });
+}
+
 
     function applyProfileToForm(profile){
       if(!profile) {
@@ -1723,8 +1727,8 @@
       
       console.log('=== TAB CLICKED ===', target);
 
-      if ((target === 'tijden' || target === 'flexijobs') && !window.vpProfileReady) {
-        showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
+      if (target === 'flexijobs' && !window.vpProfileReady) {
+      showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
         const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
         if (settingsTab) {
           document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('is-active'));
@@ -2062,15 +2066,7 @@
       if(slotForm){
         slotForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-
-          if(!window.vpProfileReady){
-            showToast('Vul eerst je bedrijfs- en locatiegegevens in bij Instellingen.','error');
-            const settingsTab = document.querySelector('.dash-tab[data-panel="instellingen"]');
-            if (settingsTab) settingsTab.click();
-            return;
-          }
-
-          if(!selected){
+        if(!selected){
             showToast('Kies eerst een datum in de kalender.','error');
             return;
           }
