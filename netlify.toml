@@ -2,14 +2,28 @@
   node_bundler = "esbuild"
   external_node_modules = ["@supabase/supabase-js","nodemailer","stripe"]
 
-# Zorg dat Stripe raw body doorlaat (voor webhook signature)
-[[headers]]
-  for = "/.netlify/functions/stripe-webhook"
-  [headers.values]
-    Content-Type = "application/json"
-
-# Webhook route
 [[redirects]]
   from = "/webhooks/stripe"
   to = "/.netlify/functions/stripe-webhook"
   status = 200
+
+# --- Cache-control: HTML altijd vers, assets lang cachen ---
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
