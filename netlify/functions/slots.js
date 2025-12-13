@@ -18,59 +18,104 @@ export async function handler(event) {
     const method = event.httpMethod;
     const qs     = event.queryStringParameters || {};
 
-    // --------------------------------
-    // GET /slots?date=YYYY-MM-DD
-    // --------------------------------
-    if (method === "GET") {
-      const date = qs.date;
+  // --------------------------------
+// GET /slots?date=YYYY-MM-DD
+// of: GET /slots?email=...&status=open,booked&from=YYYY-MM-DD&to=YYYY-MM-DD
+// --------------------------------
+if (method === "GET") {
+  const date = qs.date;
+  const email = (qs.email || "").trim().toLowerCase();
+  const statusRaw = (qs.status || "").trim();     // bv "open,booked"
+  const dateFrom = (qs.from || "").trim();        // YYYY-MM-DD
+  const dateTo = (qs.to || "").trim();            // YYYY-MM-DD
 
-      if (!date) {
-        return {
-          statusCode: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "Missing date parameter" })
-        };
-      }
+  // 1) Oud gedrag (per datum) behouden
+  if (date) {
+    const { data, error } = await supabase
+      .from("slots")
+      .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+      .eq("date", date);
 
-      const { data, error } = await supabase
-        .from("slots")
-        .select('id, email, date, "from", "to", "desc", booked_at, status, active')
-        .eq("date", date);
-
-      if (error) {
-        console.error("slots GET error:", error);
-        return {
-          statusCode: 500,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ error: "DB error (get): " + error.message })
-        };
-      }
-
-      const mapped = (data || [])
-        .map((row) => ({
-          id: row.id,
-          email: row.email,
-          date: row.date,
-          start: row.from,
-          end: row.to,
-          description: row.desc,
-          booked_at: row.booked_at,
-          active: row.active,
-          status: row.status,
-        }))
-        .sort((a, b) => (a.start || "").localeCompare(b.start || ""));
-
+    if (error) {
+      console.error("slots GET error:", error);
       return {
-        statusCode: 200,
+        statusCode: 500,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(mapped),
+        body: JSON.stringify({ error: "DB error (get): " + error.message })
       };
     }
 
-    // --------------------------------
-    // POST /slots   (tijdslot aanmaken)
-    // body: { date, start, end, description, email? }
-    // --------------------------------
+    const mapped = (data || [])
+      .map((row) => ({
+        id: row.id,
+        email: row.email,
+        date: row.date,
+        start: row.from,
+        end: row.to,
+        description: row.desc,
+        booked_at: row.booked_at,
+        active: row.active,
+        status: row.status,
+      }))
+      .sort((a, b) => (a.start || "").localeCompare(b.start || ""));
+
+    return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(mapped) };
+  }
+
+  // 2) Nieuw gedrag: lijst voor provider (dashboard)
+  if (!email) {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: "Missing date parameter OR email parameter" })
+    };
+  }
+
+  let q = supabase
+    .from("slots")
+    .select('id, email, date, "from", "to", "desc", booked_at, status, active')
+    .eq("email", email);
+
+  if (statusRaw) {
+    const statuses = statusRaw.split(",").map(s => s.trim()).filter(Boolean);
+    if (statuses.length === 1) q = q.eq("status", statuses[0]);
+    else q = q.in("status", statuses);
+  }
+
+  if (dateFrom) q = q.gte("date", dateFrom);
+  if (dateTo) q = q.lte("date", dateTo);
+
+  const { data, error } = await q;
+
+  if (error) {
+    console.error("slots GET list error:", error);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: "DB error (list): " + error.message })
+    };
+  }
+
+  const mapped = (data || [])
+    .map((row) => ({
+      id: row.id,
+      email: row.email,
+      date: row.date,
+      start: row.from,
+      end: row.to,
+      description: row.desc,
+      booked_at: row.booked_at,
+      active: row.active,
+      status: row.status,
+    }))
+    .sort((a, b) => {
+      if ((a.date || "") === (b.date || "")) return (a.start || "").localeCompare(b.start || "");
+      return (a.date || "").localeCompare(b.date || "");
+    });
+
+  return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(mapped) };
+}
+
     if (method === "POST") {
       let payload;
       try {
