@@ -105,7 +105,6 @@ async function vpSearchSubmit(e) {
 
   const resultsSection = document.getElementById('results');
   const resultsList = document.getElementById('results-list');
-  const resultsMeta = document.getElementById('results-meta');
   const resultsTitle = document.getElementById('results-title');
   const bookingMsg = document.getElementById('booking-msg');
 
