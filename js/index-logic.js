@@ -310,7 +310,6 @@ async function vpSearchSubmit(e) {
   });
 
   resultsList.innerHTML = htmlParts.join('');
-  const resultsMeta = document.getElementById('results-meta');
   if (resultsMeta) resultsMeta.textContent = `${slots.length} open tijdstippen`;
 }
 
