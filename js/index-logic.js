@@ -1,4 +1,4 @@
-console.log("INDEX LOGIC JS V7 LOADED");
+console.log("INDEX LOGIC JS V8 LOADED");
 
 // ---------- HELPERS ----------
 
@@ -105,6 +105,7 @@ async function vpSearchSubmit(e) {
 
   const resultsSection = document.getElementById('results');
   const resultsList = document.getElementById('results-list');
+  const resultsMeta = document.getElementById('results-meta');
   const resultsTitle = document.getElementById('results-title');
   const bookingMsg = document.getElementById('booking-msg');
 
@@ -250,7 +251,6 @@ async function vpSearchSubmit(e) {
               const timeLabel =
                 fromTime && toTime ? `${fromTime} – ${toTime}` : (fromTime || '');
 
-              // deposit info
               const slotDepositRequired = !!(slot.deposit_required || slot.with_deposit);
               const profileDepositEnabled = !!prof.deposit_enabled;
               const depositActive = slotDepositRequired || profileDepositEnabled;
@@ -347,6 +347,7 @@ function vpOpenBookingModal(slotId) {
   if (depositHint) depositHint.style.display = depositActive ? 'block' : 'none';
 
   clearError();
+  setSubmitting(false);
 
   stepForm.style.display = 'block';
   stepConfirm.style.display = 'none';
@@ -379,7 +380,7 @@ async function vpHandleBookingSubmit(e) {
   const phone = (form.phone?.value || '').trim();
   const notes = (form.notes?.value || '').trim();
 
-  // extra (verplicht als velden bestaan in je form)
+  // extra
   const gender = (form.gender?.value || '').trim();
   const birthYearRaw = (form.birth_year?.value || '').trim();
   const street = (form.street?.value || '').trim();
@@ -394,7 +395,7 @@ async function vpHandleBookingSubmit(e) {
     return;
   }
 
-  // Als deze velden bestaan in je form, willen we ze ook verplicht
+  // Als je extra velden in je form hebt, maken we ze verplicht
   const hasExtraFields =
     !!form.gender || !!form.birth_year || !!form.street || !!form.zip || !!form.city;
 
@@ -437,12 +438,11 @@ async function vpHandleBookingSubmit(e) {
     notes,
     terms_ok: true,
 
-    // extra velden meegeven (null als niet aanwezig)
-    gender: form.gender ? (gender || null) : null,
-    birth_year: form.birth_year ? (birthYearRaw || null) : null,
-    street: form.street ? (street || null) : null,
-    zip: form.zip ? (zip || null) : null,
-    city: form.city ? (city || null) : null,
+    gender: hasExtraFields ? gender : null,
+    birth_year: hasExtraFields ? birthYearRaw : null,
+    street: hasExtraFields ? street : null,
+    zip: hasExtraFields ? zip : null,
+    city: hasExtraFields ? city : null,
   };
 
   let resData;
@@ -511,6 +511,10 @@ async function vpHandleBookingSubmit(e) {
 // ---------- INIT ----------
 
 document.addEventListener('DOMContentLoaded', () => {
+  // footer year
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = String(getYearNow());
+
   const form = document.getElementById('form');
   if (form) form.addEventListener('submit', vpSearchSubmit);
 
@@ -543,4 +547,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
