@@ -657,4 +657,66 @@ header.site-header {
 }
 .deposit-details li + li{ margin-top:.2rem; }
 .booking-dialog { max-height: 90vh; overflow: auto; }
-  
+  /* -------------------------------------------------- */
+/* BOOKING FORM (velden + inputs)                      */
+/* -------------------------------------------------- */
+
+.booking-form {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.booking-form label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(226, 232, 240, .95);
+}
+
+.booking-form input,
+.booking-form select,
+.booking-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(15,23,42,.95);
+  border: 1px solid rgba(148,163,184,.55);
+  color: #e5edff;
+  outline: none;
+}
+
+.booking-form textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.booking-form input::placeholder,
+.booking-form textarea::placeholder {
+  color: rgba(148,163,184,.9);
+}
+
+.booking-form input:focus,
+.booking-form select:focus,
+.booking-form textarea:focus {
+  border-color: rgba(59,130,246,.9);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.18);
+}
+
+.booking-form a {
+  color: rgba(191,219,254,.95);
+}
+.booking-form a:hover {
+  text-decoration: underline;
+}
+
+#booking-error {
+  margin-top: 6px;
+  font-weight: 700;
+}
+
