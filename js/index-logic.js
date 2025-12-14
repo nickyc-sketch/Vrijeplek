@@ -1,5 +1,6 @@
+console.log("INDEX LOGIC JS V7 LOADED");
 
-console.log("INDEX LOGIC JS V6 LOADED");
+// ---------- HELPERS ----------
 
 function esc(s) {
   return String(s ?? '')
@@ -25,11 +26,42 @@ function formatDateHuman(iso) {
   }
 }
 
+function showError(msg) {
+  const errorEl = document.getElementById('booking-error');
+  if (!errorEl) return;
+  errorEl.textContent = msg;
+  errorEl.style.display = 'block';
+}
+
+function clearError() {
+  const errorEl = document.getElementById('booking-error');
+  if (!errorEl) return;
+  errorEl.textContent = '';
+  errorEl.style.display = 'none';
+}
+
+function setSubmitting(isSubmitting) {
+  const submitBtn = document.getElementById('booking-submit-btn');
+  if (!submitBtn) return;
+  submitBtn.disabled = !!isSubmitting;
+  submitBtn.textContent = isSubmitting ? 'Bezig met boeken…' : 'Boeking bevestigen';
+}
+
+function getYearNow() {
+  return new Date().getFullYear();
+}
+
+// ---------- STATE ----------
+
 const vpSearchState = {
   slotsById: {},
   profilesByEmail: {},
   currentResults: [],
 };
+
+let vpCurrentSlotId = null;
+
+// ---------- SEARCH NORMALIZE ----------
 
 function normalizeSearchResponse(data) {
   // A) Verwacht: { profiles:[...], slots:[...] }
@@ -39,7 +71,7 @@ function normalizeSearchResponse(data) {
     return { profiles, slots };
   }
 
-  // B) Jouw huidige backend: [ { email, zaak, ..., slots:[...] }, ... ]
+  // B) Backend: [ { email, zaak, ..., slots:[...] }, ... ]
   if (Array.isArray(data)) {
     const profiles = [];
     const slots = [];
@@ -50,7 +82,6 @@ function normalizeSearchResponse(data) {
 
       const arr = Array.isArray(item.slots) ? item.slots : [];
       for (const s of arr) {
-        // zorg dat slot.email er altijd op staat
         slots.push({ ...s, email: s.email || email });
       }
     }
@@ -59,6 +90,8 @@ function normalizeSearchResponse(data) {
 
   return { profiles: [], slots: [] };
 }
+
+// ---------- SEARCH SUBMIT ----------
 
 async function vpSearchSubmit(e) {
   e.preventDefault();
@@ -94,7 +127,6 @@ async function vpSearchSubmit(e) {
       body: JSON.stringify(payload),
     });
 
-    // probeer altijd nuttige fout te tonen
     const text = await res.text();
     try {
       raw = text ? JSON.parse(text) : null;
@@ -154,7 +186,6 @@ async function vpSearchSubmit(e) {
   Object.keys(byEmail).forEach((email) => {
     const prof = vpSearchState.profilesByEmail[email] || {};
 
-    // ondersteun beide schema's
     const companyName =
       prof.company_name ||
       prof.zaak ||
@@ -280,12 +311,11 @@ async function vpSearchSubmit(e) {
   });
 
   resultsList.innerHTML = htmlParts.join('');
+  const resultsMeta = document.getElementById('results-meta');
   if (resultsMeta) resultsMeta.textContent = `${slots.length} open tijdstippen`;
 }
 
 // ---------- BOOKING MODAL ----------
-
-let vpCurrentSlotId = null;
 
 function vpOpenBookingModal(slotId) {
   const modal = document.getElementById('booking-modal');
@@ -293,7 +323,6 @@ function vpOpenBookingModal(slotId) {
   const depositHint = document.getElementById('booking-deposit-hint');
   const stepForm = document.getElementById('booking-step-form');
   const stepConfirm = document.getElementById('booking-step-confirm');
-  const errorEl = document.getElementById('booking-error');
 
   if (!modal || !slotSummaryEl || !stepForm || !stepConfirm) return;
 
@@ -318,7 +347,8 @@ function vpOpenBookingModal(slotId) {
   const depositActive = slotDepositRequired || profileDepositEnabled;
 
   if (depositHint) depositHint.style.display = depositActive ? 'block' : 'none';
-  if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+
+  clearError();
 
   stepForm.style.display = 'block';
   stepConfirm.style.display = 'none';
@@ -330,48 +360,92 @@ function vpOpenBookingModal(slotId) {
 function vpCloseBookingModal() {
   const modal = document.getElementById('booking-modal');
   if (!modal) return;
+
   modal.hidden = true;
   document.body.style.overflow = '';
   vpCurrentSlotId = null;
+
+  clearError();
+  setSubmitting(false);
 }
 
 async function vpHandleBookingSubmit(e) {
   e.preventDefault();
   if (!vpCurrentSlotId) return;
 
-    const form = e.target;
-    const name = (form.name?.value || '').trim();
+  const form = e.target;
+
+  // basis
+  const name = (form.name?.value || '').trim();
   const email = (form.email?.value || '').trim();
   const phone = (form.phone?.value || '').trim();
   const notes = (form.notes?.value || '').trim();
 
-  const errorEl = document.getElementById('booking-error');
-  const submitBtn = document.getElementById('booking-submit-btn');
+  // extra (verplicht als velden bestaan in je form)
+  const gender = (form.gender?.value || '').trim();
+  const birthYearRaw = (form.birth_year?.value || '').trim();
+  const street = (form.street?.value || '').trim();
+  const zip = (form.zip?.value || '').trim();
+  const city = (form.city?.value || '').trim();
 
+  const termsOk = !!form.terms?.checked;
+
+  // VALIDATIE
   if (!name || !email || !phone) {
-    if (errorEl) {
-      errorEl.textContent = 'Vul naam, e-mailadres en telefoon in.';
-      errorEl.style.display = 'block';
-    }
+    showError('Vul naam, e-mailadres en telefoon in.');
     return;
   }
 
-  if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+  // Als deze velden bestaan in je form, willen we ze ook verplicht
+  const hasExtraFields =
+    !!form.gender || !!form.birth_year || !!form.street || !!form.zip || !!form.city;
+
+  if (hasExtraFields) {
+    if (!gender) {
+      showError('Kies man/vrouw.');
+      return;
+    }
+
+    const yearNow = getYearNow();
+    const birthYearNum = Number(birthYearRaw);
+
+    if (!birthYearRaw || !Number.isInteger(birthYearNum) || birthYearNum < 1900 || birthYearNum > yearNow) {
+      showError(`Vul een geldig geboortejaar in (1900–${yearNow}).`);
+      return;
+    }
+
+    if (!street || !zip || !city) {
+      showError('Vul je adresgegevens in (straat, postcode en gemeente).');
+      return;
+    }
+  }
+
+  if (!termsOk) {
+    showError('Je moet akkoord gaan met de algemene voorwaarden.');
+    return;
+  }
+
+  clearError();
+  setSubmitting(true);
 
   const slot = vpSearchState.slotsById[String(vpCurrentSlotId)];
-  const prof = slot ? vpSearchState.profilesByEmail[(slot.email || '').toLowerCase()] || {} : {};
+  const prof = slot ? (vpSearchState.profilesByEmail[(slot.email || '').toLowerCase()] || {}) : {};
 
-  const payload = { slot_id: vpCurrentSlotId, name, email, phone, notes };
-  const termsOk = !!form.terms?.checked;
-  if (!termsOk) {
-  if (errorEl) {
-    errorEl.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
-    errorEl.style.display = 'block';
-  }
-  return;
-}
+  const payload = {
+    slot_id: vpCurrentSlotId,
+    name,
+    email,
+    phone,
+    notes,
+    terms_ok: true,
 
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Bezig met boeken…'; }
+    // extra velden meegeven (null als niet aanwezig)
+    gender: form.gender ? (gender || null) : null,
+    birth_year: form.birth_year ? (birthYearRaw || null) : null,
+    street: form.street ? (street || null) : null,
+    zip: form.zip ? (zip || null) : null,
+    city: form.city ? (city || null) : null,
+  };
 
   let resData;
   try {
@@ -390,16 +464,14 @@ async function vpHandleBookingSubmit(e) {
     }
   } catch (err) {
     console.error(err);
-    if (errorEl) {
-      errorEl.textContent = err.message || 'Boeking mislukt.';
-      errorEl.style.display = 'block';
-    }
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Boeking bevestigen'; }
+    setSubmitting(false);
+    showError(err.message || 'Boeking mislukt.');
     return;
   }
 
-  if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Boeking bevestigen'; }
+  setSubmitting(false);
 
+  // UI naar confirm
   const stepForm = document.getElementById('booking-step-form');
   const stepConfirm = document.getElementById('booking-step-confirm');
   const confirmText = document.getElementById('booking-confirm-text');
@@ -414,6 +486,7 @@ async function vpHandleBookingSubmit(e) {
   confirmText.textContent =
     `Je aanvraag is verstuurd naar ${companyName}. Je ontvangt nog een bevestiging van de zaak zelf.`;
 
+  // deposit info tonen indien aanwezig
   const depositInfo = resData.deposit || null;
   if (depositInfo && depositBlock) {
     const ibanEl = document.getElementById('deposit-iban');
@@ -426,8 +499,10 @@ async function vpHandleBookingSubmit(e) {
     if (bicEl) bicEl.textContent = depositInfo.bic || '—';
     if (amtEl) amtEl.textContent = depositInfo.amount ? `€${depositInfo.amount}` : '';
     if (msgEl) msgEl.textContent = depositInfo.message || '';
-    if (textEl) textEl.textContent =
-      'Gelieve het voorschot zo snel mogelijk over te schrijven met onderstaande gegevens.';
+    if (textEl) {
+      textEl.textContent =
+        'Gelieve het voorschot zo snel mogelijk over te schrijven met onderstaande gegevens.';
+    }
 
     depositBlock.style.display = 'block';
   } else if (depositBlock) {
@@ -470,3 +545,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
