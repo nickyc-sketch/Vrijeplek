@@ -1236,34 +1236,24 @@
       return res.json();
     }
 
-    // We doen 2 calls: booked/pending + open
     async function fetchAppointmentsRange(fromKey, toKey){
-      if (!dashboardEmail) return { booked: [], open: [] };
+  if (!dashboardEmail) return { booked: [], open: [] };
 
-      const base = new URL(API_SLOTS, window.location.origin);
-      base.searchParams.set('email', dashboardEmail);
-      base.searchParams.set('from', fromKey);
-      base.searchParams.set('to', toKey);
+  const url = new URL(API_SLOTS, window.location.origin);
+  url.searchParams.set('email', dashboardEmail);
+  url.searchParams.set('from', fromKey);
+  url.searchParams.set('to', toKey);
+  url.searchParams.set('split', '1'); // ✅ 1 call
 
-      const urlBooked = new URL(base.toString());
-      urlBooked.searchParams.set('status', 'booked,pending_deposit');
+  const res = await fetch(url.toString(), { method:'GET', credentials:'include' });
+  if (!res.ok) throw new Error(await res.text().catch(() => 'Kon afspraken niet laden.'));
 
-      const urlOpen = new URL(base.toString());
-      urlOpen.searchParams.set('status', 'open');
-
-      const [resBooked, resOpen] = await Promise.all([
-        fetch(urlBooked.toString(), { method:'GET', credentials:'include' }),
-        fetch(urlOpen.toString(), { method:'GET', credentials:'include' }),
-      ]);
-
-      if (!resBooked.ok) throw new Error(await resBooked.text().catch(() => 'Kon afspraken niet laden.'));
-      if (!resOpen.ok) throw new Error(await resOpen.text().catch(() => 'Kon open tijdstippen niet laden.'));
-
-      const booked = await resBooked.json().catch(() => []);
-      const open = await resOpen.json().catch(() => []);
-
-      return { booked: Array.isArray(booked) ? booked : [], open: Array.isArray(open) ? open : [] };
-    }
+  const data = await res.json().catch(() => ({ booked: [], open: [] }));
+  return {
+    booked: Array.isArray(data.booked) ? data.booked : [],
+    open: Array.isArray(data.open) ? data.open : []
+  };
+}
 
     async function createSlot(payload){
       const res = await fetch(API_SLOTS, {
