@@ -269,14 +269,14 @@
       background:rgba(15,23,42,.92);
     }
 
-    /* ✅ categorie dropdown leesbaar (wit) */
+    /* ✅ dropdown: altijd leesbaar */
     .field select{
       color-scheme: dark;
-      color:rgba(226,232,240,.95);
+      color:#f1f5f9;
     }
     .field select option{
       background:#0b1220;
-      color:#e5e7eb;
+      color:#f1f5f9;
     }
 
     /* ✅ voorwaarden checkbox proper */
@@ -284,14 +284,15 @@
     .terms{
       display:flex;
       align-items:flex-start;
-      gap:.6rem;
-      padding:.55rem .7rem;
-      border-radius:.85rem;
+      gap:.65rem;
+      padding:.6rem .75rem;
+      border-radius:.95rem;
       border:1px solid rgba(148,163,184,.35);
       background:rgba(15,23,42,.45);
     }
     .terms input{
-      margin-top:.22rem;
+      margin:0;
+      margin-top:.18rem;
       width:18px; height:18px;
       accent-color:var(--o1);
       flex:0 0 auto;
@@ -299,18 +300,18 @@
     .terms span{
       font-size:.83rem;
       line-height:1.35;
-      color:rgba(226,232,240,.88);
+      color:rgba(226,232,240,.90);
     }
     .terms a{
       color:#93c5fd;
       text-decoration:underline;
-      font-weight:700;
+      font-weight:800;
     }
 
     .btn{
       width:100%;
       margin-top:.15rem;
-      padding:.75rem 1rem;
+      padding:.78rem 1rem;
       border-radius:999px;
       border:none;
       background:linear-gradient(135deg,var(--o1),var(--o2));
@@ -331,8 +332,8 @@
       text-align:center;
       color:rgba(226,232,240,.85);
     }
-    .error{ color:var(--danger); font-weight:800; }
-    .ok{ color:var(--ok); font-weight:800; }
+    .error{ color:var(--danger); font-weight:900; }
+    .ok{ color:var(--ok); font-weight:900; }
 
     .form-footnote{
       margin-top:.55rem;
@@ -371,7 +372,6 @@
 
 <body>
   <div class="site">
-
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="/" aria-label="Vrijeplek home">
@@ -394,7 +394,6 @@
       <div class="wrap">
         <section class="signup-shell">
           <div class="signup-grid">
-
             <div class="signup-copy">
               <div class="pill">Account aanmaken</div>
               <h1>Word lid van Vrijeplek in 2 stappen.</h1>
@@ -480,7 +479,7 @@
                       <option value="poetsdiensten">Poetsdiensten</option>
                       <option value="ramenwasser">Ramenwasser</option>
                       <option value="dieren">Dieren</option>
-                      <option value="bouw">Bouw & renovatie</option>
+                      <option value="bouw">Bouw &amp; renovatie</option>
                     </select>
                   </div>
                   <div class="field">
@@ -538,7 +537,6 @@
         </nav>
       </div>
     </footer>
-
   </div>
 
   <script src="/js/config.js"></script>
@@ -550,12 +548,19 @@
     const btnLogin = document.getElementById('nav-login');
     const btnMijn = document.getElementById('nav-mijn');
     const submitBtn = document.getElementById('submit-btn');
-
-    document.getElementById('year').textContent = String(new Date().getFullYear());
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
     function setMsg(kind, text){
+      if (!msg) return;
       msg.className = kind || '';
       msg.textContent = text || '';
+    }
+
+    function setLoading(on){
+      if (!submitBtn) return;
+      submitBtn.disabled = !!on;
+      submitBtn.textContent = on ? 'Even geduld…' : 'Account aanmaken';
     }
 
     // Plan tonen op basis van ?plan= en/of ?promo=launch
@@ -589,7 +594,6 @@
       const digits = btw.slice(2);
       return /^\d{10}$/.test(digits);
     }
-
     const PEPPOL_SCHEME = '0208';
     function suggestPeppolIdFromVat(btw) {
       const norm = normalizeBEVat(btw);
@@ -609,12 +613,16 @@
     }
 
     async function waitForConfig(){
-  if (getSupabaseCreds()) return;
+      if (getSupabaseCreds()) return;
 
-  await new Promise((resolve) => {
-    window.addEventListener('vrijeplek-config-loaded', resolve, { once: true });
-  });
-}
+      // ✅ nooit “hangen”: event OF timeout
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => { if (done) return; done = true; resolve(); };
+        window.addEventListener('vrijeplek-config-loaded', finish, { once:true });
+        setTimeout(finish, 2500);
+      });
+    }
 
     async function initSupabase(){
       if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
@@ -650,12 +658,6 @@
     }
     await toggleNav();
     client?.auth?.onAuthStateChange?.(() => toggleNav());
-
-    function setLoading(isLoading){
-      if (!submitBtn) return;
-      submitBtn.disabled = !!isLoading;
-      submitBtn.textContent = isLoading ? 'Even geduld…' : 'Account aanmaken';
-    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -702,9 +704,7 @@
         const normalizedBtw  = normalizeBEVat(rawBtw);
         const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
 
-        // backward compatible: straat veld blijft bestaan, maar we sturen ook apart door
-        const straat_en_nr = [straat, huisnr].filter(Boolean).join(' ').trim();
-        const postcode_gemeente = [postcode, gemeente].filter(Boolean).join(' ').trim();
+        const streetAndNr = [straat, huisnr].filter(Boolean).join(' ').trim();
 
         const { error } = await client.auth.signUp({
           email,
@@ -718,15 +718,16 @@
               peppol_id: peppolIdToSave,
               cat: document.getElementById('cat').value,
 
-              // nieuw (apart)
-              straat: straat,
-              huisnr: huisnr,
-              postcode: postcode,
-              gemeente: gemeente,
+              // adres apart (voor later)
+              straat,
+              huisnr,
+              postcode,
+              gemeente,
 
-              // oud/compat
-              straat_en_nr: straat_en_nr,
-              postcode_gemeente: postcode_gemeente
+              // compat
+              business_street: streetAndNr,
+              business_postcode: postcode,
+              business_city: gemeente
             },
             emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
           }
@@ -739,35 +740,40 @@
             : 'Registratie mislukt: ' + (error.message || 'onbekende fout'));
           return;
         }
-        await fetch('/.netlify/functions/profile', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    email,
-    company_name: document.getElementById('company').value.trim(),
-    contact_name: name,
-    billing_email: email,
-    phone: document.getElementById('phone').value.trim(),
-    vat_number: normalizedBtw,
-    cat: document.getElementById('cat').value,
 
-    // adres (pas aan naar jouw nieuwe aparte velden als je die al hebt)
-    business_street: document.getElementById('straat').value.trim(),
-    business_postcode: document.getElementById('postcode').value.trim(),
-    business_city: '' // als je later apart veld gemeente/stad hebt: vul het hier
-  })
-});
+        // ✅ Zorg dat dashboard ook zonder ?email= werkt
+        localStorage.setItem('vp_email', email);
 
-        setMsg('ok', 'Bevestigingsmail verstuurd. Controleer je inbox of spam.');
+        // ✅ Profiel rij aanmaken/updaten voor dashboard
+        const profRes = await fetch('/.netlify/functions/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            company_name: document.getElementById('company').value.trim(),
+            contact_name: name,
+            billing_email: email,
+            phone: document.getElementById('phone').value.trim(),
+            vat_number: normalizedBtw,
+            cat: document.getElementById('cat').value,
+            peppol_id: peppolIdToSave,
+
+            business_street: streetAndNr,
+            business_postcode: postcode,
+            business_city: gemeente
+          })
+        });
+
+        if (!profRes.ok) {
+          const t = await profRes.text().catch(() => '');
+          throw new Error('Profiel opslaan mislukt: ' + t);
+        }
+
+        setMsg('ok', 'Account gemaakt. Bevestigingsmail is aangevraagd — check inbox/spam. Je kan daarna inloggen.');
         form.reset();
       } catch (err){
         console.error('Signup exception:', err);
-
-        // als je deze nog ziet na de Netlify env fix → dan is het netwerk/Supabase rate-limit
-        const em = (err?.message || '').toUpperCase();
-        setMsg('error', em.includes('TIMEOUT')
-          ? 'Het duurt te lang om te verbinden. Probeer opnieuw (of check je netwerk/Supabase).'
-          : 'Netwerkfout. Probeer opnieuw.');
+        setMsg('error', err?.message ? String(err.message) : 'Netwerkfout. Probeer opnieuw.');
       } finally {
         setLoading(false);
       }
