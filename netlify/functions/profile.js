@@ -1,5 +1,5 @@
 // netlify/functions/profile.js
-import { createClient } from '@supabase/supabase-js';
+const { createClient } = require("@supabase/supabase-js");
 
 const headers = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -27,7 +27,7 @@ const toNumOrNull = (v) => {
   return Number.isFinite(n) ? n : null;
 };
 
-export async function handler(event) {
+exports.handler = async function handler(event) {
   try {
     if (event.httpMethod === 'OPTIONS') {
       return { statusCode: 204, headers, body: '' };
