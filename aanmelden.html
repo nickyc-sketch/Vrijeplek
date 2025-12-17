@@ -739,6 +739,24 @@
             : 'Registratie mislukt: ' + (error.message || 'onbekende fout'));
           return;
         }
+        await fetch('/.netlify/functions/profile', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email,
+    company_name: document.getElementById('company').value.trim(),
+    contact_name: name,
+    billing_email: email,
+    phone: document.getElementById('phone').value.trim(),
+    vat_number: normalizedBtw,
+    cat: document.getElementById('cat').value,
+
+    // adres (pas aan naar jouw nieuwe aparte velden als je die al hebt)
+    business_street: document.getElementById('straat').value.trim(),
+    business_postcode: document.getElementById('postcode').value.trim(),
+    business_city: '' // als je later apart veld gemeente/stad hebt: vul het hier
+  })
+});
 
         setMsg('ok', 'Bevestigingsmail verstuurd. Controleer je inbox of spam.');
         form.reset();
