@@ -1414,25 +1414,32 @@
       }
 
       // open
-      if (openEmpty) openEmpty.style.display = open.length ? 'none' : 'block';
-      if (openList){
-        openList.innerHTML = open.map(item => {
-          const date = item.date || '';
-          const start = item.start || '';
-          const end = item.end || '';
-          const desc = item.description || 'Open tijdstip';
-          return `
-            <div class="slot-item" style="margin-bottom:.75rem;">
-              <div class="slot-item-header">
-                <div>
-                  <div class="slot-item-title">${date} • ${start} – ${end}</div>
-                  <div class="slot-item-desc">${desc}</div>
-                  <div class="slot-meta">Open</div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
+      openList.innerHTML = open.map(item => {
+  const id = item.id || item.slot_id || '';
+  const date = item.date || '';
+  const start = item.start || '';
+  const end = item.end || '';
+  const desc = item.description || 'Open tijdstip';
+
+  return `
+    <div class="slot-item" style="margin-bottom:.75rem;" data-appt-id="${id}">
+      <div class="slot-item-header">
+        <div>
+          <div class="slot-item-title">${date} • ${start} – ${end}</div>
+          <div class="slot-item-desc">${desc}</div>
+          <div class="slot-meta">Open</div>
+        </div>
+      </div>
+
+      <div class="slot-actions">
+        <button type="button" class="btn-ghost btn-small" data-appt-edit="${id}">Aanpassen</button>
+        <button type="button" class="btn-ghost btn-small btn-danger" data-appt-delete="${id}">Verwijderen</button>
+      </div>
+    </div>
+  `;
+}).join('');
+
+wireAppointmentsActions(open); // ✅ voeg dit toe
       }
     }
 
