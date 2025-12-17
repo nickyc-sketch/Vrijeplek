@@ -66,8 +66,14 @@ export async function handler(event) {
         return json(200, (data || []).map(mapRow));
       }
 
-      // ---- dashboard lijst
+         // ---- dashboard lijst
       if (!email) return json(400, { error: "email required" });
+
+      // ✅ status filter (optioneel): status=open of status=booked,pending_deposit
+      const statusParam = (qs.status || "").trim().toLowerCase();
+      const wantedStatuses = statusParam
+        ? statusParam.split(",").map(s => normalizeStatus(s.trim()))
+        : null;
 
       let q = supabase
         .from("slots")
@@ -85,18 +91,25 @@ export async function handler(event) {
 
       const mapped = (data || []).map(mapRow);
 
-      if (!split) return json(200, mapped);
+      // ✅ filter eerst op status als die meegegeven werd
+      const filtered = wantedStatuses
+        ? mapped.filter(s => wantedStatuses.includes(s.status))
+        : mapped;
 
+      // dashboard gebruikt meestal een array terug
+      if (!split) return json(200, filtered);
+
+      // split=1: geef object terug
       const booked = [];
       const open = [];
 
-      for (const s of mapped) {
+      for (const s of filtered) {
         if (s.status === "booked" || s.status === "pending_deposit") booked.push(s);
         else open.push(s);
       }
 
       return json(200, { booked, open });
-    }
+
 
     // ======================
     // POST → nieuw slot
