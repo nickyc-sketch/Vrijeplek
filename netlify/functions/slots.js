@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+const { createClient } = require("@supabase/supabase-js");
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -30,7 +30,7 @@ const mapRow = (row) => ({
   status: normalizeStatus(row.status),
 });
 
-export async function handler(event) {
+exports.handler = async function handler(event) {
   try {
     if (!supabaseUrl || !serviceKey) {
       return json(500, { error: "Supabase not configured" });
