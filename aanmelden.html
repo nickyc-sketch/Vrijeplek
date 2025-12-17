@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Laat je bestaande stylesheet staan (maar wij overrulen alles wat nodig is hieronder) -->
+  
   <link rel="stylesheet" href="styles.css?v=ocean7">
 
   <style>
@@ -45,7 +45,7 @@
       flex-direction:column;
     }
 
-    /* ---------- HEADER (Vrijeplek stijl) ---------- */
+
     .site-header{
       position:sticky;
       top:0;
@@ -369,7 +369,7 @@
       line-height:1.45;
     }
 
-    /* ---------- FOOTER ---------- */
+   
     footer.site-footer{
       border-top:1px solid rgba(255,255,255,.10);
       background:radial-gradient(circle at 50% -50%,rgba(59,130,246,.30),transparent 60%),
@@ -561,236 +561,224 @@
 
   </div>
 
-  <!-- Supabase UMD (fallback) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+ 
+  
 
-  <!-- Config met SUPABASE_URL / ANON_KEY -->
+  
   <script src="/js/config.js"></script>
 
-  <!-- Signup + nav + BTW/Peppol + plan-highlight -->
-  <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      const form      = document.getElementById('signup-form');
-      const msg       = document.getElementById('msg');
-      const planNote  = document.getElementById('plan-note');
-      const btnLogin  = document.getElementById('nav-login');
-      const btnMijn   = document.getElementById('nav-mijn');
+  
+ <script defer>
+  window.addEventListener('DOMContentLoaded', async () => {
+    const form      = document.getElementById('signup-form');
+    const msg       = document.getElementById('msg');
+    const planNote  = document.getElementById('plan-note');
+    const btnLogin  = document.getElementById('nav-login');
+    const btnMijn   = document.getElementById('nav-mijn');
 
-      // ✅ jaar in footer
-      const y = document.getElementById('year');
-      if (y) y.textContent = String(new Date().getFullYear());
+    // Jaar in footer (als je die hebt)
+    const y = document.getElementById('year');
+    if (y) y.textContent = String(new Date().getFullYear());
 
-      // Plan tonen op basis van ?plan= en/of ?promo=launch
-      if (planNote) {
-        const params = new URLSearchParams(window.location.search);
-        const plan = params.get('plan');
-        const promo = params.get('promo');
+    // Plan tonen op basis van ?plan= en/of ?promo=launch
+    if (planNote) {
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan');
+      const promo = params.get('promo');
 
-        if (promo === 'launch') {
-          planNote.innerHTML =
-            '<span>Pre-inschrijving</span><br>' +
-            'Je reserveert je plaats nu. Details over je plan regel je in het dashboard.';
+      if (promo === 'launch') {
+        planNote.innerHTML =
+          '<span>Pre-inschrijving</span><br>' +
+          'Je reserveert je plaats nu. Details over je plan regel je later in het dashboard.';
+      }
+
+      if (plan === 'monthly') {
+        planNote.innerHTML =
+          '<span>Gekozen plan</span><br>' +
+          '<strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.';
+      } else if (plan === 'yearly') {
+        planNote.innerHTML =
+          '<span>Gekozen plan</span><br>' +
+          '<strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.';
+      }
+    }
+
+    function normalizeBEVat(btw) {
+      return (btw || '').replace(/\s+/g, '').toUpperCase();
+    }
+    function isValidBEVat(btw) {
+      btw = normalizeBEVat(btw);
+      if (!btw.startsWith('BE')) return false;
+      const digits = btw.slice(2);
+      return /^\d{10}$/.test(digits);
+    }
+
+    const PEPPOL_SCHEME = '0208'; // later afstemmen
+    function suggestPeppolIdFromVat(btw) {
+      const norm = normalizeBEVat(btw);
+      const digits = norm.slice(2);
+      return `${PEPPOL_SCHEME}:BE${digits}`;
+    }
+
+    function getSupabaseCreds(){
+      const url =
+        window.VRIJEPLEK?.SUPABASE_URL ||
+        window.ENV?.SUPABASE_URL || '';
+      const key =
+        window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+        window.ENV?.SUPABASE_ANON_KEY || '';
+      if (!url || !key) return null;
+      return { url, key };
+    }
+
+    async function waitForConfig(){
+      if (getSupabaseCreds()) return;
+
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve();
+        };
+
+        window.addEventListener('vrijeplek-config-loaded', finish, { once: true });
+        setTimeout(finish, 3000);
+      });
+    }
+
+    async function initSupabase(){
+      // ✅ singleton → voorkomt "Multiple GoTrueClient instances"
+      if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
+
+      await waitForConfig();
+
+      const creds = getSupabaseCreds();
+      if (!creds) return null;
+
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+
+      window.__vpSupabaseClient = createClient(creds.url, creds.key, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          storage: localStorage,
+        },
+      });
+
+      return window.__vpSupabaseClient;
+    }
+
+    const client = await initSupabase();
+    if (!client) {
+      if (msg) {
+        msg.className = 'error';
+        msg.textContent = 'Configuratie fout. Herlaad de pagina.';
+      }
+      return;
+    }
+
+    async function toggleNav(){
+      if (!btnLogin || !btnMijn) return;
+
+      try {
+        const { data, error } = await client.auth.getSession();
+        if (error) throw error;
+
+        const loggedIn = !!(data?.session?.user);
+        if (loggedIn) {
+          btnLogin.style.display = 'none';
+          btnMijn.style.display  = 'inline-flex';
+        } else {
+          btnLogin.style.display = 'inline-flex';
+          btnMijn.style.display  = 'none';
         }
+      } catch (err) {
+        console.error('Toggle nav error:', err);
+        btnLogin.style.display = 'inline-flex';
+        btnMijn.style.display  = 'none';
+      }
+    }
 
-        if (plan === 'monthly') {
-          planNote.innerHTML =
-            '<span>Gekozen plan</span><br>' +
-            '<strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.';
-        } else if (plan === 'yearly') {
-          planNote.innerHTML =
-            '<span>Gekozen plan</span><br>' +
-            '<strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.';
-        }
+    await toggleNav();
+    client.auth.onAuthStateChange(() => toggleNav());
+
+    if (!form || !msg) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = '';
+      msg.textContent = 'Even geduld…';
+
+      const name   = document.getElementById('name').value.trim();
+      const email  = document.getElementById('email').value.trim().toLowerCase();
+      const pass   = document.getElementById('password').value.trim();
+      const pass2  = document.getElementById('password2').value.trim();
+
+      const btwEl  = document.getElementById('btw');
+      const peppEl = document.getElementById('peppol');
+
+      if (pass !== pass2){
+        msg.className = 'error';
+        msg.textContent = 'Wachtwoorden komen niet overeen.';
+        return;
+      }
+      if (!document.getElementById('terms').checked){
+        msg.className = 'error';
+        msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
+        return;
       }
 
-      function normalizeBEVat(btw) {
-        return (btw || '').replace(/\s+/g, '').toUpperCase();
+      const rawBtw = (btwEl?.value || '').trim();
+      if (!isValidBEVat(rawBtw)) {
+        msg.className = 'error';
+        msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
+        return;
       }
 
-      function isValidBEVat(btw) {
-        btw = normalizeBEVat(btw);
-        if (!btw.startsWith('BE')) return false;
-        const digits = btw.slice(2);
-        return /^\d{10}$/.test(digits);
+      if (peppEl && !peppEl.value.trim()) {
+        peppEl.value = suggestPeppolIdFromVat(rawBtw);
       }
 
-      const PEPPOL_SCHEME = '0208'; // tijdelijk; later afstemmen met je Peppol-provider
-      function suggestPeppolIdFromVat(btw) {
-        const norm = normalizeBEVat(btw);
-        const digits = norm.slice(2);
-        return `${PEPPOL_SCHEME}:BE${digits}`;
-      }
+      const normalizedBtw  = normalizeBEVat(rawBtw);
+      const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
 
-      function createSupabaseClient() {
-        const SUPABASE_URL =
-          window.VRIJEPLEK?.SUPABASE_URL ||
-          window.ENV?.SUPABASE_URL || '';
-        const SUPABASE_ANON_KEY =
-          window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
-          window.ENV?.SUPABASE_ANON_KEY || '';
-
-        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-          console.error('Supabase/config niet geladen');
-          return null;
-        }
-
-        return import('https://esm.sh/@supabase/supabase-js@2').then(({ createClient }) => {
-          return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        });
-      }
-
-      function initSupabase() {
-        return new Promise((resolve) => {
-          if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
-            resolve(createSupabaseClient());
-            return;
+      try {
+        const { error } = await client.auth.signUp({
+          email,
+          password: pass,
+          options: {
+            data: {
+              display_name: name,
+              bedrijf: document.getElementById('company').value.trim(),
+              telefoon: document.getElementById('phone').value.trim(),
+              btw: normalizedBtw,
+              peppol_id: peppolIdToSave,
+              cat: document.getElementById('cat').value,
+              straat: document.getElementById('straat').value.trim(),
+              postcode: document.getElementById('postcode').value.trim()
+            },
+            emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
           }
-
-          window.addEventListener('vrijeplek-config-loaded', () => {
-            resolve(createSupabaseClient());
-          }, { once: true });
-
-          setTimeout(() => resolve(createSupabaseClient()), 3000);
         });
-      }
 
-      initSupabase().then(clientPromise => {
-        if (!clientPromise) {
-          if (msg) {
-            msg.className = 'error';
-            msg.textContent = 'Configuratie fout. Herlaad de pagina.';
-          }
+        if (error) {
+          msg.className = 'error';
+          msg.textContent = error.message.includes('already')
+            ? 'Er bestaat al een account met dit e-mailadres.'
+            : 'Registratie mislukt: ' + error.message;
           return;
         }
 
-        clientPromise.then(client => {
-          if (!client) {
-            if (msg) {
-              msg.className = 'error';
-              msg.textContent = 'Configuratie fout. Herlaad de pagina.';
-            }
-            return;
-          }
-
-          async function toggleNav(){
-            if (!btnLogin || !btnMijn) return;
-
-            try {
-              const { data, error } = await client.auth.getSession();
-              if (error) {
-                console.error('Session check error:', error);
-                btnLogin.style.display = 'inline-flex';
-                btnMijn.style.display  = 'none';
-                return;
-              }
-
-              const loggedIn = !!(data?.session?.user);
-              if (loggedIn) {
-                btnLogin.style.display = 'none';
-                btnMijn.style.display  = 'inline-flex';
-              } else {
-                btnLogin.style.display = 'inline-flex';
-                btnMijn.style.display  = 'none';
-              }
-            } catch (err) {
-              console.error('Toggle nav error:', err);
-              btnLogin.style.display = 'inline-flex';
-              btnMijn.style.display  = 'none';
-            }
-          }
-
-          toggleNav();
-          client.auth.onAuthStateChange(() => toggleNav());
-
-          if (!form || !msg) return;
-
-          form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            msg.className = '';
-            msg.textContent = 'Even geduld…';
-
-            const name   = document.getElementById('name').value.trim();
-            const email  = document.getElementById('email').value.trim().toLowerCase();
-            const pass   = document.getElementById('password').value.trim();
-            const pass2  = document.getElementById('password2').value.trim();
-            const btwEl  = document.getElementById('btw');
-            const peppEl = document.getElementById('peppol');
-
-            if (pass !== pass2){
-              msg.className='error';
-              msg.textContent='Wachtwoorden komen niet overeen.';
-              return;
-            }
-            if (!document.getElementById('terms').checked){
-              msg.className='error';
-              msg.textContent='Je moet akkoord gaan met de voorwaarden.';
-              return;
-            }
-
-            const rawBtw = btwEl.value.trim();
-            if (!isValidBEVat(rawBtw)) {
-              msg.className = 'error';
-              msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
-              return;
-            }
-
-            if (peppEl && !peppEl.value.trim()) {
-              peppEl.value = suggestPeppolIdFromVat(rawBtw);
-            }
-
-            const normalizedBtw  = normalizeBEVat(rawBtw);
-            const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
-
-            try{
-              const { error } = await client.auth.signUp({
-                email,
-                password: pass,
-                options:{
-                  data:{
-                    display_name: name,
-                    bedrijf: document.getElementById('company').value.trim(),
-                    telefoon: document.getElementById('phone').value.trim(),
-                    btw: normalizedBtw,
-                    peppol_id: peppolIdToSave,
-                    cat: document.getElementById('cat').value,
-                    straat: document.getElementById('straat').value.trim(),
-                    postcode: document.getElementById('postcode').value.trim()
-                  },
-                  emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
-                }
-              });
-
-              if (error) {
-                msg.className='error';
-                msg.textContent = error.message.includes('already')
-                  ? 'Er bestaat al een account met dit e-mailadres.'
-                  : 'Registratie mislukt: ' + error.message;
-                return;
-              }
-
-              msg.className='ok';
-              msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
-            } catch(err){
-              console.error(err);
-              msg.className='error';
-              msg.textContent='Netwerkfout. Probeer opnieuw.';
-            }
-          });
-        }).catch(err => {
-          console.error('Supabase init error:', err);
-          if (msg) {
-            msg.className = 'error';
-            msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
-          }
-        });
-      }).catch(err => {
-        console.error('Config load error:', err);
-        if (msg) {
-          msg.className = 'error';
-          msg.textContent = 'Configuratie fout. Herlaad de pagina.';
-        }
-      });
+        msg.className = 'ok';
+        msg.textContent = 'Bevestigingsmail verstuurd. Controleer je inbox of spam.';
+      } catch (err) {
+        console.error(err);
+        msg.className = 'error';
+        msg.textContent = 'Netwerkfout. Probeer opnieuw.';
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
