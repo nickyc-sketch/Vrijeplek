@@ -10,15 +10,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- (optioneel) jouw globale styles, mag blijven -->
   <link rel="stylesheet" href="styles.css?v=ocean7">
 
   <style>
     :root{
       --o1:#1a66ff;
       --o2:#0056ff;
+      --muted:#93a4c6;
       --line:rgba(255,255,255,.16);
       --glass:rgba(15,23,42,.84);
-      --glass2:rgba(2,6,23,.38);
       --danger:#ff3b3b;
       --ok:#22c55e;
     }
@@ -35,54 +36,97 @@
       background-attachment:fixed;
     }
 
-    .site{ min-height:100vh; display:flex; flex-direction:column; }
+    .site{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
 
+    /* HEADER */
     .site-header{
-      position:sticky; top:0; z-index:50;
+      position:sticky;
+      top:0;
+      z-index:50;
       backdrop-filter:blur(22px);
       background:linear-gradient(180deg,rgba(2,6,23,.92),rgba(2,6,23,.70),rgba(2,6,23,0));
       border-bottom:1px solid rgba(255,255,255,.12);
     }
     .header-inner{
-      max-width:1120px; margin:0 auto;
+      max-width:1120px;
+      margin:0 auto;
       padding:.9rem 1.2rem .8rem;
-      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
     }
 
-    .brand{ display:flex; align-items:center; gap:.65rem; text-decoration:none; }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      text-decoration:none;
+    }
     .brand-mark{
-      width:34px;height:34px;border-radius:999px;
+      width:34px;height:34px;
+      border-radius:999px;
       background:
         radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
         radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
       box-shadow:0 0 0 1px rgba(255,255,255,.12),0 10px 30px rgba(0,0,0,.45);
-      display:flex;align-items:center;justify-content:center;
-      font-size:1.1rem;font-weight:900;color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      font-weight:900;
+      color:#fff;
     }
-    .brand-wordmark{ display:flex; flex-direction:column; line-height:1.05; }
+    .brand-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
     .brand-wordmark span:first-child{
-      font-weight:900; letter-spacing:.02em; font-size:1.05rem; color:#f9fafb;
+      font-weight:900;
+      letter-spacing:.02em;
+      font-size:1.05rem;
+      color:#f9fafb;
     }
     .brand-wordmark span:last-child{
-      font-size:.7rem; text-transform:uppercase; letter-spacing:.18em; color:rgba(226,232,240,.72);
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(226,232,240,.72);
     }
 
-    .header-actions{ display:flex; gap:.55rem; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .header-actions{
+      display:flex;
+      gap:.55rem;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
     .nav-btn{
       padding:.45rem .95rem;
       border-radius:999px;
       border:1px solid rgba(148,163,184,.55);
       background:rgba(15,23,42,.35);
       color:rgba(226,232,240,.92);
-      font-weight:800;
+      font-weight:700;
       font-size:.86rem;
       text-decoration:none;
-      display:inline-flex; align-items:center; gap:.45rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
       backdrop-filter:blur(10px);
       cursor:pointer;
       transition:.16s ease;
     }
-    .nav-btn:hover{ background:rgba(15,23,42,.6); border-color:rgba(191,219,254,.85); transform:translateY(-1px); }
+    .nav-btn:hover{
+      background:rgba(15,23,42,.6);
+      border-color:rgba(191,219,254,.85);
+      transform:translateY(-1px);
+    }
     .btn-green{
       border:none;
       background:linear-gradient(135deg,#16a34a,#22c55e);
@@ -90,8 +134,17 @@
       box-shadow:0 14px 40px rgba(34,197,94,.22);
     }
 
-    main{ flex:1; padding:1.4rem 1.2rem 2.2rem; display:flex; justify-content:center; }
-    .wrap{ width:100%; max-width:1120px; }
+    /* MAIN */
+    main{
+      flex:1;
+      padding:1.4rem 1.2rem 2.2rem;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{
+      width:100%;
+      max-width:1120px;
+    }
 
     .signup-shell{
       border-radius:1.6rem;
@@ -103,14 +156,16 @@
     }
     .signup-shell::before{
       content:"";
-      position:absolute; inset:-20%;
+      position:absolute;
+      inset:-20%;
       background:
         radial-gradient(circle at 0 0,rgba(59,130,246,.14),transparent 55%),
         radial-gradient(circle at 100% 0,rgba(56,189,248,.12),transparent 50%),
         radial-gradient(circle at 50% 120%,rgba(34,197,94,.10),transparent 55%);
-      opacity:.8; pointer-events:none;
+      opacity:.8;
+      pointer-events:none;
     }
-    .signup-shell > *{ position:relative; z-index:1; }
+    .signup-shell > *{position:relative; z-index:1;}
 
     .signup-grid{
       display:grid;
@@ -119,8 +174,27 @@
       padding:1.35rem;
       align-items:start;
     }
-    @media(max-width:980px){ .signup-grid{ grid-template-columns:1fr; } }
+    @media(max-width:980px){
+      .signup-grid{ grid-template-columns:1fr; }
+    }
 
+    /* LEFT */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.36rem .75rem;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.92);
+      margin:.25rem 0 .85rem;
+      box-shadow:0 10px 25px rgba(0,0,0,.22);
+    }
     .signup-copy h1{
       margin:.1rem 0 .55rem;
       font-size:clamp(1.7rem,3.2vw,2.4rem);
@@ -134,20 +208,6 @@
       line-height:1.55;
       max-width:68ch;
       font-size:.98rem;
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:.5rem;
-      padding:.36rem .75rem;
-      border-radius:999px;
-      font-size:.82rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.18);
-      color:rgba(255,255,255,.92);
-      margin:.25rem 0 .85rem;
-      box-shadow:0 10px 25px rgba(0,0,0,.22);
     }
     .plan-pill{
       display:block;
@@ -182,6 +242,7 @@
       line-height:1.5;
     }
 
+    /* RIGHT */
     .signup-card{
       border-radius:1.25rem;
       padding:1.15rem 1.15rem 1.05rem;
@@ -190,7 +251,12 @@
       box-shadow:0 18px 60px rgba(0,0,0,.45);
       backdrop-filter:blur(14px);
     }
-    .signup-card h2{ margin:0 0 .35rem; font-size:1.05rem; color:#fff; letter-spacing:-.01em; }
+    .signup-card h2{
+      margin:0 0 .35rem;
+      font-size:1.05rem;
+      color:#fff;
+      letter-spacing:-.01em;
+    }
     .signup-card .sub{
       margin:0 0 1rem;
       font-size:.88rem;
@@ -198,9 +264,22 @@
       line-height:1.45;
     }
 
-    form{ display:flex; flex-direction:column; gap:.7rem; font-size:.9rem; }
-    .two{ display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
-    .three{ display:grid; grid-template-columns:1.3fr .7fr; gap:.7rem; }
+    form{
+      display:flex;
+      flex-direction:column;
+      gap:.7rem;
+      font-size:.9rem;
+    }
+    .two{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.7rem;
+    }
+    .three{
+      display:grid;
+      grid-template-columns:1.4fr .6fr;
+      gap:.7rem;
+    }
     @media(max-width:560px){
       .two{ grid-template-columns:1fr; }
       .three{ grid-template-columns:1fr; }
@@ -208,7 +287,7 @@
 
     .field label{
       display:block;
-      font-weight:800;
+      font-weight:700;
       margin-bottom:.3rem;
       color:rgba(226,232,240,.92);
       font-size:.86rem;
@@ -227,6 +306,7 @@
       transition:.16s ease;
     }
     .field input::placeholder{ color:rgba(148,163,184,.85); }
+
     .field input:focus,
     .field select:focus{
       border-color:rgba(59,130,246,.95);
@@ -234,55 +314,73 @@
       background:rgba(15,23,42,.92);
     }
 
-    /* ✅ Categorie dropdown: tekst niet donker */
-    select{ color:#e5e7eb; }
-    select option{
-      color:#e5e7eb;
+    /* Dropdown leesbaarheid */
+    .field select{
+      color:#f8fafc;
+    }
+    .field select option,
+    .field select optgroup{
+      color:#f8fafc;
       background:#0b1220;
     }
 
-    /* ✅ Proper checkbox */
-    .terms-row{ margin-top:.1rem; }
+    /* TERMS “proper” */
+    .terms-row{ margin-top:.15rem; }
     .terms-label{
       display:flex;
+      gap:.65rem;
       align-items:flex-start;
-      gap:.7rem;
-      font-size:.84rem;
-      color:rgba(226,232,240,.88);
       cursor:pointer;
-      line-height:1.35;
       user-select:none;
+      line-height:1.35;
+      color:rgba(226,232,240,.90);
+      font-size:.84rem;
     }
-    .terms-label input{
-      position:absolute;
-      opacity:0;
-      pointer-events:none;
-    }
-    .cb{
-      width:18px;height:18px; flex:0 0 18px;
-      border-radius:6px;
-      border:1px solid rgba(148,163,184,.75);
-      background:rgba(15,23,42,.9);
-      box-shadow:0 8px 18px rgba(0,0,0,.25);
-      display:grid; place-items:center;
+    .terms-check{
+      position:relative;
+      width:18px;height:18px;
       margin-top:.15rem;
+      flex:0 0 18px;
     }
-    .cb::after{
+    .terms-check input{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      cursor:pointer;
+    }
+    .terms-box{
+      position:absolute;
+      inset:0;
+      border-radius:6px;
+      border:1px solid rgba(148,163,184,.8);
+      background:rgba(15,23,42,.75);
+      box-shadow:0 0 0 1px rgba(0,0,0,.12);
+    }
+    .terms-check input:focus + .terms-box{
+      outline:none;
+      border-color:rgba(59,130,246,.95);
+      box-shadow:0 0 0 1px rgba(59,130,246,.55);
+    }
+    .terms-check input:checked + .terms-box{
+      border-color:rgba(59,130,246,.95);
+      background:linear-gradient(135deg,rgba(26,102,255,.95),rgba(0,86,255,.95));
+    }
+    .terms-box::after{
       content:"";
-      width:10px;height:10px;
-      border-radius:3px;
-      transform:scale(0);
-      transition:.12s ease;
-      background:linear-gradient(135deg,var(--o1),var(--o2));
-      box-shadow:0 0 0 4px rgba(59,130,246,.18);
+      position:absolute;
+      left:5px; top:2px;
+      width:5px; height:9px;
+      border:2px solid #fff;
+      border-top:0;border-left:0;
+      transform:rotate(45deg);
+      opacity:0;
     }
-    .terms-label input:checked + .cb{
-      border-color:rgba(191,219,254,.9);
+    .terms-check input:checked + .terms-box::after{opacity:1;}
+
+    .terms-label a{
+      color:#93c5fd;
+      text-decoration:underline;
     }
-    .terms-label input:checked + .cb::after{
-      transform:scale(1);
-    }
-    .terms-label a{ color:#93c5fd; text-decoration:underline; }
 
     .btn{
       width:100%;
@@ -297,19 +395,42 @@
       cursor:pointer;
       box-shadow:0 14px 40px rgba(37,99,235,.35);
       transition:.18s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.6rem;
     }
-    .btn:hover{ filter:brightness(1.05); transform:translateY(-1px); box-shadow:0 18px 55px rgba(37,99,235,.45); }
-    .btn[disabled]{ opacity:.7; cursor:not-allowed; transform:none; }
+    .btn:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+      box-shadow:0 18px 55px rgba(37,99,235,.45);
+    }
+    .btn[disabled]{
+      opacity:.75;
+      cursor:not-allowed;
+      transform:none !important;
+      box-shadow:0 14px 40px rgba(37,99,235,.20);
+    }
+    .spinner{
+      width:14px;height:14px;
+      border-radius:999px;
+      border:2px solid rgba(255,255,255,.35);
+      border-top-color:#fff;
+      display:none;
+      animation:spin .9s linear infinite;
+    }
+    .btn.is-loading .spinner{display:inline-block;}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
     #msg{
       min-height:18px;
-      font-size:.84rem;
+      font-size:.82rem;
       margin-top:.1rem;
       text-align:center;
       color:rgba(226,232,240,.85);
     }
-    .error{ color:var(--danger); font-weight:900; }
-    .ok{ color:var(--ok); font-weight:900; }
+    .error{ color:var(--danger); font-weight:800; }
+    .ok{ color:var(--ok); font-weight:800; }
 
     .form-footnote{
       margin-top:.55rem;
@@ -318,25 +439,8 @@
       text-align:center;
       line-height:1.45;
     }
-    .form-links{
-      margin-top:.55rem;
-      display:flex;
-      gap:.6rem;
-      justify-content:center;
-      flex-wrap:wrap;
-      font-size:.78rem;
-    }
-    .form-links a{
-      color:rgba(191,219,254,.95);
-      text-decoration:none;
-      font-weight:700;
-      border:1px solid rgba(148,163,184,.55);
-      background:rgba(15,23,42,.35);
-      padding:.35rem .7rem;
-      border-radius:999px;
-    }
-    .form-links a:hover{ text-decoration:underline; }
 
+    /* FOOTER */
     footer.site-footer{
       border-top:1px solid rgba(255,255,255,.10);
       background:radial-gradient(circle at 50% -50%,rgba(59,130,246,.30),transparent 60%),
@@ -353,8 +457,16 @@
       font-size:.82rem;
       color:rgba(148,163,184,.95);
     }
-    .footer-nav{ display:flex; gap:.9rem; flex-wrap:wrap; }
-    .footer-nav a{ color:rgba(191,219,254,.95); text-decoration:none; font-weight:700; }
+    .footer-nav{
+      display:flex;
+      gap:.9rem;
+      flex-wrap:wrap;
+    }
+    .footer-nav a{
+      color:rgba(191,219,254,.95);
+      text-decoration:none;
+      font-weight:600;
+    }
     .footer-nav a:hover{ text-decoration:underline; }
   </style>
 </head>
@@ -418,11 +530,11 @@
                 <div class="two">
                   <div class="field">
                     <label for="name">Naam</label>
-                    <input id="name" type="text" required placeholder="Volledige naam">
+                    <input id="name" type="text" required placeholder="Volledige naam" autocomplete="name">
                   </div>
                   <div class="field">
                     <label for="company">Bedrijfsnaam</label>
-                    <input id="company" type="text" placeholder="Naam van je zaak">
+                    <input id="company" type="text" placeholder="Naam van je zaak" autocomplete="organization">
                   </div>
                 </div>
 
@@ -449,13 +561,13 @@
                   </div>
                   <div class="field">
                     <label for="btw">BTW-nummer</label>
-                    <input id="btw" type="text" placeholder="BE0123456789" required>
+                    <input id="btw" type="text" placeholder="BE0123456789" required autocomplete="off">
                   </div>
                 </div>
 
                 <div class="field">
                   <label for="peppol">Peppol-ID (voor facturatie)</label>
-                  <input id="peppol" type="text" placeholder="bv. 0208:BE0123456789">
+                  <input id="peppol" type="text" placeholder="bv. 0208:BE0123456789" autocomplete="off">
                 </div>
 
                 <div class="two">
@@ -475,31 +587,39 @@
                   </div>
 
                   <div class="field">
-                    <label for="postcode_num">Postcode</label>
-                    <input id="postcode_num" type="text" placeholder="3500" inputmode="numeric" autocomplete="postal-code">
+                    <label for="postcode">Postcode</label>
+                    <input id="postcode" type="text" placeholder="bv. 3500" autocomplete="postal-code">
                   </div>
                 </div>
 
                 <div class="two">
                   <div class="field">
                     <label for="gemeente">Gemeente</label>
-                    <input id="gemeente" type="text" placeholder="Hasselt" autocomplete="address-level2">
+                    <input id="gemeente" type="text" placeholder="bv. Hasselt" autocomplete="address-level2">
                   </div>
                   <div class="field">
-                    <label for="straatnaam">Straat</label>
-                    <input id="straatnaam" type="text" placeholder="Breeërweg" autocomplete="street-address">
+                    <label for="straat">Straat</label>
+                    <input id="straat" type="text" placeholder="Bergstraat" autocomplete="street-address">
                   </div>
                 </div>
 
-                <div class="field">
-                  <label for="huisnummer">Huisnummer</label>
-                  <input id="huisnummer" type="text" placeholder="15A">
+                <div class="three">
+                  <div class="field">
+                    <label for="huisnr">Huisnummer</label>
+                    <input id="huisnr" type="text" placeholder="1 / 15A / ..." autocomplete="address-line2">
+                  </div>
+                  <div class="field">
+                    <label for="bus">Bus (optioneel)</label>
+                    <input id="bus" type="text" placeholder="A / 2 / ..." autocomplete="off">
+                  </div>
                 </div>
 
                 <div class="field terms-row">
                   <label class="terms-label" for="terms">
-                    <input id="terms" type="checkbox" required>
-                    <span class="cb" aria-hidden="true"></span>
+                    <span class="terms-check">
+                      <input id="terms" type="checkbox" required>
+                      <span class="terms-box" aria-hidden="true"></span>
+                    </span>
                     <span>
                       Ik ga akkoord met de
                       <a href="/voorwaarden.html" target="_blank" rel="noopener">algemene voorwaarden</a>.
@@ -507,17 +627,16 @@
                   </label>
                 </div>
 
-                <button id="submit-btn" type="submit" class="btn">Account aanmaken</button>
+                <button type="submit" class="btn" id="submitBtn">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span id="btnText">Account aanmaken</span>
+                </button>
+
                 <div id="msg"></div>
 
                 <p class="form-footnote">
                   Na je registratie sturen we een bevestigingsmail. Daarna kun je inloggen en je abonnement activeren.
                 </p>
-
-                <div class="form-links">
-                  <a href="/login.html">Ik heb al een account → Login</a>
-                  <a href="/bedankt.html" target="_blank" rel="noopener">Bedankt-pagina openen</a>
-                </div>
               </form>
             </div>
 
@@ -540,14 +659,14 @@
 
   <script src="/js/config.js"></script>
 
-  <script defer>
+  <script>
     window.addEventListener('DOMContentLoaded', async () => {
       const form     = document.getElementById('signup-form');
       const msg      = document.getElementById('msg');
       const planNote = document.getElementById('plan-note');
       const btnLogin = document.getElementById('nav-login');
       const btnMijn  = document.getElementById('nav-mijn');
-      const btnSubmit= document.getElementById('submit-btn');
+      const submitBtn = document.getElementById('submitBtn');
 
       const y = document.getElementById('year');
       if (y) y.textContent = String(new Date().getFullYear());
@@ -563,6 +682,7 @@
             '<span>Pre-inschrijving</span><br>' +
             'Je reserveert je plaats nu. Details over je plan regel je later in het dashboard.';
         }
+
         if (plan === 'monthly') {
           planNote.innerHTML =
             '<span>Gekozen plan</span><br>' +
@@ -574,8 +694,10 @@
         }
       }
 
-      function normalizeBEVat(btw){ return (btw || '').replace(/\s+/g,'').toUpperCase(); }
-      function isValidBEVat(btw){
+      function normalizeBEVat(btw) {
+        return (btw || '').replace(/\s+/g, '').toUpperCase();
+      }
+      function isValidBEVat(btw) {
         btw = normalizeBEVat(btw);
         if (!btw.startsWith('BE')) return false;
         const digits = btw.slice(2);
@@ -583,7 +705,7 @@
       }
 
       const PEPPOL_SCHEME = '0208';
-      function suggestPeppolIdFromVat(btw){
+      function suggestPeppolIdFromVat(btw) {
         const norm = normalizeBEVat(btw);
         const digits = norm.slice(2);
         return `${PEPPOL_SCHEME}:BE${digits}`;
@@ -601,105 +723,120 @@
         await new Promise((resolve) => {
           let done = false;
           const finish = () => { if (done) return; done = true; resolve(); };
-          window.addEventListener('vrijeplek-config-loaded', finish, { once:true });
+          window.addEventListener('vrijeplek-config-loaded', finish, { once: true });
           setTimeout(finish, 3000);
         });
       }
 
       async function initSupabase(){
-        // singleton
         if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
+
         await waitForConfig();
         const creds = getSupabaseCreds();
         if (!creds) return null;
 
         const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+
         window.__vpSupabaseClient = createClient(creds.url, creds.key, {
-          auth: { persistSession:true, autoRefreshToken:true, storage: localStorage },
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            storage: localStorage,
+          },
         });
+
         return window.__vpSupabaseClient;
       }
 
       const client = await initSupabase();
       if (!client) {
-        if (msg){ msg.className='error'; msg.textContent='Configuratie fout. Herlaad de pagina.'; }
+        if (msg) { msg.className = 'error'; msg.textContent = 'Configuratie fout. Herlaad de pagina.'; }
         return;
       }
 
       async function toggleNav(){
         if (!btnLogin || !btnMijn) return;
-        try{
+        try {
           const { data, error } = await client.auth.getSession();
           if (error) throw error;
           const loggedIn = !!(data?.session?.user);
           btnLogin.style.display = loggedIn ? 'none' : 'inline-flex';
           btnMijn.style.display  = loggedIn ? 'inline-flex' : 'none';
-        }catch(e){
+        } catch (err) {
+          console.error('Toggle nav error:', err);
           btnLogin.style.display = 'inline-flex';
           btnMijn.style.display  = 'none';
         }
       }
-
       await toggleNav();
       client.auth.onAuthStateChange(() => toggleNav());
 
+      function setLoading(isLoading){
+        if (!submitBtn) return;
+        submitBtn.disabled = !!isLoading;
+        submitBtn.classList.toggle('is-loading', !!isLoading);
+      }
+
       function withTimeout(promise, ms){
-        let t;
-        const timeout = new Promise((_, rej) => t = setTimeout(() => rej(new Error('timeout')), ms));
-        return Promise.race([promise, timeout]).finally(() => clearTimeout(t));
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), ms))
+        ]);
       }
 
       if (!form || !msg) return;
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         msg.className = '';
-        msg.textContent = 'Even geduld…';
-        if (btnSubmit) btnSubmit.disabled = true;
-
-        const name   = document.getElementById('name').value.trim();
-        const email  = document.getElementById('email').value.trim().toLowerCase();
-        const pass   = document.getElementById('password').value.trim();
-        const pass2  = document.getElementById('password2').value.trim();
-
-        const btwEl  = document.getElementById('btw');
-        const peppEl = document.getElementById('peppol');
-
-        if (pass !== pass2){
-          msg.className = 'error';
-          msg.textContent = 'Wachtwoorden komen niet overeen.';
-          if (btnSubmit) btnSubmit.disabled = false;
-          return;
-        }
-        if (!document.getElementById('terms').checked){
-          msg.className = 'error';
-          msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
-          if (btnSubmit) btnSubmit.disabled = false;
-          return;
-        }
-
-        const rawBtw = (btwEl?.value || '').trim();
-        if (!isValidBEVat(rawBtw)) {
-          msg.className = 'error';
-          msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
-          if (btnSubmit) btnSubmit.disabled = false;
-          return;
-        }
-
-        if (peppEl && !peppEl.value.trim()) peppEl.value = suggestPeppolIdFromVat(rawBtw);
-
-        const straatnaam = document.getElementById('straatnaam').value.trim();
-        const huisnummer = document.getElementById('huisnummer').value.trim();
-        const postcodeNum = document.getElementById('postcode_num').value.trim();
-        const gemeente = document.getElementById('gemeente').value.trim();
-
-        // backward compatible velden
-        const straatCombined = [straatnaam, huisnummer].filter(Boolean).join(' ').trim();
-        const postcodeCombined = [postcodeNum, gemeente].filter(Boolean).join(' ').trim();
+        msg.textContent = '';
+        setLoading(true);
 
         try {
-          const signupCall = client.auth.signUp({
+          msg.textContent = 'Even geduld…';
+
+          const name   = document.getElementById('name').value.trim();
+          const email  = document.getElementById('email').value.trim().toLowerCase();
+          const pass   = document.getElementById('password').value.trim();
+          const pass2  = document.getElementById('password2').value.trim();
+
+          if (pass !== pass2){
+            msg.className = 'error';
+            msg.textContent = 'Wachtwoorden komen niet overeen.';
+            return;
+          }
+          if (!document.getElementById('terms').checked){
+            msg.className = 'error';
+            msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
+            return;
+          }
+
+          const btwEl  = document.getElementById('btw');
+          const peppEl = document.getElementById('peppol');
+          const rawBtw = (btwEl?.value || '').trim();
+
+          if (!isValidBEVat(rawBtw)) {
+            msg.className = 'error';
+            msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
+            return;
+          }
+
+          if (peppEl && !peppEl.value.trim()) {
+            peppEl.value = suggestPeppolIdFromVat(rawBtw);
+          }
+
+          const normalizedBtw  = normalizeBEVat(rawBtw);
+          const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
+
+          const straat = document.getElementById('straat').value.trim();
+          const huisnr = document.getElementById('huisnr').value.trim();
+          const bus    = document.getElementById('bus').value.trim();
+          const postcode = document.getElementById('postcode').value.trim();
+          const gemeente = document.getElementById('gemeente').value.trim();
+
+          const straatVolledig = [straat, huisnr, bus ? ('bus ' + bus) : ''].filter(Boolean).join(' ');
+
+          const signUpPromise = client.auth.signUp({
             email,
             password: pass,
             options: {
@@ -707,53 +844,43 @@
                 display_name: name,
                 bedrijf: document.getElementById('company').value.trim(),
                 telefoon: document.getElementById('phone').value.trim(),
-                btw: normalizeBEVat(rawBtw),
-                peppol_id: peppEl ? peppEl.value.trim() : '',
+                btw: normalizedBtw,
+                peppol_id: peppolIdToSave,
                 cat: document.getElementById('cat').value,
-
-                // nieuw (duidelijk)
-                straatnaam,
-                huisnummer,
-                postcode_num: postcodeNum,
-                gemeente,
-
-                // oud (compat)
-                straat: straatCombined,
-                postcode: postcodeCombined
+                straat: straatVolledig,
+                postcode: postcode,
+                gemeente: gemeente
               },
-              emailRedirectTo: 'https://vrijeplek.be/bedankt.html'
+              // Let op: /bedankt.html staat als route 200 in je redirects :contentReference[oaicite:1]{index=1}
+              emailRedirectTo: 'https://www.vrijeplek.be/bedankt.html'
             }
           });
 
-          const { data, error } = await withTimeout(signupCall, 20000);
+          const { error } = await withTimeout(signUpPromise, 15000);
 
           if (error) {
-            msg.className = 'error';
-            msg.textContent =
-              (String(error.message || '').includes('already'))
-                ? 'Er bestaat al een account met dit e-mailadres.'
-                : ('Registratie mislukt: ' + (error.message || 'Onbekende fout'));
-            if (btnSubmit) btnSubmit.disabled = false;
+            console.error('Supabase signup error:', error);
+            msg.className='error';
+            msg.textContent = (error.message && error.message.toLowerCase().includes('already'))
+              ? 'Er bestaat al een account met dit e-mailadres.'
+              : 'Registratie mislukt: ' + (error.message || 'onbekende fout');
             return;
           }
 
-          // Supabase kan "user" teruggeven maar email bevestiging nog nodig → dat is ok
-          msg.className = 'ok';
-          msg.textContent = 'Bevestigingsmail verstuurd. Check je inbox + spam.';
-
+          msg.className='ok';
+          msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
+          form.reset();
         } catch (err) {
-          console.error('Signup error:', err);
-          msg.className = 'error';
-          msg.textContent =
-            (err && err.message === 'timeout')
-              ? 'Het duurt te lang. Herlaad de pagina en probeer opnieuw.'
-              : ('Netwerkfout: ' + (err?.message || 'Probeer opnieuw.'));
+          console.error('Signup exception:', err);
+          msg.className='error';
+          msg.textContent = (err && err.message === 'TIMEOUT')
+            ? 'Het duurt te lang om te verbinden. Probeer opnieuw (of check je console/network).'
+            : 'Netwerkfout. Probeer opnieuw.';
         } finally {
-          if (btnSubmit) btnSubmit.disabled = false;
+          setLoading(false);
         }
       });
     });
   </script>
 </body>
 </html>
-
