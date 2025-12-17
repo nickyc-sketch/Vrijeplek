@@ -14,11 +14,22 @@
   <link rel="stylesheet" href="/css/index.css?v=9">
 
   <style>
+    /* Lichtere launch hero */
+    .launch-wrap {
+      background: rgba(255,255,255,.92);
+      color:#0a2a4a;
+    }
+
+    .launch-wrap h1,
+    .launch-wrap p {
+      color:#0a2a4a;
+    }
+
     .launch-badge {
       display:inline-block;
-      background:rgba(27,117,208,.15);
-      color:#fff;
-      padding:.35rem .75rem;
+      background:#e6f0fb;
+      color:#1b75d0;
+      padding:.35rem .7rem;
       border-radius:999px;
       font-size:.8rem;
       font-weight:600;
@@ -29,59 +40,59 @@
       display:grid;
       grid-template-columns:repeat(4,1fr);
       gap:1rem;
-      margin:1.8rem 0;
+      margin:1.6rem 0;
     }
 
     .countdown-box {
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:12px;
-      padding:1rem .5rem;
+      background:#fff;
+      border:1px solid #dbe7f4;
+      border-radius:10px;
+      padding:1rem .4rem;
       text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
 
     .countdown-box strong {
       display:block;
-      font-size:1.9rem;
+      font-size:1.8rem;
       font-weight:700;
-      color:#fff;
+      color:#1b75d0;
     }
 
     .countdown-box span {
       font-size:.75rem;
-      opacity:.85;
-      color:#fff;
+      color:#3a4b6a;
+    }
+
+    .section-block {
+      margin-top:3rem;
+    }
+
+    .info-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:1.2rem;
+      margin-top:1.4rem;
+    }
+
+    .info-card {
+      background:#fff;
+      border:1px solid #dbe7f4;
+      border-radius:10px;
+      padding:1.2rem;
+      color:#0a2a4a;
+    }
+
+    .info-card strong {
+      display:block;
+      margin-bottom:.35rem;
+      font-weight:600;
     }
 
     .launch-helper {
       font-size:.85rem;
-      color:#fff;
-      opacity:.9;
+      color:#3a4b6a;
       margin-top:.6rem;
       line-height:1.5;
-    }
-
-    .why-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:1.2rem;
-      margin-top:2rem;
-    }
-
-    .why-card {
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:12px;
-      padding:1.2rem;
-      color:#fff;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
-    }
-
-    .why-card strong {
-      display:block;
-      margin-bottom:.35rem;
-      font-weight:600;
     }
   </style>
 </head>
@@ -89,7 +100,7 @@
 <body>
 <div class="site">
 
-  <!-- HEADER (unchanged) -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="/" aria-label="Vrijeplek home">
@@ -111,86 +122,83 @@
   <main>
     <section class="main-grid">
       <div class="page-container">
-
         <div class="search-column">
 
-          <!-- LAUNCH CARD -->
-          <section class="search-wrap">
+          <!-- HERO -->
+          <section class="search-wrap launch-wrap">
             <div class="launch-badge">🚀 Launch op 5 maart 2026</div>
 
-            <h1 style="margin-bottom:.6rem;">
-              Maak van vrije momenten echte afspraken
-            </h1>
+            <h1>Vrije momenten omzetten in echte afspraken</h1>
 
-            <p style="color:#fff;opacity:.95;max-width:640px;">
+            <p style="max-width:620px;">
               Vrijeplek helpt zelfstandigen en zaken om last-minute vrije plaatsen
-              zichtbaar te maken en correct te laten boeken — zonder verplichtingen.
+              zichtbaar te maken én correct te laten boeken.
             </p>
 
-            <!-- COUNTDOWN -->
             <div class="countdown-grid">
-              <div class="countdown-box">
-                <strong id="cd-d">–</strong>
-                <span>dagen</span>
-              </div>
-              <div class="countdown-box">
-                <strong id="cd-h">–</strong>
-                <span>uur</span>
-              </div>
-              <div class="countdown-box">
-                <strong id="cd-m">–</strong>
-                <span>min</span>
-              </div>
-              <div class="countdown-box">
-                <strong id="cd-s">–</strong>
-                <span>sec</span>
-              </div>
+              <div class="countdown-box"><strong id="cd-d">–</strong><span>dagen</span></div>
+              <div class="countdown-box"><strong id="cd-h">–</strong><span>uur</span></div>
+              <div class="countdown-box"><strong id="cd-m">–</strong><span>min</span></div>
+              <div class="countdown-box"><strong id="cd-s">–</strong><span>sec</span></div>
             </div>
 
-            <!-- CTA -->
             <a href="/aanmelden.html" class="btn-primary">
               Pre-inschrijven aan €19,95/maand
             </a>
 
             <p class="launch-helper">
-              ✔ Inschrijven kan nu<br>
-              ✔ Eerste factuur pas bij launch<br>
-              ✔ Altijd kosteloos opzegbaar
+              Inschrijven kan nu · Eerste factuur bij launch · Altijd kosteloos opzegbaar
             </p>
           </section>
 
-          <!-- WHY -->
-          <section class="results" style="margin-top:2.8rem;">
-            <div class="results-inner">
-              <div class="results-head">
-                <h2>Waarom Vrijeplek?</h2>
-              </div>
+          <!-- VOOR ZAKEN -->
+          <section class="section-block">
+            <h2>Voor zelfstandigen & zaken</h2>
 
-              <div class="why-grid">
-                <div class="why-card">
-                  <strong>Lege momenten kosten geld</strong>
-                  Vrijeplek helpt je om last-minute beschikbaarheid zichtbaar te maken.
-                </div>
-                <div class="why-card">
-                  <strong>Minder no-shows</strong>
-                  Werk met bevestiging of voorschot wanneer jij dat wil.
-                </div>
-                <div class="why-card">
-                  <strong>Professioneel voor nieuwe klanten</strong>
-                  Eén duidelijke pagina en een overzichtelijk dashboard.
-                </div>
-                <div class="why-card">
-                  <strong>Jij houdt controle</strong>
-                  Jij kiest wanneer je zichtbaar bent en hoeveel plaatsen je vrijgeeft.
-                </div>
-                <div class="why-card">
-                  <strong>Geen verplichtingen</strong>
-                  Je kan altijd stoppen, zonder kosten of kleine lettertjes.
-                </div>
-                <div class="why-card">
-                  <strong>Early-adopter voordeel</strong>
-                  Schrijf je vóór launch in en betaal voor altijd €19,95/maand.
-                </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <strong>Vul lege momenten</strong>
+                Maak last-minute beschikbaarheid zichtbaar voor nieuwe klanten.
+              </div>
+              <div class="info-card">
+                <strong>Minder no-shows</strong>
+                Werk met bevestiging of voorschot, wanneer jij dat wil.
+              </div>
+              <div class="info-card">
+                <strong>Professionele uitstraling</strong>
+                Een duidelijke pagina en een overzichtelijk dashboard.
+              </div>
+            </div>
+          </section>
+
+          <!-- FLEXIJOBS -->
+          <section class="section-block">
+            <h2>Ook voor flexijobbers</h2>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <strong>Extra bijverdienen</strong>
+                Vind snel flexijobs bij zaken die vandaag iemand zoeken.
+              </div>
+              <div class="info-card">
+                <strong>Overzicht per regio</strong>
+                Filter op sector en locatie, net zoals op de homepage.
+              </div>
+            </div>
+          </section>
+
+          <!-- PRAKTISCH -->
+          <section class="section-block">
+            <h2>Praktisch & transparant</h2>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <strong>Early adopter prijs</strong>
+                Schrijf je vóór launch in en betaal voor altijd €19,95/maand.
+              </div>
+              <div class="info-card">
+                <strong>Geen verplichtingen</strong>
+                Je kan altijd stoppen, zonder kosten of kleine lettertjes.
               </div>
             </div>
           </section>
@@ -200,7 +208,7 @@
     </section>
   </main>
 
-  <!-- FOOTER (unchanged) -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-inner">
       <span>© <span id="year"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
@@ -215,27 +223,21 @@
 
 <script>
   const launchDate = new Date('2026-03-05T00:00:00');
-
   function tick(){
     const now = new Date();
     let diff = Math.max(0, launchDate - now);
-
-    const d = Math.floor(diff / 86400000);
-    diff %= 86400000;
-    const h = Math.floor(diff / 3600000);
-    diff %= 3600000;
-    const m = Math.floor(diff / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-
-    document.getElementById('cd-d').textContent = d;
-    document.getElementById('cd-h').textContent = h;
-    document.getElementById('cd-m').textContent = m;
-    document.getElementById('cd-s').textContent = s;
+    const d=Math.floor(diff/86400000); diff%=86400000;
+    const h=Math.floor(diff/3600000); diff%=3600000;
+    const m=Math.floor(diff/60000);
+    const s=Math.floor((diff%60000)/1000);
+    cdD.textContent=d; cdH.textContent=h; cdM.textContent=m; cdS.textContent=s;
   }
-
-  tick();
-  setInterval(tick, 1000);
-  document.getElementById('year').textContent = new Date().getFullYear();
+  const cdD=document.getElementById('cd-d'),
+        cdH=document.getElementById('cd-h'),
+        cdM=document.getElementById('cd-m'),
+        cdS=document.getElementById('cd-s');
+  tick(); setInterval(tick,1000);
+  document.getElementById('year').textContent=new Date().getFullYear();
 </script>
 
 </body>
