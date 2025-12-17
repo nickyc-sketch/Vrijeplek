@@ -1442,6 +1442,44 @@
 wireAppointmentsActions(open); // ✅ voeg dit toe
       }
     }
+function wireAppointmentsActions(openArray){
+  const openList = document.getElementById('open-list');
+  if (!openList) return;
+
+  openList.querySelectorAll('[data-appt-edit]').forEach(btn => {
+    const id = btn.getAttribute('data-appt-edit');
+    const slot = (openArray || []).find(s => String(s.id || s.slot_id) === String(id));
+    if (!slot) return;
+
+    btn.onclick = () => {
+      if (window.vpOpenSlotFromAppointments) {
+        window.vpOpenSlotFromAppointments(slot); // ✅ springt naar "tijden" en vult formulier
+      } else {
+        showToast('Edit-functie is nog niet geïnitialiseerd.', 'error');
+      }
+    };
+  });
+
+  openList.querySelectorAll('[data-appt-delete]').forEach(btn => {
+    const id = btn.getAttribute('data-appt-delete');
+    const slot = (openArray || []).find(s => String(s.id || s.slot_id) === String(id));
+    if (!slot) return;
+
+    btn.onclick = async () => {
+      const ok = confirm('Weet je zeker dat je dit tijdslot wil verwijderen?');
+      if (!ok) return;
+
+      try{
+        await deleteSlot(id);
+        showToast('Tijdslot verwijderd','success');
+        await loadAppointments();
+      }catch(err){
+        console.error(err);
+        showToast('Verwijderen mislukt: ' + (err.message || err),'error');
+      }
+    };
+  });
+}
 
     async function loadAppointments(){
       try{
@@ -1789,7 +1827,42 @@ wireAppointmentsActions(open); // ✅ voeg dit toe
 
       const slotsCache = {};
       let editingSlotId = null;
+      window.vpOpenSlotFromAppointments = async function(slot){
+  // 1) ga naar tab "tijden"
+  document.querySelector('.dash-tab[data-panel="tijden"]')?.click();
 
+  // 2) selecteer datum in kalender
+  const dateStr = slot.date || slot.dateKey || '';
+  if (!dateStr) {
+    showToast('Geen datum gevonden voor dit tijdslot.', 'error');
+    return;
+  }
+
+  const targetDate = new Date(dateStr);
+  targetDate.setHours(0,0,0,0);
+
+  // current maand naar juiste maand zetten
+  current = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+  selected = new Date(targetDate);
+
+  updateSelectedLabels();
+  renderCalendar();
+
+  // 3) laad slots van die dag (vult cache + rendert lijst)
+  await loadSlotsForSelectedDate();
+
+  // 4) zet edit state + vul form
+  editingSlotId = String(slot.id || slot.slot_id || '');
+  slotStart.value = slot.start || '';
+  slotEnd.value = slot.end || '';
+  if (slotPlaces) slotPlaces.value = 1; // optioneel (je bewaart dit niet in payload)
+  slotDesc.value = slot.description || '';
+  if (slotVisible) slotVisible.checked = true;
+
+  if (slotSubmitBtn) slotSubmitBtn.textContent = 'Tijdslot bijwerken';
+  showToast('Tijdslot geladen om aan te passen','success');
+  slotForm.scrollIntoView({behavior:'smooth', block:'start'});
+};
       const monthNames = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
       const weekdayNames = ['maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag'];
 
