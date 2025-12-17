@@ -609,15 +609,12 @@
     }
 
     async function waitForConfig(){
-      if (getSupabaseCreds()) return;
+  if (getSupabaseCreds()) return;
 
-      await new Promise((resolve) => {
-        let done = false;
-        const finish = () => { if (done) return; done = true; resolve(); };
-        window.addEventListener('vrijeplek-config-loaded', finish, { once: true });
-        setTimeout(finish, 3500);
-      });
-    }
+  await new Promise((resolve) => {
+    window.addEventListener('vrijeplek-config-loaded', resolve, { once: true });
+  });
+}
 
     async function initSupabase(){
       if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
