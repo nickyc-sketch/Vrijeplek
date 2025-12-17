@@ -22,10 +22,7 @@
     }
 
     *{box-sizing:border-box;}
-
-    html,body{
-      height:100%;
-    }
+    html,body{height:100%}
 
     body{
       margin:0;
@@ -47,7 +44,6 @@
       flex-direction:column;
     }
 
-   
     .site-header{
       position:sticky;
       top:0;
@@ -75,8 +71,7 @@
       margin-right:auto;
     }
     .brand-mark{
-      width:34px;
-      height:34px;
+      width:34px;height:34px;
       border-radius:999px;
       background:
         radial-gradient(circle at 30% 20%, #ffffff 0, #b3e0ff 18%, transparent 40%),
@@ -151,20 +146,10 @@
     }
 
     @media(max-width:720px){
-      .header-inner{
-        padding:.75rem 1rem;
-        gap:.6rem;
-      }
-      .header-actions{
-        gap:.35rem;
-      }
-      .nav-btn{
-        font-size:.76rem;
-        padding:.35rem .75rem;
-      }
+      .header-inner{ padding:.75rem 1rem; gap:.6rem; }
+      .header-actions{ gap:.35rem; }
+      .nav-btn{ font-size:.76rem; padding:.35rem .75rem; }
     }
-
-    /* MAIN LAYOUT */
 
     main.site-main{
       flex:1;
@@ -182,10 +167,7 @@
       align-items:center;
     }
     @media(max-width:960px){
-      .auth-shell{
-        grid-template-columns:1fr;
-        gap:1.75rem;
-      }
+      .auth-shell{ grid-template-columns:1fr; gap:1.75rem; }
     }
 
     .auth-copy h1{
@@ -213,8 +195,7 @@
       margin:.2rem 0;
     }
     .auth-list li span.bullet{
-      width:18px;
-      height:18px;
+      width:18px;height:18px;
       border-radius:999px;
       background:rgba(22,163,74,.18);
       border:1px solid rgba(34,197,94,.6);
@@ -231,17 +212,10 @@
       font-size:.78rem;
       color:rgba(148,163,184,.95);
     }
-    .auth-note a{
-      color:#bfdbfe;
-      text-decoration:none;
-    }
-    .auth-note a:hover{text-decoration:underline;}
+    .auth-note a{ color:#bfdbfe; text-decoration:none; }
+    .auth-note a:hover{ text-decoration:underline; }
 
-    /* LOGIN CARD */
-
-    .auth-card{
-      position:relative;
-    }
+    .auth-card{ position:relative; }
 
     .card{
       background:rgba(15,23,42,.88);
@@ -263,7 +237,7 @@
       opacity:.8;
       pointer-events:none;
     }
-    .card > *{position:relative; z-index:1;}
+    .card > *{ position:relative; z-index:1; }
 
     .card-glass{
       background:linear-gradient(135deg,rgba(15,23,42,.97),rgba(15,23,42,.92));
@@ -277,10 +251,7 @@
       gap:.8rem;
       margin-bottom:.9rem;
     }
-    .card-title{
-      margin:0;
-      font-size:1.05rem;
-    }
+    .card-title{ margin:0; font-size:1.05rem; }
     .card-subtitle{
       margin:.1rem 0 0;
       font-size:.78rem;
@@ -299,8 +270,7 @@
       white-space:nowrap;
     }
     .badge-dot{
-      width:8px;
-      height:8px;
+      width:8px;height:8px;
       border-radius:999px;
       background:radial-gradient(circle at 50% 50%, #4ade80 0,#22c55e 50%,#166534 100%);
       box-shadow:0 0 0 4px rgba(34,197,94,.28);
@@ -312,11 +282,7 @@
       gap:.65rem;
     }
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:.28rem;
-    }
+    .field{ display:flex; flex-direction:column; gap:.28rem; }
     .field label{
       font-size:.84rem;
       font-weight:500;
@@ -332,7 +298,7 @@
       outline:none;
       transition:.14s;
     }
-    .field input::placeholder{color:rgba(148,163,184,.85);}
+    .field input::placeholder{ color:rgba(148,163,184,.85); }
     .field input:focus{
       border-color:rgba(191,219,254,.95);
       box-shadow:0 0 0 1px rgba(129,140,248,.9);
@@ -341,10 +307,11 @@
     .remember-row{
       display:flex;
       align-items:center;
-      gap:.4rem;
+      gap:.5rem;
       font-size:.8rem;
       color:rgba(148,163,184,.9);
       margin-top:.15rem;
+      user-select:none;
     }
     .remember-row input{
       accent-color:var(--o1);
@@ -383,6 +350,12 @@
       transform:translateY(0);
       box-shadow:0 10px 28px rgba(37,99,235,.6);
     }
+    .btn-main:disabled{
+      opacity:.7;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:0 10px 28px rgba(37,99,235,.35);
+    }
 
     #login-msg{
       min-height:18px;
@@ -390,10 +363,8 @@
       text-align:center;
       color:rgba(148,163,184,.95);
     }
-    #login-msg.error{
-      color:var(--danger);
-      font-weight:600;
-    }
+    #login-msg.error{ color:var(--danger); font-weight:600; }
+    #login-msg.ok{ color:var(--ok); font-weight:600; }
 
     .under-links{
       display:flex;
@@ -404,11 +375,8 @@
       font-size:.8rem;
       color:rgba(148,163,184,.9);
     }
-    .under-links a{
-      color:#bfdbfe;
-      text-decoration:none;
-    }
-    .under-links a:hover{text-decoration:underline;}
+    .under-links a{ color:#bfdbfe; text-decoration:none; }
+    .under-links a:hover{ text-decoration:underline; }
 
     footer.site-footer{
       border-top:1px solid rgba(30,64,175,.8);
@@ -435,15 +403,11 @@
       color:rgba(148,163,184,.9);
       text-decoration:none;
     }
-    .footer-nav a:hover{text-decoration:underline;}
+    .footer-nav a:hover{ text-decoration:underline; }
 
     @media(max-width:720px){
-      main.site-main{
-        padding:1.2rem 1rem 2rem;
-      }
-      .card{
-        padding:1.15rem 1.1rem 1.2rem;
-      }
+      main.site-main{ padding:1.2rem 1rem 2rem; }
+      .card{ padding:1.15rem 1.1rem 1.2rem; }
       .site-footer .footer-inner{
         padding:.8rem 1rem 1rem;
         flex-direction:column-reverse;
@@ -452,6 +416,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="site">
     <header class="site-header">
@@ -463,6 +428,7 @@
             <span>last minute afspreken</span>
           </div>
         </a>
+
         <nav class="header-actions">
           <a class="nav-btn" href="waarom.html">Waarom Vrijeplek?</a>
           <a id="nav-login" class="nav-btn" href="login.html" aria-current="page">Login</a>
@@ -480,21 +446,12 @@
             eindeloze telefoontjes of berichtjes.
           </p>
           <ul class="auth-list">
-            <li>
-              <span class="bullet">✓</span>
-              <span>Publiceer last-minute vrije momenten in enkele seconden.</span>
-            </li>
-            <li>
-              <span class="bullet">✓</span>
-              <span>Bevestig of weiger aanvragen met één klik.</span>
-            </li>
-            <li>
-              <span class="bullet">✓</span>
-              <span>Pas je bedrijfs- en facturatiegegevens aan in je eigen dashboard.</span>
-            </li>
+            <li><span class="bullet">✓</span><span>Publiceer last-minute vrije momenten in enkele seconden.</span></li>
+            <li><span class="bullet">✓</span><span>Bevestig of weiger aanvragen met één klik.</span></li>
+            <li><span class="bullet">✓</span><span>Pas je bedrijfs- en facturatiegegevens aan in je eigen dashboard.</span></li>
           </ul>
           <p class="auth-note">
-          Nog geen account? <a href="waarom.html">Lees waarom en maak je lid!</a>
+            Nog geen account? <a href="aanmelden.html">Maak je gratis account aan</a>.
           </p>
         </div>
 
@@ -505,10 +462,7 @@
                 <h2 class="card-title">Beveiligde login</h2>
                 <p class="card-subtitle">Log in met je e-mailadres en wachtwoord.</p>
               </div>
-              <span class="badge">
-                <span class="badge-dot"></span>
-                SSL actief
-              </span>
+              <span class="badge"><span class="badge-dot"></span>SSL actief</span>
             </div>
 
             <form id="login-form" class="form-grid" novalidate>
@@ -516,33 +470,31 @@
                 <label for="login-email">E-mailadres</label>
                 <input id="login-email" type="email" required autocomplete="email" placeholder="naam@voorbeeld.be">
               </div>
+
               <div class="field">
                 <label for="login-password">Wachtwoord</label>
                 <input id="login-password" type="password" required autocomplete="current-password" placeholder="Je wachtwoord">
               </div>
+
               <div class="field">
-                <div class="remember-row">
+                <label class="remember-row" for="remember">
                   <input id="remember" type="checkbox" checked>
-                  <label for="remember">Ingelogd blijven op dit toestel</label>
-                </div>
+                  <span>Ingelogd blijven op dit toestel</span>
+                </label>
               </div>
 
               <div class="submit-zone">
-                <button type="submit" class="btn-main">
-                  Inloggen
-                </button>
+                <button id="login-btn" type="submit" class="btn-main">Inloggen</button>
                 <div id="login-msg"></div>
                 <div class="under-links">
-  <a href="wachtwoord-vergeten.html">Wachtwoord vergeten?</a>
-  <span>•</span>
-  <a href="waarom.html">Nog geen account? Lees waarom en maak je lid!</a>
-</div>
-
+                  <a href="wachtwoord-vergeten.html">Wachtwoord vergeten?</a>
+                  <span>•</span>
+                  <a href="aanmelden.html">Nog geen account? Registreren</a>
+                </div>
               </div>
             </form>
           </div>
         </div>
-
       </section>
     </main>
 
@@ -558,188 +510,205 @@
     </footer>
   </div>
 
+  <!-- config.js zet window.VRIJEPLEK en dispatcht 'vrijeplek-config-loaded' -->
   <script src="/js/config.js"></script>
+
   <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    // Kleine in-memory storage (voor "niet onthouden")
+    function createMemoryStorage(){
+      const mem = new Map();
+      return {
+        getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+        setItem: (k, v) => { mem.set(k, String(v)); },
+        removeItem: (k) => { mem.delete(k); }
+      };
+    }
 
-    // Wait for config to load
-    function initSupabase() {
-      return new Promise((resolve) => {
-        // If config is already loaded, proceed immediately
-        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
-          resolve(createSupabaseClient());
-          return;
-        }
+    function getSupabaseCreds(){
+      const url =
+        window.VRIJEPLEK?.SUPABASE_URL ||
+        window.ENV?.SUPABASE_URL || '';
+      const key =
+        window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+        window.ENV?.SUPABASE_ANON_KEY || '';
+      if (!url || !key) return null;
+      return { url, key };
+    }
 
-        // Otherwise wait for config-loaded event
-        window.addEventListener('vrijeplek-config-loaded', () => {
-          resolve(createSupabaseClient());
-        }, { once: true });
-
-        // Timeout after 3 seconds
-        setTimeout(() => {
-          resolve(createSupabaseClient());
-        }, 3000);
+    async function waitForConfig(){
+      if (getSupabaseCreds()) return;
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        window.addEventListener('vrijeplek-config-loaded', finish, { once:true });
+        setTimeout(finish, 3000);
       });
     }
 
-    function createSupabaseClient() {
-      const SUPABASE_URL = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-      const SUPABASE_ANON_KEY = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+    async function initSupabase(storage){
+      // singleton (voorkomt rare "springt terug" door meerdere clients)
+      if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
 
-      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-        console.error('Supabase credentials not configured. Check Netlify environment variables.');
-        const msg = document.getElementById('login-msg');
-        if (msg) {
+      await waitForConfig();
+      const creds = getSupabaseCreds();
+
+      const msg = document.getElementById('login-msg');
+      if (!creds){
+        if (msg){
           msg.className = 'error';
-          msg.textContent = 'Configuratiefout: Supabase credentials ontbreken. Neem contact op met de beheerder.';
+          msg.textContent = 'Configuratiefout: Supabase credentials ontbreken. Check Netlify env + /.netlify/functions/config.';
         }
         return null;
       }
 
-      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+
+      window.__vpSupabaseClient = createClient(creds.url, creds.key, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          storage
+        }
+      });
+
+      return window.__vpSupabaseClient;
+    }
+
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
+
+    function setNav(loggedIn){
+      if (!btnLogin || !btnMijn) return;
+      btnLogin.style.display = loggedIn ? 'none' : 'inline-flex';
+      btnMijn.style.display  = loggedIn ? 'inline-flex' : 'none';
+    }
+
+    const form  = document.getElementById('login-form');
+    const email = document.getElementById('login-email');
+    const pass  = document.getElementById('login-password');
+    const msg   = document.getElementById('login-msg');
+    const remember = document.getElementById('remember');
+    const loginBtn = document.getElementById('login-btn');
+
+    function setMsg(kind, text){
+      if (!msg) return;
+      msg.className = kind || '';
+      msg.textContent = text || '';
+    }
+
+    async function withTimeout(promise, ms){
+      let t;
+      const timeout = new Promise((_, reject) => {
+        t = setTimeout(() => reject(new Error('TIMEOUT')), ms);
+      });
+      try {
+        return await Promise.race([promise, timeout]);
+      } finally {
+        clearTimeout(t);
+      }
+    }
+
+    // Init supabase met juiste storage:
+    // - remember aan: localStorage
+    // - remember uit: memory (tab refresh = uitgelogd)
+    let supa = null;
+    async function ensureClient(){
+      const storage = (remember && remember.checked) ? localStorage : createMemoryStorage();
+      // als user togglet remember na init: rebuild client (simpel)
+      if (window.__vpSupabaseClient && window.__vpRememberChecked !== !!remember.checked){
+        window.__vpSupabaseClient = null;
+      }
+      window.__vpRememberChecked = !!(remember && remember.checked);
+      supa = await initSupabase(storage);
+      return supa;
+    }
+
+    await ensureClient();
+
+    if (supa){
+      try{
+        const { data } = await supa.auth.getSession();
+        setNav(!!data?.session?.user);
+      } catch {
+        setNav(false);
+      }
+      supa.auth.onAuthStateChange(async () => {
+        try{
+          const { data } = await supa.auth.getSession();
+          setNav(!!data?.session?.user);
+        } catch {
+          setNav(false);
+        }
+      });
+    } else {
+      setNav(false);
+    }
+
+    if (remember){
+      remember.addEventListener('change', async () => {
+        // herinit met andere storage
+        window.__vpSupabaseClient = null;
+        supa = await ensureClient();
       });
     }
 
-    // On load: zorg dat "Mijn Vrijeplek" verstopt is tot we weten of er een sessie is
-    (function() {
-      const btnMijn = document.getElementById('nav-mijn');
-      const btnLogin = document.getElementById('nav-login');
-      if (btnMijn) {
-        btnMijn.style.setProperty('display', 'none', 'important');
-        btnMijn.style.setProperty('visibility', 'hidden', 'important');
-        btnMijn.style.setProperty('opacity', '0', 'important');
-        btnMijn.style.setProperty('pointer-events', 'none', 'important');
-      }
-      if (btnLogin) {
-        btnLogin.style.setProperty('display', 'inline-flex', 'important');
-        btnLogin.style.setProperty('visibility', 'visible', 'important');
-      }
-    })();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    const supaPromise = initSupabase();
+      const cleanEmail = (email.value || '').trim().toLowerCase();
+      const password   = (pass.value || '');
 
-    supaPromise.then(async (supa) => {
-      if (!supa) {
-        const btnLogin = document.getElementById('nav-login');
-        const btnMijn = document.getElementById('nav-mijn');
-        if (btnLogin) btnLogin.style.display = 'inline-flex';
-        if (btnMijn) btnMijn.style.display = 'none';
+      if (!cleanEmail || !password){
+        setMsg('error', 'Vul e-mailadres en wachtwoord in.');
         return;
       }
 
-      const btnLogin = document.getElementById('nav-login');
-      const btnMijn  = document.getElementById('nav-mijn');
-
-      if (!btnLogin || !btnMijn) {
-        console.warn('Nav buttons not found');
+      const client = await ensureClient();
+      if (!client){
+        setMsg('error', 'Configuratie fout. Herlaad de pagina.');
         return;
       }
 
-      async function toggleNav(){
-        try {
-          const { data, error } = await supa.auth.getSession();
+      loginBtn.disabled = true;
+      setMsg('', 'Aan het inloggen…');
 
-          if (error) {
-            console.error('Session check error:', error);
-            btnLogin.style.display = 'inline-flex';
-            btnLogin.style.visibility = 'visible';
-            btnMijn.style.display = 'none';
-            btnMijn.style.visibility = 'hidden';
-            return;
-          }
+      try{
+        const { error } = await withTimeout(
+          client.auth.signInWithPassword({ email: cleanEmail, password }),
+          15000
+        );
 
-          const hasValidSession = !!(data?.session?.user?.id);
-          const sessionExpired = data?.session?.expires_at
-            ? (new Date(data.session.expires_at * 1000) < new Date())
-            : false;
-
-          const loggedIn = hasValidSession && !sessionExpired;
-          console.log('Session check - logged in:', loggedIn, 'User:', data?.session?.user?.email);
-
-          if (loggedIn){
-            btnLogin.style.display = 'none';
-            btnLogin.style.visibility = 'hidden';
-            btnMijn.style.display = 'inline-flex';
-            btnMijn.style.visibility = 'visible';
-          } else {
-            btnLogin.style.display = 'inline-flex';
-            btnLogin.style.visibility = 'visible';
-            btnMijn.style.display = 'none';
-            btnMijn.style.visibility = 'hidden';
-          }
-        } catch (err) {
-          console.error('Toggle nav error:', err);
-          btnLogin.style.display = 'inline-flex';
-          btnLogin.style.visibility = 'visible';
-          btnMijn.style.display = 'none';
-          btnMijn.style.visibility = 'hidden';
-        }
-      }
-
-      // Initial check
-      await toggleNav();
-
-      // Listen for auth state changes
-      supa.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event, 'Has session:', !!session);
-        toggleNav();
-      });
-
-      const form   = document.getElementById('login-form');
-      const email  = document.getElementById('login-email');
-      const pass   = document.getElementById('login-password');
-      const msg    = document.getElementById('login-msg');
-
-      form.addEventListener('submit', async (e)=>{
-        e.preventDefault();
-        const cleanEmail = email.value.trim().toLowerCase();
-
-        if (!cleanEmail || !pass.value) {
-          msg.className = 'error';
-          msg.textContent = 'Vul e-mailadres en wachtwoord in.';
-          return;
-        }
-        msg.className = '';
-        msg.textContent = 'Aan het inloggen…';
-
-        const { error } = await supa.auth.signInWithPassword({
-          email: cleanEmail,
-          password: pass.value
-        });
-
-        if (error) {
-          msg.className = 'error';
-          msg.textContent = error.message || 'Login mislukt.';
+        if (error){
+          setMsg('error', error.message || 'Login mislukt.');
           return;
         }
 
-        // Succes → nav updaten en doorsturen
-        if (typeof toggleNav === 'function') {
-          await toggleNav();
+        // Belangrijk: check of er effectief een sessie bestaat vóór we doorsturen
+        const { data } = await withTimeout(client.auth.getSession(), 8000);
+        const ok = !!(data?.session?.user);
+
+        if (!ok){
+          setMsg('error', 'Login gelukt, maar sessie werd niet opgeslagen. Probeer opnieuw (of schakel “Ingelogd blijven” in).');
+          return;
         }
-        const target = '/dashboard.html?email=' + encodeURIComponent(cleanEmail);
+
+        setMsg('ok', 'Gelukt! Je wordt doorgestuurd…');
+        setNav(true);
+
+        // Geen querystring (die kan dashboard-redirects triggeren)
         setTimeout(() => {
-          window.location.href = target;
-        }, 100);
-      });
-    }).catch(err => {
-      console.error('Failed to initialize Supabase:', err);
-      const btnLogin = document.getElementById('nav-login');
-      const btnMijn = document.getElementById('nav-mijn');
-      if (btnLogin) {
-        btnLogin.style.display = 'inline-flex';
-        btnLogin.style.visibility = 'visible';
-      }
-      if (btnMijn) {
-        btnMijn.style.display = 'none';
-        btnMijn.style.visibility = 'hidden';
-      }
-      const msg = document.getElementById('login-msg');
-      if (msg) {
-        msg.className = 'error';
-        msg.textContent = 'Fout bij initialiseren. Herlaad de pagina.';
+          window.location.href = '/dashboard.html';
+        }, 150);
+
+      } catch (err){
+        const em = String(err?.message || '').toUpperCase();
+        setMsg('error', em.includes('TIMEOUT')
+          ? 'Timeout bij verbinden. Probeer opnieuw.'
+          : 'Netwerkfout. Probeer opnieuw.'
+        );
+        console.error('Login exception:', err);
+      } finally {
+        loginBtn.disabled = false;
       }
     });
   </script>
