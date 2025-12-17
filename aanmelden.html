@@ -10,19 +10,28 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- (optioneel) jouw globale styles, mag blijven -->
   <link rel="stylesheet" href="styles.css?v=ocean7">
 
   <style>
     :root{
       --o1:#1a66ff;
       --o2:#0056ff;
+
       --muted:#93a4c6;
       --line:rgba(255,255,255,.16);
       --glass:rgba(15,23,42,.84);
+
       --danger:#ff3b3b;
       --ok:#22c55e;
+
+      --field-bg:rgba(15,23,42,.82);
+      --field-bg-focus:rgba(15,23,42,.92);
+      --field-border:rgba(148,163,184,.60);
+      --field-border-focus:rgba(59,130,246,.95);
     }
+
+    /* belangrijk voor dropdowns in dark UI */
+    :root{ color-scheme: dark; }
 
     html,body{height:100%}
     body{
@@ -42,7 +51,7 @@
       flex-direction:column;
     }
 
-    /* HEADER */
+    /* ---------- HEADER ---------- */
     .site-header{
       position:sticky;
       top:0;
@@ -91,6 +100,7 @@
       letter-spacing:.02em;
       font-size:1.05rem;
       color:#f9fafb;
+      text-transform:lowercase;
     }
     .brand-wordmark span:last-child{
       font-size:.7rem;
@@ -134,7 +144,7 @@
       box-shadow:0 14px 40px rgba(34,197,94,.22);
     }
 
-    /* MAIN */
+    /* ---------- MAIN ---------- */
     main{
       flex:1;
       padding:1.4rem 1.2rem 2.2rem;
@@ -178,7 +188,21 @@
       .signup-grid{ grid-template-columns:1fr; }
     }
 
-    /* LEFT */
+    /* LEFT COPY */
+    .signup-copy h1{
+      margin:.1rem 0 .55rem;
+      font-size:clamp(1.7rem,3.2vw,2.4rem);
+      line-height:1.08;
+      letter-spacing:-.02em;
+      color:#fff;
+    }
+    .lead{
+      margin:0 0 .8rem;
+      color:rgba(226,232,240,.88);
+      line-height:1.55;
+      max-width:68ch;
+      font-size:.98rem;
+    }
     .pill{
       display:inline-flex;
       align-items:center;
@@ -195,24 +219,10 @@
       margin:.25rem 0 .85rem;
       box-shadow:0 10px 25px rgba(0,0,0,.22);
     }
-    .signup-copy h1{
-      margin:.1rem 0 .55rem;
-      font-size:clamp(1.7rem,3.2vw,2.4rem);
-      line-height:1.08;
-      letter-spacing:-.02em;
-      color:#fff;
-    }
-    .lead{
-      margin:0 0 .8rem;
-      color:rgba(226,232,240,.88);
-      line-height:1.55;
-      max-width:68ch;
-      font-size:.98rem;
-    }
     .plan-pill{
       display:block;
       margin-top:.75rem;
-      padding:.8rem .9rem;
+      padding:.85rem .95rem;
       border-radius:1rem;
       background:rgba(2,6,23,.32);
       border:1px solid rgba(255,255,255,.16);
@@ -227,6 +237,7 @@
       color:#fff;
       letter-spacing:.02em;
     }
+
     .steps-list{
       margin:.9rem 0 0;
       padding-left:1.05rem;
@@ -242,7 +253,7 @@
       line-height:1.5;
     }
 
-    /* RIGHT */
+    /* RIGHT FORM CARD */
     .signup-card{
       border-radius:1.25rem;
       padding:1.15rem 1.15rem 1.05rem;
@@ -275,14 +286,22 @@
       grid-template-columns:1fr 1fr;
       gap:.7rem;
     }
-    .three{
-      display:grid;
-      grid-template-columns:1.4fr .6fr;
-      gap:.7rem;
-    }
     @media(max-width:560px){
       .two{ grid-template-columns:1fr; }
-      .three{ grid-template-columns:1fr; }
+    }
+
+    .addr3{
+      display:grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap:.7rem;
+    }
+    .addr2{
+      display:grid;
+      grid-template-columns: 1fr 2fr;
+      gap:.7rem;
+    }
+    @media(max-width:720px){
+      .addr3, .addr2{ grid-template-columns:1fr; }
     }
 
     .field label{
@@ -292,13 +311,14 @@
       color:rgba(226,232,240,.92);
       font-size:.86rem;
     }
+
     .field input,
     .field select{
       width:100%;
       padding:.62rem .75rem;
       border-radius:.85rem;
-      border:1px solid rgba(148,163,184,.60);
-      background:rgba(15,23,42,.82);
+      border:1px solid var(--field-border);
+      background:var(--field-bg);
       color:#e5e7eb;
       font-family:inherit;
       font-size:.92rem;
@@ -309,77 +329,69 @@
 
     .field input:focus,
     .field select:focus{
-      border-color:rgba(59,130,246,.95);
+      border-color:var(--field-border-focus);
       box-shadow:0 0 0 1px rgba(59,130,246,.55);
-      background:rgba(15,23,42,.92);
+      background:var(--field-bg-focus);
     }
 
-    /* Dropdown leesbaarheid */
+    /* dropdown: maak opties leesbaar */
     .field select{
-      color:#f8fafc;
+      color:#e5e7eb !important;
     }
-    .field select option,
-    .field select optgroup{
-      color:#f8fafc;
-      background:#0b1220;
+    .field select option{
+      color:#e5e7eb !important;
+      background:#0b1220 !important;
     }
 
-    /* TERMS “proper” */
-    .terms-row{ margin-top:.15rem; }
+    /* TERMS (checkbox proper) */
+    .terms-row{ margin-top:.25rem; }
     .terms-label{
-      display:flex;
-      gap:.65rem;
-      align-items:flex-start;
-      cursor:pointer;
-      user-select:none;
-      line-height:1.35;
-      color:rgba(226,232,240,.90);
-      font-size:.84rem;
-    }
-    .terms-check{
       position:relative;
-      width:18px;height:18px;
-      margin-top:.15rem;
-      flex:0 0 18px;
-    }
-    .terms-check input{
-      position:absolute;
-      inset:0;
-      opacity:0;
+      display:flex;
+      align-items:flex-start;
+      gap:.65rem;
+      font-size:.84rem;
+      color:rgba(226,232,240,.88);
       cursor:pointer;
+      line-height:1.35;
+      user-select:none;
     }
-    .terms-box{
+    .terms-label input{
       position:absolute;
-      inset:0;
-      border-radius:6px;
-      border:1px solid rgba(148,163,184,.8);
-      background:rgba(15,23,42,.75);
-      box-shadow:0 0 0 1px rgba(0,0,0,.12);
-    }
-    .terms-check input:focus + .terms-box{
-      outline:none;
-      border-color:rgba(59,130,246,.95);
-      box-shadow:0 0 0 1px rgba(59,130,246,.55);
-    }
-    .terms-check input:checked + .terms-box{
-      border-color:rgba(59,130,246,.95);
-      background:linear-gradient(135deg,rgba(26,102,255,.95),rgba(0,86,255,.95));
-    }
-    .terms-box::after{
-      content:"";
-      position:absolute;
-      left:5px; top:2px;
-      width:5px; height:9px;
-      border:2px solid #fff;
-      border-top:0;border-left:0;
-      transform:rotate(45deg);
       opacity:0;
+      pointer-events:none;
     }
-    .terms-check input:checked + .terms-box::after{opacity:1;}
-
+    .cb{
+      width:20px;height:20px;
+      border-radius:6px;
+      flex:0 0 20px;
+      margin-top:.08rem;
+      border:1px solid rgba(148,163,184,.75);
+      background:rgba(15,23,42,.55);
+      box-shadow:0 0 0 1px rgba(0,0,0,.18) inset;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .cb svg{
+      width:14px;height:14px;
+      opacity:0;
+      transform:scale(.9);
+      transition:.12s ease;
+    }
+    .terms-label input:checked + .cb{
+      border-color:rgba(59,130,246,.95);
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      box-shadow:0 10px 22px rgba(37,99,235,.22);
+    }
+    .terms-label input:checked + .cb svg{
+      opacity:1;
+      transform:scale(1);
+    }
     .terms-label a{
       color:#93c5fd;
       text-decoration:underline;
+      font-weight:700;
     }
 
     .btn{
@@ -395,10 +407,6 @@
       cursor:pointer;
       box-shadow:0 14px 40px rgba(37,99,235,.35);
       transition:.18s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.6rem;
     }
     .btn:hover{
       filter:brightness(1.05);
@@ -406,28 +414,21 @@
       box-shadow:0 18px 55px rgba(37,99,235,.45);
     }
     .btn[disabled]{
-      opacity:.75;
+      opacity:.72;
       cursor:not-allowed;
-      transform:none !important;
-      box-shadow:0 14px 40px rgba(37,99,235,.20);
+      transform:none;
+      filter:none;
+      box-shadow:none;
     }
-    .spinner{
-      width:14px;height:14px;
-      border-radius:999px;
-      border:2px solid rgba(255,255,255,.35);
-      border-top-color:#fff;
-      display:none;
-      animation:spin .9s linear infinite;
-    }
-    .btn.is-loading .spinner{display:inline-block;}
-    @keyframes spin{to{transform:rotate(360deg)}}
 
     #msg{
       min-height:18px;
-      font-size:.82rem;
-      margin-top:.1rem;
+      font-size:.84rem;
+      margin-top:.15rem;
       text-align:center;
       color:rgba(226,232,240,.85);
+      line-height:1.35;
+      word-break:break-word;
     }
     .error{ color:var(--danger); font-weight:800; }
     .ok{ color:var(--ok); font-weight:800; }
@@ -498,10 +499,10 @@
           <div class="signup-grid">
 
             <div class="signup-copy">
-              <div class="pill">Account aanmaken</div>
-              <h1>Word lid van Vrijeplek in 2 stappen.</h1>
+              <div class="pill" id="pill-title">Account aanmaken</div>
+              <h1 id="hero-title">Word lid van Vrijeplek in 2 stappen.</h1>
 
-              <p class="lead">
+              <p class="lead" id="hero-lead">
                 Eerst maak je <strong>gratis</strong> een account. Daarna kies je in je dashboard
                 of je maandelijks of jaarlijks wil activeren. Je betaalt pas als je je plan activeert.
               </p>
@@ -511,13 +512,13 @@
                 Maandelijks €19,95 • Jaarplan €180 (3 mnd gratis)
               </div>
 
-              <ul class="steps-list">
+              <ul class="steps-list" id="steps">
                 <li><strong>Stap 1:</strong> vul hieronder je gegevens in en bevestig via e-mail.</li>
                 <li><strong>Stap 2:</strong> log in, activeer je plan en zet je eerste vrije plekken online.</li>
-                <li>Maandelijks opzegbaar. Geen commissie per boeking.</li>
+                <li>Kosteloos opzegbaar. Geen commissie per boeking.</li>
               </ul>
 
-              <p class="mini-note">
+              <p class="mini-note" id="mini-note">
                 Tip: gebruik hetzelfde e-mailadres als voor je facturatie, dan loopt alles netjes samen.
               </p>
             </div>
@@ -530,95 +531,97 @@
                 <div class="two">
                   <div class="field">
                     <label for="name">Naam</label>
-                    <input id="name" type="text" required placeholder="Volledige naam" autocomplete="name">
+                    <input id="name" name="name" type="text" required placeholder="Volledige naam" autocomplete="name">
                   </div>
                   <div class="field">
                     <label for="company">Bedrijfsnaam</label>
-                    <input id="company" type="text" placeholder="Naam van je zaak" autocomplete="organization">
+                    <input id="company" name="company" type="text" placeholder="Naam van je zaak" autocomplete="organization">
                   </div>
                 </div>
 
                 <div class="field">
                   <label for="email">E-mail</label>
-                  <input id="email" type="email" required placeholder="naam@voorbeeld.be" autocomplete="email">
+                  <input id="email" name="email" type="email" required placeholder="naam@voorbeeld.be" autocomplete="email">
                 </div>
 
                 <div class="two">
                   <div class="field">
                     <label for="password">Wachtwoord</label>
-                    <input id="password" type="password" required minlength="6" placeholder="Min. 6 tekens" autocomplete="new-password">
+                    <input id="password" name="password" type="password" required minlength="6"
+                           placeholder="Min. 6 tekens" autocomplete="new-password">
                   </div>
                   <div class="field">
                     <label for="password2">Herhaal wachtwoord</label>
-                    <input id="password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord" autocomplete="new-password">
+                    <input id="password2" name="password2" type="password" required minlength="6"
+                           placeholder="Nogmaals wachtwoord" autocomplete="new-password">
                   </div>
                 </div>
 
                 <div class="two">
                   <div class="field">
                     <label for="phone">Telefoon</label>
-                    <input id="phone" type="tel" placeholder="+32 ..." autocomplete="tel">
+                    <input id="phone" name="phone" type="tel" placeholder="+32 ..." autocomplete="tel">
                   </div>
                   <div class="field">
                     <label for="btw">BTW-nummer</label>
-                    <input id="btw" type="text" placeholder="BE0123456789" required autocomplete="off">
+                    <input id="btw" name="btw" type="text" placeholder="BE0123456789" required inputmode="text" autocomplete="off">
                   </div>
                 </div>
 
                 <div class="field">
                   <label for="peppol">Peppol-ID (voor facturatie)</label>
-                  <input id="peppol" type="text" placeholder="bv. 0208:BE0123456789" autocomplete="off">
+                  <input id="peppol" name="peppol" type="text" placeholder="bv. 0208:BE0123456789" autocomplete="off">
                 </div>
 
-                <div class="two">
-                  <div class="field">
-                    <label for="cat">Categorie</label>
-                    <select id="cat" required>
-                      <option value="">Kies</option>
-                      <option value="horeca">Horeca</option>
-                      <option value="wellness">Wellness</option>
-                      <option value="zorg">Gezondheid</option>
-                      <option value="events">Events</option>
-                      <option value="poetsdiensten">Poetsdiensten</option>
-                      <option value="ramenwasser">Ramenwasser</option>
-                      <option value="dieren">Dieren</option>
-                      <option value="bouw">Bouw & renovatie</option>
-                    </select>
-                  </div>
+                <div class="field">
+                  <label for="cat">Categorie</label>
+                  <select id="cat" name="cat" required>
+                    <option value="">Kies</option>
+                    <option value="horeca">Horeca</option>
+                    <option value="wellness">Wellness</option>
+                    <option value="zorg">Gezondheid</option>
+                    <option value="events">Events</option>
+                    <option value="poetsdiensten">Poetsdiensten</option>
+                    <option value="ramenwasser">Ramenwasser</option>
+                    <option value="dieren">Dieren</option>
+                    <option value="bouw">Bouw & renovatie</option>
+                  </select>
+                </div>
 
+                <!-- ADRES: alles apart -->
+                <div class="addr3">
+                  <div class="field">
+                    <label for="street">Straat</label>
+                    <input id="street" name="street" type="text" required placeholder="Bv. Breereweg" autocomplete="address-line1">
+                  </div>
+                  <div class="field">
+                    <label for="house_number">Huisnr.</label>
+                    <input id="house_number" name="house_number" type="text" required placeholder="15A" autocomplete="off">
+                  </div>
+                  <div class="field">
+                    <label for="bus">Bus</label>
+                    <input id="bus" name="bus" type="text" placeholder="(optioneel)" autocomplete="address-line2">
+                  </div>
+                </div>
+
+                <div class="addr2">
                   <div class="field">
                     <label for="postcode">Postcode</label>
-                    <input id="postcode" type="text" placeholder="bv. 3500" autocomplete="postal-code">
-                  </div>
-                </div>
-
-                <div class="two">
-                  <div class="field">
-                    <label for="gemeente">Gemeente</label>
-                    <input id="gemeente" type="text" placeholder="bv. Hasselt" autocomplete="address-level2">
+                    <input id="postcode" name="postcode" type="text" required placeholder="3665" inputmode="numeric" autocomplete="postal-code">
                   </div>
                   <div class="field">
-                    <label for="straat">Straat</label>
-                    <input id="straat" type="text" placeholder="Bergstraat" autocomplete="street-address">
-                  </div>
-                </div>
-
-                <div class="three">
-                  <div class="field">
-                    <label for="huisnr">Huisnummer</label>
-                    <input id="huisnr" type="text" placeholder="1 / 15A / ..." autocomplete="address-line2">
-                  </div>
-                  <div class="field">
-                    <label for="bus">Bus (optioneel)</label>
-                    <input id="bus" type="text" placeholder="A / 2 / ..." autocomplete="off">
+                    <label for="city">Gemeente</label>
+                    <input id="city" name="city" type="text" required placeholder="As" autocomplete="address-level2">
                   </div>
                 </div>
 
                 <div class="field terms-row">
                   <label class="terms-label" for="terms">
-                    <span class="terms-check">
-                      <input id="terms" type="checkbox" required>
-                      <span class="terms-box" aria-hidden="true"></span>
+                    <input id="terms" type="checkbox" required>
+                    <span class="cb" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
                     </span>
                     <span>
                       Ik ga akkoord met de
@@ -627,11 +630,7 @@
                   </label>
                 </div>
 
-                <button type="submit" class="btn" id="submitBtn">
-                  <span class="spinner" aria-hidden="true"></span>
-                  <span id="btnText">Account aanmaken</span>
-                </button>
-
+                <button id="submitBtn" type="submit" class="btn">Account aanmaken</button>
                 <div id="msg"></div>
 
                 <p class="form-footnote">
@@ -657,40 +656,32 @@
 
   </div>
 
+  <!-- Config (zet window.VRIJEPLEK) -->
   <script src="/js/config.js"></script>
+
+  <!-- Supabase UMD -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
 
   <script>
     window.addEventListener('DOMContentLoaded', async () => {
-      const form     = document.getElementById('signup-form');
-      const msg      = document.getElementById('msg');
-      const planNote = document.getElementById('plan-note');
-      const btnLogin = document.getElementById('nav-login');
-      const btnMijn  = document.getElementById('nav-mijn');
-      const submitBtn = document.getElementById('submitBtn');
-
       const y = document.getElementById('year');
       if (y) y.textContent = String(new Date().getFullYear());
 
-      // Plan tonen op basis van ?plan= en/of ?promo=launch
-      if (planNote) {
-        const params = new URLSearchParams(window.location.search);
-        const plan = params.get('plan');
-        const promo = params.get('promo');
+      const form = document.getElementById('signup-form');
+      const msg  = document.getElementById('msg');
+      const submitBtn = document.getElementById('submitBtn');
+      const planNote = document.getElementById('plan-note');
 
-        if (promo === 'launch') {
-          planNote.innerHTML =
-            '<span>Pre-inschrijving</span><br>' +
-            'Je reserveert je plaats nu. Details over je plan regel je later in het dashboard.';
-        }
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn  = document.getElementById('nav-mijn');
 
-        if (plan === 'monthly') {
-          planNote.innerHTML =
-            '<span>Gekozen plan</span><br>' +
-            '<strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.';
-        } else if (plan === 'yearly') {
-          planNote.innerHTML =
-            '<span>Gekozen plan</span><br>' +
-            '<strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.';
+      let loading = false;
+
+      function setLoading(on){
+        loading = !!on;
+        if (submitBtn) submitBtn.disabled = loading;
+        if (loading) {
+          if (msg) { msg.className = ''; msg.textContent = 'Even geduld…'; }
         }
       }
 
@@ -708,12 +699,16 @@
       function suggestPeppolIdFromVat(btw) {
         const norm = normalizeBEVat(btw);
         const digits = norm.slice(2);
-        return `${PEPPOL_SCHEME}:BE${digits}`;
+        return `${PEPPOL_SCHEME}:${norm.startsWith('BE') ? ('BE' + digits) : norm}`;
       }
 
       function getSupabaseCreds(){
-        const url = window.VRIJEPLEK?.SUPABASE_URL || window.ENV?.SUPABASE_URL || '';
-        const key = window.VRIJEPLEK?.SUPABASE_ANON_KEY || window.ENV?.SUPABASE_ANON_KEY || '';
+        const url =
+          window.VRIJEPLEK?.SUPABASE_URL ||
+          window.ENV?.SUPABASE_URL || '';
+        const key =
+          window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+          window.ENV?.SUPABASE_ANON_KEY || '';
         if (!url || !key) return null;
         return { url, key };
       }
@@ -722,22 +717,37 @@
         if (getSupabaseCreds()) return;
         await new Promise((resolve) => {
           let done = false;
-          const finish = () => { if (done) return; done = true; resolve(); };
+          const finish = () => {
+            if (done) return;
+            done = true;
+            resolve();
+          };
           window.addEventListener('vrijeplek-config-loaded', finish, { once: true });
-          setTimeout(finish, 3000);
+          setTimeout(finish, 3500);
         });
+      }
+
+      function withTimeout(promise, ms){
+        let t;
+        const timeout = new Promise((_, reject) => {
+          t = setTimeout(() => reject(new Error('TIMEOUT')), ms);
+        });
+        return Promise.race([promise, timeout]).finally(() => clearTimeout(t));
       }
 
       async function initSupabase(){
         if (window.__vpSupabaseClient) return window.__vpSupabaseClient;
 
         await waitForConfig();
+
         const creds = getSupabaseCreds();
         if (!creds) return null;
 
-        const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+        // wacht tot UMD geladen is
+        const supa = window.supabase;
+        if (!supa || typeof supa.createClient !== 'function') return null;
 
-        window.__vpSupabaseClient = createClient(creds.url, creds.key, {
+        window.__vpSupabaseClient = supa.createClient(creds.url, creds.key, {
           auth: {
             persistSession: true,
             autoRefreshToken: true,
@@ -759,11 +769,11 @@
         try {
           const { data, error } = await client.auth.getSession();
           if (error) throw error;
+
           const loggedIn = !!(data?.session?.user);
           btnLogin.style.display = loggedIn ? 'none' : 'inline-flex';
           btnMijn.style.display  = loggedIn ? 'inline-flex' : 'none';
-        } catch (err) {
-          console.error('Toggle nav error:', err);
+        } catch (e) {
           btnLogin.style.display = 'inline-flex';
           btnMijn.style.display  = 'none';
         }
@@ -771,53 +781,96 @@
       await toggleNav();
       client.auth.onAuthStateChange(() => toggleNav());
 
-      function setLoading(isLoading){
-        if (!submitBtn) return;
-        submitBtn.disabled = !!isLoading;
-        submitBtn.classList.toggle('is-loading', !!isLoading);
-      }
+      // Promo / plan tekst
+      if (planNote) {
+        const params = new URLSearchParams(window.location.search);
+        const promo = params.get('promo');
+        const plan  = params.get('plan');
 
-      function withTimeout(promise, ms){
-        return Promise.race([
-          promise,
-          new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), ms))
-        ]);
+        if (promo === 'launch') {
+          planNote.innerHTML =
+            '<span>Pre-inschrijving</span><br>' +
+            'Schrijf nu in en behoud je <strong>€19,95/maand</strong> zolang je klant blijft. ' +
+            'Kosteloos opzegbaar.';
+        } else if (plan === 'monthly') {
+          planNote.innerHTML =
+            '<span>Gekozen plan</span><br>' +
+            '<strong>Maandelijks</strong> €19,95 • later altijd om te zetten naar jaarplan.';
+        } else if (plan === 'yearly') {
+          planNote.innerHTML =
+            '<span>Gekozen plan</span><br>' +
+            '<strong>Jaarplan</strong> €180 (3 mnd gratis) • voordeligste optie.';
+        } else {
+          planNote.innerHTML =
+            '<span>Stap 2 — plannen</span><br>' +
+            'Maandelijks €19,95 • Jaarplan €180 (3 mnd gratis)';
+        }
       }
 
       if (!form || !msg) return;
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        msg.className = '';
-        msg.textContent = '';
+        if (loading) return;
+
         setLoading(true);
 
-        try {
-          msg.textContent = 'Even geduld…';
+        // Na 6s: “nog even geduld”
+        const slowTimer = setTimeout(() => {
+          if (loading && msg) msg.textContent = 'Nog even geduld… dit kan soms 10–20 seconden duren.';
+        }, 6000);
 
-          const name   = document.getElementById('name').value.trim();
-          const email  = document.getElementById('email').value.trim().toLowerCase();
-          const pass   = document.getElementById('password').value.trim();
-          const pass2  = document.getElementById('password2').value.trim();
+        try{
+          const name  = document.getElementById('name').value.trim();
+          const email = document.getElementById('email').value.trim().toLowerCase();
+          const pass  = document.getElementById('password').value.trim();
+          const pass2 = document.getElementById('password2').value.trim();
 
+          const phone = document.getElementById('phone').value.trim();
+          const btwEl = document.getElementById('btw');
+          const peppEl= document.getElementById('peppol');
+          const cat   = document.getElementById('cat').value;
+
+          const street = document.getElementById('street').value.trim();
+          const house  = document.getElementById('house_number').value.trim();
+          const bus    = document.getElementById('bus').value.trim();
+          const pc     = document.getElementById('postcode').value.trim();
+          const city   = document.getElementById('city').value.trim();
+
+          const termsOk = document.getElementById('terms').checked;
+
+          if (!name || !email || !pass || !pass2) {
+            msg.className = 'error';
+            msg.textContent = 'Vul alle verplichte velden in.';
+            return;
+          }
           if (pass !== pass2){
             msg.className = 'error';
             msg.textContent = 'Wachtwoorden komen niet overeen.';
             return;
           }
-          if (!document.getElementById('terms').checked){
+          if (!termsOk){
             msg.className = 'error';
-            msg.textContent = 'Je moet akkoord gaan met de voorwaarden.';
+            msg.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
             return;
           }
 
-          const btwEl  = document.getElementById('btw');
-          const peppEl = document.getElementById('peppol');
           const rawBtw = (btwEl?.value || '').trim();
-
           if (!isValidBEVat(rawBtw)) {
             msg.className = 'error';
             msg.textContent = 'BTW-nummer lijkt niet correct. Gebruik formaat BE0XXXXXXXXX.';
+            return;
+          }
+
+          if (!cat) {
+            msg.className = 'error';
+            msg.textContent = 'Kies een categorie.';
+            return;
+          }
+
+          if (!street || !house || !pc || !city) {
+            msg.className = 'error';
+            msg.textContent = 'Vul je adres volledig in (straat, huisnr, postcode en gemeente).';
             return;
           }
 
@@ -828,55 +881,62 @@
           const normalizedBtw  = normalizeBEVat(rawBtw);
           const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
 
-          const straat = document.getElementById('straat').value.trim();
-          const huisnr = document.getElementById('huisnr').value.trim();
-          const bus    = document.getElementById('bus').value.trim();
-          const postcode = document.getElementById('postcode').value.trim();
-          const gemeente = document.getElementById('gemeente').value.trim();
+          const straatVolledig = bus ? `${street} ${house} bus ${bus}` : `${street} ${house}`;
 
-          const straatVolledig = [straat, huisnr, bus ? ('bus ' + bus) : ''].filter(Boolean).join(' ');
+          // redirect na email confirm: stuur naar login (bestaat zeker)
+          const redirectTo = window.location.origin + '/login.html?confirmed=1';
 
-          const signUpPromise = client.auth.signUp({
+          const signupPromise = client.auth.signUp({
             email,
             password: pass,
             options: {
               data: {
                 display_name: name,
                 bedrijf: document.getElementById('company').value.trim(),
-                telefoon: document.getElementById('phone').value.trim(),
+                telefoon: phone,
                 btw: normalizedBtw,
                 peppol_id: peppolIdToSave,
-                cat: document.getElementById('cat').value,
+                cat,
+                // backwards compat + apart velden
                 straat: straatVolledig,
-                postcode: postcode,
-                gemeente: gemeente
+                straatnaam: street,
+                huisnummer: house,
+                bus: bus || null,
+                postcode: pc,
+                gemeente: city,
               },
-              // Let op: /bedankt.html staat als route 200 in je redirects :contentReference[oaicite:1]{index=1}
-              emailRedirectTo: 'https://www.vrijeplek.be/bedankt.html'
+              emailRedirectTo: redirectTo
             }
           });
 
-          const { error } = await withTimeout(signUpPromise, 15000);
+          // 45s is ruim genoeg zonder “hang forever”
+          const { data, error } = await withTimeout(signupPromise, 45000);
 
           if (error) {
-            console.error('Supabase signup error:', error);
-            msg.className='error';
-            msg.textContent = (error.message && error.message.toLowerCase().includes('already'))
+            msg.className = 'error';
+            msg.textContent = (String(error.message || '').toLowerCase().includes('already'))
               ? 'Er bestaat al een account met dit e-mailadres.'
-              : 'Registratie mislukt: ' + (error.message || 'onbekende fout');
+              : ('Registratie mislukt: ' + (error.message || 'onbekende fout'));
             return;
           }
 
-          msg.className='ok';
-          msg.textContent='Bevestigingsmail verstuurd. Controleer je inbox of spam.';
+          // Success
+          msg.className = 'ok';
+          msg.textContent = 'Bevestigingsmail verstuurd. Controleer je inbox of spam. Klik op de link en log daarna in.';
           form.reset();
-        } catch (err) {
+        } catch(err){
           console.error('Signup exception:', err);
-          msg.className='error';
-          msg.textContent = (err && err.message === 'TIMEOUT')
-            ? 'Het duurt te lang om te verbinden. Probeer opnieuw (of check je console/network).'
-            : 'Netwerkfout. Probeer opnieuw.';
+
+          msg.className = 'error';
+          if (err && err.message === 'TIMEOUT') {
+            msg.textContent =
+              'Het duurt te lang om te verbinden. Probeer opnieuw. ' +
+              'Als dit blijft gebeuren: check in “Network” of de call naar Supabase niet geblokkeerd wordt.';
+          } else {
+            msg.textContent = 'Netwerkfout. Probeer opnieuw.';
+          }
         } finally {
+          clearTimeout(slowTimer);
           setLoading(false);
         }
       });
