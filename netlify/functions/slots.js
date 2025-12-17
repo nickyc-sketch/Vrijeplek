@@ -109,7 +109,7 @@ exports.handler = async function handler(event) {
       }
 
       return json(200, { booked, open });
-
+      }
 
     // ======================
     // POST → nieuw slot
