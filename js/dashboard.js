@@ -1,4 +1,4 @@
-<script>
+
     console.log('Dashboard script loading...');
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -999,4 +999,4 @@ function wireAppointmentsActions(openArray){
         if (e.key === '5') { e.preventDefault(); window.switchTab('instellingen'); }
       }
     });
-  </script>
+  
