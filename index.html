@@ -1,244 +1,856 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vrijeplek — Launch op 5 maart 2026</title>
+  <meta name="description" content="Vrijeplek lanceert op 5 maart 2026. Pre-inschrijven kan nu: early-adopter tarief €19,95/maand. Altijd kosteloos opzegbaar." />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Existing Vrijeplek CSS -->
-  <link rel="stylesheet" href="/css/index.css?v=9">
+  <!-- Vrijeplek homepage CSS -->
+  <link rel="stylesheet" href="/css/index.css?v=9" />
 
   <style>
-    /* Lichtere launch hero */
-    .launch-wrap {
-      background: rgba(255,255,255,.92);
-      color:#0a2a4a;
-    }
-
-    .launch-wrap h1,
-    .launch-wrap p {
-      color:#0a2a4a;
-    }
-
-    .launch-badge {
+    /* Kleine overrides uit je homepage (zorgt dat alles mooi en leesbaar is) */
+    .btn-primary,
+    .btn-primary.btn-primary-small,
+    .search-btn,
+    #flex-search-btn{
       display:inline-block;
-      background:#e6f0fb;
-      color:#1b75d0;
-      padding:.35rem .7rem;
-      border-radius:999px;
-      font-size:.8rem;
+      padding:0.7rem 1.4rem;
+      border-radius:4px;
+      border:none;
+      background:#1b75d0;
+      color:#fff;
       font-weight:600;
-      margin-bottom:.8rem;
+      font-size:0.95rem;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .btn-primary.btn-primary-small{
+      padding:0.5rem 1.1rem;
+      font-size:0.9rem;
+    }
+    .btn-primary:hover,
+    .search-btn:hover,
+    #flex-search-btn:hover{
+      filter:brightness(1.1);
+    }
+    .site-footer,
+    .site-footer a{
+      color:#fff;
+    }
+    .site-footer a{
+      text-decoration:none;
+      font-weight:500;
+    }
+    .site-footer a:hover{
+      text-decoration:underline;
     }
 
-    .countdown-grid {
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
+    /* ===== LAUNCH STYLES (Vrijeplek-gevoel, heavy maar clean) ===== */
+    .launch-wrap{
+      position:relative;
+      overflow:hidden;
+      color:#fff;
+    }
+    /* Glow + diepte */
+    .launch-wrap::before{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      background:
+        radial-gradient(60% 55% at 15% 20%, rgba(27,117,208,.55) 0%, rgba(27,117,208,0) 60%),
+        radial-gradient(55% 55% at 85% 25%, rgba(34,197,94,.30) 0%, rgba(34,197,94,0) 60%),
+        radial-gradient(70% 70% at 50% 110%, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 55%);
+      filter:blur(8px);
+      opacity:.95;
+      pointer-events:none;
+    }
+    .launch-wrap > *{ position:relative; z-index:1; }
+
+    .launch-badge-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:1rem;
-      margin:1.6rem 0;
+      flex-wrap:wrap;
+      margin-bottom:.6rem;
     }
-
-    .countdown-box {
-      background:#fff;
-      border:1px solid #dbe7f4;
-      border-radius:10px;
-      padding:1rem .4rem;
-      text-align:center;
-    }
-
-    .countdown-box strong {
-      display:block;
-      font-size:1.8rem;
+    .launch-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.35rem .75rem;
+      border-radius:999px;
+      font-size:.82rem;
       font-weight:700;
-      color:#1b75d0;
+      letter-spacing:.02em;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
     }
-
-    .countdown-box span {
-      font-size:.75rem;
-      color:#3a4b6a;
-    }
-
-    .section-block {
-      margin-top:3rem;
-    }
-
-    .info-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:1.2rem;
-      margin-top:1.4rem;
-    }
-
-    .info-card {
-      background:#fff;
-      border:1px solid #dbe7f4;
-      border-radius:10px;
-      padding:1.2rem;
-      color:#0a2a4a;
-    }
-
-    .info-card strong {
-      display:block;
-      margin-bottom:.35rem;
-      font-weight:600;
-    }
-
-    .launch-helper {
+    .launch-preview-link{
       font-size:.85rem;
-      color:#3a4b6a;
+      color:rgba(255,255,255,.92);
+      opacity:.9;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(255,255,255,.35);
+      padding-bottom:.1rem;
+      white-space:nowrap;
+    }
+    .launch-preview-link:hover{ opacity:1; }
+
+    .launch-title{
+      margin:.25rem 0 .55rem;
+      font-size:clamp(1.7rem, 3.2vw, 2.4rem);
+      line-height:1.08;
+      letter-spacing:-.02em;
+      color:#fff;
+      text-shadow:0 18px 55px rgba(0,0,0,.55);
+    }
+    .launch-lead{
+      margin:0 0 1.15rem;
+      max-width:68ch;
+      color:rgba(255,255,255,.92);
+      font-size:1.02rem;
+      line-height:1.55;
+    }
+
+    /* ===== BIG COUNTDOWN (dik, duidelijk, omkaderd) ===== */
+    .countdown-shell{
+      margin:1.05rem 0 1.25rem;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+      gap:.75rem;
+      flex-wrap:wrap;
+    }
+    .countdown-block{
+      min-width:140px;
+      border-radius:16px;
+      padding:1.05rem .95rem .85rem;
+      text-align:center;
+
+      background:rgba(2,6,23,.40);
+      border:1px solid rgba(255,255,255,.20);
+      backdrop-filter:blur(14px);
+
+      box-shadow:
+        0 18px 55px rgba(0,0,0,.40),
+        inset 0 0 0 1px rgba(255,255,255,.06);
+
+      position:relative;
+      overflow:hidden;
+    }
+    .countdown-block::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(80% 70% at 20% 0%, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .countdown-num{
+      font-variant-numeric:tabular-nums;
+      font-weight:800;
+      letter-spacing:.06em;
+      font-size:clamp(2.6rem, 5.2vw, 4.6rem);
+      line-height:1;
+      color:#fff;
+      text-shadow:0 20px 60px rgba(0,0,0,.55);
+    }
+    .countdown-label{
+      margin-top:.35rem;
+      font-size:.74rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.82);
+    }
+    .countdown-sep{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 .1rem;
+      font-weight:800;
+      font-size:clamp(2rem, 4.6vw, 3.2rem);
+      color:rgba(255,255,255,.50);
+      text-shadow:0 18px 55px rgba(0,0,0,.45);
+      transform:translateY(-2px);
+      user-select:none;
+    }
+
+    /* subtiele animatie bij tick */
+    .cd-pop{
+      animation:cdpop .22s ease-out;
+    }
+    @keyframes cdpop{
+      from{ transform:translateY(2px) scale(.985); opacity:.88; }
+      to{ transform:translateY(0) scale(1); opacity:1; }
+    }
+
+    /* ===== PRICE CARDS ===== */
+    .price-row{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:.95rem;
+      margin:1.15rem 0 1.1rem;
+    }
+    @media (max-width:780px){
+      .price-row{ grid-template-columns:1fr; }
+      .countdown-block{ min-width:135px; }
+    }
+
+    .price-card{
+      border-radius:16px;
+      padding:1.05rem 1.05rem .95rem;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 16px 45px rgba(0,0,0,.28);
+      backdrop-filter:blur(12px);
+      overflow:hidden;
+      position:relative;
+    }
+    .price-card::before{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      background:radial-gradient(55% 55% at 20% 15%, rgba(255,255,255,.13), rgba(255,255,255,0) 60%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .price-card > *{ position:relative; z-index:1; }
+
+    .price-card.is-hot{
+      border-color:rgba(34,197,94,.55);
+      box-shadow:
+        0 22px 60px rgba(0,0,0,.34),
+        0 18px 55px rgba(34,197,94,.18);
+    }
+    .price-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.86);
+      opacity:.95;
+    }
+    .price-amount{
+      margin:.25rem 0 .15rem;
+      font-weight:900;
+      letter-spacing:-.02em;
+      font-size:clamp(1.85rem, 3.2vw, 2.25rem);
+      color:#fff;
+    }
+    .price-amount span{
+      font-size:.95rem;
+      font-weight:700;
+      opacity:.9;
+      margin-left:.25rem;
+    }
+    .price-sub{
+      margin:0;
+      color:rgba(255,255,255,.88);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+    .price-note{
+      margin:.55rem 0 0;
+      color:rgba(255,255,255,.80);
+      font-size:.82rem;
+      line-height:1.45;
+    }
+
+    /* ===== CTA ROW ===== */
+    .launch-cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+      align-items:center;
+      margin-top:.25rem;
+    }
+    .launch-cta-primary{
+      padding:.82rem 1.25rem;
+      border-radius:999px;
+      font-size:1rem;
+      font-weight:800;
+      text-decoration:none;
+      box-shadow:0 18px 55px rgba(0,0,0,.40);
+    }
+    .launch-cta-secondary{
+      padding:.82rem 1.05rem;
+      border-radius:999px;
+      text-decoration:none;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      font-weight:700;
+    }
+    .launch-cta-secondary:hover{
+      filter:brightness(1.08);
+    }
+
+    .launch-checks{
+      margin-top:.95rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+    }
+    .launch-check{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.38rem .68rem;
+      border-radius:999px;
+      background:rgba(2,6,23,.35);
+      border:1px solid rgba(255,255,255,.16);
+      color:rgba(255,255,255,.92);
+      font-size:.84rem;
+      font-weight:700;
+      backdrop-filter:blur(12px);
+    }
+
+    .launch-fineprint{
+      margin:1rem 0 0;
+      color:rgba(255,255,255,.86);
+      font-size:.9rem;
+      line-height:1.55;
+      max-width:78ch;
+    }
+    .launch-fineprint strong{ color:#fff; }
+
+    /* ===== WHY GRID ===== */
+    .section-title{
+      margin:0 0 .45rem;
+      color:#fff;
+      font-size:1.25rem;
+      letter-spacing:-.01em;
+      text-shadow:0 16px 45px rgba(0,0,0,.45);
+    }
+    .section-lead{
+      margin:0 0 1rem;
+      color:rgba(255,255,255,.90);
+      line-height:1.55;
+      max-width:85ch;
+    }
+    .why-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:.95rem;
       margin-top:.6rem;
+    }
+    @media (max-width:980px){
+      .why-grid{ grid-template-columns:1fr; }
+    }
+    .why-card{
+      border-radius:16px;
+      padding:1.05rem 1.05rem .95rem;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 16px 45px rgba(0,0,0,.25);
+      backdrop-filter:blur(12px);
+    }
+    .why-icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(27,117,208,.18);
+      border:1px solid rgba(255,255,255,.16);
+      margin-bottom:.6rem;
+      font-size:1.2rem;
+    }
+    .why-card h3{
+      margin:0 0 .25rem;
+      color:#fff;
+      font-size:1rem;
+      letter-spacing:-.01em;
+    }
+    .why-card p{
+      margin:0;
+      color:rgba(255,255,255,.88);
       line-height:1.5;
+      font-size:.92rem;
+    }
+    .section-bottom-cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+      margin-top:1.05rem;
+      align-items:center;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-grid{
+      display:grid;
+      gap:.75rem;
+      margin-top:.8rem;
+    }
+    .faq-item{
+      border-radius:16px;
+      padding:.9rem 1rem;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 14px 40px rgba(0,0,0,.22);
+      backdrop-filter:blur(12px);
+      color:#fff;
+    }
+    .faq-item summary{
+      cursor:pointer;
+      font-weight:800;
+      color:#fff;
+      list-style:none;
+      outline:none;
+    }
+    .faq-item summary::-webkit-details-marker{ display:none; }
+    .faq-item summary::after{
+      content:"+";
+      float:right;
+      font-weight:900;
+      opacity:.85;
+    }
+    .faq-item[open] summary::after{ content:"–"; }
+    .faq-item p{
+      margin:.55rem 0 0;
+      color:rgba(255,255,255,.88);
+      line-height:1.55;
+      font-size:.92rem;
+    }
+
+    /* Accessibility helper */
+    .sr-only{
+      position:absolute !important;
+      width:1px !important;
+      height:1px !important;
+      padding:0 !important;
+      margin:-1px !important;
+      overflow:hidden !important;
+      clip:rect(0,0,0,0) !important;
+      white-space:nowrap !important;
+      border:0 !important;
     }
   </style>
 </head>
 
 <body>
-<div class="site">
+  <div class="site">
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="/" aria-label="Vrijeplek home">
-        <div class="brand-mark">V</div>
-        <div class="brand-wordmark">
-          <span>vrijeplek</span>
-          <span>last minute afspreken</span>
-        </div>
-      </a>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Vrijeplek home">
+          <div class="brand-mark">V</div>
+          <div class="brand-wordmark">
+            <span>vrijeplek</span>
+            <span>last minute afspreken</span>
+          </div>
+        </a>
 
-      <nav class="header-actions">
-        <a class="nav-btn" href="/waarom">Waarom Vrijeplek?</a>
-        <a class="nav-btn btn-green" href="/aanmelden.html">Pre-inschrijven</a>
-      </nav>
-    </div>
-  </header>
+        <nav class="header-actions">
+          <a class="nav-btn" href="/waarom">Waarom Vrijeplek?</a>
+          <a class="nav-btn" href="/login" id="nav-login">Login</a>
+          <a class="nav-btn btn-green" href="/dashboard.html" id="nav-mijn" style="display:none;">Mijn Vrijeplek</a>
+          <a class="nav-btn btn-green" href="/aanmelden.html?promo=launch">Pre-inschrijven</a>
+        </nav>
+      </div>
+    </header>
 
-  <!-- MAIN -->
-  <main>
-    <section class="main-grid">
-      <div class="page-container">
-        <div class="search-column">
+    <!-- MAIN -->
+    <main>
+      <section class="main-grid">
+        <div class="page-container">
 
-          <!-- HERO -->
-          <section class="search-wrap launch-wrap">
-            <div class="launch-badge">🚀 Launch op 5 maart 2026</div>
-
-            <h1>Vrije momenten omzetten in echte afspraken</h1>
-
-            <p style="max-width:620px;">
-              Vrijeplek helpt zelfstandigen en zaken om last-minute vrije plaatsen
-              zichtbaar te maken én correct te laten boeken.
+          <!-- ASIDE (Flexijobs zichtbaar + preview) -->
+          <aside class="flex-panel" id="flex-panel">
+            <div class="flex-badge-top">Zie ook</div>
+            <h2 class="flex-title">Flexijobs in jouw buurt</h2>
+            <p class="flex-sub">
+              Werk je graag bij als flexi? Dit komt mee in Vrijeplek.
+              Wil je het nu al zien? Open de homepage preview.
             </p>
 
-            <div class="countdown-grid">
-              <div class="countdown-box"><strong id="cd-d">–</strong><span>dagen</span></div>
-              <div class="countdown-box"><strong id="cd-h">–</strong><span>uur</span></div>
-              <div class="countdown-box"><strong id="cd-m">–</strong><span>min</span></div>
-              <div class="countdown-box"><strong id="cd-s">–</strong><span>sec</span></div>
-            </div>
-
-            <a href="/aanmelden.html" class="btn-primary">
-              Pre-inschrijven aan €19,95/maand
+            <a class="btn-primary btn-primary-small" href="/home.html#flex-panel">
+              Bekijk flexijobs preview
             </a>
 
-            <p class="launch-helper">
-              Inschrijven kan nu · Eerste factuur bij launch · Altijd kosteloos opzegbaar
+            <p class="flex-sub" style="margin-top:.75rem; opacity:.95;">
+              👀 Preview = gewoon een aparte pagina. Je blijft volledig online.
             </p>
-          </section>
+          </aside>
 
-          <!-- VOOR ZAKEN -->
-          <section class="section-block">
-            <h2>Voor zelfstandigen & zaken</h2>
+          <!-- CONTENT -->
+          <div class="search-column">
 
-            <div class="info-grid">
-              <div class="info-card">
-                <strong>Vul lege momenten</strong>
-                Maak last-minute beschikbaarheid zichtbaar voor nieuwe klanten.
+            <!-- HERO / COUNTDOWN -->
+            <section class="search-wrap launch-wrap" id="inschrijven">
+              <div class="launch-badge-row">
+                <div class="launch-badge">🚀 Launch • 05/03/2026</div>
+                <a class="launch-preview-link" href="/home.html">Homepage testen (preview)</a>
               </div>
-              <div class="info-card">
-                <strong>Minder no-shows</strong>
-                Werk met bevestiging of voorschot, wanneer jij dat wil.
-              </div>
-              <div class="info-card">
-                <strong>Professionele uitstraling</strong>
-                Een duidelijke pagina en een overzichtelijk dashboard.
-              </div>
-            </div>
-          </section>
 
-          <!-- FLEXIJOBS -->
-          <section class="section-block">
-            <h2>Ook voor flexijobbers</h2>
+              <h1 class="launch-title">
+                Een last-minute vrije plek? Maak er een echte afspraak van.
+              </h1>
 
-            <div class="info-grid">
-              <div class="info-card">
-                <strong>Extra bijverdienen</strong>
-                Vind snel flexijobs bij zaken die vandaag iemand zoeken.
-              </div>
-              <div class="info-card">
-                <strong>Overzicht per regio</strong>
-                Filter op sector en locatie, net zoals op de homepage.
-              </div>
-            </div>
-          </section>
+              <p class="launch-lead">
+                Vrijeplek is voor zelfstandigen en zaken met lege momenten.
+                Jij zet <strong>open tijdstippen</strong> online, klanten boeken netjes,
+                en jij houdt controle via een duidelijk dashboard.
+              </p>
 
-          <!-- PRAKTISCH -->
-          <section class="section-block">
-            <h2>Praktisch & transparant</h2>
+              <div class="countdown-shell" aria-label="Aftellen tot de launch">
+                <div class="countdown-block">
+                  <div class="countdown-num" id="cd-days">000</div>
+                  <div class="countdown-label">Dagen</div>
+                </div>
 
-            <div class="info-grid">
-              <div class="info-card">
-                <strong>Early adopter prijs</strong>
-                Schrijf je vóór launch in en betaal voor altijd €19,95/maand.
-              </div>
-              <div class="info-card">
-                <strong>Geen verplichtingen</strong>
-                Je kan altijd stoppen, zonder kosten of kleine lettertjes.
-              </div>
-            </div>
-          </section>
+                <div class="countdown-sep" aria-hidden="true">:</div>
 
-        </div>
+                <div class="countdown-block">
+                  <div class="countdown-num" id="cd-hours">00</div>
+                  <div class="countdown-label">Uren</div>
+                </div>
+
+                <div class="countdown-sep" aria-hidden="true">:</div>
+
+                <div class="countdown-block">
+                  <div class="countdown-num" id="cd-mins">00</div>
+                  <div class="countdown-label">Min</div>
+                </div>
+
+                <div class="countdown-sep" aria-hidden="true">:</div>
+
+                <div class="countdown-block">
+                  <div class="countdown-num" id="cd-secs">00</div>
+                  <div class="countdown-label">Sec</div>
+                </div>
+              </div>
+
+              <div class="sr-only" aria-live="polite" id="cd-live"></div>
+
+              <div class="price-row" aria-label="Tarieven">
+                <div class="price-card is-hot">
+                  <div class="price-tag">⭐ Pre-inschrijving</div>
+                  <div class="price-amount">€19,95<span>/maand</span></div>
+                  <p class="price-sub">
+                    Tarief blijft vast zolang je lid blijft.
+                  </p>
+                  <p class="price-note">
+                    Kosteloos opzegbaar. Geen kleine lettertjes.
+                  </p>
+                </div>
+
+                <div class="price-card">
+                  <div class="price-tag">Vanaf 05/03/2026</div>
+                  <div class="price-amount">€24,95<span>/maand</span></div>
+                  <p class="price-sub">
+                    Voor nieuwe inschrijvingen na de launch.
+                  </p>
+                  <p class="price-note">
+                    We starten pas vanaf de launch met facturen en betalingen.
+                  </p>
+                </div>
+              </div>
+
+              <div class="launch-cta-row">
+                <a class="nav-btn btn-green launch-cta-primary" href="/aanmelden.html?promo=launch">
+                  Ja, ik wil pre-inschrijven
+                </a>
+                <a class="launch-cta-secondary" href="#waarom">
+                  Waarom Vrijeplek?
+                </a>
+              </div>
+
+              <div class="launch-checks" aria-label="Belangrijkste punten">
+                <div class="launch-check">✅ Eerste factuur pas vanaf 05/03/2026</div>
+                <div class="launch-check">✅ Kosteloos opzegbaar</div>
+                <div class="launch-check">✅ Facturen via Peppol</div>
+                <div class="launch-check">✅ Optioneel voorschot (jij kiest)</div>
+              </div>
+
+              <p class="launch-fineprint">
+                <strong>Early adopter voordeel:</strong> pre-inschrijven vóór 5 maart 2026 = jouw tarief blijft €19,95/maand zolang je klant blijft.
+                Vanaf de launch is het €24,95/maand voor nieuwe klanten.
+              </p>
+            </section>
+
+            <!-- WAAROM -->
+            <section class="search-wrap launch-wrap" id="waarom" style="margin-top:2.2rem;">
+              <h2 class="section-title">Waarom Vrijeplek?</h2>
+              <p class="section-lead">
+                Omdat lege momenten geld kosten — en last-minute afspraken vaak rommelig gebeuren via DM’s, telefoons en “is dat uur nog vrij?”.
+                Vrijeplek maakt het gedurfd simpel: één plek, één flow, één overzicht.
+              </p>
+
+              <div class="why-grid">
+                <article class="why-card">
+                  <div class="why-icon">⚡</div>
+                  <h3>Vul lege momenten sneller</h3>
+                  <p>
+                    Zet vrije tijdstippen open en maak ze zichtbaar voor mensen die nú een afspraak zoeken.
+                  </p>
+                </article>
+
+                <article class="why-card">
+                  <div class="why-icon">📅</div>
+                  <h3>Jij houdt controle</h3>
+                  <p>
+                    Jij kiest wanneer je zichtbaar bent, hoeveel plaatsen je vrijgeeft en wat klanten zien.
+                  </p>
+                </article>
+
+                <article class="why-card">
+                  <div class="why-icon">🧾</div>
+                  <h3>Professioneel & netjes</h3>
+                  <p>
+                    Een duidelijke pagina + dashboard. Geen chaos meer, wél overzicht en vertrouwen.
+                  </p>
+                </article>
+
+                <article class="why-card">
+                  <div class="why-icon">🛡️</div>
+                  <h3>Minder no-shows</h3>
+                  <p>
+                    Werk met bevestiging of optioneel voorschot wanneer jij dat wil.
+                  </p>
+                </article>
+
+                <article class="why-card">
+                  <div class="why-icon">💼</div>
+                  <h3>Flexijobs inbegrepen</h3>
+                  <p>
+                    Zet je flexi-vacature erop en laat kandidaten je vinden. (Preview staat al klaar.)
+                  </p>
+                </article>
+
+                <article class="why-card">
+                  <div class="why-icon">✅</div>
+                  <h3>Stoppen kan altijd</h3>
+                  <p>
+                    Kosteloos opzegbaar. Je zit nergens “vast” als je wil pauzeren of veranderen.
+                  </p>
+                </article>
+              </div>
+
+              <div class="section-bottom-cta">
+                <a class="nav-btn btn-green launch-cta-primary" href="/aanmelden.html?promo=launch">
+                  Pre-inschrijven aan €19,95/maand
+                </a>
+                <a class="launch-cta-secondary" href="/waarom">
+                  Meer lezen
+                </a>
+              </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="search-wrap launch-wrap" id="faq" style="margin-top:2.2rem; margin-bottom:2.6rem;">
+              <h2 class="section-title">Veelgestelde vragen</h2>
+
+              <div class="faq-grid">
+                <details class="faq-item">
+                  <summary>Wanneer betaal ik?</summary>
+                  <p>
+                    Je kan nu al pre-inschrijven om je early-adopter tarief vast te leggen.
+                    We starten pas vanaf <strong>05/03/2026</strong> met facturen en betalingen.
+                  </p>
+                </details>
+
+                <details class="faq-item">
+                  <summary>Kan ik kosteloos opzeggen?</summary>
+                  <p>
+                    Ja. Je kan altijd kosteloos opzeggen. Geen gedoe, geen “trucjes”.
+                  </p>
+                </details>
+
+                <details class="faq-item">
+                  <summary>Wat krijg ik precies?</summary>
+                  <p>
+                    Een publiek profiel + een dashboard om open tijdstippen te plaatsen, afspraken te beheren,
+                    en (optioneel) met voorschot te werken. Flexijobs hoort er ook bij.
+                  </p>
+                </details>
+
+                <details class="faq-item">
+                  <summary>Kan ik de echte homepage blijven testen?</summary>
+                  <p>
+                    Ja. Je launchpagina staat op <strong>/</strong> (index.html).
+                    Je originele homepage blijft testbaar via <strong>/home.html</strong>.
+                  </p>
+                </details>
+              </div>
+            </section>
+
+          </div><!-- /search-column -->
+        </div><!-- /page-container -->
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© <span id="year"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
+        <nav class="footer-nav">
+          <a href="/voorwaarden.html">Algemene voorwaarden</a>
+          <a href="/waarom">Waarom Vrijeplek?</a>
+        </nav>
       </div>
-    </section>
-  </main>
+    </footer>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>© <span id="year"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
-      <nav class="footer-nav">
-        <a href="/voorwaarden.html">Algemene voorwaarden</a>
-        <a href="/waarom">Waarom Vrijeplek?</a>
-      </nav>
-    </div>
-  </footer>
+  </div><!-- /site -->
 
-</div>
+  <!-- CONFIG -->
+  <script src="/js/config.js"></script>
 
-<script>
-  const launchDate = new Date('2026-03-05T00:00:00');
-  function tick(){
-    const now = new Date();
-    let diff = Math.max(0, launchDate - now);
-    const d=Math.floor(diff/86400000); diff%=86400000;
-    const h=Math.floor(diff/3600000); diff%=3600000;
-    const m=Math.floor(diff/60000);
-    const s=Math.floor((diff%60000)/1000);
-    cdD.textContent=d; cdH.textContent=h; cdM.textContent=m; cdS.textContent=s;
-  }
-  const cdD=document.getElementById('cd-d'),
-        cdH=document.getElementById('cd-h'),
-        cdM=document.getElementById('cd-m'),
-        cdS=document.getElementById('cd-s');
-  tick(); setInterval(tick,1000);
-  document.getElementById('year').textContent=new Date().getFullYear();
-</script>
+  <!-- Nav toggle (login/mijn) zoals je homepage -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+    function createSupabaseClient() {
+      const SUPABASE_URL =
+        window.VRIJEPLEK?.SUPABASE_URL ||
+        window.ENV?.SUPABASE_URL || '';
+      const SUPABASE_ANON_KEY =
+        window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+        window.ENV?.SUPABASE_ANON_KEY || '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          storage: localStorage,
+        },
+      });
+    }
+
+    function initSupabase() {
+      return new Promise((resolve) => {
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
+
+        window.addEventListener(
+          'vrijeplek-config-loaded',
+          () => resolve(createSupabaseClient()),
+          { once: true },
+        );
+
+        setTimeout(() => resolve(createSupabaseClient()), 3000);
+      });
+    }
+
+    const btnLogin = document.getElementById('nav-login');
+    const btnMijn  = document.getElementById('nav-mijn');
+
+    function showLogin() {
+      if (!btnLogin || !btnMijn) return;
+      btnLogin.style.display = 'inline-flex';
+      btnMijn.style.display = 'none';
+      btnMijn.style.pointerEvents = 'none';
+    }
+
+    function showMijn() {
+      if (!btnLogin || !btnMijn) return;
+      btnLogin.style.display = 'none';
+      btnMijn.style.display = 'inline-flex';
+      btnMijn.style.pointerEvents = 'auto';
+    }
+
+    (async () => {
+      showLogin();
+
+      const supa = await initSupabase();
+      if (!supa) return;
+
+      async function updateFromSession() {
+        try {
+          const { data, error } = await supa.auth.getSession();
+          if (error) { showLogin(); return; }
+
+          const session = data?.session || null;
+          const hasValidSession = !!(session?.user?.id);
+          const expired = session?.expires_at
+            ? new Date(session.expires_at * 1000) < new Date()
+            : false;
+
+          if (hasValidSession && !expired) showMijn();
+          else showLogin();
+        } catch {
+          showLogin();
+        }
+      }
+
+      await updateFromSession();
+      supa.auth.onAuthStateChange(() => updateFromSession());
+    })();
+  </script>
+
+  <!-- COUNTDOWN -->
+  <script>
+    (function () {
+      // Belgium launch date (lokale tijd is prima voor een countdown)
+      const launchDate = new Date('2026-03-05T00:00:00+01:00');
+
+      const elDays  = document.getElementById('cd-days');
+      const elHours = document.getElementById('cd-hours');
+      const elMins  = document.getElementById('cd-mins');
+      const elSecs  = document.getElementById('cd-secs');
+      const elLive  = document.getElementById('cd-live');
+
+      const prev = { d:null, h:null, m:null, s:null };
+
+      const pad2 = (n) => String(n).padStart(2, '0');
+      const pad3 = (n) => String(n).padStart(3, '0');
+
+      function setVal(el, val, key) {
+        if (!el) return;
+        if (prev[key] === val) return;
+        prev[key] = val;
+
+        el.textContent = val;
+        el.classList.remove('cd-pop');
+        void el.offsetWidth; // reflow for animation
+        el.classList.add('cd-pop');
+      }
+
+      function tick() {
+        const now = new Date();
+        let diff = launchDate - now;
+        if (diff < 0) diff = 0;
+
+        const d = Math.floor(diff / 86400000);
+        diff %= 86400000;
+        const h = Math.floor(diff / 3600000);
+        diff %= 3600000;
+        const m = Math.floor(diff / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        setVal(elDays,  pad3(d), 'd');
+        setVal(elHours, pad2(h), 'h');
+        setVal(elMins,  pad2(m), 'm');
+        setVal(elSecs,  pad2(s), 's');
+
+        if (elLive) elLive.textContent = `${d} dagen, ${h} uur, ${m} minuten en ${s} seconden tot launch.`;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+
+      const year = document.getElementById('year');
+      if (year) year.textContent = new Date().getFullYear();
+    })();
+  </script>
 </body>
 </html>
+
