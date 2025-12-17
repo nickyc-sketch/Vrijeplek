@@ -5,198 +5,130 @@
   <title>Vrijeplek — Launch op 5 maart 2026</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --blue:#1a66ff;
-      --dark:#020617;
-      --ink:#e5edff;
-      --muted:#94a3b8;
-      --glass:rgba(15,23,42,.85);
-    }
-
-    body{
-      margin:0;
-      font-family:Poppins,system-ui,sans-serif;
-      background:
-        radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
-        radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
-        radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
-      color:var(--ink);
-    }
-
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:3rem 1.5rem 4rem;
-    }
-
-    header{
-      text-align:center;
-      margin-bottom:3rem;
-    }
-
-    h1{
-      font-size:2.4rem;
-      margin-bottom:.6rem;
-    }
-
-    .tagline{
-      color:var(--muted);
-      font-size:1.05rem;
-    }
-
-    .countdown{
-      display:flex;
-      justify-content:center;
-      gap:1rem;
-      margin:2.2rem 0;
-    }
-
-    .timebox{
-      background:var(--glass);
-      border-radius:1rem;
-      padding:1rem 1.2rem;
-      min-width:90px;
-      text-align:center;
-      border:1px solid rgba(148,163,184,.35);
-    }
-
-    .timebox strong{
-      display:block;
-      font-size:1.8rem;
-    }
-
-    .cta{
-      margin-top:2rem;
-    }
-
-    .btn{
-      display:inline-block;
-      padding:.75rem 1.6rem;
-      border-radius:999px;
-      background:linear-gradient(135deg,#1a66ff,#0056ff);
-      color:#fff;
-      font-weight:600;
-      text-decoration:none;
-      box-shadow:0 14px 40px rgba(37,99,235,.45);
-    }
-
-    .section{
-      margin-top:4rem;
-    }
-
-    .cards{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:1.25rem;
-    }
-
-    .card{
-      background:var(--glass);
-      border-radius:1.2rem;
-      padding:1.4rem;
-      border:1px solid rgba(148,163,184,.35);
-    }
-
-    .price{
-      margin-top:1rem;
-      font-size:1.1rem;
-    }
-
-    .price strong{
-      color:#4ade80;
-    }
-
-    .screenshots img{
-      width:100%;
-      border-radius:1rem;
-      border:1px solid rgba(148,163,184,.35);
-      margin-top:1rem;
-    }
-
-    footer{
-      text-align:center;
-      margin-top:4rem;
-      color:var(--muted);
-      font-size:.85rem;
-    }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 
-<body>
-  <div class="wrap">
+<body class="site">
 
-    <header>
-      <h1>Vrijeplek komt eraan 🚀</h1>
-      <p class="tagline">
-        Last-minute afspraken. Netjes geregeld.<br>
-        Launch op <strong>5 maart 2026</strong>
+<header class="site-header">
+  <div class="header-inner container">
+    <a href="/" class="brand">
+      <span class="brand-name">vrijeplek</span><span class="brand-dot"></span>
+    </a>
+    <div class="header-actions">
+      <a href="/aanmelden.html" class="nav-btn btn-green">Pre-inschrijven</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>Vrije momenten omzetten in boekingen</h1>
+      <p>
+        Vrijeplek helpt zelfstandigen en zaken om last-minute vrije plaatsen
+        zichtbaar te maken en correct te laten boeken.
       </p>
 
-      <div class="countdown" id="countdown">
-        <div class="timebox"><strong id="d">–</strong>dagen</div>
-        <div class="timebox"><strong id="h">–</strong>uur</div>
-        <div class="timebox"><strong id="m">–</strong>min</div>
-        <div class="timebox"><strong id="s">–</strong>sec</div>
-      </div>
+      <div class="search-wrap" style="margin-top:26px;">
+        <p style="font-weight:800;color:var(--blue-950);margin-bottom:8px;">
+          Launch over:
+        </p>
 
-      <div class="cta">
-        <a href="/aanmelden.html" class="btn">Pre-inschrijven aan €19,95/maand</a>
-        <div class="price">
-          🔒 <strong>Voor altijd €19,95</strong> voor wie vóór 5/03/2026 instapt<br>
-          Daarna: €24,95/maand
+        <div style="display:flex;gap:14px;justify-content:center;" id="countdown">
+          <div class="card"><strong id="d">–</strong><div>Dagen</div></div>
+          <div class="card"><strong id="h">–</strong><div>Uur</div></div>
+          <div class="card"><strong id="m">–</strong><div>Min</div></div>
+          <div class="card"><strong id="s">–</strong><div>Sec</div></div>
+        </div>
+
+        <div style="margin-top:20px;text-align:center;">
+          <a href="/aanmelden.html" class="nav-btn btn-green">
+            Pre-inschrijven aan €19,95/maand
+          </a>
+          <p style="margin-top:10px;font-size:13px;color:var(--muted);">
+            Eerste betaling pas vanaf <strong>5 maart 2026</strong>
+          </p>
         </div>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <section class="section">
-      <h2>Wat is Vrijeplek?</h2>
-      <div class="cards">
-        <div class="card">📅 Vul lege momenten in je agenda</div>
-        <div class="card">⚡ Last-minute boekingen zonder gedoe</div>
-        <div class="card">💳 Optioneel voorschot bij boeking</div>
-        <div class="card">📊 Overzichtelijk dashboard</div>
+  <!-- WAAROM -->
+  <section class="container" style="margin-top:60px;">
+    <h2 style="text-align:center;margin-bottom:24px;">Waarom Vrijeplek?</h2>
+
+    <div class="value-grid">
+      <div class="card">
+        <strong>Minder lege momenten</strong><br>
+        Vul last-minute vrije plekken op met klanten die nu beschikbaar zijn.
       </div>
-    </section>
+      <div class="card">
+        <strong>Professioneel en betrouwbaar</strong><br>
+        Eén overzichtelijke pagina en dashboard voor je afspraken.
+      </div>
+      <div class="card">
+        <strong>Volledige controle</strong><br>
+        Jij beslist wanneer je zichtbaar bent en hoeveel plaatsen je vrijgeeft.
+      </div>
+      <div class="card">
+        <strong>Optioneel voorschot</strong><br>
+        Verminder no-shows zonder ingewikkelde betalingen.
+      </div>
+      <div class="card">
+        <strong>Early-adopter voordeel</strong><br>
+        Schrijf je vóór launch in en betaal <b>voor altijd €19,95/maand</b>.
+      </div>
+      <div class="card">
+        <strong>Start wanneer Vrijeplek live gaat</strong><br>
+        Inschrijven kan nu, facturatie start pas op 05/03/2026.
+      </div>
+    </div>
 
-    <section class="section screenshots">
-      <h2>Zo werkt het</h2>
-      <img src="/images/dashboard-1.png" alt="Vrijeplek dashboard">
-      <img src="/images/dashboard-2.png" alt="Open tijdstippen">
-    </section>
+    <div style="text-align:center;margin-top:36px;">
+      <a href="/aanmelden.html" class="nav-btn btn-green">
+        Pre-inschrijven — levenslang €19,95
+      </a>
+    </div>
+  </section>
 
-    <footer>
-      © <span id="year"></span> Vrijeplek.be
-      · <a href="/home.html" style="color:#93c5fd;">Homepage preview</a>
-    </footer>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Vrijeplek.be</span>
+    <nav class="footer-nav">
+      <a href="/home.html">Homepage preview</a>
+    </nav>
   </div>
+</footer>
 
-  <script>
-    const launchDate = new Date('2026-03-05T00:00:00');
-    const ids = { d:'d', h:'h', m:'m', s:'s' };
+<script>
+  const launch = new Date('2026-03-05T00:00:00');
+  function tick(){
+    const now = new Date();
+    let diff = Math.max(0, launch - now);
 
-    function tick(){
-      const now = new Date();
-      let diff = Math.max(0, launchDate - now);
+    const d = Math.floor(diff / 86400000);
+    diff %= 86400000;
+    const h = Math.floor(diff / 3600000);
+    diff %= 3600000;
+    const m = Math.floor(diff / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
 
-      const d = Math.floor(diff / 86400000);
-      diff %= 86400000;
-      const h = Math.floor(diff / 3600000);
-      diff %= 3600000;
-      const m = Math.floor(diff / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
+    dEl.textContent=d; hEl.textContent=h; mEl.textContent=m; sEl.textContent=s;
+  }
 
-      document.getElementById(ids.d).textContent = d;
-      document.getElementById(ids.h).textContent = h;
-      document.getElementById(ids.m).textContent = m;
-      document.getElementById(ids.s).textContent = s;
-    }
+  const dEl=d=document.getElementById('d');
+  const hEl=h=document.getElementById('h');
+  const mEl=m=document.getElementById('m');
+  const sEl=s=document.getElementById('s');
 
-    tick();
-    setInterval(tick,1000);
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  tick(); setInterval(tick,1000);
+  document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+
 </body>
 </html>
