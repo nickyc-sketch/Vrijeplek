@@ -1,88 +1,115 @@
-<!doctype html><html lang="nl"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Algemene voorwaarden — Vrijeplek.be</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-</head><body><div class="container">
-<header class="header">
-  <div class="brand"><div class="logo"></div> Vrijeplek<span style="color:#64748b">.be</span></div>
-  <nav class="nav">
-    <a href="index.html">Home</a>
-    <a href="voor-bedrijven.html">Voor bedrijven</a>
-    <a href="login.html" class="button ghost" id="loginLink">Login</a>
-    <a href="#" class="button ghost" id="logoutLink" style="display:none">Uitloggen</a>
-    <a href="signup.html" class="cta">Aanmelden</a>
-  </nav>
-</header>
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Algemene voorwaarden — Vrijeplek</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/index.css?v=15" />
+  <style>
+    :root{ --muted: rgba(255,255,255,.82); --accent:#1b75d0; }
+    .container{ max-width:1060px; margin:28px auto; padding:0 16px 60px; color:#fff; }
+    .card{ background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.04); border-radius:12px; padding:30px; box-shadow:0 30px 80px rgba(0,0,0,.55); }
+    h1{ margin:0 0 8px; font-size:1.6rem; }
+    h2{ margin:18px 0 8px; font-size:1.05rem; color:#fff; }
+    p{ color:var(--muted); line-height:1.6; }
+    ul{ color:var(--muted); margin-left:1.05rem; line-height:1.6; }
+    .small{ font-size:.92rem; color:var(--muted); }
+    .header-note{ margin-top:8px; color:var(--muted); }
+    .muted-strong{ color:#fff; font-weight:700; }
+    .legal-foot{ margin-top:20px; font-size:.9rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner" style="justify-content:space-between;">
+      <a class="brand" href="/" aria-label="Vrijeplek home" style="display:flex;align-items:center;gap:.6rem;">
+        <div class="brand-mark">V</div>
+        <div class="brand-wordmark">
+          <span>vrijeplek</span>
+          <span>last minute afspreken</span>
+        </div>
+      </a>
+      <nav>
+        <a class="nav-btn btn-green" href="/voorwaarden.html">Voorwaarden</a>
+      </nav>
+    </div>
+  </header>
 
-<div class="card">
-  <h1>Algemene voorwaarden</h1>
-  <p>Laatst bijgewerkt: 7 oktober 2025</p>
-  <h2>1. Definities</h2>
-  <p><b>Vrijeplek.be</b>: de dienst en website geëxploiteerd door Easygyps BV (ondernemingsnummer zoals op factuur), die bedrijven (Handelaars) toelaat een profiel en beschikbaarheden te publiceren en consumenten (Gebruikers) toelaat deze te raadplegen.</p>
-  <p><b>Handelaar</b>: een onderneming die zich aanmeldt, betaalt en gebruik maakt van het dashboard.</p>
-  <p><b>Gebruiker</b>: iedere bezoeker van de website.</p>
-  <h2>2. Toepasselijkheid</h2>
-  <p>Deze voorwaarden zijn van toepassing op elk gebruik van Vrijeplek.be, op elke overeenkomst tussen Vrijeplek.be en de Handelaar, en op alle door Vrijeplek.be geleverde diensten. Afwijkingen zijn enkel geldig indien schriftelijk bevestigd door Vrijeplek.be.</p>
-  <h2>3. Dienstbeschrijving</h2>
-  <ul>
-    <li>Vrijeplek.be biedt een platform waar Handelaars bedrijfsgegevens en vrije tijdssloten kunnen publiceren.</li>
-    <li>Vrijeplek.be is geen partij bij afspraken tussen Gebruiker en Handelaar; de Handelaar is volledig verantwoordelijk voor dienstverlening, prijzen, planning en naleving van wet- en regelgeving.</li>
-    <li>Vrijeplek.be rekent geen commissie aan Gebruikers of Handelaars.</li>
-  </ul>
-  <h2>4. Abonnement, prijs en facturatie</h2>
-  <ul>
-    <li>Prijs: €9/maand of €80/jaar (incl. btw indien van toepassing). Wijzigingen worden minstens 30 dagen vooraf gecommuniceerd.</li>
-    <li>Promotie: bij eerste inschrijving betaalt de Handelaar €9 (eenmalig) en ontvangt vervolgens 3 maanden gratis toegang. Daarna wordt maandelijks automatisch €9 aangerekend (tenzij jaarplan werd gekozen).</li>
-    <li>Automatische verlenging: abonnementen verlengen automatisch. De Handelaar kan op elk moment opzeggen; de opzeg geldt voor de volgende periode.</li>
-    <li>Betaling gebeurt via onze betaalprovider (bv. Stripe). Door te abonneren machtigt de Handelaar Vrijeplek.be om periodiek bedragen te incasseren.</li>
-    <li>Facturen worden elektronisch verzonden naar het opgegeven e-mailadres. De Handelaar staat in voor correcte facturatiegegevens (incl. btw-nummer).</li>
-    <li>Bij wanbetaling behoudt Vrijeplek.be zich het recht voor om toegang tijdelijk te schorsen of het account te beëindigen.</li>
-  </ul>
-  <h2>5. Herroepingsrecht & opzeg</h2>
-  <ul>
-    <li>De dienst is een digitale ondernemingsdienst die onmiddellijk na inschrijving beschikbaar is. De Handelaar stemt in met onmiddellijke uitvoering en erkent dat daardoor een wettelijk herroepingsrecht niet van toepassing is.</li>
-    <li>Opzeg kan op elk moment, zonder opzegvergoeding. Reeds betaalde bedragen voor lopende (gedeeltelijke) perioden worden niet pro rata terugbetaald, tenzij wettelijk verplicht.</li>
-  </ul>
-  <h2>6. Aanlevering en juistheid van informatie</h2>
-  <ul>
-    <li>De Handelaar is verantwoordelijk voor de juistheid, wettigheid en actualiteit van alle aangeleverde gegevens (teksten, beelden, tarieven, beschikbaarheden, links zoals Google Reviews).</li>
-    <li>Vrijeplek.be kan content modereren, weigeren of verwijderen die onjuist, illegaal of strijdig met deze voorwaarden is.</li>
-  </ul>
-  <h2>7. Gebruik en fair use</h2>
-  <ul>
-    <li>Misbruik, scraping, reverse engineering, of het omzeilen van beveiliging is verboden.</li>
-    <li>Accounts zijn persoonlijk voor de betreffende Handelaar en mogen niet gedeeld of doorverkocht worden.</li>
-  </ul>
-  <h2>8. Aansprakelijkheid</h2>
-  <ul>
-    <li>Vrijeplek.be streeft naar hoge beschikbaarheid maar garandeert geen ononderbroken toegang.</li>
-    <li>Vrijeplek.be is niet aansprakelijk voor indirecte of gevolgschade, winstderving of reputatieschade.</li>
-    <li>De totale aansprakelijkheid is beperkt tot de bedragen die de Handelaar in de laatste 12 maanden voor de dienst heeft betaald.</li>
-  </ul>
-  <h2>9. Privacy & gegevensverwerking (AVG/GDPR)</h2>
-  <ul>
-    <li>Vrijeplek.be verwerkt persoonsgegevens conform de AVG. Doeleinden: accountbeheer, facturatie, ondersteuning, beveiliging en verbetering van de dienst.</li>
-    <li>Rechtsgronden: uitvoering van de overeenkomst, gerechtvaardigd belang en wettelijke verplichting (bv. boekhouding).</li>
-    <li>Bewaartermijnen: zolang nodig voor de doeleinden of wettelijke verplichtingen.</li>
-    <li>Betrokkenenrechten: inzage, rectificatie, wissen, beperking, bezwaar en dataportabiliteit via het contactadres op de website.</li>
-    <li>Subverwerkers (bv. hosting, betaalprovider, e-maildienst) kunnen buiten de EER gevestigd zijn; passende waarborgen worden voorzien (bv. SCC’s).</li>
-    <li>Cookiebeleid: functionele cookies voor werking; analytische/marketingcookies enkel met toestemming.</li>
-  </ul>
-  <h2>10. Intellectuele eigendom</h2>
-  <p>Alle rechten op de website, software en huisstijl behoren toe aan Vrijeplek.be of haar licentiegevers. De Handelaar behoudt rechten op eigen content en verleent Vrijeplek.be een niet-exclusieve licentie om deze te tonen binnen de dienst.</p>
-  <h2>11. Duur en beëindiging</h2>
-  <p>Vrijeplek.be kan accounts beëindigen bij ernstige of herhaalde inbreuk, onwettig gebruik of wanbetaling. Bij beëindiging wordt het profiel onzichtbaar gemaakt.</p>
-  <h2>12. Wijzigingen</h2>
-  <p>Vrijeplek.be kan deze voorwaarden wijzigen. De meest recente versie wordt op de website gepubliceerd. Bij wezenlijke wijzigingen wordt de Handelaar per e-mail geïnformeerd.</p>
-  <h2>13. Toepasselijk recht & forumkeuze</h2>
-  <p>Op deze voorwaarden is Belgisch recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechtbanken te Limburg (afdeling Genk), behoudens dwingend recht.</p>
-  <p>Door je aan te melden en de checkbox “Ik ga akkoord met de Algemene voorwaarden” aan te vinken, bevestig je deze voorwaarden te hebben gelezen en te accepteren.</p>
-</div>
+  <main class="container">
+    <section class="card">
+      <h1>Algemene voorwaarden van Vrijeplek</h1>
+      <p class="header-note">Lees deze voorwaarden zorgvuldig. Door u te registreren en een abonnement af te sluiten bevestigt u dat u deze voorwaarden hebt gelezen en accepteert.</p>
 
-<footer class="footer">© <span id="year">2025</span> Vrijeplek.be · <a href="terms.html">Algemene voorwaarden</a></footer>
-</div>
-<script defer src="/.netlify/identity/widget.js"></script>
-<script defer src="app.js"></script>
-</body></html>
+      <h2>1. Definities</h2>
+      <p>In deze voorwaarden betekent “Vrijeplek” de website en de bijbehorende diensten aangeboden door Vrijeplek vzw/kvk. “Gebruiker” of “u” betekent de persoon of rechtspersoon die zich registreert en gebruikmaakt van het platform. “Dienst” betekent de software-as-a-service (SaaS), het dashboard en alle functies van Vrijeplek.</p>
+
+      <h2>2. Toepasselijkheid</h2>
+      <p>Deze algemene voorwaarden zijn van toepassing op alle aanbiedingen, registraties, abonnementen en het gebruik van Vrijeplek. Afwijkingen zijn alleen geldig als die schriftelijk en expliciet zijn overeengekomen.</p>
+
+      <h2>3. Aard van de dienst – aansprakelijkheid</h2>
+      <p>Vrijeplek biedt een platform voor het publiceren en boeken van beschikbare tijdstippen en voor het publiceren of zoeken van flexijobs. Vrijeplek is geen partij bij afspraken tussen gebruikers. Vrijeplek is niet aansprakelijk voor:</p>
+      <ul>
+        <li>de inhoud, uitvoering of kwaliteit van diensten die via het platform worden aangeboden;</li>
+        <li>schade, letsel, verlies of kosten voortvloeiend uit afspraken, no-shows of wanprestatie tussen gebruikers;</li>
+        <li>ongevallen, schade of ander nadeel dat voortvloeit uit een afspraak die via Vrijeplek is gemaakt;</li>
+        <li>indirecte schade, gederfde winst of gevolgschade ten gevolge van gebruik of onbereikbaarheid van het platform.</li>
+      </ul>
+      <p class="small">Gebruikers vrijwaren Vrijeplek tegen aanspraken van derden die voortvloeien uit hun gebruik van het platform.</p>
+
+      <h2>4. Abonnementen en automatische betalingen</h2>
+      <p>Vrijeplek biedt doorlopende abonnementen met maand- of jaarbetaling. Bij inschrijving machtigt u Vrijeplek om de abonnementsbetalingen automatisch te incasseren via de door u opgegeven betaalmethode (bijvoorbeeld via terugkerende kaartbetaling of SEPA-mandaat). Deze machtiging geldt voor alle toekomstige, periodieke incasso’s zolang uw abonnement loopt.</p>
+      <p class="small"><span class="muted-strong">Belangrijk:</span> door het invullen van het inschrijfformulier en het aanvinken van de akkoordvink bevestigt u dat u instemt met automatische afschrijving van de abonnementsbedragen. Een vooraf aangevinkt vakje is niet voldoende; uw instemming moet actief en ondubbelzinnig zijn.</p>
+
+      <h2>5. Opzegging en duur</h2>
+      <p>Uw abonnement loopt door tot u opzegt via uw Vrijeplek-dashboard. Uitsluitend opzeggingen die via het dashboard worden gedaan zijn rechtsgeldig. Opzegging per telefoon of e-mail wordt niet geaccepteerd tenzij uitdrukkelijk schriftelijk anders overeengekomen door Vrijeplek.</p>
+      <p>Maandabonnementen: na bevestiging van opzegging via het dashboard blijven maandabonnementen nog doorlopen gedurende <strong>2 volledige kalendermaanden</strong>. In die periode blijven automatische incasso’s plaatsvinden. U behoudt gedurende die termijn toegang tot uw account.</p>
+      <p>Jaarabonnementen: bij opzegging wordt de toegang behouden tot het einde van de reeds betaalde jaarperiode. Jaarbetalingen worden niet pro rata gerestitueerd; er is geen terugbetaling van het reeds betaalde jaarbedrag. Een jaarlijkse betaling stopt dus pas na afloop van de betaalde jaarperiode.</p>
+
+      <h2>6. Geen terugbetaling</h2>
+      <p>Betaalde abonnementskosten zijn definitief. Vrijeplek verleent geen terugbetalingen of pro-rata teruggaven voor lopende abonnementsperiodes die al zijn betaald. Het enige recht dat in de wet bestaat (zoals het consumentenherroepingsrecht) wordt gerespecteerd voor zover het van toepassing is; in dat geval gelden de wettelijke voorwaarden.</p>
+
+      <h2>7. Founderprijs en promoties</h2>
+      <p>Promotionele tarieven of founding-voordelen gelden alleen zolang uw abonnement ononderbroken actief blijft. Bij opzegging vervallen deze voordelen. Herinschrijving wordt beschouwd als een geheel nieuwe overeenkomst en vindt plaats tegen de dan geldende tarieven; eerder toegekende founding-voordelen worden niet automatisch heringevoerd.</p>
+
+      <h2>8. Betalingsverplichtingen en incasso</h2>
+      <p>U bent verantwoordelijk voor correcte betaalgegevens. Bij een mislukte incasso of mislukte kaartbetaling behoudt Vrijeplek zich het recht voor uw toegang tijdelijk te schorsen totdat de betaling is voldaan. Eventuele incassokosten of kosten als gevolg van foutieve betaalgegevens komen voor rekening van de gebruiker indien wettelijk toegestaan.</p>
+
+      <h2>9. Geen aansprakelijkheid voor afspraken en schade</h2>
+      <p>Vrijeplek is niet aansprakelijk voor schade die voortvloeit uit afspraken tussen gebruikers, inclusief maar niet beperkt tot: wanprestatie, ongevallen, letsel of verlies van goederen. Gebruikers zijn zelf verantwoordelijk voor de uitvoering, verzekeringen en veiligheid van hun activiteiten. Gebruikers vrijwaren Vrijeplek tegen alle aanspraken die daaruit voortvloeien.</p>
+
+      <h2>10. Privacy en gegevensverwerking</h2>
+      <p>Vrijeplek verwerkt persoonsgegevens in overeenstemming met haar Privacy Policy en de AVG/GDPR. Na beëindiging van uw abonnement bewaart Vrijeplek uw accountgegevens en persoonsgegevens maximaal <strong>3 maanden</strong> in het systeem. Na deze periode worden persoonsgegevens verwijderd of geanonimiseerd, behoudens gegevens die wij op grond van wetgeving (bijvoorbeeld fiscale verplichtingen) langer moeten bewaren. Verwijdering is definitief en herstel van accountgegevens is daarna niet mogelijk.</p>
+
+      <h2>11. Heractivering en herinschrijving</h2>
+      <p>Bij herinschrijving wordt een nieuw abonnement aangegaan onder de dan geldende voorwaarden en tarieven. Eerdere prijsvoordelen vervallen automatisch. Heractivering binnen de bewaarperiode kan mogelijk zijn, maar eventuele vroegere promoties worden niet gegarandeerd.</p>
+
+      <h2>12. Consumentenrecht en herroeping</h2>
+      <p>Indien u handelt als consument kunnen op sommige aankopen het wettelijke herroepingsrecht van toepassing zijn. Vrijeplek zal tijdens het bestelproces aangeven of en hoe het herroepingsrecht geldt en zal conform de wet handelen. Voor zakelijke klanten (B2B) is het herroepingsrecht doorgaans niet van toepassing.</p>
+
+      <h2>13. Beëindiging door Vrijeplek</h2>
+      <p>Vrijeplek kan uw account onmiddellijk schorsen of beëindigen bij schending van de voorwaarden, fraude of illegale handelingen. In geval van beëindiging om ernstige reden kan toegang direct worden beëindigd zonder terugbetaling.</p>
+
+      <h2>14. Wijzigingen van de voorwaarden</h2>
+      <p>Vrijeplek kan deze voorwaarden wijzigen. Wijzigingen worden tijdig aangekondigd. Doet u geen afstand van uw abonnement, dan gaat u akkoord met de gewijzigde voorwaarden. Bij wezenlijke tarievenwijzigingen ontvangt u vooraf bericht over opzegmogelijkheden waar de wet dat vereist.</p>
+
+      <h2>15. Vrijwaring</h2>
+      <p>U vrijwaart Vrijeplek tegen alle aanspraken van derden voortvloeiend uit uw gebruik van de dienst of door uw handelwijze via het platform.</p>
+
+      <h2>16. Overmacht</h2>
+      <p>Vrijeplek is niet aansprakelijk voor het niet nakomen van verplichtingen indien dit het gevolg is van oorzaken buiten onze redelijke beheersing (force majeure), inclusief storingen van derden, technische uitval, stroomstoringen, internetstoringen of overheidsmaatregelen.</p>
+
+      <h2>17. Toepasselijk recht en bevoegde rechtbank</h2>
+      <p>Op deze voorwaarden is het Belgisch recht van toepassing, onverminderd dwingende rechtsregels die van toepassing kunnen zijn op consumenten. Geschillen worden voorgelegd aan de bevoegde rechtbanken in België, tenzij partijen anders overeenkomen.</p>
+
+      <h2>18. Aanvaarding</h2>
+      <p>Door zich aan te melden voor een account en het aanvinken van de verklaring op het aanmeldformulier bevestigt de gebruiker uitdrukkelijk akkoord te gaan met deze Algemene Voorwaarden en de automatische incasso van abonnementsbedragen als omschreven.</p>
+
+      <div class="legal-foot">
+        <p>Voor vragen of opzeggingen: <a href="mailto:contact@vrijeplek.be" style="color:#fff;text-decoration:underline">contact@vrijeplek.be</a></p>
+        <p>Laatste wijziging: <strong><?php echo date('Y'); ?></strong></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
