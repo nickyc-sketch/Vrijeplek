@@ -1,304 +1,300 @@
-// server.js
-require('dotenv').config();
-const express = require('express');
-const Stripe = require('stripe');
-const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vrijeplek — Exclusieve pre-inschrijvingen</title>
+  <meta name="description" content="Pre-inschrijven: €19,95/maand of €180/jaar voor de eerste 3000 klanten. Betaalgegevens nu, eerste incasso op 01-06-2026." />
 
-// CONFIG via ENV
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- JOUW BESTAANDE CSS -->
+  <link rel="stylesheet" href="/css/index.css?v=10" />
 
-const PRICE_EARLY_MONTHLY = process.env.PRICE_EARLY_MONTHLY_ID; // €19,95 p/m
-const PRICE_EARLY_YEARLY  = process.env.PRICE_EARLY_YEARLY_ID;  // €180 p/j
-const PRICE_REGULAR_MONTHLY = process.env.PRICE_REGULAR_MONTHLY_ID; // €24,95
-const PRICE_REGULAR_YEARLY  = process.env.PRICE_REGULAR_YEARLY_ID;  // €250
+  <style>
+    /* Kleine, gerichte aanvullingen (zodat je index.css grotendeels hetzelfde blijft) */
+    :root { --accent: #1b75d0; --muted-white: rgba(255,255,255,.9); }
+    .launch-card { border-radius:18px; padding:20px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.06); box-shadow:0 30px 90px rgba(0,0,0,.55); }
+    .exclusive-badge{ display:inline-block; padding:.35rem .6rem; border-radius:999px; background:linear-gradient(90deg,var(--accent),#2ac36a); color:#021026; font-weight:900; }
+    .hero{ display:grid; grid-template-columns:1fr 360px; gap:22px; align-items:start; }
+    @media(max-width:980px){ .hero{ grid-template-columns:1fr; } }
+    .hero-right{ border-radius:12px; padding:14px; background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.03)); border:1px solid rgba(255,255,255,.04); }
+    .progress{ height:12px; background:rgba(255,255,255,.06); border-radius:999px; overflow:hidden; }
+    .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--accent),#2ac36a); width:7%; transition:width .6s ease; }
+    .plan { display:flex; gap:.6rem; align-items:center; padding:.5rem; border-radius:10px; border:1px solid rgba(255,255,255,.04); cursor:pointer; background:transparent; }
+    .plan input{ accent-color:var(--accent); }
+    .btn-primary{ background:var(--accent); color:#021024; padding:.75rem 1.05rem; border-radius:999px; font-weight:900; border:none; box-shadow:0 16px 40px rgba(0,0,0,.36); cursor:pointer; }
+    .btn-soft{ background:transparent; border:1px solid rgba(255,255,255,.06); padding:.6rem .9rem; border-radius:999px; color:rgba(255,255,255,.88); cursor:pointer; }
+    .fine{ color:rgba(255,255,255,.85); }
+    .muted{ color: rgba(255,255,255,.78); }
+  </style>
+</head>
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+<body>
+  <div class="site">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Vrijeplek home">
+          <div class="brand-mark">V</div>
+          <div class="brand-wordmark">
+            <span>vrijeplek</span>
+            <span>last minute afspreken</span>
+          </div>
+        </a>
 
-const COMBELL_SMTP_HOST = process.env.COMBELL_SMTP_HOST;
-const COMBELL_SMTP_PORT = Number(process.env.COMBELL_SMTP_PORT || 587);
-const COMBELL_SMTP_USER = process.env.COMBELL_SMTP_USER;
-const COMBELL_SMTP_PASS = process.env.COMBELL_SMTP_PASS;
-const NO_REPLY_EMAIL = process.env.NO_REPLY_EMAIL || 'noreply@vrijeplek.be';
+        <nav class="header-actions">
+          <a class="nav-btn" href="#waarom">Waarom?</a>
+          <a class="nav-btn" href="#flexijobs">Flexijobs</a>
+          <a class="nav-btn btn-green" href="/aanmelden.html?promo=launch">Pre-inschrijven</a>
+        </nav>
+      </div>
+    </header>
 
-const BASE_URL = process.env.BASE_URL || 'https://vrijeplek.be';
+    <main class="launch-container">
+      <section class="launch-card" id="top">
+        <div class="hero">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <div class="exclusive-badge">EXCLUSIEF</div>
+              <div style="font-weight:800;color:var(--muted-white)">Eerste 3000 klanten — Early adopter tarief</div>
+              <div style="margin-left:auto;color:var(--muted-white);font-weight:700">Facturatie start: <strong>01-06-2026</strong></div>
+            </div>
 
-// Trial timestamp (UTC seconds) for 2026-06-01 00:00:00 local time
-const TRIAL_TIMESTAMP = Math.floor(new Date('2026-06-01T00:00:00Z').getTime() / 1000);
+            <h1 style="margin:6px 0 10px;font-size:clamp(1.8rem,4vw,2.7rem);">Een last-minute vrije plek? Maak er een écht afspraak van.</h1>
 
-if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Environment variables missing. See README in code.');
-  process.exit(1);
-}
+            <p class="muted" style="max-width:70ch;">
+              Vrijeplek helpt zelfstandigen en zaken om lege momenten te vullen. Jij zet <strong>open tijdstippen</strong> online,
+              klanten boeken netjes, en jij houdt controle via een duidelijk dashboard. Pre-inschrijven nu: betaalgegevens invullen,
+              eerste incasso pas op <strong>01-06-2026</strong>.
+            </p>
 
-const stripe = Stripe(STRIPE_SECRET_KEY);
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+            <!-- COUNTDOWN -->
+            <div class="countdown-row" aria-label="Aftellen tot start facturatie" style="margin-top:14px;">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <div class="cd-box" style="min-width:110px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
+                  <div class="cd-num" id="cd-days">000</div>
+                  <div class="cd-lbl">DAGEN</div>
+                </div>
+                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
+                  <div class="cd-num" id="cd-hours">00</div>
+                  <div class="cd-lbl">UREN</div>
+                </div>
+                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
+                  <div class="cd-num" id="cd-mins">00</div>
+                  <div class="cd-lbl">MIN</div>
+                </div>
+                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
+                  <div class="cd-num" id="cd-secs">00</div>
+                  <div class="cd-lbl">SEC</div>
+                </div>
+              </div>
+            </div>
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+            <p class="fine" style="margin-top:14px;">
+              <strong>Pre-inschrijven:</strong> <span id="price-summary">€19,95/maand of €180/jaar</span> — tarief blijft vast zolang je klant blijft.
+              Alleen geldig voor de <strong>eerste 3000</strong> klanten. Na 3000 geldt: <strong>€24,95/maand of €250/jaar</strong>.
+            </p>
+          </div>
 
-// Nodemailer transporter (Combell SMTP)
-const transporter = nodemailer.createTransport({
-  host: COMBELL_SMTP_HOST,
-  port: COMBELL_SMTP_PORT,
-  secure: COMBELL_SMTP_PORT === 465,
-  auth: {
-    user: COMBELL_SMTP_USER,
-    pass: COMBELL_SMTP_PASS
-  }
-});
+          <aside class="hero-right" aria-label="Pre-inschrijving paneel">
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div style="font-size:.95rem;font-weight:800">Gereseveerde spots</div>
+                  <div style="color:rgba(255,255,255,.78);font-size:.88rem">Eerste 3000 early-adopter spots</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="color:rgba(255,255,255,.78);font-size:.82rem">Vanaf</div>
+                  <div style="font-weight:900;font-size:1.05rem">€19,95 / maand</div>
+                </div>
+              </div>
 
-// Initialize counters row if not present
-async function ensureCounters() {
-  const { data, error } = await supabase
-    .from('counters')
-    .select('*')
-    .eq('id', 1)
-    .limit(1);
-  if (error) throw error;
-  if (!data || data.length === 0) {
-    // default: total=3000, completed=start=210
-    const resp = await supabase
-      .from('counters')
-      .insert([{ id: 1, total: 3000, completed: 210, start: 210 }]);
-    if (resp.error) throw resp.error;
-    console.log('Counters initialized.');
-  }
-}
-ensureCounters().catch(console.error);
+              <div style="margin-top:12px;">
+                <div class="progress" aria-hidden="true"><i id="progress-bar" style="width:7%"></i></div>
+                <div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:rgba(255,255,255,.92);">
+                  <div><span id="taken-display">210</span> gereserveerd</div>
+                  <div class="muted"><span id="remaining-display">2790</span> beschikbaar</div>
+                </div>
+              </div>
 
-// --- API: GET slots ---
-app.get('/api/slots', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('counters')
-      .select('total,completed,start')
-      .eq('id', 1)
-      .single();
-    if (error) throw error;
-    const taken = Number(data.completed || data.start || 210);
-    res.json({ taken, total: Number(data.total || 3000), start: Number(data.start || 210) });
-  } catch (err) {
-    console.error(err);
-    res.json({ taken: 210, total: 3000, start: 210 });
-  }
-});
+              <div style="margin-top:12px;">
+                <label class="plan" data-plan="monthly">
+                  <input type="radio" name="plan" value="monthly" checked>
+                  <div>
+                    <div style="font-weight:900" id="label-monthly">€19,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small></div>
+                    <div style="font-size:.86rem;color:rgba(255,255,255,.78)">Maandelijks, tarief blijft vast</div>
+                  </div>
+                </label>
 
-// --- API: create checkout session ---
-app.post('/api/create-checkout-session', async (req, res) => {
-  try {
-    const { plan } = req.body;
-    if (!['monthly','yearly'].includes(plan)) return res.status(400).json({ error: 'invalid plan' });
+                <label class="plan" data-plan="yearly" style="margin-top:8px;">
+                  <input type="radio" name="plan" value="yearly">
+                  <div>
+                    <div style="font-weight:900" id="label-yearly">€180 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small></div>
+                    <div style="font-size:.86rem;color:rgba(255,255,255,.78)">Jaarlijks, korting t.o.v. maand</div>
+                  </div>
+                </label>
+              </div>
 
-    // get current completed count
-    const { data: counter, error: counterErr } = await supabase
-      .from('counters').select('completed,total').eq('id',1).single();
-    if (counterErr) throw counterErr;
-    const taken = Number(counter.completed || 0);
-    const total = Number(counter.total || 3000);
-    const earlyAvailable = taken < total;
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <button id="btn-signup" class="btn-primary" role="button">Pre-inschrijven en betalen</button>
+                <button id="btn-why" class="btn-soft" onclick="location.hash='#waarom'">Waarom Vrijeplek?</button>
+              </div>
 
-    // choose price id
-    const priceId = earlyAvailable
-      ? (plan === 'monthly' ? PRICE_EARLY_MONTHLY : PRICE_EARLY_YEARLY)
-      : (plan === 'monthly' ? PRICE_REGULAR_MONTHLY : PRICE_REGULAR_YEARLY);
+              <div style="font-size:.82rem;color:rgba(255,255,255,.80);margin-top:10px;">
+                <strong>Let op:</strong> je schrijft je nu in en geeft betaalgegevens — de eerste afschrijving wordt pas gedaan op <strong>01-06-2026</strong>.
+              </div>
+            </div>
+          </aside>
+        </div>
 
-    if (!priceId) return res.status(500).json({ error: 'price_id_missing' });
+        <!-- onderliggende secties (hergebruik je bestaande content) -->
+        <div id="waarom" style="margin-top:20px;">
+          <h2>Waarom Vrijeplek?</h2>
+          <p class="muted">Omdat lege momenten geld kosten — en last-minute afspraken vaak rommelig gebeuren via DM’s, telefoons en “is dat uur nog vrij?”. Vrijeplek maakt het gedurfd simpel: één plek, één flow, één overzicht.</p>
+        </div>
 
-    // create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: [{ price: priceId, quantity: 1 }],
-      subscription_data: {
-        trial_end: TRIAL_TIMESTAMP
-      },
-      success_url: `${BASE_URL}/aanmelden.html?session_id={CHECKOUT_SESSION_ID}&success=true`,
-      cancel_url: `${BASE_URL}/aanmelden.html?canceled=true`,
-      // we collect email on checkout: leave email empty, stripe collects it
-      // store useful metadata
-      metadata: { plan, early: earlyAvailable ? '1' : '0' }
+        <div id="flexijobs" style="margin-top:16px;">
+          <h2>Flexijobs op Vrijeplek</h2>
+          <p class="muted">Vrijeplek is er ook voor flexijobs — zo vinden flexi’s sneller werk, en zaken sneller hulp.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div style="max-width:1200px;margin:0 auto;padding:12px;">
+        © <span id="year"></span> Vrijeplek — Last minute afspraken, netjes geregeld.
+      </div>
+    </footer>
+  </div>
+
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <script>
+  (function(){
+    // --- CONFIG (pas deze env values aan in server of vervang hier tijdelijk) ---
+    const SLOT_API = '/api/slots'; // GET -> { taken, total, start }
+    const CREATE_API = '/api/create-checkout-session'; // POST { plan }
+    const FALLBACK_TAKEN = 210;
+    const TOTAL_SLOTS = 3000;
+    const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME'; // Vervang of zet via server-side injection
+    const TRIAL_START = new Date('2026-06-01T00:00:00+02:00');
+
+    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+
+    // Countdown (no leading zero for days if < 100)
+    const launchDate = TRIAL_START;
+    const elDays  = document.getElementById('cd-days');
+    const elHours = document.getElementById('cd-hours');
+    const elMins  = document.getElementById('cd-mins');
+    const elSecs  = document.getElementById('cd-secs');
+
+    function formatDays(n){
+      if (n >= 100) return String(n).padStart(3,'0');
+      return String(n); // geen voorloopnul bij <100
+    }
+    function pad2(n){ return String(n).padStart(2,'0'); }
+
+    function tick(){
+      const now = new Date();
+      let diff = launchDate - now;
+      if (diff < 0) diff = 0;
+      const d = Math.floor(diff / 86400000);
+      diff %= 86400000;
+      const h = Math.floor(diff / 3600000);
+      diff %= 3600000;
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+
+      if (elDays) elDays.textContent = formatDays(d);
+      if (elHours) elHours.textContent = pad2(h);
+      if (elMins) elMins.textContent = pad2(m);
+      if (elSecs) elSecs.textContent = pad2(s);
+    }
+    tick(); setInterval(tick,1000);
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Slots / progress
+    const takenEl = document.getElementById('taken-display');
+    const remEl = document.getElementById('remaining-display');
+    const progressBar = document.getElementById('progress-bar');
+    const priceSummary = document.getElementById('price-summary');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelYearly = document.getElementById('label-yearly');
+
+    async function fetchSlots(){
+      try{
+        const r = await fetch(SLOT_API, { cache: 'no-store' });
+        if (!r.ok) throw new Error('no slots');
+        const j = await r.json();
+        const taken = Number(j.taken ?? FALLBACK_TAKEN);
+        const total = Number(j.total ?? TOTAL_SLOTS);
+        const start = Number(j.start ?? FALLBACK_TAKEN);
+        updateSlots(taken, total, start);
+      }catch(e){
+        updateSlots(FALLBACK_TAKEN, TOTAL_SLOTS, FALLBACK_TAKEN);
+      }
+    }
+
+    function updateSlots(taken, total, start){
+      const safeTaken = Math.max(0, Math.floor(taken));
+      const remaining = Math.max(0, total - safeTaken);
+      takenEl.textContent = safeTaken.toLocaleString('nl-NL');
+      remEl.textContent = remaining.toLocaleString('nl-NL');
+      const pct = Math.round((safeTaken / total) * 100);
+      progressBar.style.width = Math.max(3, Math.min(100, pct)) + '%';
+
+      // if early adopter still available
+      if (safeTaken < total){
+        priceSummary.textContent = '€19,95/maand of €180/jaar — voor de eerste 3000 klanten';
+        labelMonthly.innerHTML = '€19,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small>';
+        labelYearly.innerHTML = '€180 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small>';
+      } else {
+        priceSummary.textContent = 'Early adopter spots vol — huidige prijs: €24,95/maand of €250/jaar';
+        labelMonthly.innerHTML = '€24,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small>';
+        labelYearly.innerHTML = '€250 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small>';
+      }
+    }
+
+    fetchSlots();
+    setInterval(fetchSlots, 15000);
+
+    // Sign-up & Stripe
+    function getSelectedPlan(){
+      const radios = document.querySelectorAll('input[name="plan"]');
+      for (const r of radios) if (r.checked) return r.value;
+      return 'monthly';
+    }
+
+    const btn = document.getElementById('btn-signup');
+    btn.addEventListener('click', async function(){
+      const plan = getSelectedPlan();
+      btn.disabled = true;
+      btn.textContent = 'Even doorsturen…';
+      try{
+        const r = await fetch(CREATE_API, {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ plan })
+        });
+        if (!r.ok){
+          const txt = await r.text();
+          throw new Error(txt || 'Kon sessie niet aanmaken');
+        }
+        const j = await r.json();
+        if (!j.sessionId) throw new Error('Geen session id');
+        const res = await stripe.redirectToCheckout({ sessionId: j.sessionId });
+        if (res.error) throw res.error;
+      }catch(err){
+        console.error(err);
+        alert('Sorry, we konden je pre-inschrijving niet afronden. Probeer opnieuw of contacteer support.');
+        btn.disabled = false;
+        btn.textContent = 'Pre-inschrijven en betalen';
+      }
     });
 
-    // Create a pending customer row (status pending). We'll fill details on webhook.
-    await supabase.from('customers').insert([{
-      session_id: session.id,
-      status: 'pending',
-      plan,
-      early: earlyAvailable,
-      created_at: new Date().toISOString()
-    }]);
+    document.getElementById('btn-why').addEventListener('click', ()=>{ location.hash = '#waarom' });
 
-    res.json({ sessionId: session.id });
-  } catch (err) {
-    console.error('create-checkout-session error', err);
-    res.status(500).json({ error: 'server_error' });
-  }
-});
-
-// Stripe webhook - raw body
-app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error('Webhook signature verification failed.', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  // Handle checkout.session.completed
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    try {
-      // find the pending customer row by session_id
-      const { data: existing, error: fetchErr } = await supabase
-        .from('customers')
-        .select('*')
-        .eq('session_id', session.id)
-        .limit(1)
-        .single();
-
-      if (fetchErr) {
-        console.warn('Customer row not found for session, inserting new.');
-      }
-
-      const email = session.customer_details?.email || session.customer_email || null;
-      const stripeCustomerId = session.customer || null;
-      const sessionId = session.id;
-      const plan = (session.metadata && session.metadata.plan) || (existing && existing.plan) || 'monthly';
-      const earlyFlag = (session.metadata && session.metadata.early === '1') || (existing && existing.early) || false;
-
-      // Update / upsert customer
-      if (existing) {
-        await supabase.from('customers').update({
-          status: 'active',
-          stripe_customer_id: stripeCustomerId,
-          email,
-          updated_at: new Date().toISOString()
-        }).eq('id', existing.id);
-      } else {
-        await supabase.from('customers').insert([{
-          session_id: sessionId,
-          status: 'active',
-          plan,
-          early: earlyFlag,
-          email,
-          stripe_customer_id: stripeCustomerId,
-          created_at: new Date().toISOString()
-        }]);
-      }
-
-      // increment counters.completed
-      await supabase.from('counters').update({
-        completed: supabase.rpc ? supabase.rpc /* fallback */ : undefined // we'll do simple fetch+update
-      }).eq('id', 1);
-
-      // Simpler safe increment: fetch current and update
-      const { data: cnt, error: cntErr } = await supabase.from('counters').select('completed').eq('id',1).single();
-      if (cntErr) throw cntErr;
-      const newCompleted = Number(cnt.completed || 0) + 1;
-      await supabase.from('counters').update({ completed: newCompleted }).eq('id', 1);
-
-      // send welcome / thank-you mail (using template)
-      // Only proceed if we have an email
-      if (email) {
-        const subject = earlyFlag ? 'Welkom bij Vrijeplek — Bedankt als early adopter!' : 'Welkom bij Vrijeplek — bedankt!';
-        const html = buildWelcomeEmailHtml({ name: email.split('@')[0], plan, early: earlyFlag, first_billing: '01-06-2026' });
-        const text = buildWelcomeEmailText({ name: email.split('@')[0], plan, early: earlyFlag, first_billing: '01-06-2026' });
-
-        await transporter.sendMail({
-          from: `Vrijeplek <${NO_REPLY_EMAIL}>`,
-          to: email,
-          subject,
-          text,
-          html
-        });
-      }
-
-      console.log('Processed checkout.session.completed for', session.id);
-    } catch (err) {
-      console.error('Error handling checkout.session.completed', err);
-    }
-  }
-
-  // Return a response to acknowledge receipt of the event
-  res.json({ received: true });
-});
-
-// Simple helper: email templates
-function buildWelcomeEmailHtml({ name, plan, early, first_billing }) {
-  return `
-  <html>
-  <body style="font-family:Arial,Helvetica,sans-serif;color:#0b1624;">
-    <div style="max-width:680px;margin:0 auto;padding:20px;">
-      <h1 style="color:#0b2a4a;">Bedankt & welkom bij Vrijeplek</h1>
-      <p>Hoi ${escapeHtml(name)},</p>
-
-      ${early ? `<p><strong>Dankjewel dat je als early adopter bij Vrijeplek bent ingestapt.</strong> Jouw pre-inschrijving is vastgelegd met het voordelige tarief. We waarderen het dat je ons in deze fase steunt — we hebben een speciaal “founder”-voordeel voor de eerste 3000 klanten.</p>` : `<p>Bedankt voor je inschrijving bij Vrijeplek. Je abonnement is nu bevestigd aan het standaardtarief.</p>`}
-
-      <h3>Wat gebeurt er nu?</h3>
-      <ul>
-        <li>Je betaalgegevens zijn veilig opgeslagen bij ons via Stripe.</li>
-        <li>De <strong>eerste afschrijving</strong> vindt plaats op <strong>${first_billing}</strong>.</li>
-        <li>Je kan vanaf nu al inloggen op je dashboard (link) en alles klaarzetten voor de launch.</li>
-      </ul>
-
-      <h3>Wat kun je verwachten in het dashboard?</h3>
-      <p>In het dashboard kun je onder andere:</p>
-      <ul>
-        <li>Beschikbare uren publiceren en beheren</li>
-        <li>Bevestigingen en no-show maatregelen instellen</li>
-        <li>Flexijobs plaatsen en kandidaten vinden</li>
-      </ul>
-
-      <h3>Quick screenshots</h3>
-      <p>Hieronder staan een paar voorbeelden van wat je straks ziet (plaats hier je screenshots):</p>
-      <p>
-        <img src="${BASE_URL}/images/screenshot-dashboard-01.png" alt="Dashboard voorbeeld" style="max-width:100%;border-radius:8px;border:1px solid #e6eefb;" />
-      </p>
-
-      <h3>Vragen?</h3>
-      <p>Antwoord op deze mail of mail naar <a href="mailto:contact@vrijeplek.be">contact@vrijeplek.be</a>. We helpen je snel verder.</p>
-
-      <p>Nogmaals bedankt — we kijken ernaar uit om dit samen met jou te bouwen.</p>
-      <p>Groeten,<br/>Het Vrijeplek-team</p>
-    </div>
-  </body>
-  </html>
-  `;
-}
-
-function buildWelcomeEmailText({ name, plan, early, first_billing }) {
-  return `
-Hoi ${name},
-
-${early ? 'Dankjewel dat je als early adopter bij Vrijeplek bent ingestapt. Jouw pre-inschrijving is vastgelegd met het voordelige tarief.' : 'Bedankt voor je inschrijving bij Vrijeplek. Je abonnement is nu bevestigd aan het standaardtarief.'}
-
-Wat gebeurt er nu?
-- Je betaalgegevens zijn veilig opgeslagen via Stripe.
-- De eerste afschrijving vindt plaats op ${first_billing}.
-- Je kan vanaf nu inloggen op je dashboard en alles klaarzetten voor de launch.
-
-Wat kun je verwachten in het dashboard?
-- Beschikbare uren publiceren en beheren
-- Bevestigingen en no-show maatregelen instellen
-- Flexijobs plaatsen en kandidaten vinden
-
-Screenshots en meer uitleg vind je in de mail (HTML versie).
-Vragen? Antwoord op deze mail of mail naar contact@vrijeplek.be.
-
-Groeten,
-Het Vrijeplek-team
-`;
-}
-
-function escapeHtml(str){ return String(str).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
-
-const port = process.env.PORT || 3000;
-app.listen(port, ()=> console.log(`Server listening on ${port}`));
+  })();
+  </script>
+</body>
+</html>
