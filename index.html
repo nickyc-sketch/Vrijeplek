@@ -3,34 +3,60 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vrijeplek — Exclusieve pre-inschrijvingen</title>
+  <title>Vrijeplek — Pre-inschrijven (exclusief)</title>
   <meta name="description" content="Pre-inschrijven: €19,95/maand of €180/jaar voor de eerste 3000 klanten. Betaalgegevens nu, eerste incasso op 01-06-2026." />
 
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <!-- JOUW BESTAANDE CSS -->
-  <link rel="stylesheet" href="/css/index.css?v=10" />
+  <!-- Jouw bestaande stylesheet -->
+  <link rel="stylesheet" href="/css/index.css?v=11" />
 
   <style>
-    /* Kleine, gerichte aanvullingen (zodat je index.css grotendeels hetzelfde blijft) */
-    :root { --accent: #1b75d0; --muted-white: rgba(255,255,255,.9); }
-    .launch-card { border-radius:18px; padding:20px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.06); box-shadow:0 30px 90px rgba(0,0,0,.55); }
-    .exclusive-badge{ display:inline-block; padding:.35rem .6rem; border-radius:999px; background:linear-gradient(90deg,var(--accent),#2ac36a); color:#021026; font-weight:900; }
-    .hero{ display:grid; grid-template-columns:1fr 360px; gap:22px; align-items:start; }
-    @media(max-width:980px){ .hero{ grid-template-columns:1fr; } }
-    .hero-right{ border-radius:12px; padding:14px; background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.03)); border:1px solid rgba(255,255,255,.04); }
-    .progress{ height:12px; background:rgba(255,255,255,.06); border-radius:999px; overflow:hidden; }
-    .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--accent),#2ac36a); width:7%; transition:width .6s ease; }
-    .plan { display:flex; gap:.6rem; align-items:center; padding:.5rem; border-radius:10px; border:1px solid rgba(255,255,255,.04); cursor:pointer; background:transparent; }
-    .plan input{ accent-color:var(--accent); }
-    .btn-primary{ background:var(--accent); color:#021024; padding:.75rem 1.05rem; border-radius:999px; font-weight:900; border:none; box-shadow:0 16px 40px rgba(0,0,0,.36); cursor:pointer; }
-    .btn-soft{ background:transparent; border:1px solid rgba(255,255,255,.06); padding:.6rem .9rem; border-radius:999px; color:rgba(255,255,255,.88); cursor:pointer; }
-    .fine{ color:rgba(255,255,255,.85); }
-    .muted{ color: rgba(255,255,255,.78); }
+    /* Kleine extra's ter structurering — minimal overlap met je index.css */
+    :root { --accent: #1b75d0; --muted: rgba(255,255,255,.82); --glass-dark: rgba(0,0,0,.18); }
+
+    .lp-outer { max-width:1120px; margin:20px auto; padding:0 16px 40px; }
+    .lp-hero { display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:start; }
+    @media (max-width:980px) { .lp-hero { grid-template-columns:1fr; } }
+
+    .lp-card { border-radius:16px; padding:22px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.04); box-shadow:0 30px 80px rgba(0,0,0,.5); }
+    .lp-badge { display:inline-flex; align-items:center; gap:.6rem; padding:.35rem .7rem; border-radius:999px; font-weight:800; color:#021024; background:linear-gradient(90deg,var(--accent),#2ac36a); }
+    .lp-title { margin:6px 0 10px; font-size:clamp(1.9rem,4vw,2.6rem); line-height:1.02; font-weight:800; color:#fff; }
+    .lp-lead { margin:0 0 14px; color:var(--muted); max-width:72ch; font-size:1rem; line-height:1.5; }
+
+    /* Right panel */
+    .lp-panel { padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.04); }
+    .lp-panel .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .lp-price { font-weight:900; font-size:1.05rem; color:#fff; }
+    .lp-progress { height:12px; background:rgba(255,255,255,.05); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.03); margin-top:12px; }
+    .lp-progress .bar { height:100%; background:linear-gradient(90deg,var(--accent),#20c06a); width:5%; transition:width .6s ease; min-width:3%; }
+
+    .plans { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+    .plan { display:flex; gap:.6rem; align-items:center; padding:.6rem; border-radius:10px; border:1px solid rgba(255,255,255,.04); cursor:pointer; background:transparent; }
+    .plan input { accent-color: var(--accent); }
+
+    .cta { display:flex; gap:10px; margin-top:14px; }
+    .btn-primary { background:var(--accent); color:#021024; padding:.8rem 1.1rem; border-radius:999px; font-weight:900; border:none; cursor:pointer; box-shadow:0 14px 40px rgba(0,0,0,.35); }
+    .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,.06); color:var(--muted); padding:.68rem 1rem; border-radius:999px; cursor:pointer; }
+
+    /* Countdown small cards */
+    .countdown { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+    .cd { min-width:90px; text-align:center; padding:10px; border-radius:10px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.04); }
+    .cd .num { font-weight:900; font-size:1.75rem; color:#fff; }
+    .cd .lbl { font-size:.8rem; color:var(--muted); margin-top:.35rem; letter-spacing:.12em; text-transform:uppercase; }
+
+    /* Small helpers */
+    .muted { color:var(--muted); }
+    .small { font-size:.88rem; color:var(--muted); }
+    .feature-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:18px; }
+    @media (max-width:760px){ .feature-grid{ grid-template-columns:1fr; } }
+    .feature { padding:12px; border-radius:10px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.04); color:#fff; }
+    footer.site-footer { margin-top:28px; }
   </style>
 </head>
-
 <body>
   <div class="site">
+    <!-- header simplified -->
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="/" aria-label="Vrijeplek home">
@@ -40,128 +66,156 @@
             <span>last minute afspreken</span>
           </div>
         </a>
-
         <nav class="header-actions">
           <a class="nav-btn" href="#waarom">Waarom?</a>
           <a class="nav-btn" href="#flexijobs">Flexijobs</a>
+          <a class="nav-btn btn-green" href="/voorwaarden.html">Voorwaarden</a>
           <a class="nav-btn btn-green" href="/aanmelden.html?promo=launch">Pre-inschrijven</a>
         </nav>
       </div>
     </header>
 
-    <main class="launch-container">
-      <section class="launch-card" id="top">
-        <div class="hero">
-          <div>
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-              <div class="exclusive-badge">EXCLUSIEF</div>
-              <div style="font-weight:800;color:var(--muted-white)">Eerste 3000 klanten — Early adopter tarief</div>
-              <div style="margin-left:auto;color:var(--muted-white);font-weight:700">Facturatie start: <strong>01-06-2026</strong></div>
-            </div>
-
-            <h1 style="margin:6px 0 10px;font-size:clamp(1.8rem,4vw,2.7rem);">Een last-minute vrije plek? Maak er een écht afspraak van.</h1>
-
-            <p class="muted" style="max-width:70ch;">
-              Vrijeplek helpt zelfstandigen en zaken om lege momenten te vullen. Jij zet <strong>open tijdstippen</strong> online,
-              klanten boeken netjes, en jij houdt controle via een duidelijk dashboard. Pre-inschrijven nu: betaalgegevens invullen,
-              eerste incasso pas op <strong>01-06-2026</strong>.
-            </p>
-
-            <!-- COUNTDOWN -->
-            <div class="countdown-row" aria-label="Aftellen tot start facturatie" style="margin-top:14px;">
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <div class="cd-box" style="min-width:110px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
-                  <div class="cd-num" id="cd-days">000</div>
-                  <div class="cd-lbl">DAGEN</div>
-                </div>
-                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
-                  <div class="cd-num" id="cd-hours">00</div>
-                  <div class="cd-lbl">UREN</div>
-                </div>
-                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
-                  <div class="cd-num" id="cd-mins">00</div>
-                  <div class="cd-lbl">MIN</div>
-                </div>
-                <div class="cd-box" style="min-width:80px;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);">
-                  <div class="cd-num" id="cd-secs">00</div>
-                  <div class="cd-lbl">SEC</div>
-                </div>
-              </div>
-            </div>
-
-            <p class="fine" style="margin-top:14px;">
-              <strong>Pre-inschrijven:</strong> <span id="price-summary">€19,95/maand of €180/jaar</span> — tarief blijft vast zolang je klant blijft.
-              Alleen geldig voor de <strong>eerste 3000</strong> klanten. Na 3000 geldt: <strong>€24,95/maand of €250/jaar</strong>.
-            </p>
+    <main class="lp-outer">
+      <section class="lp-card lp-hero" aria-labelledby="hero-title">
+        <!-- LEFT: copy -->
+        <div>
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;">
+            <div class="lp-badge" aria-hidden="true">EXCLUSIEF</div>
+            <div class="small muted">Eerste 3.000 klanten — Early adopter tarief</div>
+            <div style="margin-left:auto;font-weight:700;color:#fff">Facturatie: <strong>01-06-2026</strong></div>
           </div>
 
-          <aside class="hero-right" aria-label="Pre-inschrijving paneel">
-            <div>
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <div>
-                  <div style="font-size:.95rem;font-weight:800">Gereseveerde spots</div>
-                  <div style="color:rgba(255,255,255,.78);font-size:.88rem">Eerste 3000 early-adopter spots</div>
-                </div>
-                <div style="text-align:right">
-                  <div style="color:rgba(255,255,255,.78);font-size:.82rem">Vanaf</div>
-                  <div style="font-weight:900;font-size:1.05rem">€19,95 / maand</div>
-                </div>
-              </div>
+          <h1 id="hero-title" class="lp-title">Een last-minute vrije plek? Maak er een professionele afspraak van — snel.</h1>
 
-              <div style="margin-top:12px;">
-                <div class="progress" aria-hidden="true"><i id="progress-bar" style="width:7%"></i></div>
-                <div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:rgba(255,255,255,.92);">
-                  <div><span id="taken-display">210</span> gereserveerd</div>
-                  <div class="muted"><span id="remaining-display">2790</span> beschikbaar</div>
-                </div>
-              </div>
+          <p class="lp-lead">Vrijeplek helpt zelfstandigen en zaken om lege momenten te vullen met nette, last-minute afspraken. Publiceer vrije tijden, ontvang boekingen en beheer alles via een eenvoudig dashboard. Schrijf je nu in: betaalgegevens worden opgeslagen, eerste afschrijving pas op <strong>01-06-2026</strong>.</p>
 
-              <div style="margin-top:12px;">
-                <label class="plan" data-plan="monthly">
-                  <input type="radio" name="plan" value="monthly" checked>
-                  <div>
-                    <div style="font-weight:900" id="label-monthly">€19,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small></div>
-                    <div style="font-size:.86rem;color:rgba(255,255,255,.78)">Maandelijks, tarief blijft vast</div>
-                  </div>
-                </label>
-
-                <label class="plan" data-plan="yearly" style="margin-top:8px;">
-                  <input type="radio" name="plan" value="yearly">
-                  <div>
-                    <div style="font-weight:900" id="label-yearly">€180 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small></div>
-                    <div style="font-size:.86rem;color:rgba(255,255,255,.78)">Jaarlijks, korting t.o.v. maand</div>
-                  </div>
-                </label>
-              </div>
-
-              <div style="display:flex;gap:8px;margin-top:12px;">
-                <button id="btn-signup" class="btn-primary" role="button">Pre-inschrijven en betalen</button>
-                <button id="btn-why" class="btn-soft" onclick="location.hash='#waarom'">Waarom Vrijeplek?</button>
-              </div>
-
-              <div style="font-size:.82rem;color:rgba(255,255,255,.80);margin-top:10px;">
-                <strong>Let op:</strong> je schrijft je nu in en geeft betaalgegevens — de eerste afschrijving wordt pas gedaan op <strong>01-06-2026</strong>.
-              </div>
+          <!-- compact countdown -->
+          <div class="countdown" aria-live="polite" aria-atomic="true">
+            <div class="cd" role="group" aria-label="dagen">
+              <div class="num" id="cd-days">000</div>
+              <div class="lbl">Dagen</div>
             </div>
-          </aside>
+            <div class="cd">
+              <div class="num" id="cd-hours">00</div>
+              <div class="lbl">Uren</div>
+            </div>
+            <div class="cd">
+              <div class="num" id="cd-mins">00</div>
+              <div class="lbl">Min</div>
+            </div>
+            <div class="cd">
+              <div class="num" id="cd-secs">00</div>
+              <div class="lbl">Sec</div>
+            </div>
+          </div>
+
+          <!-- Why -->
+          <div id="waarom" style="margin-top:18px;">
+            <h2 style="color:#fff;margin-bottom:8px;">Waarom Vrijeplek?</h2>
+            <div class="feature-grid">
+              <div class="feature"><strong>Vul je lege momenten</strong><div class="small muted">Maak beschikbaarheid zichtbaar voor directe boekingen.</div></div>
+              <div class="feature"><strong>Jij houdt de regie</strong><div class="small muted">Bepaal wanneer je zichtbaar bent en wanneer je klanten kunnen boeken.</div></div>
+              <div class="feature"><strong>Professioneel & netjes</strong><div class="small muted">Dashboard, facturatie via Peppol en optionele voorschotten.</div></div>
+              <div class="feature"><strong>Minder no-shows</strong><div class="small muted">Bevestigingen en optionele voorschotten voor meer zekerheid.</div></div>
+            </div>
+          </div>
         </div>
 
-        <!-- onderliggende secties (hergebruik je bestaande content) -->
-        <div id="waarom" style="margin-top:20px;">
-          <h2>Waarom Vrijeplek?</h2>
-          <p class="muted">Omdat lege momenten geld kosten — en last-minute afspraken vaak rommelig gebeuren via DM’s, telefoons en “is dat uur nog vrij?”. Vrijeplek maakt het gedurfd simpel: één plek, één flow, één overzicht.</p>
+        <!-- RIGHT: signup panel -->
+        <aside class="lp-panel" aria-labelledby="signup-title">
+          <div class="row">
+            <div>
+              <div style="font-weight:800;color:#fff" id="signup-title">Pre-inschrijven</div>
+              <div class="small muted">Beperkt: eerste <strong>3000</strong> early-adopter spots</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small muted">Vanaf</div>
+              <div class="lp-price" id="panel-price">€19,95 / maand</div>
+            </div>
+          </div>
+
+          <div class="lp-progress" aria-hidden="true">
+            <div class="bar" id="progress-bar" style="width:7%"></div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:10px;font-weight:800;color:#fff;">
+            <div><span id="taken-display">210</span> gereserveerd</div>
+            <div class="muted"><span id="remaining-display">2790</span> beschikbaar</div>
+          </div>
+
+          <!-- Plans -->
+          <div class="plans" aria-label="Kies een tarief">
+            <label class="plan" data-plan="monthly">
+              <input type="radio" name="plan" value="monthly" checked>
+              <div>
+                <div style="font-weight:900;color:#fff;"><span id="label-monthly">€19,95</span> <small style="font-weight:700;color:var(--muted);font-size:.9rem">/maand</small></div>
+                <div class="small muted">Maandabonnement</div>
+              </div>
+            </label>
+
+            <label class="plan" data-plan="yearly">
+              <input type="radio" name="plan" value="yearly">
+              <div>
+                <div style="font-weight:900;color:#fff;"><span id="label-yearly">€180</span> <small style="font-weight:700;color:var(--muted);font-size:.9rem">/jaar</small></div>
+                <div class="small muted">Jaarabonnement — voordelig</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="cta" role="group" aria-label="Acties">
+            <button id="btn-signup" class="btn-primary" aria-live="polite">Pre-inschrijven & betalen</button>
+            <button id="btn-why" class="btn-ghost" onclick="location.hash='#waarom'">Meer info</button>
+          </div>
+
+          <div class="small muted" style="margin-top:10px;">
+            Eerste afschrijving op <strong>01-06-2026</strong>. Betaalgegevens worden veilig opgeslagen via Stripe.
+          </div>
+
+          <div style="margin-top:14px;font-size:.92rem;color:var(--muted);">
+            <strong id="status-line">Nog <span id="left-spot">2790</span> spots beschikbaar</strong>
+          </div>
+        </aside>
+      </section>
+
+      <!-- FAQ / Flexijobs (compact) -->
+      <section class="lp-card" style="margin-top:18px;">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+          <h2 style="margin:0;color:#fff;">Veelgestelde vragen</h2>
+          <div class="small muted">Nog vragen? <a href="mailto:contact@vrijeplek.be">contact@vrijeplek.be</a></div>
         </div>
 
-        <div id="flexijobs" style="margin-top:16px;">
-          <h2>Flexijobs op Vrijeplek</h2>
-          <p class="muted">Vrijeplek is er ook voor flexijobs — zo vinden flexi’s sneller werk, en zaken sneller hulp.</p>
+        <div style="margin-top:12px;">
+          <details style="margin-bottom:8px;">
+            <summary style="font-weight:900;color:#fff;cursor:pointer;">Wanneer start de facturatie?</summary>
+            <p class="muted">We bewaren je betaalgegevens. De eerste incasso gebeurt op 01-06-2026.</p>
+          </details>
+
+          <details style="margin-bottom:8px;">
+            <summary style="font-weight:900;color:#fff;cursor:pointer;">Kan ik kosteloos opzeggen?</summary>
+            <p class="muted">Ja. Je kunt altijd kosteloos opzeggen volgens onze voorwaarden.</p>
+          </details>
+
+          <details style="margin-bottom:8px;">
+            <summary style="font-weight:900;color:#fff;cursor:pointer;">Waarom start de teller op 210?</summary>
+            <p class="muted">We tonen startwaarde 210 om te vermijden dat iemand écht 'de eerste' is — het is puur visueel en voorkomt onzekerheid.</p>
+          </details>
+
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <a class="btn-primary" href="/aanmelden.html?promo=launch">Pre-inschrijven</a>
+            <a class="btn-ghost" href="/voorwaarden.html">Algemene voorwaarden</a>
+          </div>
         </div>
       </section>
+
     </main>
 
     <footer class="site-footer">
-      <div style="max-width:1200px;margin:0 auto;padding:12px;">
-        © <span id="year"></span> Vrijeplek — Last minute afspraken, netjes geregeld.
+      <div class="footer-inner">
+        <span>© <span id="year"></span> Vrijeplek — Last minute afspraken, netjes geregeld.</span>
+        <nav class="footer-nav">
+          <a href="/voorwaarden.html">Algemene voorwaarden</a>
+          <a href="#waarom">Waarom Vrijeplek?</a>
+        </nav>
       </div>
     </footer>
   </div>
@@ -171,32 +225,44 @@
 
   <script>
   (function(){
-    // --- CONFIG (pas deze env values aan in server of vervang hier tijdelijk) ---
-    const SLOT_API = '/api/slots'; // GET -> { taken, total, start }
-    const CREATE_API = '/api/create-checkout-session'; // POST { plan }
+    // --- CONFIG: pas of zet via server-side render ---
+    const SLOT_API = '/api/slots';                // GET => { taken, total, start }
+    const CREATE_API = '/api/create-checkout-session'; // POST { plan } => { sessionId }
     const FALLBACK_TAKEN = 210;
     const TOTAL_SLOTS = 3000;
-    const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME'; // Vervang of zet via server-side injection
+    const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME'; // VERVANG met jouw key
+
+    // Trial date (first invoice) -> 2026-06-01
     const TRIAL_START = new Date('2026-06-01T00:00:00+02:00');
 
+    // DOM
+    const elDays = document.getElementById('cd-days');
+    const elHours = document.getElementById('cd-hours');
+    const elMins = document.getElementById('cd-mins');
+    const elSecs = document.getElementById('cd-secs');
+    const takenEl = document.getElementById('taken-display');
+    const remainingEl = document.getElementById('remaining-display');
+    const leftSpot = document.getElementById('left-spot');
+    const progressBar = document.getElementById('progress-bar');
+    const statusLine = document.getElementById('status-line');
+    const panelPrice = document.getElementById('panel-price');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelYearly = document.getElementById('label-yearly');
+    const btnSignup = document.getElementById('btn-signup');
+
+    // Stripe instance
     const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-    // Countdown (no leading zero for days if < 100)
-    const launchDate = TRIAL_START;
-    const elDays  = document.getElementById('cd-days');
-    const elHours = document.getElementById('cd-hours');
-    const elMins  = document.getElementById('cd-mins');
-    const elSecs  = document.getElementById('cd-secs');
-
+    // --- Countdown (days: no leading zero when < 100) ---
     function formatDays(n){
-      if (n >= 100) return String(n).padStart(3,'0');
-      return String(n); // geen voorloopnul bij <100
+      if (n >= 100) return String(n).padStart(3, '0');
+      return String(n);
     }
     function pad2(n){ return String(n).padStart(2,'0'); }
 
     function tick(){
       const now = new Date();
-      let diff = launchDate - now;
+      let diff = TRIAL_START - now;
       if (diff < 0) diff = 0;
       const d = Math.floor(diff / 86400000);
       diff %= 86400000;
@@ -210,17 +276,11 @@
       if (elMins) elMins.textContent = pad2(m);
       if (elSecs) elSecs.textContent = pad2(s);
     }
-    tick(); setInterval(tick,1000);
+    tick();
+    setInterval(tick, 1000);
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Slots / progress
-    const takenEl = document.getElementById('taken-display');
-    const remEl = document.getElementById('remaining-display');
-    const progressBar = document.getElementById('progress-bar');
-    const priceSummary = document.getElementById('price-summary');
-    const labelMonthly = document.getElementById('label-monthly');
-    const labelYearly = document.getElementById('label-yearly');
-
+    // --- Slots / progress ---
     async function fetchSlots(){
       try{
         const r = await fetch(SLOT_API, { cache: 'no-store' });
@@ -239,37 +299,57 @@
       const safeTaken = Math.max(0, Math.floor(taken));
       const remaining = Math.max(0, total - safeTaken);
       takenEl.textContent = safeTaken.toLocaleString('nl-NL');
-      remEl.textContent = remaining.toLocaleString('nl-NL');
+      remainingEl.textContent = remaining.toLocaleString('nl-NL');
+      leftSpot.textContent = remaining.toLocaleString('nl-NL');
+
       const pct = Math.round((safeTaken / total) * 100);
       progressBar.style.width = Math.max(3, Math.min(100, pct)) + '%';
 
-      // if early adopter still available
+      // update pricing labels and CTA state
       if (safeTaken < total){
-        priceSummary.textContent = '€19,95/maand of €180/jaar — voor de eerste 3000 klanten';
-        labelMonthly.innerHTML = '€19,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small>';
-        labelYearly.innerHTML = '€180 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small>';
+        panelPrice.textContent = '€19,95 / maand';
+        labelMonthly.textContent = '€19,95';
+        labelYearly.textContent = '€180';
+        statusLine.innerHTML = `Nog <strong>${remaining.toLocaleString('nl-NL')}</strong> early-adopter spots beschikbaar`;
+        // options enabled
+        togglePlanOptions(true);
       } else {
-        priceSummary.textContent = 'Early adopter spots vol — huidige prijs: €24,95/maand of €250/jaar';
-        labelMonthly.innerHTML = '€24,95 <small style="font-weight:800;color:rgba(255,255,255,.8);">/maand</small>';
-        labelYearly.innerHTML = '€250 <small style="font-weight:800;color:rgba(255,255,255,.8);">/jaar</small>';
+        panelPrice.textContent = '€24,95 / maand';
+        labelMonthly.textContent = '€24,95';
+        labelYearly.textContent = '€250';
+        statusLine.innerHTML = `Early-adopter spots zijn vol — huidige prijs: €24,95/maand of €250/jaar`;
+        // remove early price option visually (disable) to avoid confusion
+        togglePlanOptions(false);
+      }
+
+      // sold out entirely (edge-case)
+      if (remaining <= 0 && safeTaken >= total){
+        // still allow regular pricing (backend decides), but CTA remains active
       }
     }
 
+    function togglePlanOptions(earlyAllowed){
+      // if earlyAllowed = false we can still allow selecting month/year but labels show regular prices
+      const radios = document.querySelectorAll('input[name="plan"]');
+      radios.forEach(r => r.disabled = false); // keep options selectable
+      // if you want to hide monthly/yearly options entirely when early done, you could disable them.
+    }
+
+    // initial
     fetchSlots();
     setInterval(fetchSlots, 15000);
 
-    // Sign-up & Stripe
+    // --- Signup flow (Stripe Checkout) ---
     function getSelectedPlan(){
       const radios = document.querySelectorAll('input[name="plan"]');
       for (const r of radios) if (r.checked) return r.value;
       return 'monthly';
     }
 
-    const btn = document.getElementById('btn-signup');
-    btn.addEventListener('click', async function(){
+    btnSignup.addEventListener('click', async function(){
       const plan = getSelectedPlan();
-      btn.disabled = true;
-      btn.textContent = 'Even doorsturen…';
+      btnSignup.disabled = true;
+      btnSignup.textContent = 'Even doorsturen…';
       try{
         const r = await fetch(CREATE_API, {
           method: 'POST',
@@ -281,19 +361,18 @@
           throw new Error(txt || 'Kon sessie niet aanmaken');
         }
         const j = await r.json();
-        if (!j.sessionId) throw new Error('Geen session id');
+        if (!j.sessionId) throw new Error('Geen session id van server');
         const res = await stripe.redirectToCheckout({ sessionId: j.sessionId });
         if (res.error) throw res.error;
       }catch(err){
         console.error(err);
-        alert('Sorry, we konden je pre-inschrijving niet afronden. Probeer opnieuw of contacteer support.');
-        btn.disabled = false;
-        btn.textContent = 'Pre-inschrijven en betalen';
+        alert('Kon je pre-inschrijving niet afronden. Probeer opnieuw of contacteer support.');
+        btnSignup.disabled = false;
+        btnSignup.textContent = 'Pre-inschrijven & betalen';
       }
     });
 
     document.getElementById('btn-why').addEventListener('click', ()=>{ location.hash = '#waarom' });
-
   })();
   </script>
 </body>
