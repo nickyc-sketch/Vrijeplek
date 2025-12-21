@@ -9,10 +9,11 @@
   <style>
     :root{ --muted: rgba(255,255,255,.82); --accent:#1b75d0; }
     body{ margin:0; background:linear-gradient(180deg,#021428,#020617); color:#fff; font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    .header-inner{ max-width:1100px; margin:0 auto; padding:18px 16px; display:flex; align-items:center; justify-content:space-between; }
+    .header-inner{ max-width:1100px; margin:0 auto; padding:18px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
     .brand{ display:flex; align-items:center; gap:.6rem; text-decoration:none; color:#fff; }
-    .brand-mark{ width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#2ac36a); display:flex; align-items:center; justify-content:center; font-weight:900; color:#021024; }
-    .brand-wordmark span:first-child{ font-weight:800; font-size:1.05rem; color:#fff; }
+    .brand-mark{ width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#2ac36a); display:flex; align-items:center; justify-content:center; font-weight:900; color:#021024; font-size:18px; }
+    .brand-wordmark span:first-child{ font-weight:800; font-size:1.05rem; color:#fff; display:block; }
+    .brand-wordmark span:last-child{ font-size:.78rem; color:var(--muted); display:block; }
     .nav{ display:flex; gap:12px; align-items:center; }
     .nav a{ color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px; font-weight:700; }
     .container{ max-width:1060px; margin:26px auto; padding:20px; }
@@ -29,15 +30,20 @@
     .updated{ font-size:.95rem; color:var(--muted); margin-top:6px; margin-bottom:14px; }
     .price-box{ background:rgba(255,255,255,.03); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,.04); }
     .price-box strong{ color:#fff; }
+    img.logo { height:44px; width:auto; display:block; }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="/" aria-label="Vrijeplek home">
-        <div class="brand-mark">V</div>
-        <div class="brand-wordmark">
-          <span>Vrijeplek</span>
+      <a class="brand" href="/" aria-label="Vrijeplek home" style="gap:12px;">
+        <!-- Use real logo if present, otherwise fallback to styled mark -->
+        <picture>
+          <source srcset="/images/logo.svg" type="image/svg+xml">
+          <img src="/images/logo.png" alt="Vrijeplek logo" class="logo" onerror="this.style.display='none'">
+        </picture>
+        <div style="display:flex;flex-direction:column;line-height:1;">
+          <span style="font-weight:800;font-size:1.05rem;color:#fff;">Vrijeplek</span>
           <span style="font-size:.78rem;color:var(--muted)">.be</span>
         </div>
       </a>
@@ -78,15 +84,15 @@
 
       <p>Promotionele tarieven gelden alleen zolang het abonnement ononderbroken actief blijft. Bij opzegging vervalt het recht op het promotietarief; bij herinschrijving geldt het op dat moment geldende tarief.</p>
 
-      <p>Betaling gebeurt via de door Vrijeplek geaccepteerde betaalprovider. Door te abonneren machtigt de Handelaar Vrijeplek om periodiek bedragen te incasseren via de opgegeven betaalmethode. Facturen worden elektronisch verzonden naar het opgegeven e-mailadres. De Handelaar is verantwoordelijk voor correcte facturatiegegevens (inclusief BTW waar van toepassing). Bij wanbetaling kan toegang worden geschorst of het account beëindigd.</p>
+      <p>Betaling gebeurt via de door Vrijeplek geaccepteerde betaalprovider. Door te abonneren machtigt de Handelaar Vrijeplek om periodiek bedragen te incasseren via de opgegeven betaalmethode. Eerste afschrijving voor pre-inschrijvingen: 01-06-2026. Facturen worden elektronisch verzonden naar het opgegeven e-mailadres. De Handelaar is verantwoordelijk voor correcte facturatiegegevens (inclusief BTW waar van toepassing). Bij wanbetaling kan toegang worden geschorst of het account beëindigd.</p>
 
       <h2>5. Herroepingsrecht & opzeg</h2>
       <p>De dienst is direct beschikbaar na inschrijving. De Handelaar stemt in met onmiddellijke uitvoering; waar wettelijk van toepassing kan een consumentenherroepingsrecht bestaan. In het aanmeldproces wordt dit duidelijk aangegeven wanneer het relevant is.</p>
 
       <h2>6. Duur en opzegtermijn</h2>
       <p>Het abonnement loopt door tot u opzegt via het online dashboard. Alleen opzegging via het dashboard is rechtsgeldig.</p>
-      <p>Voor maandabonnementen geldt na bevestiging van uw opzegging een opzegtermijn van <strong>3 maanden</strong>, gerekend vanaf de maand waarin u opzegt. Tijdens deze periode blijven automatische incasso’s plaatsvinden en behoudt u toegang tot de dienst. Bij het early-adopter maandtarief betekent dit maximaal €59,85 (circa €60) aan kosten over die drie maanden.</p>
-      <p>Voor jaarabonnementen blijft uw account actief tot het einde van de reeds betaalde jaarperiode; er is geen pro-rata terugbetaling. Jaarabonnementen verlengen stilzwijgend tenzij tijdig opgezegd.</p>
+      <p>Voor maandabonnementen geldt na bevestiging van uw opzegging een opzegtermijn van <strong>3 maanden</strong>, gerekend vanaf de maand waarin u opzegt. Tijdens deze periode blijven automatische incasso’s plaatsvinden en behoudt u toegang tot de dienst. Bij het early-adopter maandtarief betekent dit maximaal circa €60 aan kosten over die drie maanden.</p>
+      <p>Voor jaarabonnementen blijft uw account actief tot het einde van de reeds betaalde jaarperiode; jaarbetalingen worden niet pro rata terugbetaald. Jaarabonnementen verlengen stilzwijgend tenzij tijdig opgezegd.</p>
 
       <h2>7. Geen terugbetalingen</h2>
       <p>Alle betalingen zijn definitief. Vrijeplek verleent geen terugbetaling of pro-rata teruggave voor reeds betaalde periodes, behalve waar dwingend recht dit vereist.</p>
@@ -111,7 +117,7 @@
       <p>Vrijeplek kan accounts beëindigen of schorsen bij schending van de voorwaarden, fraude, onwettig gebruik of wanbetaling. In ernstige gevallen kan beëindiging zonder restitutie plaatsvinden.</p>
 
       <h2>14. Wijzigingen van de voorwaarden</h2>
-      <p>Vrijeplek kan deze voorwaarden wijzigen. De meest recente versie wordt op de website gepubliceerd en handelend gebruik na publicatie geldt als aanvaarding. Bij wezenlijke wijzigingen informeren wij Handelaren per e-mail. Wijzigingen in tarieven worden minstens 30 dagen van tevoren aangekondigd.</p>
+      <p>Vrijeplek kan deze voorwaarden wijzigen. De meest recente versie wordt op de website gepubliceerd en voortgezet gebruik na publicatie geldt als aanvaarding. Bij wezenlijke wijzigingen informeren wij Handelaren per e-mail. Wijzigingen in tarieven worden minstens 30 dagen van tevoren aangekondigd.</p>
 
       <h2>15. Vrijwaring</h2>
       <p>De Handelaar vrijwaart Vrijeplek tegen aanspraken van derden voortvloeiend uit het gebruik van de dienst of uit schending van deze voorwaarden.</p>
