@@ -44,7 +44,7 @@
       <section class="card">
         <div class="center">
           <h1 style="margin:6px 0 4px;">Hier kan je je inschrijven</h1>
-          <p class="small-muted">Vul hieronder je gegevens in. Betaalgegevens worden bewaard — eerste afschrijving op <strong>01-06-2026</strong>.</p>
+          <p class="small-muted">Vul hieronder je gegevens in.</strong>.</p>
         </div>
 
         <form id="signup-form" class="form" novalidate>
@@ -55,11 +55,11 @@
 
           <div class="row">
             <div class="col">
-              <label for="firstname">Contact — voornaam</label>
+              <label for="firstname">voornaam</label>
               <input id="firstname" name="firstname" type="text" required />
             </div>
             <div class="col">
-              <label for="lastname">Contact — achternaam</label>
+              <label for="lastname">Achternaam</label>
               <input id="lastname" name="lastname" type="text" required />
             </div>
           </div>
@@ -149,7 +149,7 @@
   <script>
     (function(){
       const CREATE_API = '/api/create-checkout-session';
-      const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME';
+      const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SF1MUISeRVYri7oSf7ki1csKXcEMl87c96WRVVIUvLQIDkfYts5VAEqTbqfQERxhgyPZLvmCkHcicOYPJTYinUT00egdtnqzx';
       const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
       function showError(msg){
