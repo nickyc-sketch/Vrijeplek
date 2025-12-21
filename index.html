@@ -1,24 +1,304 @@
-PORT=3000
-BASE_URL=https://vrijeplek.be
+// server.js
+require('dotenv').config();
+const express = require('express');
+const Stripe = require('stripe');
+const { createClient } = require('@supabase/supabase-js');
+const nodemailer = require('nodemailer');
+const cors = require('cors');
 
-# Stripe
-STRIPE_SECRET_KEY=sk_live_xxx
-STRIPE_PUBLISHABLE_KEY=pk_live_xxx
-STRIPE_WEBHOOK_SECRET=whsec_xxx
+// CONFIG via ENV
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
 
-# Stripe price IDs
-PRICE_EARLY_MONTHLY_ID=price_early_monthly_xxx
-PRICE_EARLY_YEARLY_ID=price_early_yearly_xxx
-PRICE_REGULAR_MONTHLY_ID=price_regular_monthly_xxx
-PRICE_REGULAR_YEARLY_ID=price_regular_yearly_xxx
+const PRICE_EARLY_MONTHLY = process.env.PRICE_EARLY_MONTHLY_ID; // €19,95 p/m
+const PRICE_EARLY_YEARLY  = process.env.PRICE_EARLY_YEARLY_ID;  // €180 p/j
+const PRICE_REGULAR_MONTHLY = process.env.PRICE_REGULAR_MONTHLY_ID; // €24,95
+const PRICE_REGULAR_YEARLY  = process.env.PRICE_REGULAR_YEARLY_ID;  // €250
 
-# Supabase
-SUPABASE_URL=https://your-supabase-url.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-# Combell SMTP (voor nodemailer)
-COMBELL_SMTP_HOST=smtp.combell.com
-COMBELL_SMTP_PORT=587
-COMBELL_SMTP_USER=mail@vrijeplek.be
-COMBELL_SMTP_PASS=your-mail-password
-NO_REPLY_EMAIL=noreply@vrijeplek.be
+const COMBELL_SMTP_HOST = process.env.COMBELL_SMTP_HOST;
+const COMBELL_SMTP_PORT = Number(process.env.COMBELL_SMTP_PORT || 587);
+const COMBELL_SMTP_USER = process.env.COMBELL_SMTP_USER;
+const COMBELL_SMTP_PASS = process.env.COMBELL_SMTP_PASS;
+const NO_REPLY_EMAIL = process.env.NO_REPLY_EMAIL || 'noreply@vrijeplek.be';
+
+const BASE_URL = process.env.BASE_URL || 'https://vrijeplek.be';
+
+// Trial timestamp (UTC seconds) for 2026-06-01 00:00:00 local time
+const TRIAL_TIMESTAMP = Math.floor(new Date('2026-06-01T00:00:00Z').getTime() / 1000);
+
+if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('Environment variables missing. See README in code.');
+  process.exit(1);
+}
+
+const stripe = Stripe(STRIPE_SECRET_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Nodemailer transporter (Combell SMTP)
+const transporter = nodemailer.createTransport({
+  host: COMBELL_SMTP_HOST,
+  port: COMBELL_SMTP_PORT,
+  secure: COMBELL_SMTP_PORT === 465,
+  auth: {
+    user: COMBELL_SMTP_USER,
+    pass: COMBELL_SMTP_PASS
+  }
+});
+
+// Initialize counters row if not present
+async function ensureCounters() {
+  const { data, error } = await supabase
+    .from('counters')
+    .select('*')
+    .eq('id', 1)
+    .limit(1);
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    // default: total=3000, completed=start=210
+    const resp = await supabase
+      .from('counters')
+      .insert([{ id: 1, total: 3000, completed: 210, start: 210 }]);
+    if (resp.error) throw resp.error;
+    console.log('Counters initialized.');
+  }
+}
+ensureCounters().catch(console.error);
+
+// --- API: GET slots ---
+app.get('/api/slots', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('counters')
+      .select('total,completed,start')
+      .eq('id', 1)
+      .single();
+    if (error) throw error;
+    const taken = Number(data.completed || data.start || 210);
+    res.json({ taken, total: Number(data.total || 3000), start: Number(data.start || 210) });
+  } catch (err) {
+    console.error(err);
+    res.json({ taken: 210, total: 3000, start: 210 });
+  }
+});
+
+// --- API: create checkout session ---
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    const { plan } = req.body;
+    if (!['monthly','yearly'].includes(plan)) return res.status(400).json({ error: 'invalid plan' });
+
+    // get current completed count
+    const { data: counter, error: counterErr } = await supabase
+      .from('counters').select('completed,total').eq('id',1).single();
+    if (counterErr) throw counterErr;
+    const taken = Number(counter.completed || 0);
+    const total = Number(counter.total || 3000);
+    const earlyAvailable = taken < total;
+
+    // choose price id
+    const priceId = earlyAvailable
+      ? (plan === 'monthly' ? PRICE_EARLY_MONTHLY : PRICE_EARLY_YEARLY)
+      : (plan === 'monthly' ? PRICE_REGULAR_MONTHLY : PRICE_REGULAR_YEARLY);
+
+    if (!priceId) return res.status(500).json({ error: 'price_id_missing' });
+
+    // create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [{ price: priceId, quantity: 1 }],
+      subscription_data: {
+        trial_end: TRIAL_TIMESTAMP
+      },
+      success_url: `${BASE_URL}/aanmelden.html?session_id={CHECKOUT_SESSION_ID}&success=true`,
+      cancel_url: `${BASE_URL}/aanmelden.html?canceled=true`,
+      // we collect email on checkout: leave email empty, stripe collects it
+      // store useful metadata
+      metadata: { plan, early: earlyAvailable ? '1' : '0' }
+    });
+
+    // Create a pending customer row (status pending). We'll fill details on webhook.
+    await supabase.from('customers').insert([{
+      session_id: session.id,
+      status: 'pending',
+      plan,
+      early: earlyAvailable,
+      created_at: new Date().toISOString()
+    }]);
+
+    res.json({ sessionId: session.id });
+  } catch (err) {
+    console.error('create-checkout-session error', err);
+    res.status(500).json({ error: 'server_error' });
+  }
+});
+
+// Stripe webhook - raw body
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Webhook signature verification failed.', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle checkout.session.completed
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    try {
+      // find the pending customer row by session_id
+      const { data: existing, error: fetchErr } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('session_id', session.id)
+        .limit(1)
+        .single();
+
+      if (fetchErr) {
+        console.warn('Customer row not found for session, inserting new.');
+      }
+
+      const email = session.customer_details?.email || session.customer_email || null;
+      const stripeCustomerId = session.customer || null;
+      const sessionId = session.id;
+      const plan = (session.metadata && session.metadata.plan) || (existing && existing.plan) || 'monthly';
+      const earlyFlag = (session.metadata && session.metadata.early === '1') || (existing && existing.early) || false;
+
+      // Update / upsert customer
+      if (existing) {
+        await supabase.from('customers').update({
+          status: 'active',
+          stripe_customer_id: stripeCustomerId,
+          email,
+          updated_at: new Date().toISOString()
+        }).eq('id', existing.id);
+      } else {
+        await supabase.from('customers').insert([{
+          session_id: sessionId,
+          status: 'active',
+          plan,
+          early: earlyFlag,
+          email,
+          stripe_customer_id: stripeCustomerId,
+          created_at: new Date().toISOString()
+        }]);
+      }
+
+      // increment counters.completed
+      await supabase.from('counters').update({
+        completed: supabase.rpc ? supabase.rpc /* fallback */ : undefined // we'll do simple fetch+update
+      }).eq('id', 1);
+
+      // Simpler safe increment: fetch current and update
+      const { data: cnt, error: cntErr } = await supabase.from('counters').select('completed').eq('id',1).single();
+      if (cntErr) throw cntErr;
+      const newCompleted = Number(cnt.completed || 0) + 1;
+      await supabase.from('counters').update({ completed: newCompleted }).eq('id', 1);
+
+      // send welcome / thank-you mail (using template)
+      // Only proceed if we have an email
+      if (email) {
+        const subject = earlyFlag ? 'Welkom bij Vrijeplek — Bedankt als early adopter!' : 'Welkom bij Vrijeplek — bedankt!';
+        const html = buildWelcomeEmailHtml({ name: email.split('@')[0], plan, early: earlyFlag, first_billing: '01-06-2026' });
+        const text = buildWelcomeEmailText({ name: email.split('@')[0], plan, early: earlyFlag, first_billing: '01-06-2026' });
+
+        await transporter.sendMail({
+          from: `Vrijeplek <${NO_REPLY_EMAIL}>`,
+          to: email,
+          subject,
+          text,
+          html
+        });
+      }
+
+      console.log('Processed checkout.session.completed for', session.id);
+    } catch (err) {
+      console.error('Error handling checkout.session.completed', err);
+    }
+  }
+
+  // Return a response to acknowledge receipt of the event
+  res.json({ received: true });
+});
+
+// Simple helper: email templates
+function buildWelcomeEmailHtml({ name, plan, early, first_billing }) {
+  return `
+  <html>
+  <body style="font-family:Arial,Helvetica,sans-serif;color:#0b1624;">
+    <div style="max-width:680px;margin:0 auto;padding:20px;">
+      <h1 style="color:#0b2a4a;">Bedankt & welkom bij Vrijeplek</h1>
+      <p>Hoi ${escapeHtml(name)},</p>
+
+      ${early ? `<p><strong>Dankjewel dat je als early adopter bij Vrijeplek bent ingestapt.</strong> Jouw pre-inschrijving is vastgelegd met het voordelige tarief. We waarderen het dat je ons in deze fase steunt — we hebben een speciaal “founder”-voordeel voor de eerste 3000 klanten.</p>` : `<p>Bedankt voor je inschrijving bij Vrijeplek. Je abonnement is nu bevestigd aan het standaardtarief.</p>`}
+
+      <h3>Wat gebeurt er nu?</h3>
+      <ul>
+        <li>Je betaalgegevens zijn veilig opgeslagen bij ons via Stripe.</li>
+        <li>De <strong>eerste afschrijving</strong> vindt plaats op <strong>${first_billing}</strong>.</li>
+        <li>Je kan vanaf nu al inloggen op je dashboard (link) en alles klaarzetten voor de launch.</li>
+      </ul>
+
+      <h3>Wat kun je verwachten in het dashboard?</h3>
+      <p>In het dashboard kun je onder andere:</p>
+      <ul>
+        <li>Beschikbare uren publiceren en beheren</li>
+        <li>Bevestigingen en no-show maatregelen instellen</li>
+        <li>Flexijobs plaatsen en kandidaten vinden</li>
+      </ul>
+
+      <h3>Quick screenshots</h3>
+      <p>Hieronder staan een paar voorbeelden van wat je straks ziet (plaats hier je screenshots):</p>
+      <p>
+        <img src="${BASE_URL}/images/screenshot-dashboard-01.png" alt="Dashboard voorbeeld" style="max-width:100%;border-radius:8px;border:1px solid #e6eefb;" />
+      </p>
+
+      <h3>Vragen?</h3>
+      <p>Antwoord op deze mail of mail naar <a href="mailto:contact@vrijeplek.be">contact@vrijeplek.be</a>. We helpen je snel verder.</p>
+
+      <p>Nogmaals bedankt — we kijken ernaar uit om dit samen met jou te bouwen.</p>
+      <p>Groeten,<br/>Het Vrijeplek-team</p>
+    </div>
+  </body>
+  </html>
+  `;
+}
+
+function buildWelcomeEmailText({ name, plan, early, first_billing }) {
+  return `
+Hoi ${name},
+
+${early ? 'Dankjewel dat je als early adopter bij Vrijeplek bent ingestapt. Jouw pre-inschrijving is vastgelegd met het voordelige tarief.' : 'Bedankt voor je inschrijving bij Vrijeplek. Je abonnement is nu bevestigd aan het standaardtarief.'}
+
+Wat gebeurt er nu?
+- Je betaalgegevens zijn veilig opgeslagen via Stripe.
+- De eerste afschrijving vindt plaats op ${first_billing}.
+- Je kan vanaf nu inloggen op je dashboard en alles klaarzetten voor de launch.
+
+Wat kun je verwachten in het dashboard?
+- Beschikbare uren publiceren en beheren
+- Bevestigingen en no-show maatregelen instellen
+- Flexijobs plaatsen en kandidaten vinden
+
+Screenshots en meer uitleg vind je in de mail (HTML versie).
+Vragen? Antwoord op deze mail of mail naar contact@vrijeplek.be.
+
+Groeten,
+Het Vrijeplek-team
+`;
+}
+
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+const port = process.env.PORT || 3000;
+app.listen(port, ()=> console.log(`Server listening on ${port}`));
