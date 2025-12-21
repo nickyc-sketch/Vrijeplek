@@ -6,62 +6,50 @@
   <title>Vrijeplek — Pre-inschrijven (exclusief)</title>
   <meta name="description" content="Pre-inschrijven: €19,95/maand of €180/jaar voor de eerste 3000 klanten. Betaalgegevens nu, eerste incasso op 01-06-2026." />
 
-  <!-- Google font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <!-- Jouw bestaande stylesheet -->
-  <link rel="stylesheet" href="/css/index.css?v=12" />
+  <link rel="stylesheet" href="/css/index.css?v=13" />
 
   <style>
-    /* Gerichte aanvullingen — minimale overlap met index.css */
-    :root { --accent:#1b75d0; --muted:rgba(255,255,255,.82); }
+    /* Kleine extra's — minimale overlap met index.css */
+    :root { --accent: #1b75d0; --muted: rgba(255,255,255,.82); }
     .lp-wrap{ max-width:1120px; margin:20px auto; padding:0 16px 48px; }
-    .lp-header-centre { text-align:center; margin-bottom:18px; color:#fff; }
-    .lp-header-centre h1{ margin:0; font-size:clamp(1.6rem,3.5vw,2.2rem); font-weight:900; letter-spacing:-.01em; }
     .lp-card { border-radius:16px; padding:22px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.04); box-shadow:0 30px 90px rgba(0,0,0,.55); }
     .lp-hero { display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start; }
     @media (max-width:980px) { .lp-hero { grid-template-columns:1fr; } }
-
+    .lp-header-centre { text-align:center; margin-bottom:18px; color:#fff; }
     .lp-title{ font-size:clamp(1.5rem,3.8vw,2.4rem); margin:6px 0 10px; color:#fff; font-weight:800; }
     .lp-lead{ color:var(--muted); max-width:72ch; font-size:1rem; line-height:1.5; margin-bottom:12px; }
-
     .lp-panel { padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.04); }
     .lp-progress{ height:12px; background:rgba(255,255,255,.05); border-radius:999px; overflow:hidden; margin-top:12px; border:1px solid rgba(255,255,255,.03); }
     .lp-progress .bar{ height:100%; background:linear-gradient(90deg,var(--accent),#20c06a); width:7%; transition:width .6s ease; min-width:3%; }
-
     .plans{ margin-top:12px; display:flex; flex-direction:column; gap:8px; }
     .plan{ display:flex; gap:.6rem; align-items:center; padding:.6rem; border-radius:10px; border:1px solid rgba(255,255,255,.04); cursor:pointer; background:transparent; }
     .plan input{ accent-color:var(--accent); }
     .btn-primary{ background:var(--accent); color:#021024; padding:.8rem 1.1rem; border-radius:999px; font-weight:900; border:none; cursor:pointer; box-shadow:0 14px 40px rgba(0,0,0,.35); }
     .btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,.06); color:var(--muted); padding:.68rem 1rem; border-radius:999px; cursor:pointer; }
-
     .countdown{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
     .cd{ min-width:90px; text-align:center; padding:10px; border-radius:10px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.04); }
     .cd .num{ font-weight:900; font-size:1.75rem; color:#fff; }
     .cd .lbl{ font-size:.8rem; color:var(--muted); margin-top:.35rem; letter-spacing:.12em; text-transform:uppercase; }
-
     .muted{ color:var(--muted); }
-    .feature-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:18px; }
-    @media (max-width:760px){ .feature-grid{ grid-template-columns:1fr; } }
-    .feature{ padding:12px; border-radius:10px; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.04); color:#fff; }
     footer.site-footer{ margin-top:28px; }
   </style>
 </head>
 <body>
   <div class="site">
+    <!-- HEADER: alleen logo links en "Voorwaarden" rechts -->
     <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="/" aria-label="Vrijeplek home">
+      <div class="header-inner" style="justify-content:space-between;">
+        <a class="brand" href="/" aria-label="Vrijeplek home" style="display:flex;align-items:center;gap:.6rem;">
           <div class="brand-mark">V</div>
           <div class="brand-wordmark">
             <span>vrijeplek</span>
             <span>last minute afspreken</span>
           </div>
         </a>
-        <nav class="header-actions">
-          <a class="nav-btn" href="#waarom">Waarom?</a>
-          <a class="nav-btn" href="#flexijobs">Flexijobs</a>
+
+        <nav>
           <a class="nav-btn btn-green" href="/voorwaarden.html">Voorwaarden</a>
-          <a class="nav-btn btn-green" href="/aanmelden.html?promo=launch">Pre-inschrijven</a>
         </nav>
       </div>
     </header>
@@ -73,19 +61,17 @@
       </div>
 
       <section class="lp-card lp-hero" aria-labelledby="hero-title">
-        <!-- left: tekst -->
         <div>
           <h2 id="hero-title" class="lp-title">Simpel. Betaalbaar. Slim je lege momenten vullen.</h2>
 
           <p class="lp-lead">
-            De bedoeling van Vrijeplek is eenvoudig: zo simpel en goedkoop mogelijk jouw lege plekken vullen.
-            Ons platform is er ook voor wie een flexijob zoekt of wie een flexijob-vacature wil plaatsen.
-            Zelfstandigen met een gaatje in de agenda vinden snel - en professioneel - klanten.
-            Omdat we de prijs laag houden, verdient zelfs wie in bijberoep werkt er voordeel mee.
-            Om Vrijeplek extra op gang te helpen schenken we de eerste <strong>3.000</strong> bedrijven die zich inschrijven een levenslange korting.
+            Vrijeplek is er om jouw lege plekken eenvoudig en goedkoop op te vullen. Ons platform is ook voor wie
+            flexijobs zoekt of flexijob-vacatures heeft. Zelfstandigen met een gaatje in de agenda vinden snel en
+            professioneel klanten. Omdat we de prijs laag houden, verdient zelfs wie in bijberoep werkt er voordeel mee.
+            Om Vrijeplek op gang te helpen schenken we de eerste <strong>3.000</strong> bedrijven die zich inschrijven
+            een levenslange korting.
           </p>
 
-          <!-- countdown -->
           <div class="countdown" aria-live="polite" aria-atomic="true">
             <div class="cd" role="group" aria-label="dagen">
               <div class="num" id="cd-days">000</div>
@@ -105,22 +91,13 @@
             </div>
           </div>
 
-          <div style="margin-top:18px;">
-            <div class="feature-grid">
-              <div class="feature"><strong>Publiseer vrije uren</strong><div class="small muted">Laat klanten direct boeken wanneer jij beschikbaar bent.</div></div>
-              <div class="feature"><strong>Beheer makkelijk</strong><div class="small muted">Duidelijk dashboard — geen losse DM’s of notities meer.</div></div>
-              <div class="feature"><strong>Flexijobs</strong><div class="small muted">Zet vacatures online of vind flexi’s per regio en sector.</div></div>
-              <div class="feature"><strong>Betrouwbare betalingen</strong><div class="small muted">Facturatie via Peppol en Stripe, optionele voorschotten voor minder no-shows.</div></div>
-            </div>
-          </div>
-
           <p class="muted" style="margin-top:14px;">
-            <strong>Belangrijk:</strong> je schrijft je nu in en geeft betaalgegevens; de eerste afschrijving gebeurt op <strong>01-06-2026</strong>.
-            Bij opzegging geldt een opzegtermijn van <strong>3 maanden</strong> vanaf de maand waarin je opzegt — dat betekent bij een maandabonnement maximaal €60 aan kosten. Meer niet.
+            <strong>Belangrijk:</strong> je schrijft je nu in en geeft betaalgegevens; de eerste afschrijving gebeurt
+            op <strong>01-06-2026</strong>. Bij opzegging geldt een opzegtermijn van <strong>3 maanden</strong> vanaf de
+            maand waarin je opzegt — bij een maandabonnement betekent dat maximaal €60.
           </p>
         </div>
 
-        <!-- right: panel -->
         <aside class="lp-panel" aria-labelledby="signup-title">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
@@ -162,8 +139,8 @@
           </div>
 
           <div style="display:flex;gap:10px;margin-top:14px;">
-            <button id="btn-signup" class="btn-primary">Pre-inschrijven & betalen</button>
-            <button id="btn-learn" class="btn-ghost" onclick="location.hash='#waarom'">Meer info</button>
+            <a class="btn-primary" href="/aanmelden?promo=launch">Pre-inschrijven</a>
+            <a class="btn-ghost" href="/voorwaarden.html">Voorwaarden</a>
           </div>
 
           <div style="margin-top:12px;font-size:.92rem;color:var(--muted);">
@@ -178,7 +155,6 @@
         <span>© <span id="year"></span> Vrijeplek — Last minute afspraken, netjes geregeld.</span>
         <nav class="footer-nav">
           <a href="/voorwaarden.html">Algemene voorwaarden</a>
-          <a href="#waarom">Waarom Vrijeplek?</a>
         </nav>
       </div>
     </footer>
@@ -188,137 +164,74 @@
   <script src="https://js.stripe.com/v3/"></script>
 
   <script>
-  (function(){
-    // CONFIG: endpoints en fallbackwaarden
-    const SLOT_API = '/api/slots';                // GET => { taken, total, start }
-    const CREATE_API = '/api/create-checkout-session'; // POST { plan } => { sessionId }
-    const FALLBACK_TAKEN = 210;
-    const TOTAL_SLOTS = 3000;
-    const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME'; // Vervang door je key of laat server injecteren
+    (function(){
+      // Zelfde script als eerder: countdown + slot fetch + price-update
+      const SLOT_API = '/api/slots';
+      const CREATE_API = '/api/create-checkout-session';
+      const FALLBACK_TAKEN = 210;
+      const TOTAL_SLOTS = 3000;
+      const STRIPE_PUBLISHABLE_KEY = 'pk_test_XXX_REPLACE_ME';
 
-    // Eerste afschrijving
-    const TRIAL_START = new Date('2026-06-01T00:00:00+02:00');
+      const TRIAL_START = new Date('2026-06-01T00:00:00+02:00');
+      const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-    // DOM
-    const elDays  = document.getElementById('cd-days');
-    const elHours = document.getElementById('cd-hours');
-    const elMins  = document.getElementById('cd-mins');
-    const elSecs  = document.getElementById('cd-secs');
-    const takenEl = document.getElementById('taken-display');
-    const remainingEl = document.getElementById('remaining-display');
-    const leftSpot = document.getElementById('left-spot');
-    const progressBar = document.getElementById('progress-bar');
-    const statusLine = document.getElementById('status-line');
-    const panelPrice = document.getElementById('panel-price');
-    const labelMonthly = document.getElementById('label-monthly');
-    const labelYearly = document.getElementById('label-yearly');
-    const btnSignup = document.getElementById('btn-signup');
-
-    // Stripe instance
-    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-
-    // Countdown: dagen zonder voorloopnul bij <100
-    function formatDays(n){
-      if (n >= 100) return String(n).padStart(3,'0');
-      return String(n);
-    }
-    function pad2(n){ return String(n).padStart(2,'0'); }
-
-    function tick(){
-      const now = new Date();
-      let diff = TRIAL_START - now;
-      if (diff < 0) diff = 0;
-      const d = Math.floor(diff / 86400000);
-      diff %= 86400000;
-      const h = Math.floor(diff / 3600000);
-      diff %= 3600000;
-      const m = Math.floor(diff / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-
-      if (elDays) elDays.textContent = formatDays(d);
-      if (elHours) elHours.textContent = pad2(h);
-      if (elMins) elMins.textContent = pad2(m);
-      if (elSecs) elSecs.textContent = pad2(s);
-    }
-    tick(); setInterval(tick, 1000);
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Slots / progress
-    async function fetchSlots(){
-      try{
-        const r = await fetch(SLOT_API, { cache: 'no-store' });
-        if (!r.ok) throw new Error('no slots');
-        const j = await r.json();
-        const taken = Number(j.taken ?? FALLBACK_TAKEN);
-        const total = Number(j.total ?? TOTAL_SLOTS);
-        updateSlots(taken, total);
-      }catch(e){
-        updateSlots(FALLBACK_TAKEN, TOTAL_SLOTS);
+      const elDays=document.getElementById('cd-days'), elHours=document.getElementById('cd-hours'),
+            elMins=document.getElementById('cd-mins'), elSecs=document.getElementById('cd-secs');
+      function formatDays(n){ return n>=100?String(n).padStart(3,'0'):String(n); }
+      function pad2(n){ return String(n).padStart(2,'0'); }
+      function tick(){
+        const now=new Date(); let diff=TRIAL_START-now; if(diff<0) diff=0;
+        const d=Math.floor(diff/86400000); diff%=86400000;
+        const h=Math.floor(diff/3600000); diff%=3600000;
+        const m=Math.floor(diff/60000);
+        const s=Math.floor((diff%60000)/1000);
+        if(elDays) elDays.textContent=formatDays(d);
+        if(elHours) elHours.textContent=pad2(h);
+        if(elMins) elMins.textContent=pad2(m);
+        if(elSecs) elSecs.textContent=pad2(s);
       }
-    }
+      tick(); setInterval(tick,1000);
+      document.getElementById('year').textContent=new Date().getFullYear();
 
-    function updateSlots(taken, total){
-      const safeTaken = Math.max(0, Math.floor(taken));
-      const remaining = Math.max(0, total - safeTaken);
-      takenEl.textContent = safeTaken.toLocaleString('nl-NL');
-      remainingEl.textContent = remaining.toLocaleString('nl-NL');
-      leftSpot.textContent = remaining.toLocaleString('nl-NL');
+      // slots
+      const takenEl=document.getElementById('taken-display'), remainingEl=document.getElementById('remaining-display'),
+            leftSpot=document.getElementById('left-spot'), progressBar=document.getElementById('progress-bar'),
+            panelPrice=document.getElementById('panel-price'), labelMonthly=document.getElementById('label-monthly'),
+            labelYearly=document.getElementById('label-yearly'), statusLine=document.getElementById('status-line');
 
-      const pct = Math.round((safeTaken / total) * 100);
-      progressBar.style.width = Math.max(3, Math.min(100, pct)) + '%';
-
-      // update pricing labels
-      if (safeTaken < total){
-        panelPrice.textContent = '€19,95 / maand';
-        labelMonthly.textContent = '€19,95';
-        labelYearly.textContent = '€180';
-        statusLine.innerHTML = `Nog <strong>${remaining.toLocaleString('nl-NL')}</strong> early-adopter spots beschikbaar`;
-      } else {
-        panelPrice.textContent = '€24,95 / maand';
-        labelMonthly.textContent = '€24,95';
-        labelYearly.textContent = '€250';
-        statusLine.innerHTML = `Early-adopter spots zijn vol — huidige prijs: €24,95/maand of €250/jaar`;
-      }
-    }
-
-    fetchSlots();
-    setInterval(fetchSlots, 15000);
-
-    // Signup via Stripe Checkout
-    function getSelectedPlan(){
-      const radios = document.querySelectorAll('input[name="plan"]');
-      for (const r of radios) if (r.checked) return r.value;
-      return 'monthly';
-    }
-
-    btnSignup.addEventListener('click', async function(){
-      const plan = getSelectedPlan();
-      btnSignup.disabled = true;
-      btnSignup.textContent = 'Even doorsturen…';
-      try{
-        const r = await fetch(CREATE_API, {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
-          body: JSON.stringify({ plan })
-        });
-        if (!r.ok){
-          const txt = await r.text();
-          throw new Error(txt || 'Kon sessie niet aanmaken');
+      async function fetchSlots(){
+        try{
+          const r=await fetch(SLOT_API,{cache:'no-store'});
+          if(!r.ok) throw new Error('no');
+          const j=await r.json();
+          const taken=Number(j.taken ?? FALLBACK_TAKEN), total=Number(j.total ?? TOTAL_SLOTS);
+          updateSlots(taken,total);
+        }catch(e){
+          updateSlots(FALLBACK_TAKEN,TOTAL_SLOTS);
         }
-        const j = await r.json();
-        if (!j.sessionId) throw new Error('Geen session id van server');
-        const res = await stripe.redirectToCheckout({ sessionId: j.sessionId });
-        if (res.error) throw res.error;
-      }catch(err){
-        console.error(err);
-        alert('Kon je pre-inschrijving niet afronden. Probeer opnieuw of contacteer support.');
-        btnSignup.disabled = false;
-        btnSignup.textContent = 'Pre-inschrijven & betalen';
       }
-    });
-
-    document.getElementById('btn-learn').addEventListener('click', ()=>{ location.hash = '#waarom' });
-  })();
+      function updateSlots(taken,total){
+        const safeTaken=Math.max(0,Math.floor(taken));
+        const remaining=Math.max(0,total-safeTaken);
+        takenEl.textContent=safeTaken.toLocaleString('nl-NL');
+        remainingEl.textContent=remaining.toLocaleString('nl-NL');
+        leftSpot.textContent=remaining.toLocaleString('nl-NL');
+        const pct=Math.round((safeTaken/total)*100);
+        progressBar.style.width=Math.max(3,Math.min(100,pct))+'%';
+        if(safeTaken<total){
+          panelPrice.textContent='€19,95 / maand';
+          labelMonthly.textContent='€19,95';
+          labelYearly.textContent='€180';
+          statusLine.innerHTML=`Nog <strong>${remaining.toLocaleString('nl-NL')}</strong> early-adopter spots beschikbaar`;
+        }else{
+          panelPrice.textContent='€24,95 / maand';
+          labelMonthly.textContent='€24,95';
+          labelYearly.textContent='€250';
+          statusLine.innerHTML=`Early-adopter spots zijn vol — huidige prijs: €24,95/maand of €250/jaar`;
+        }
+      }
+      fetchSlots(); setInterval(fetchSlots,15000);
+    })();
   </script>
 </body>
 </html>
