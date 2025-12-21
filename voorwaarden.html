@@ -4,56 +4,51 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Algemene voorwaarden — Vrijeplek</title>
+
+  <!-- dezelfde stylesheet als op home/dashboard zodat stijl klopt -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/index.css?v=20" />
+  <link rel="stylesheet" href="/css/index.css?v=9" />
+
   <style>
     :root{ --muted: rgba(255,255,255,.82); --accent:#1b75d0; }
     body{ margin:0; background:linear-gradient(180deg,#021428,#020617); color:#fff; font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    .header-inner{ max-width:1100px; margin:0 auto; padding:18px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .header-inner{ max-width:1120px; margin:0 auto; padding:.9rem 1rem .8rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
     .brand{ display:flex; align-items:center; gap:.6rem; text-decoration:none; color:#fff; }
-    .brand-mark{ width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#2ac36a); display:flex; align-items:center; justify-content:center; font-weight:900; color:#021024; font-size:18px; }
-    .brand-wordmark span:first-child{ font-weight:800; font-size:1.05rem; color:#fff; display:block; }
-    .brand-wordmark span:last-child{ font-size:.78rem; color:var(--muted); display:block; }
-    .nav{ display:flex; gap:12px; align-items:center; }
-    .nav a{ color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px; font-weight:700; }
-    .container{ max-width:1060px; margin:26px auto; padding:20px; }
+    .brand-mark{ width:32px; height:32px; border-radius:999px; background:radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%), radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%); box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:700; color:#fff; }
+    .brand-wordmark{ display:flex; flex-direction:column; line-height:1.05; }
+    .brand-wordmark span:first-child{ font-weight:700; letter-spacing:.02em; font-size:1.05rem; color:#f9fafb; }
+    .brand-wordmark span:last-child{ font-size:.7rem; text-transform:uppercase; letter-spacing:.18em; color:rgba(226,232,240,.8); }
+    .nav{ display:flex; gap:.5rem; align-items:center; }
+    .nav a.nav-btn{ display:inline-flex; align-items:center; padding:8px 14px; border-radius:999px; font-weight:600; text-decoration:none; font-size:13px; border:1px solid rgba(148,163,184,.6); background:rgba(15,23,42,.7); color:#e5edff; }
+    .nav a.nav-btn:hover{ background:rgba(15,23,42,.95); transform:translateY(-1px); }
+    .container{ max-width:1120px; margin:26px auto; padding:20px; }
     .card{ background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.04); border-radius:12px; padding:28px; box-shadow:0 30px 80px rgba(0,0,0,.55); }
     h1{ margin:0 0 8px; font-size:1.6rem; color:#fff; }
     h2{ margin:18px 0 8px; font-size:1.02rem; color:#fff; }
     p, ul, li{ color:var(--muted); line-height:1.6; font-size:0.98rem; margin:0 0 12px 0; }
     ul{ margin-left:1.05rem; padding-left:0; }
     .small{ font-size:.92rem; color:var(--muted); }
-    .muted-strong{ color:#fff; font-weight:700; }
+    .price-box{ background:rgba(255,255,255,.03); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,.04); }
     .legal-foot{ margin-top:20px; font-size:.9rem; color:var(--muted); }
     footer.site-footer{ border-top:1px solid rgba(255,255,255,.04); margin-top:26px; padding:18px 0; text-align:center; color:var(--muted); }
-    a{ color:#ffffff; text-decoration:underline; }
-    .updated{ font-size:.95rem; color:var(--muted); margin-top:6px; margin-bottom:14px; }
-    .price-box{ background:rgba(255,255,255,.03); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,.04); }
-    .price-box strong{ color:#fff; }
-    img.logo { height:44px; width:auto; display:block; }
   </style>
 </head>
 <body>
+  <!-- HEADER: exact zoals home.html zodat logo + stijl matchen -->
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="/" aria-label="Vrijeplek home" style="gap:12px;">
-        <!-- Use real logo if present, otherwise fallback to styled mark -->
-        <picture>
-          <source srcset="/images/logo.svg" type="image/svg+xml">
-          <img src="/images/logo.png" alt="Vrijeplek logo" class="logo" onerror="this.style.display='none'">
-        </picture>
-        <div style="display:flex;flex-direction:column;line-height:1;">
-          <span style="font-weight:800;font-size:1.05rem;color:#fff;">Vrijeplek</span>
-          <span style="font-size:.78rem;color:var(--muted)">.be</span>
+      <a class="brand" href="/" aria-label="Vrijeplek home">
+        <div class="brand-mark">V</div>
+        <div class="brand-wordmark">
+          <span>vrijeplek</span>
+          <span>last minute afspreken</span>
         </div>
       </a>
 
       <nav class="nav" aria-label="Hoofdmenu">
-        <a href="/">Home</a>
-        <a href="/voor-bedrijven">Voor bedrijven</a>
-        <a href="/login">Login</a>
-        <a href="/aanmelden">Aanmelden</a>
-        <a class="active" href="/voorwaarden.html">Algemene voorwaarden</a>
+        <a class="nav-btn" href="/waarom">Waarom Vrijeplek?</a>
+        <a class="nav-btn" href="/login" id="nav-login">Login</a>
+        <a class="nav-btn btn-green" href="/dashboard.html" id="nav-mijn" style="display:none;">Mijn Vrijeplek</a>
       </nav>
     </div>
   </header>
@@ -61,7 +56,7 @@
   <main class="container">
     <section class="card">
       <h1>Algemene voorwaarden</h1>
-      <p class="updated">Laatst bijgewerkt: 7 oktober 2025</p>
+      <p class="small">Laatst bijgewerkt: 7 oktober 2025</p>
 
       <h2>1. Definities</h2>
       <p><strong>Vrijeplek.be</strong>: de dienst en website geëxploiteerd door Easygyps BV (ondernemingsnummer zoals op factuur), die bedrijven (Handelaars) toelaat een profiel en beschikbaarheden te publiceren en consumenten (Gebruikers) toelaat deze te raadplegen.</p>
@@ -117,7 +112,7 @@
       <p>Vrijeplek kan accounts beëindigen of schorsen bij schending van de voorwaarden, fraude, onwettig gebruik of wanbetaling. In ernstige gevallen kan beëindiging zonder restitutie plaatsvinden.</p>
 
       <h2>14. Wijzigingen van de voorwaarden</h2>
-      <p>Vrijeplek kan deze voorwaarden wijzigen. De meest recente versie wordt op de website gepubliceerd en voortgezet gebruik na publicatie geldt als aanvaarding. Bij wezenlijke wijzigingen informeren wij Handelaren per e-mail. Wijzigingen in tarieven worden minstens 30 dagen van tevoren aangekondigd.</p>
+      <p>Vrijeplek kan deze voorwaarden wijzigen. Wij publiceren de meest recente versie op de website en informeren Handelaren per e-mail bij wezenlijke wijzigingen. Voortgezet gebruik na publicatie geldt als aanvaarding.</p>
 
       <h2>15. Vrijwaring</h2>
       <p>De Handelaar vrijwaart Vrijeplek tegen aanspraken van derden voortvloeiend uit het gebruik van de dienst of uit schending van deze voorwaarden.</p>
@@ -126,7 +121,7 @@
       <p>Vrijeplek is niet aansprakelijk voor het niet-nakomen van verplichtingen als gevolg van overmacht, waaronder technische storingen, storingen bij derden, internetonderbrekingen of overheidsmaatregelen.</p>
 
       <h2>17. Toepasselijk recht & forumkeuze</h2>
-      <p>Op deze voorwaarden is Belgisch recht van toepassing. Geschillen zullen worden voorgelegd aan de bevoegde rechtbanken in België, behoudens dwingend recht.</p>
+      <p>Op deze voorwaarden is Belgisch recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechtbanken in België, behoudens dwingend recht.</p>
 
       <h2>18. Acceptatie</h2>
       <p>Door u te registreren en de checkbox “Ik ga akkoord met de Algemene voorwaarden” aan te vinken bevestigt u dat u deze voorwaarden heeft gelezen en accepteert. U geeft tevens toestemming voor automatische incasso van abonnementsbedragen zoals omschreven.</p>
@@ -139,9 +134,19 @@
   </main>
 
   <footer class="site-footer">
-    <div style="max-width:1100px;margin:0 auto;padding:0 16px 18px;">
+    <div style="max-width:1120px;margin:0 auto;padding:0 16px 18px;">
       © 2025 Vrijeplek · Algemene voorwaarden
     </div>
   </footer>
+
+  <script>
+    // toggle nav visibility consistent with home/dashboard logic
+    (function(){
+      const btnLogin = document.getElementById('nav-login');
+      const btnMijn  = document.getElementById('nav-mijn');
+      if(btnLogin) btnLogin.style.display = 'inline-flex';
+      if(btnMijn) btnMijn.style.display = 'none';
+    })();
+  </script>
 </body>
 </html>
