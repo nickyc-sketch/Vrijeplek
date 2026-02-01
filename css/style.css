@@ -1,0 +1,144 @@
+/*
+ * Vrijeplek v2 – globale stijlen
+ *
+ * Dit bestand bevat de basiskleuren en stijlen voor de vernieuwde
+ * Vrijeplek-website. Gebruik CSS-variabelen voor de thema‐kleuren
+ * zodat we later makkelijk aanpassingen kunnen doen. De layout
+ * richt zich op rust, professionaliteit en veel witruimte.
+ */
+
+:root {
+  --color-primary: #1F8A8F;
+  --color-accent: #F2B705;
+  --color-background: #FAF7F2;
+  --color-dark: #3B1F3B;
+  --color-light: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-dark);
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.site-header {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  padding: 1rem 0;
+}
+
+.site-header .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-light);
+}
+
+.hero {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.hero h1 {
+  margin-top: 0;
+  font-size: 2rem;
+}
+
+.hero p {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+}
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.search-form input,
+.search-form button {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-form input {
+  flex: 1 1 200px;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-dark);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.result-card {
+  background-color: var(--color-light);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.result-card h3 {
+  margin-top: 0;
+}
+
+.result-card .book-btn {
+  margin-top: 1rem;
+  background-color: var(--color-accent);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+.site-footer {
+  background-color: var(--color-dark);
+  color: var(--color-background);
+  padding: 1rem 0;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.site-footer a {
+  color: var(--color-background);
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.cta {
+  text-align: center;
+  margin-top: 2rem;
+}

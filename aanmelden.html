@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bedrijf aanmelden – Vrijeplek</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Vrijeplek</a>
+    </div>
+  </header>
+  <main class="container">
+    <h1>Bedrijf aanmelden</h1>
+    <p>Meld je zaak aan en beheer je kalender vanaf je eigen dashboard. Het eerste jaar is volledig gratis.</p>
+    <form id="signup-form" class="signup-form">
+      <div class="form-group">
+        <label for="first_name">Voornaam</label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+      <div class="form-group">
+        <label for="last_name">Achternaam</label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">E‑mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Telefoon / GSM</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+      <div class="form-group">
+        <label for="business_name">Naam van de zaak</label>
+        <input type="text" id="business_name" name="business_name" required>
+      </div>
+      <div class="form-group">
+        <label for="address">Adres</label>
+        <input type="text" id="address" name="address" required>
+      </div>
+      <div class="form-group">
+        <label for="postal_code">Postcode</label>
+        <input type="text" id="postal_code" name="postal_code" required>
+      </div>
+      <div class="form-group">
+        <label for="city">Stad</label>
+        <input type="text" id="city" name="city" required>
+      </div>
+      <div class="form-group">
+        <label for="category">Categorie</label>
+        <input type="text" id="category" name="category" placeholder="Bijv. kapper, therapeut" required>
+      </div>
+      <div class="form-group">
+        <label for="vat_number">BTW‑nummer</label>
+        <input type="text" id="vat_number" name="vat_number" required>
+      </div>
+      <div class="form-group">
+        <label for="peppol">Peppol‑ID</label>
+        <input type="text" id="peppol" name="peppol">
+      </div>
+      <div class="form-group">
+        <label for="iban">Bankrekening (IBAN)</label>
+        <input type="text" id="iban" name="iban" required>
+      </div>
+      <div class="form-group">
+        <label for="deposit">Voorschot</label>
+        <select id="deposit" name="deposit">
+          <option value="none">Geen voorschot</option>
+          <option value="15">€15</option>
+          <option value="30">€30</option>
+          <option value="50">€50</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="visible_on_location" name="visible_on_location" checked>
+          Vindbaar zijn op locatie
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="accept_terms" name="accept_terms" required>
+          Ik ga akkoord met de <a href="voorwaarden.html" target="_blank">algemene voorwaarden</a>
+        </label>
+      </div>
+      <button type="submit" class="btn-primary">Aanmelden</button>
+    </form>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Vrijeplek.</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/aanmelden.js"></script>
+</body>
+</html>

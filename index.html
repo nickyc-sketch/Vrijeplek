@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vrijeplek – Zoek en boek</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <!-- Logo as text. Dit kan later vervangen worden door een SVG-logo -->
+      <a href="index.html" class="logo">Vrijeplek</a>
+    </div>
+  </header>
+  <main class="home">
+    <section class="hero">
+      <div class="container hero-content">
+        <h1>Vind en boek je afspraak</h1>
+        <p>Zoek naar diensten in jouw buurt en reserveer direct een tijdslot.</p>
+        <form id="search-form" class="search-form">
+          <input type="text" id="category" name="category" placeholder="Dienst of categorie" required>
+          <input type="text" id="location" name="location" placeholder="Locatie (stad of postcode)" required>
+          <input type="date" id="date" name="date" placeholder="Datum (optioneel)">
+          <button type="submit" class="btn-primary">Zoek</button>
+        </form>
+      </div>
+    </section>
+    <section id="results" class="results container">
+      <!-- Zoekresultaten worden hier weergegeven via JavaScript -->
+    </section>
+    <section class="cta container">
+      <p>Is jouw bedrijf nog niet vindbaar?</p>
+      <a href="aanmelden.html" class="btn-secondary">Jouw bedrijf hier?</a>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Vrijeplek. Alle rechten voorbehouden.</p>
+      <a href="voorwaarden.html">Algemene voorwaarden</a>
+    </div>
+  </footer>
+  <!-- Supabase client library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
