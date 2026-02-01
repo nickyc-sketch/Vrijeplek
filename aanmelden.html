@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aanmelden — Vrijeplek (Pre-inschrijving)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/index.css?v=14" />
+  <style>
+    :root{ --accent:#1b75d0; --muted:rgba(255,255,255,.82); }
+    .page{ max-width:820px; margin:26px auto; padding:0 16px 60px; }
+    .card{ border-radius:14px; padding:20px; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.04); box-shadow:0 30px 80px rgba(0,0,0,.55); }
+    .center{ text-align:center; color:#fff; }
+    .form{ margin-top:18px; display:flex; flex-direction:column; gap:12px; max-width:560px; margin-left:auto; margin-right:auto; }
+    label{ color:var(--muted); font-weight:700; font-size:.94rem; }
+    input[type=text], input[type=email], input[type=tel], select{ padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.06); background:rgba(0,0,0,.4); color:#fff; width:100%; box-sizing:border-box; }
+    .row{ display:flex; gap:12px; }
+    .row .col{ flex:1; }
+    .small-muted{ font-size:.92rem;color:var(--muted); }
+    .legal{ font-size:.9rem; color:var(--muted); margin-top:8px; }
+    .btn{ background:var(--accent); color:#021024; padding:.8rem 1rem; border-radius:999px; border:none; font-weight:900; cursor:pointer; }
+    .btn[disabled]{ opacity:.6; cursor:not-allowed; }
+    .inline-link{ color:#fff; text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <header class="site-header">
+      <div class="header-inner" style="justify-content:space-between;">
+        <a class="brand" href="/" aria-label="Vrijeplek home" style="display:flex;align-items:center;gap:.6rem;">
+          <div class="brand-mark">V</div>
+          <div class="brand-wordmark">
+            <span>vrijeplek</span>
+            <span>last minute afspreken</span>
+          </div>
+        </a>
+        <nav>
+          <a class="nav-btn btn-green" href="/voorwaarden.html">Voorwaarden</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="card">
+        <div class="center">
+          <h1 style="margin:6px 0 4px;">Hier kan je je inschrijven</h1>
+          <p class="small-muted">Vul hieronder je gegevens in.</strong>.</p>
+        </div>
+
+        <form id="signup-form" class="form" novalidate>
+          <input type="hidden" name="promo" id="promo" value="launch" />
+
+          <label for="company">Bedrijfsnaam / handelsnaam</label>
+          <input id="company" name="company" type="text" required />
+
+          <div class="row">
+            <div class="col">
+              <label for="firstname">voornaam</label>
+              <input id="firstname" name="firstname" type="text" required />
+            </div>
+            <div class="col">
+              <label for="lastname">Achternaam</label>
+              <input id="lastname" name="lastname" type="text" required />
+            </div>
+          </div>
+
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" required />
+
+          <label for="phone">Telefoon</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" />
+
+          <label for="btw">BTW-nummer</label>
+          <input id="btw" name="btw" type="text" placeholder="bv. BE0123456789 of 0123456789" required />
+
+          <label for="street">Straat</label>
+          <input id="street" name="street" type="text" required />
+
+          <div class="row">
+            <div class="col">
+              <label for="huisnummer">Huisnummer</label>
+              <input id="huisnummer" name="huisnummer" type="text" required />
+            </div>
+            <div class="col">
+              <label for="bus">Bus (optioneel)</label>
+              <input id="bus" name="bus" type="text" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label for="postcode">Postcode</label>
+              <input id="postcode" name="postcode" type="text" required />
+            </div>
+            <div class="col">
+              <label for="gemeente">Gemeente</label>
+              <input id="gemeente" name="gemeente" type="text" required />
+            </div>
+          </div>
+
+          <label for="country">Land</label>
+          <select id="country" name="country">
+            <option value="BE" selected>België</option>
+            <option value="NL">Nederland</option>
+            <option value="DE">Duitsland</option>
+            <option value="FR">Frankrijk</option>
+            <option value="OTHER">Anders</option>
+          </select>
+
+          <div style="margin-top:6px;">
+            <label style="display:block;font-weight:800;color:#fff;margin-bottom:6px;">Tarief</label>
+            <label style="display:flex;gap:.6rem;align-items:center;">
+              <input type="radio" name="plan" value="monthly" checked /> <span style="font-weight:900;margin-left:6px;color:#fff;">€19,95 / maand</span>
+            </label>
+            <label style="display:flex;gap:.6rem;align-items:center;margin-top:6px;">
+              <input type="radio" name="plan" value="yearly" /> <span style="font-weight:900;margin-left:6px;color:#fff;">€180 / jaar</span>
+            </label>
+            <div class="small-muted" style="margin-top:6px;">Early-adopter tarief voor de eerste 3.000 klanten. Na 3.000 geldt €24,95/maand of €250/jaar.</div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <label style="display:flex;align-items:center;gap:8px;">
+              <input id="agree" type="checkbox" /> <span class="small-muted">Ik ga akkoord met de <a href="/voorwaarden.html" class="inline-link" target="_blank" rel="noopener">Algemene voorwaarden</a></span>
+            </label>
+            <div id="agree-error" style="color:#ffb0b0;font-weight:700;display:none;margin-top:6px;">Je moet akkoord gaan met de Algemene voorwaarden om verder te gaan.</div>
+          </div>
+
+          <div style="display:flex;justify-content:center;margin-top:10px;">
+            <button id="submit-btn" class="btn" type="button">Bevestigen en naar betaling</button>
+          </div>
+
+          <div id="form-error" style="color:#ffb0b0;font-weight:700;display:none;text-align:center;margin-top:10px;"></div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© <span id="year"></span> Vrijeplek — Last minute afspraken, netjes geregeld.</span>
+        <nav class="footer-nav">
+          <a href="/voorwaarden.html">Algemene voorwaarden</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <script>
+    (function(){
+      const CREATE_API = '/api/create-checkout-session';
+      const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SF1MUISeRVYri7oSf7ki1csKXcEMl87c96WRVVIUvLQIDkfYts5VAEqTbqfQERxhgyPZLvmCkHcicOYPJTYinUT00egdtnqzx';
+      const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+
+      function showError(msg){
+        const el = document.getElementById('form-error');
+        el.style.display = 'block';
+        el.textContent = msg;
+      }
+
+      function hideError(){
+        const el = document.getElementById('form-error');
+        el.style.display = 'none';
+        el.textContent = '';
+      }
+
+      function normalizeBtw(input){
+        if(!input) return '';
+        let v = input.toUpperCase().replace(/[^0-9A-Z]/g,'');
+        if(v.startsWith('BE')) v = v.slice(2);
+        return v;
+      }
+
+      function validBelgianVAT(v){
+        if(!/^\d{10}$/.test(v)) return false;
+        const first8 = parseInt(v.slice(0,8),10);
+        const check = parseInt(v.slice(8),10);
+        const computed = 97 - (first8 % 97);
+        return computed === check;
+      }
+
+      function validateForm(data){
+        if(!data.company) return 'Vul uw bedrijfsnaam in.';
+        if(!data.firstname) return 'Vul uw voornaam in.';
+        if(!data.lastname) return 'Vul uw achternaam in.';
+        if(!data.email) return 'Vul uw e-mail in.';
+        if(!data.street) return 'Vul uw straat in.';
+        if(!data.huisnummer) return 'Vul uw huisnummer in.';
+        if(!data.postcode) return 'Vul uw postcode in.';
+        if(!data.gemeente) return 'Vul uw gemeente in.';
+        if(!data.btw) return 'Vul uw BTW-nummer in.';
+        const norm = normalizeBtw(data.btw);
+        if(!validBelgianVAT(norm)) return 'Geef een geldig Belgisch BTW-nummer (10 cijfers of BE + 10 cijfers).';
+        return null;
+      }
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      document.getElementById('submit-btn').addEventListener('click', async function(){
+        hideError();
+        const agree = document.getElementById('agree').checked;
+        if(!agree){
+          document.getElementById('agree-error').style.display = 'block';
+          return;
+        } else {
+          document.getElementById('agree-error').style.display = 'none';
+        }
+
+        const data = {
+          promo: document.getElementById('promo').value || '',
+          company: document.getElementById('company').value.trim(),
+          firstname: document.getElementById('firstname').value.trim(),
+          lastname: document.getElementById('lastname').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          btw: document.getElementById('btw').value.trim(),
+          street: document.getElementById('street').value.trim(),
+          huisnummer: document.getElementById('huisnummer').value.trim(),
+          bus: document.getElementById('bus').value.trim(),
+          postcode: document.getElementById('postcode').value.trim(),
+          gemeente: document.getElementById('gemeente').value.trim(),
+          country: document.getElementById('country').value,
+          plan: (document.querySelector('input[name="plan"]:checked') || {value:'monthly'}).value
+        };
+
+        const err = validateForm(data);
+        if(err){ showError(err); return; }
+
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.textContent = 'Even doorsturen…';
+
+        try{
+          const resp = await fetch(CREATE_API, {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify(data)
+          });
+          if(!resp.ok){
+            const txt = await resp.text();
+            throw new Error(txt || 'Server returned error');
+          }
+          const json = await resp.json();
+          if(!json.sessionId) throw new Error('Geen sessionId ontvangen');
+          const result = await stripe.redirectToCheckout({ sessionId: json.sessionId });
+          if(result.error) throw result.error;
+        }catch(e){
+          console.error(e);
+          showError('Kon je inschrijving niet afronden. Probeer opnieuw of contacteer support.');
+          btn.disabled = false;
+          btn.textContent = 'Bevestigen en naar betaling';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

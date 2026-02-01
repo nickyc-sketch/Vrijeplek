@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Vrijeplek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=ocean3">
+
+  <style>
+    :root{
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
+      --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
+        radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
+        radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
+      background-attachment:fixed;
+    }
+
+    .site{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(26px);
+      background:linear-gradient(180deg,rgba(2,6,23,.92),rgba(2,6,23,.7),rgba(2,6,23,0));
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .header-inner{
+      max-width:1120px;
+      margin:0 auto;
+      padding:.9rem 1.5rem .8rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1.25rem;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      text-decoration:none;
+    }
+    .header-left{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+    }
+    .btn-home{
+      border-radius:999px;
+      padding:.28rem .7rem;
+      font-size:.78rem;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.6);
+      color:rgba(226,232,240,.9);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      backdrop-filter:blur(10px);
+    }
+    .btn-home:hover{
+      background:rgba(15,23,42,.9);
+      border-color:rgba(191,219,254,.9);
+      transform:translateY(-1px);
+    }
+    .brand-mark{
+      width:32px; height:32px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
+                 radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
+      box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      font-weight:700;
+      color:#fff;
+    }
+    .brand-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand-wordmark span:first-child{
+      font-weight:700;
+      letter-spacing:.02em;
+      font-size:1.05rem;
+      color:#f9fafb;
+    }
+    .brand-wordmark span:last-child{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(226,232,240,.7);
+    }
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .chip-pill{
+      font-size:.72rem;
+      padding:.2rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      color:rgba(226,232,240,.7);
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    .chip-dot{
+      width:8px; height:8px;
+      border-radius:999px;
+      background:radial-gradient(circle at 50% 50%, #4ade80 0,#22c55e 50%,#166534 100%);
+      box-shadow:0 0 0 4px rgba(34,197,94,.2);
+    }
+    .btn-head{
+      border-radius:999px;
+      padding:.4rem .9rem;
+      font-size:.82rem;
+      border:1px solid rgba(129,140,248,.7);
+      background:rgba(15,23,42,.4);
+      color:#e5edff;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      backdrop-filter:blur(10px);
+    }
+    .btn-head-primary{
+      border:none;
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#fff;
+      box-shadow:0 10px 30px rgba(15,118,255,.4);
+    }
+
+    .site-main{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:1.2rem 1.2rem 2.2rem;
+    }
+    .dash-shell{
+      width:100%;
+      max-width:1120px;
+    }
+
+    .dash-layout{
+      display:grid;
+      grid-template-columns:minmax(220px,260px) minmax(0,1fr);
+      gap:1.5rem;
+      align-items:flex-start;
+    }
+
+    .dash-tabs{
+      background:rgba(15,23,42,.8);
+      border-radius:1.25rem;
+      padding:.75rem;
+      border:1px solid rgba(148,163,184,.3);
+      box-shadow:0 18px 50px rgba(15,23,42,.7);
+      backdrop-filter:blur(22px);
+    }
+    .dash-tab{
+      width:100%;
+      text-align:left;
+      border:none;
+      background:transparent;
+      padding:.65rem .9rem;
+      border-radius:.9rem;
+      display:flex;
+      flex-direction:column;
+      gap:.1rem;
+      cursor:pointer;
+      transition:.18s ease;
+      color:rgba(226,232,240,.8);
+      position:relative;
+    }
+    .dash-tab + .dash-tab{margin-top:.25rem;}
+    .dash-tab-icon{font-size:1.05rem;}
+    .dash-tab-label{font-weight:600; font-size:.9rem;}
+    .dash-tab-sub{font-size:.75rem; opacity:.7;}
+    .dash-tab::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      border:1px solid transparent;
+      transition:.18s ease;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .dash-tab:hover{
+      background:rgba(15,118,255,.08);
+    }
+    .dash-tab.is-active{
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,.45),rgba(30,64,175,.9));
+      color:#f9fafb;
+      box-shadow:0 14px 40px rgba(15,23,42,.9);
+    }
+    .dash-tab.is-active::after{
+      border-color:rgba(191,219,254,.9);
+    }
+    .dash-tab.is-locked{
+      opacity:.55;
+    }
+
+    .dash-panels{display:block;}
+    .dash-panel{display:none;}
+    .dash-panel.is-visible{display:block;}
+
+    .panel-head{margin-bottom:1rem;}
+    .panel-head h1{
+      font-size:1.4rem;
+      color:#e5edff;
+      margin:0 0 .25rem;
+    }
+    .panel-intro{
+      margin:0;
+      font-size:.88rem;
+      color:rgba(191,219,254,.8);
+    }
+
+    .card{
+      background:rgba(15,23,42,.84);
+      border-radius:1.25rem;
+      padding:1.25rem 1.4rem 1.35rem;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 22px 60px rgba(15,23,42,.9);
+      color:#e5e7eb;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 0 0,rgba(59,130,246,.12),transparent 55%),
+        radial-gradient(circle at 100% 0,rgba(56,189,248,.12),transparent 50%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .card > *{position:relative; z-index:1;}
+    .card-soft{
+      background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(15,23,42,.92));
+    }
+    .card-glass{
+      background:linear-gradient(135deg,rgba(37,99,235,.96),rgba(8,47,107,.96));
+      border-color:rgba(191,219,254,.55);
+      color:#f9fafb;
+    }
+
+    .card-title{
+      font-size:1.1rem;
+      margin:0 0 .3rem;
+    }
+    .card-subtitle{
+      margin:0 0 1rem;
+      font-size:.85rem;
+      color:rgba(226,232,240,.85);
+    }
+    .card-header-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+    .card-divider{
+      border:none;
+      border-top:1px solid rgba(148,163,184,.4);
+      margin:1.2rem 0 1rem;
+    }
+
+    .badge-warning{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      font-size:.78rem;
+      padding:.2rem .6rem;
+      border-radius:999px;
+      background:rgba(250,204,21,.15);
+      border:1px solid rgba(250,204,21,.6);
+      color:#fef3c7;
+      margin-bottom:.75rem;
+    }
+    .badge-warning::before{
+      content:"!";
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:14px; height:14px;
+      border-radius:999px;
+      background:#facc15;
+      color:#1f2937;
+      font-size:.7rem;
+      font-weight:800;
+    }
+
+    .cards-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,1.25fr);
+      gap:1.25rem;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:.28rem;
+      margin-bottom:.8rem;
+    }
+    .field label{
+      font-size:.84rem;
+      font-weight:500;
+      color:rgba(226,232,240,.9);
+    }
+    .field input,
+    .field textarea,
+    .field select{
+      border-radius:.75rem;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.85);
+      color:#e5e7eb;
+      padding:.5rem .7rem;
+      font-size:.9rem;
+      outline:none;
+      transition:.16s ease;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder{
+      color:rgba(148,163,184,.8);
+      font-size:.84rem;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus{
+      border-color:rgba(59,130,246,.9);
+      box-shadow:0 0 0 1px rgba(59,130,246,.6);
+      background:rgba(15,23,42,.96);
+    }
+
+    .field-group{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .slot-form .slot-row{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+      align-items:flex-end;
+    }
+    .slot-form .slot-row input[type="time"],
+    .slot-form .slot-row input[type="number"]{
+      height:44px;
+      line-height:44px;
+    }
+
+    .helper{
+      font-size:.78rem;
+      color:rgba(148,163,184,.95);
+      line-height:1.5;
+    }
+    .example{
+      font-size:.8rem;
+      color:rgba(191,219,254,.9);
+      margin-top:.35rem;
+    }
+
+    .input-with-prefix{
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    .input-with-prefix span{
+      padding:.35rem .6rem;
+      border-radius:.75rem;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.95);
+      font-size:.8rem;
+      color:rgba(226,232,240,.9);
+    }
+
+    .form-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:.5rem;
+      margin-top:.6rem;
+    }
+
+    .switch{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      cursor:pointer;
+      user-select:none;
+    }
+    .switch input{display:none;}
+    .switch-slider{
+      width:38px;
+      height:20px;
+      border-radius:18px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.7);
+      position:relative;
+      transition:.18s ease;
+    }
+    .switch-slider::after{
+      content:"";
+      position:absolute;
+      width:16px; height:16px;
+      border-radius:999px;
+      background:#e5e7eb;
+      top:1px; left:1px;
+      transition:.18s ease;
+      box-shadow:0 2px 6px rgba(15,23,42,.6);
+    }
+    .switch input:checked + .switch-slider{
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      border-color:rgba(191,219,254,.9);
+    }
+    .switch input:checked + .switch-slider::after{
+      transform:translateX(16px);
+      background:#f9fafb;
+    }
+    .switch-label{
+      font-size:.85rem;
+      color:rgba(226,232,240,.9);
+    }
+
+    .deposit-settings{
+      margin-top:.75rem;
+      padding:.85rem .95rem;
+      border-radius:.9rem;
+      border:1px dashed rgba(148,163,184,.7);
+      background:rgba(15,23,42,.9);
+    }
+    .deposit-settings.is-disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    .btn,
+    .btn-primary,
+    .btn-ghost,
+    .btn-pill{
+      border-radius:999px;
+      padding:.48rem 1.05rem;
+      font-size:.86rem;
+      border:1px solid transparent;
+      cursor:pointer;
+      font-weight:500;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      background:transparent;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#f9fafb;
+      border:none;
+      box-shadow:0 14px 40px rgba(37,99,235,.55);
+    }
+    .btn-primary:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+    .btn-ghost{
+      background:rgba(15,23,42,.2);
+      border-color:rgba(148,163,184,.7);
+      color:rgba(226,232,240,.9);
+    }
+    .btn-ghost:hover{
+      background:rgba(15,23,42,.4);
+    }
+    .btn-pill{
+      background:rgba(15,23,42,.1);
+      border-color:rgba(191,219,254,.7);
+      color:#e0f2fe;
+      font-size:.78rem;
+      padding:.3rem .8rem;
+    }
+    .btn-small{
+      padding:.25rem .7rem;
+      font-size:.78rem;
+    }
+    .btn-danger{
+      border-color:rgba(239,68,68,.75);
+      color:#fecaca;
+    }
+    .btn-danger:hover{
+      background:rgba(127,29,29,.75);
+    }
+
+    .empty-state{
+      border-radius:.9rem;
+      background:rgba(15,23,42,.85);
+      border:1px dashed rgba(148,163,184,.7);
+      padding:.85rem 1rem;
+      font-size:.86rem;
+      color:rgba(226,232,240,.95);
+    }
+    .empty-state strong{font-weight:600;}
+
+    .calendar-controls{
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      font-size:.82rem;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .calendar-controls .btn-ghost,
+    .calendar-controls .btn-pill{
+      padding:.3rem .7rem;
+      font-size:.78rem;
+    }
+    .calendar-month{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      min-width:auto;
+    }
+    .calendar-month span:first-child{font-weight:600;}
+    .calendar-month span:last-child{font-size:.75rem; opacity:.85;}
+
+    .calendar-shell{
+      margin-top:.85rem;
+      padding:.75rem .8rem .9rem;
+      border-radius:1rem;
+      background:radial-gradient(circle at 0 0,rgba(15,23,42,.18),transparent 60%);
+      box-shadow:inset 0 0 0 1px rgba(148,163,184,.4);
+    }
+    .calendar-days-row{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:rgba(226,232,240,.8);
+      margin-bottom:.3rem;
+    }
+    .calendar-days-row span{text-align:center; padding-bottom:.15rem;}
+    .calendar-grid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.18rem;}
+    .calendar-day{
+      position:relative;
+      aspect-ratio:1/1;
+      border-radius:.85rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.8rem;
+      cursor:pointer;
+      background:rgba(15,23,42,.92);
+      border:1px solid rgba(148,163,184,.55);
+      color:#e5e7eb;
+      transition:.14s ease;
+      overflow:hidden;
+    }
+    .calendar-day::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 10% 0,rgba(248,250,252,.22),transparent 55%);
+      opacity:0;
+      transition:.2s ease;
+    }
+    .calendar-day:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 30px rgba(15,23,42,.95);
+      border-color:rgba(191,219,254,.9);
+    }
+    .calendar-day:hover::after{opacity:1;}
+    .calendar-day.is-today{border-color:#fbbf24; box-shadow:0 0 0 1px rgba(251,191,36,.6);}
+    .calendar-day.is-selected{
+      background:linear-gradient(135deg,#f9fafb,#93c5fd);
+      color:#0f172a;
+      font-weight:700;
+      box-shadow:0 14px 40px rgba(15,23,42,1);
+    }
+
+    .slot-list h3{margin:0 0 .25rem; font-size:.95rem; color:#e5e7eb;}
+    .slot-item{
+      border-radius:.9rem;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.7);
+      padding:.7rem .9rem;
+      margin-bottom:.6rem;
+    }
+    .slot-item.is-booked{border-style:dashed; border-color:rgba(234,179,8,.9);}
+    .slot-item-header{display:flex; justify-content:space-between; align-items:flex-start; gap:.75rem;}
+    .slot-item-title{font-weight:600; font-size:.9rem;}
+    .slot-item-desc{font-size:.83rem; margin-top:.15rem; color:rgba(226,232,240,.95);}
+    .slot-meta{font-size:.76rem; color:rgba(148,163,184,.95); margin-top:.25rem;}
+    .slot-actions{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem;}
+
+    .settings-group{
+      border-radius:1rem;
+      border:1px solid rgba(148,163,184,.5);
+      padding:1rem 1rem .9rem;
+      margin-bottom:1rem;
+      background:rgba(15,23,42,.95);
+    }
+    .settings-group-muted{background:rgba(15,23,42,.85); border-style:dashed;}
+    .settings-group legend{
+      padding:0 .3rem;
+      font-size:.86rem;
+      font-weight:600;
+      color:rgba(191,219,254,.95);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:.4rem;
+    }
+
+    /* ✅ 2-kolommen afspraken */
+    .appointments-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:1rem;
+    }
+    @media (max-width:960px){
+      .appointments-grid{ grid-template-columns:1fr; }
+    }
+
+    .site-footer{
+      padding:1rem 1.5rem 1.4rem;
+      border-top:1px solid rgba(15,23,42,.8);
+      background:radial-gradient(circle at 50% -50%,rgba(59,130,246,.35),transparent 60%),
+                 rgba(2,6,23,.96);
+    }
+    .footer-inner{
+      max-width:1120px;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:.75rem;
+      color:rgba(148,163,184,.9);
+      font-size:.78rem;
+    }
+    .footer-inner a{color:rgba(191,219,254,.95); text-decoration:none;}
+
+    .toast{
+      position:fixed;
+      right:1.4rem;
+      bottom:1.4rem;
+      max-width:280px;
+      padding:.7rem .9rem;
+      border-radius:1rem;
+      font-size:.82rem;
+      display:flex;
+      align-items:flex-start;
+      gap:.5rem;
+      border:1px solid transparent;
+      box-shadow:0 18px 40px rgba(15,23,42,.9);
+      background:rgba(15,23,42,.95);
+      color:#e5e7eb;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(10px);
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:80;
+    }
+    .toast.is-visible{opacity:1; pointer-events:auto; transform:translateY(0);}
+    .toast-icon{
+      width:20px; height:20px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.9rem;
+      font-weight:700;
+      flex-shrink:0;
+    }
+    .toast-success{
+      border-color:rgba(34,197,94,.8);
+      background:linear-gradient(135deg,rgba(22,163,74,.96),rgba(15,118,110,.96));
+    }
+    .toast-success .toast-icon{background:#bbf7d0; color:#14532d;}
+    .toast-error{
+      border-color:rgba(239,68,68,.8);
+      background:linear-gradient(135deg,rgba(185,28,28,.96),rgba(127,29,29,.96));
+    }
+    .toast-error .toast-icon{background:#fee2e2; color:#7f1d1d;}
+
+    @media (max-width:960px){
+      .calendar-day{font-size:0.7rem; aspect-ratio:auto; padding-top:0.2rem; padding-bottom:0.2rem;}
+      .header-inner{padding:.8rem 1rem .7rem;}
+      .dash-layout{grid-template-columns:minmax(0,1fr);}
+      .cards-grid{grid-template-columns:minmax(0,1fr);}
+      .site-main{padding:1rem .9rem 1.6rem;}
+      .toast{left:.9rem; right:.9rem;}
+    }
+    @media (max-width:640px){
+      .header-actions{gap:.45rem;}
+      .chip-pill{display:none;}
+      .slot-form .slot-row{grid-template-columns:repeat(1,minmax(0,1fr));}
+      .field-group{grid-template-columns:1fr;}
+      .calendar-controls{justify-content:flex-start;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site">
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-home" type="button" onclick="window.location.href='/'">⟵ Home</button>
+          <a href="/" class="brand" aria-label="Terug naar Vrijeplek home">
+            <div class="brand-mark">V</div>
+            <div class="brand-wordmark">
+              <span>vrijeplek</span>
+              <span>last minute afspreken</span>
+            </div>
+          </a>
+        </div>
+        <div class="header-actions">
+          <div class="chip-pill">
+            <span class="chip-dot"></span>
+            <span>Dashboard actief</span>
+          </div>
+          <button class="btn-head" type="button" onclick="window.open('/', '_blank')">Website bekijken</button>
+          <button class="btn-head btn-head-primary" type="button" id="logout-btn">Uitloggen</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <div class="dash-shell">
+        <div class="dash-layout">
+          <aside class="dash-tabs" aria-label="Dashboard navigatie">
+            <button class="dash-tab is-active" data-panel="afspraken">
+              <span class="dash-tab-icon">📅</span>
+              <span class="dash-tab-label">Afspraken</span>
+              <span class="dash-tab-sub">Vandaag & binnenkort</span>
+            </button>
+            <button class="dash-tab" data-panel="tijden">
+              <span class="dash-tab-icon">✨</span>
+              <span class="dash-tab-label">Open tijdstippen</span>
+              <span class="dash-tab-sub">Kalender & tijdsloten</span>
+            </button>
+            <button class="dash-tab" data-panel="website">
+              <span class="dash-tab-icon">🌐</span>
+              <span class="dash-tab-label">Website</span>
+              <span class="dash-tab-sub">Jouw Vrijeplek-pagina</span>
+            </button>
+            <button class="dash-tab" data-panel="flexijobs">
+              <span class="dash-tab-icon">💼</span>
+              <span class="dash-tab-label">Flexijobs</span>
+              <span class="dash-tab-sub">Vacature voor flexi's</span>
+            </button>
+            <button class="dash-tab" data-panel="instellingen">
+              <span class="dash-tab-icon">⚙</span>
+              <span class="dash-tab-label">Instellingen</span>
+              <span class="dash-tab-sub">Gegevens & facturen</span>
+            </button>
+          </aside>
+
+          <section class="dash-panels">
+            <section class="dash-panel is-visible" id="panel-afspraken">
+              <header class="panel-head">
+                <h1>Jouw Vrijeplek</h1>
+                <p class="panel-intro">Hier verschijnen straks de echte boekingen die via jouw vrije tijdsloten binnenkomen.</p>
+              </header>
+
+              <section class="card card-soft">
+                <h2 class="card-title">Afspraken</h2>
+                <p class="card-subtitle">Overzicht van aankomende boekingen.</p>
+
+                <div class="empty-state" id="appointments-empty">
+                  <p><strong>Nog geen afspraken.</strong></p>
+                  <p>Maak eerst enkele open tijdstippen aan. Zodra klanten boeken, zie je ze hier automatisch verschijnen.</p>
+                  <button type="button" class="btn-ghost" data-panel-jump="tijden">➜ Open tijdstippen beheren</button>
+                </div>
+
+                <div class="appointments-grid" id="appointments-grid" style="display:none;">
+                  <div>
+                    <h3 style="margin:0 0 .6rem;">Geboekte afspraken</h3>
+                    <div class="empty-state" id="booked-empty">Nog geen geboekte afspraken.</div>
+                    <div id="booked-list"></div>
+                  </div>
+                  <div>
+                    <h3 style="margin:0 0 .6rem;">Open tijdstippen</h3>
+                    <div class="empty-state" id="open-empty">Nog geen open tijdstippen.</div>
+                    <div id="open-list"></div>
+                  </div>
+                </div>
+              </section>
+            </section>
+
+            <section class="dash-panel" id="panel-tijden">
+              <header class="panel-head">
+                <h1>Open tijdstippen</h1>
+                <p class="panel-intro">Klik in de kalender, voeg een tijdslot toe en kies zelf of het zichtbaar is op Vrijeplek.</p>
+              </header>
+
+              <div class="cards-grid">
+                <section class="card card-glass">
+                  <header class="card-header-row">
+                    <div><h2 class="card-title">Kalender</h2></div>
+                    <div class="calendar-controls">
+                      <button type="button" class="btn-ghost" data-cal-prev>‹</button>
+                      <div class="calendar-month">
+                        <span data-cal-month>Maand</span>
+                        <span data-cal-year>Jaar</span>
+                      </div>
+                      <button type="button" class="btn-ghost" data-cal-next>›</button>
+                      <button type="button" class="btn-pill" data-cal-today>Vandaag</button>
+                    </div>
+                  </header>
+
+                  <div class="calendar-shell">
+                    <div class="calendar-days-row">
+                      <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span><span>Za</span><span>Zo</span>
+                    </div>
+                    <div class="calendar-grid" data-cal-grid></div>
+                  </div>
+                </section>
+
+                <section class="card card-soft">
+                  <h2 class="card-title">Tijdslot voor <span data-selected-date>geen datum geselecteerd</span></h2>
+                  <p class="card-subtitle">Kies eerst een dag in de kalender en vul hieronder jouw vrije plek in.</p>
+
+                  <form class="slot-form" id="slot-form">
+                    <div class="slot-row">
+                      <div class="field">
+                        <label for="slot-start">Startuur</label>
+                        <input type="time" id="slot-start" name="start">
+                      </div>
+                      <div class="field">
+                        <label for="slot-end">Einduur</label>
+                        <input type="time" id="slot-end" name="end">
+                      </div>
+                      <div class="field">
+                        <label for="slot-places">Aantal plaatsen (optioneel)</label>
+                        <input type="number" id="slot-places" name="places" min="1" placeholder="1">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label for="slot-desc">Omschrijving (zichtbaar voor klant)</label>
+                      <input type="text" id="slot-desc" name="description" placeholder="bv. ‘Kapper — snit &amp; brushing (45 min)’">
+                    </div>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="slot-visible" name="visible" checked>
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Zichtbaar op Vrijeplek</span>
+                      </label>
+                    </div>
+
+                    <p class="helper">
+                      Voorbeeld: “Vrije plek: tandarts — controle (30 min)” of “Vrije plek: gyproc-offerte ter plaatse (1u)”.
+                    </p>
+
+                    <div class="form-actions">
+                      <button type="submit" class="btn-primary" id="slot-submit-btn">＋ Tijdslot opslaan</button>
+                    </div>
+                  </form>
+
+                  <hr class="card-divider">
+
+                  <div class="slot-list">
+                    <h3>Bestaande tijdstippen op <span data-selected-date-short>–</span></h3>
+                    <p class="helper">
+                      Hier zie je alle open tijdstippen voor de gekozen dag. Zodra een tijdslot geboekt is,
+                      wordt het gemarkeerd en kun je het niet meer aanpassen.
+                    </p>
+                    <div class="empty-state" id="slot-empty">
+                      <p><strong>Nog geen tijdstippen voor deze dag.</strong></p>
+                      <p>Voeg hierboven een eerste vrij moment toe.</p>
+                    </div>
+                    <div id="slot-list"></div>
+                  </div>
+                </section>
+              </div>
+            </section>
+
+            <section class="dash-panel" id="panel-website">
+              <header class="panel-head">
+                <h1>Website</h1>
+                <p class="panel-intro">Bouw of pas jouw Vrijeplek-pagina aan. Dit is wat klanten zien wanneer ze jouw vrije plek openen.</p>
+              </header>
+
+              <section class="card card-soft">
+                <h2 class="card-title">AI websitebuilder</h2>
+                <p class="card-subtitle">
+                  Laat Vrijeplek automatisch een stijlvolle pagina voor je ontwerpen. Jij kiest foto’s, kleuren en teksten – AI doet de rest.
+                </p>
+
+                <button type="button" class="btn-primary" onclick="window.location.href='/builder.html'">Open de websitebuilder</button>
+
+                <hr class="card-divider">
+
+                <h3>Link naar jouw Vrijeplek</h3>
+                <p class="helper">De publieke link naar jouw pagina verschijnt hier zodra jouw profiel compleet is.</p>
+                <p class="example">Voorbeeld: https://vrijeplek.be/kapper-janssens</p>
+
+                <div id="public-url"></div>
+              </section>
+            </section>
+
+            <section class="dash-panel" id="panel-flexijobs">
+              <header class="panel-head">
+                <h1>Flexijobs</h1>
+                <p class="panel-intro">Schrijf een vacature voor een flexi of extra hulp in jouw zaak.</p>
+              </header>
+
+              <section class="card card-soft">
+                <h2 class="card-title">Nieuwe flexijob</h2>
+                <p class="card-subtitle">Vul de gegevens hieronder in. We tonen enkel de relevante info aan kandidaten.</p>
+
+                <form id="flexjob-form">
+                  <div class="field">
+                    <label for="flex-title">Functie / titel</label>
+                    <input id="flex-title" type="text" placeholder="bv. Flexi medewerker bediening (avond)">
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-sector">Sector</label>
+                      <select id="flex-sector">
+                        <option value="">Kies sector…</option>
+                        <option value="horeca">Horeca</option>
+                        <option value="wellness">Wellness</option>
+                        <option value="zorg">Gezondheid</option>
+                        <option value="events">Events</option>
+                        <option value="huishoudhulp">Huishoudhulp</option>
+                        <option value="ramenwasser">Ramenwasser</option>
+                        <option value="dieren">Dieren</option>
+                        <option value="bouw">Bouw &amp; renovatie</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="flex-location">Locatie</label>
+                      <input id="flex-location" type="text" placeholder="Stad of regio">
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-hours">Uren / momenten</label>
+                      <input id="flex-hours" type="text" placeholder="bv. Vrijdag- en zaterdagavond, 18u–23u">
+                    </div>
+                    <div class="field">
+                      <label for="flex-pay">Verloning (optioneel)</label>
+                      <input id="flex-pay" type="text" placeholder="bv. Volgens barema, maaltijdcheques…">
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field">
+                      <label for="flex-contact-name">Contactpersoon</label>
+                      <input id="flex-contact-name" type="text" placeholder="Naam contactpersoon">
+                    </div>
+                    <div class="field">
+                      <label for="flex-contact-email">E-mail</label>
+                      <input id="flex-contact-email" type="email" placeholder="mail@voorbeeld.be">
+                    </div>
+                    <div class="field">
+                      <label for="flex-contact-phone">Telefoon / GSM</label>
+                      <input id="flex-contact-phone" type="tel" placeholder="GSM-nummer voor kandidaten">
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="flex-description">Omschrijving</label>
+                    <textarea id="flex-description" rows="4" placeholder="Vertel kort wat je zoekt..."></textarea>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">Vacature publiceren</button>
+                  </div>
+                </form>
+
+                <p class="helper" id="flexjob-status" style="margin-top:.75rem;"></p>
+              </section>
+            </section>
+
+            <section class="dash-panel" id="panel-instellingen">
+              <header class="panel-head">
+                <h1>Instellingen &amp; facturatie</h1>
+                <p class="panel-intro">Jouw bedrijfsgegevens voor facturen van Vrijeplek + optioneel voorschot.</p>
+              </header>
+
+              <section class="card card-soft">
+                <p class="badge-warning" id="settings-status">Gegevens nog niet opgeslagen</p>
+
+                <form id="settings-form" class="settings-form">
+                  <fieldset class="settings-group">
+                    <legend>Bedrijf</legend>
+
+                    <div class="field">
+                      <label for="company-name">Bedrijfsnaam</label>
+                      <input id="company-name" name="company_name" type="text" autocomplete="organization">
+                    </div>
+
+                    <div class="field">
+                      <label for="contact-name">Naam contactpersoon</label>
+                      <input id="contact-name" name="contact_name" type="text">
+                    </div>
+
+                    <div class="field-group">
+                      <div class="field">
+                        <label for="business-street">Straat &amp; nr</label>
+                        <input id="business-street" name="business_street" type="text" placeholder="Stationsstraat 12">
+                      </div>
+                      <div class="field">
+                        <label for="business-postcode">Postcode</label>
+                        <input id="business-postcode" name="business_postcode" type="text" placeholder="1000">
+                      </div>
+                      <div class="field">
+                        <label for="business-city">Gemeente / stad</label>
+                        <input id="business-city" name="business_city" type="text" placeholder="Brussel">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label for="billing-email">E-mailadres voor facturen</label>
+                      <input id="billing-email" name="billing_email" type="email" autocomplete="email">
+                    </div>
+                    <div class="field">
+                      <label for="phone">Telefoon / GSM</label>
+                      <input id="phone" name="phone" type="tel" autocomplete="tel">
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="settings-group">
+                    <legend>Facturatie Vrijeplek-abonnement</legend>
+                    <div class="field">
+                      <label for="vat-number">Btw-nummer</label>
+                      <input id="vat-number" name="vat_number" type="text" placeholder="BE0…">
+                    </div>
+                    <div class="field">
+                      <label for="invoice-note">Standaard factuurnoot</label>
+                      <textarea id="invoice-note" name="invoice_note" rows="2" placeholder="Eventuele interne referentie..."></textarea>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="settings-group">
+                    <legend>Voorschot bij boeking (optioneel)</legend>
+
+                    <p class="helper">
+                      Dit gaat over het <strong>voorschot dat jouw klant rechtstreeks aan jouw bedrijf betaalt</strong>.
+                      Vrijeplek factureert alleen jouw abonnement.
+                    </p>
+
+                    <label class="switch">
+                      <input type="checkbox" id="deposit-enabled" name="deposit_enabled">
+                      <span class="switch-slider"></span>
+                      <span class="switch-label">Voorschot vragen bij elke online boeking</span>
+                    </label>
+
+                    <div class="deposit-settings" data-deposit-block>
+                      <div class="field">
+                        <label for="iban">IBAN rekeningnummer</label>
+                        <input id="iban" name="iban" type="text" placeholder="BE00 0000 0000 0000">
+                      </div>
+                      <div class="field">
+                        <label for="bic">BIC (optioneel)</label>
+                        <input id="bic" name="bic" type="text" placeholder="GKCCBEBB">
+                      </div>
+
+                      <div class="field">
+                        <label for="deposit-amount-select">Voorschotbedrag (optioneel)</label>
+
+                        <select id="deposit-amount-select">
+                          <option value="">Kies bedrag…</option>
+                          <option value="15">€15</option>
+                          <option value="25">€25</option>
+                          <option value="50">€50</option>
+                          <option value="custom">Ander bedrag…</option>
+                        </select>
+
+                        <div class="input-with-prefix" id="deposit-amount-custom-wrap" style="display:none; margin-top:.5rem;">
+                          <span>€</span>
+                          <input id="deposit-amount-custom" type="number" min="0" step="1" placeholder="Ander bedrag">
+                        </div>
+
+                        <p class="helper" style="margin-top:.4rem;">
+                          Leeg laten mag als je enkel per tijdslot werkt. We sturen dan 0 door (DB-safe).
+                        </p>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="settings-group">
+                    <legend>Reviews &amp; locatie</legend>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="google-review-enabled" name="google_review_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Google review tonen</span>
+                      </label>
+                    </div>
+
+                    <div class="field" id="google-review-field" style="display:none;">
+                      <label for="google-review-url">Google review link</label>
+                      <input id="google-review-url" name="google_review_url" type="text" placeholder="Plak hier je Google review link of tekst">
+                    </div>
+
+                    <div class="field">
+                      <label class="switch">
+                        <input type="checkbox" id="share-location-enabled" name="share_location_enabled">
+                        <span class="switch-slider"></span>
+                        <span class="switch-label">Toon je locatie met een speld op de kaart</span>
+                      </label>
+                      <p class="helper">We gebruiken het adres dat aan je account gekoppeld is.</p>
+                    </div>
+                  </fieldset>
+
+                  <fieldset class="settings-group settings-group-muted">
+                    <legend>Vrijeplek facturatiegegevens</legend>
+                    <p class="helper">Dit zijn de gegevens van Vrijeplek die op jouw abonnement-factuur verschijnen:</p>
+                    <p class="example">
+                      Vrijeplek.be<br>
+                      Breeerweg 15A<br>
+                      3665 As<br>
+                      BTW: BE0742.671.986
+                    </p>
+
+                    <div class="field">
+                      <label for="extra-footer">Extra info onderaan factuur (optioneel)</label>
+                      <textarea id="extra-footer" name="extra_footer" rows="2" placeholder="Bv. ‘Betaling binnen 14 dagen...’"></textarea>
+                    </div>
+                  </fieldset>
+
+                  <p class="helper">
+                    Door op <strong>Instellingen opslaan</strong> te klikken, gebruik je deze gegevens voor facturen en bevestigingsmails.
+                  </p>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">Instellingen opslaan</button>
+                  </div>
+                </form>
+              </section>
+            </section>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© <span id="year-span"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
+        <span><a href="/voorwaarden.html">Algemene voorwaarden</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <div id="vp-toast" class="toast" role="status" aria-live="polite" aria-atomic="true" style="display:none;">
+    <div class="toast-icon">✓</div>
+    <div class="toast-text"></div>
+  </div>
+
+  <script src="/js/config.js?v=2"></script>
+ <script src="/js/dashboard.js?v=2"></script>
+</body>
+</html>

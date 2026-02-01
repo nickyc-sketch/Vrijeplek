@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waarom Vrijeplek — Vul je agenda zonder commissie</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=ocean3">
+
+  <style>
+    :root{
+      --o1:#1a66ff; --o2:#0056ff; --ink:#0a2a4a; --muted:#3a4b6a;
+      --glass-b: rgba(26,102,255,.18); --glass: rgba(255,255,255,.7);
+      --line: rgba(26,102,255,.25); --danger:#e23b3b; --ok:#0fa958;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(120% 140% at 0% 0%, #003b84 0, transparent 60%),
+        radial-gradient(120% 140% at 100% 0%, #00a0ff 0, transparent 55%),
+        radial-gradient(160% 160% at 50% 120%, #021428 0, #020617 55%);
+      background-attachment:fixed;
+    }
+
+    .site{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(26px);
+      background:linear-gradient(180deg,rgba(2,6,23,.92),rgba(2,6,23,.7),rgba(2,6,23,0));
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .header-inner{
+      max-width:1120px;
+      margin:0 auto;
+      padding:.9rem 1.5rem .8rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1.25rem;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      text-decoration:none;
+    }
+    .header-left{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+    }
+    .btn-home{
+      border-radius:999px;
+      padding:.28rem .7rem;
+      font-size:.78rem;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.6);
+      color:rgba(226,232,240,.9);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      backdrop-filter:blur(10px);
+    }
+    .btn-home:hover{
+      background:rgba(15,23,42,.9);
+      border-color:rgba(191,219,254,.9);
+      transform:translateY(-1px);
+    }
+    .brand-mark{
+      width:32px; height:32px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 20%, #fff 0, #b3e0ff 18%, transparent 40%),
+                 radial-gradient(circle at 80% 80%, #0f5bff 0, #001d5c 55%);
+      box-shadow:0 0 0 1px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      font-weight:700;
+      color:#fff;
+    }
+    .brand-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand-wordmark span:first-child{
+      font-weight:700;
+      letter-spacing:.02em;
+      font-size:1.05rem;
+      color:#f9fafb;
+    }
+    .brand-wordmark span:last-child{
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(226,232,240,.7);
+    }
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .chip-pill{
+      font-size:.72rem;
+      padding:.2rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      color:rgba(226,232,240,.7);
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+    }
+    .chip-dot{
+      width:8px; height:8px;
+      border-radius:999px;
+      background:radial-gradient(circle at 50% 50%, #4ade80 0,#22c55e 50%,#166534 100%);
+      box-shadow:0 0 0 4px rgba(34,197,94,.2);
+    }
+    .btn-head{
+      border-radius:999px;
+      padding:.4rem .9rem;
+      font-size:.82rem;
+      border:1px solid rgba(129,140,248,.7);
+      background:rgba(15,23,42,.4);
+      color:#e5edff;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      backdrop-filter:blur(10px);
+      text-decoration:none;
+    }
+
+    .site-main{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:1.4rem 1.2rem 2.2rem;
+    }
+    .why-shell{
+      width:100%;
+      max-width:1120px;
+      display:flex;
+      flex-direction:column;
+      gap:1.25rem;
+    }
+
+    .card{
+      background:rgba(15,23,42,.84);
+      border-radius:1.25rem;
+      padding:1.25rem 1.4rem 1.35rem;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 22px 60px rgba(15,23,42,.9);
+      color:#e5e7eb;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 0 0,rgba(59,130,246,.12),transparent 55%),
+        radial-gradient(circle at 100% 0,rgba(56,189,248,.12),transparent 50%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .card > *{position:relative; z-index:1;}
+    .card-soft{
+      background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(15,23,42,.92));
+    }
+    .card-glass{
+      background:linear-gradient(135deg,rgba(37,99,235,.96),rgba(8,47,107,.96));
+      border-color:rgba(191,219,254,.55);
+      color:#f9fafb;
+    }
+
+    .card-title{
+      font-size:1.35rem;
+      margin:0 0 .4rem;
+      color:#e5edff;
+    }
+    .card-subtitle{
+      margin:0 0 1rem;
+      font-size:.9rem;
+      color:rgba(191,219,254,.9);
+    }
+
+    .btn,
+    .btn-primary,
+    .btn-ghost{
+      border-radius:999px;
+      padding:.48rem 1.05rem;
+      font-size:.86rem;
+      border:1px solid transparent;
+      cursor:pointer;
+      font-weight:500;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      background:transparent;
+      text-decoration:none;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--o1),var(--o2));
+      color:#f9fafb;
+      border:none;
+      box-shadow:0 14px 40px rgba(37,99,235,.55);
+    }
+    .btn-primary:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
+    .btn-ghost{
+      background:rgba(15,23,42,.2);
+      border-color:rgba(148,163,184,.7);
+      color:rgba(226,232,240,.9);
+    }
+    .btn-ghost:hover{
+      background:rgba(15,23,42,.4);
+    }
+
+    .why-hero-top{
+      display:flex;
+      flex-direction:column;
+      gap:.5rem;
+      margin-bottom:1rem;
+    }
+    .why-eyebrow{
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:rgba(191,219,254,.9);
+    }
+    .why-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.35rem;
+      font-size:.78rem;
+      color:rgba(191,219,254,.9);
+    }
+    .why-badge{
+      padding:.2rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.7);
+    }
+
+    .why-hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.6rem;
+      margin-top:.6rem;
+    }
+    .why-hero-meta{
+      margin-top:.6rem;
+      font-size:.8rem;
+      color:rgba(148,163,184,.95);
+    }
+
+    .why-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:1rem;
+      margin-top:.8rem;
+      font-size:.86rem;
+    }
+    @media (max-width:960px){
+      .why-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    .why-item-title{
+      font-weight:600;
+      margin-bottom:.2rem;
+      color:#e5edff;
+    }
+    .why-item-text{
+      color:rgba(191,219,254,.9);
+      line-height:1.5;
+    }
+
+    .why-split{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:1rem;
+    }
+    @media (max-width:960px){
+      .why-split{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .helper{
+      font-size:.8rem;
+      color:rgba(191,219,254,.9);
+      line-height:1.5;
+    }
+
+    .why-list{
+      margin:.4rem 0 0 1.2rem;
+      padding:0;
+      font-size:.86rem;
+      color:rgba(191,219,254,.92);
+    }
+    .why-list li{margin:.15rem 0;}
+
+    .why-pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      margin-top:.5rem;
+      font-size:.78rem;
+    }
+    .why-pill{
+      padding:.25rem .65rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      color:rgba(226,232,240,.9);
+      background:rgba(15,23,42,.7);
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:.25rem;
+      margin-bottom:.6rem;
+    }
+    .field label{
+      font-size:.8rem;
+      color:rgba(226,232,240,.9);
+    }
+    .field input,
+    .field select{
+      border-radius:.75rem;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.85);
+      color:#e5e7eb;
+      padding:.45rem .7rem;
+      font-size:.86rem;
+      outline:none;
+    }
+    .field input::placeholder{
+      color:rgba(148,163,184,.8);
+      font-size:.8rem;
+    }
+    .field input:focus,
+    .field select:focus{
+      border-color:rgba(59,130,246,.9);
+      box-shadow:0 0 0 1px rgba(59,130,246,.6);
+      background:rgba(15,23,42,.96);
+    }
+    .why-ribbon{
+      margin-top:.4rem;
+      padding:.6rem .75rem;
+      border-radius:.9rem;
+      border:1px dashed rgba(191,219,254,.7);
+      background:rgba(15,23,42,.9);
+      font-size:.84rem;
+      color:#e5edff;
+    }
+    .why-ribbon small{
+      display:block;
+      margin-top:.2rem;
+      font-size:.78rem;
+      color:rgba(191,219,254,.9);
+    }
+
+    .why-faq{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:1rem;
+      font-size:.86rem;
+    }
+    @media (max-width:960px){
+      .why-faq{
+        grid-template-columns:1fr;
+      }
+    }
+    .faq-item+ .faq-item{margin-top:.25rem;}
+    .faq-q{
+      font-weight:600;
+      color:#e5edff;
+      margin-bottom:.15rem;
+    }
+    .faq-a{
+      color:rgba(191,219,254,.9);
+    }
+
+    .site-footer{
+      padding:1rem 1.5rem 1.4rem;
+      border-top:1px solid rgba(15,23,42,.8);
+      background:radial-gradient(circle at 50% -50%,rgba(59,130,246,.35),transparent 60%),
+                 rgba(2,6,23,.96);
+    }
+    .footer-inner{
+      max-width:1120px;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:.75rem;
+      color:rgba(148,163,184,.9);
+      font-size:.78rem;
+    }
+    .footer-inner a{
+      color:rgba(191,219,254,.95);
+      text-decoration:none;
+    }
+
+    @media (max-width:640px){
+      .header-inner{padding:.8rem 1rem .7rem;}
+      .site-main{padding:1.1rem .9rem 1.6rem;}
+      .why-shell{gap:1rem;}
+    }
+
+    /* Modal in Vrijeplek-stijl */
+    .plan-modal-backdrop{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:1rem;
+      background:rgba(15,23,42,.92);
+      z-index:60;
+    }
+    .plan-modal-backdrop.show{
+      display:flex;
+    }
+    .plan-modal{
+      width:100%;
+      max-width:520px;
+      border-radius:1.1rem;
+      background:linear-gradient(135deg,rgba(15,23,42,.98),rgba(15,23,42,.96));
+      border:1px solid rgba(148,163,184,.7);
+      box-shadow:0 28px 80px rgba(0,0,0,.9);
+      padding:1.1rem 1.25rem 1.2rem;
+      color:#e5e7eb;
+      position:relative;
+    }
+    .plan-modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.75rem;
+      margin-bottom:.6rem;
+    }
+    .plan-modal-title{
+      margin:0;
+      font-size:1.1rem;
+      color:#e5edff;
+    }
+    .plan-modal-sub{
+      margin:.1rem 0 .4rem;
+      font-size:.86rem;
+      color:rgba(191,219,254,.9);
+    }
+    .plan-badge{
+      display:inline-flex;
+      padding:.2rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      font-size:.78rem;
+      color:rgba(226,232,240,.9);
+      background:rgba(15,23,42,.7);
+    }
+    .plan-modal-close{
+      border:none;
+      background:transparent;
+      color:rgba(148,163,184,.9);
+      font-size:1rem;
+      cursor:pointer;
+    }
+    .plan-form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.6rem;
+      margin-top:.3rem;
+    }
+    @media (max-width:520px){
+      .plan-form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+    .terms-row{
+      margin-top:.25rem;
+      font-size:.78rem;
+      color:rgba(226,232,240,.9);
+      display:flex;
+      gap:.5rem;
+      align-items:flex-start;
+    }
+    .terms-row input{
+      margin-top:.12rem;
+      accent-color:#1d4ed8;
+    }
+    .terms-row a{
+      color:#60a5fa;
+      text-decoration:underline;
+    }
+    .plan-modal-footer{
+      margin-top:.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:.3rem;
+    }
+    .plan-btn-primary{
+      width:100%;
+      justify-content:center;
+    }
+    .plan-msg{
+      min-height:1rem;
+      font-size:.8rem;
+      text-align:left;
+    }
+    .plan-msg.error{color:var(--danger);}
+    .plan-msg.ok{color:var(--ok);}
+    .plan-note-small{
+      font-size:.78rem;
+      color:rgba(148,163,184,.95);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site">
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button class="btn-home" type="button" onclick="window.location.href='/'">
+            ⟵ Home
+          </button>
+          <a href="/" class="brand" aria-label="Terug naar Vrijeplek home">
+            <div class="brand-mark">V</div>
+            <div class="brand-wordmark">
+              <span>vrijeplek</span>
+              <span>last minute afspreken</span>
+            </div>
+          </a>
+        </div>
+        <div class="header-actions">
+          <div class="chip-pill">
+            <span class="chip-dot"></span>
+            <span>Voor zelfstandigen & kleine teams</span>
+          </div>
+          <a class="btn-head" href="/waarom.html">
+            Waarom Vrijeplek?
+          </a>
+          <a class="btn-head" href="/login.html">
+            Login
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <div class="why-shell">
+
+        <!-- HERO KAART -->
+        <section class="card card-soft">
+          <div class="why-hero-top">
+            <div class="why-eyebrow">Waarom Vrijeplek bestaat</div>
+            <h1 class="card-title">Omdat lege uren je meer kosten dan één abonnement.</h1>
+            <p class="card-subtitle">
+              Je agenda is niet leeg, maar er zitten altijd gaten in. Die blokken brengen niets op, terwijl je er wél voor
+              beschikbaar bent. Vrijeplek maakt net die momenten zichtbaar voor mensen in jouw buurt die nú willen boeken.
+            </p>
+          </div>
+
+          <div class="why-badges">
+            <span class="why-badge">Geen commissie op boekingen</span>
+            <span class="why-badge">Jij bevestigt elke aanvraag</span>
+            <span class="why-badge">Werkt naast je huidige manier van plannen</span>
+          </div>
+
+          <div class="why-hero-actions">
+            <button class="btn-primary" type="button" id="cta-monthly-top">
+              Start met maandabonnement — €19,95
+            </button>
+            <button class="btn-ghost" type="button" id="cta-yearly-top">
+              Jaarplan — €180 (3 maanden gratis)
+            </button>
+          </div>
+
+          <p class="why-hero-meta">
+            Eén extra afspraak per maand en je zit positief. Alles daarboven is pure marge.
+          </p>
+        </section>
+
+        <!-- WAAROM BLOKKEN -->
+        <section class="card card-soft">
+          <h2 class="card-title">Wat Vrijeplek anders doet dan de rest.</h2>
+          <p class="card-subtitle">
+            Je hoeft geen volledige online agenda open te gooien. Je gebruikt Vrijeplek alleen voor de momenten die nu leeg zijn.
+          </p>
+
+          <div class="why-grid">
+            <div>
+              <div class="why-item-title">1. Alleen de gaten die jij kiest</div>
+              <p class="why-item-text">
+                Geen “alles-of-niets” kalender. Je publiceert enkel de tijdsblokken die anders toch leeg blijven. Zo komt je
+                vaste planning niet in de knoei, en bouw je rustig extra omzet op.
+              </p>
+            </div>
+            <div>
+              <div class="why-item-title">2. Bereik mensen in boekmodus</div>
+              <p class="why-item-text">
+                Social media is goed voor bereik. Vrijeplek is er voor het moment dat iemand denkt: “Ik wil vandaag of morgen
+                nog ergens terecht” en meteen boekt.
+              </p>
+            </div>
+            <div>
+              <div class="why-item-title">3. Abonnement, geen commissie</div>
+              <p class="why-item-text">
+                Geen procenten op elke afspraak, geen servicekosten achteraf. Je betaalt een vast bedrag per maand of per jaar.
+                Wat binnenkomt via jouw vrije plekken is volledig voor jou.
+              </p>
+            </div>
+          </div>
+
+          <div class="why-pill-row">
+            <span class="why-pill">Therapeuten & coaches</span>
+            <span class="why-pill">Praktijkruimtes & gedeelde werkplekken</span>
+            <span class="why-pill">Creatieve studio’s & ateliers</span>
+            <span class="why-pill">Workshops & lessen</span>
+          </div>
+        </section>
+
+        <!-- ROI + VERGELIJKING -->
+        <section class="why-split">
+          <section class="card card-soft">
+            <h2 class="card-title">Wat kost één leeg uur per week je eigenlijk?</h2>
+            <p class="helper">
+              Eén blok dat telkens leeg blijft, voelt niet dramatisch. Maar op jaarbasis tikt het aan.
+            </p>
+            <ul class="why-list">
+              <li>1 leeg uur per week × €60 = <strong>€240 per maand</strong></li>
+              <li>Op jaarbasis: <strong>€2.880</strong> die gewoon wegloopt</li>
+              <li>Vrijeplek kost <strong>€19,95/mnd</strong> of <strong>€180/jaar</strong> (3 maanden gratis)</li>
+            </ul>
+            <p class="helper" style="margin-top:.6rem;">
+              Met één extra afspraak per maand zit je al positief. Gebruik Vrijeplek enkel voor die gaten, en laat de rest
+              van je werking zoals ze is.
+            </p>
+          </section>
+
+          <section class="card card-soft">
+            <h2 class="card-title">Snel uitrekenen voor jouw praktijk.</h2>
+            <p class="helper">Speel even met de cijfers hieronder.</p>
+
+            <div class="field">
+              <label for="val">Gemiddelde waarde per afspraak (€)</label>
+              <input id="val" type="number" min="1" value="60">
+            </div>
+            <div class="field">
+              <label for="amt">Extra afspraken per maand via Vrijeplek</label>
+              <input id="amt" type="number" min="0" value="2">
+            </div>
+
+            <div class="why-ribbon" id="roi">
+              Verwachte extra omzet: €120 / mnd • ROI: 502%
+              <small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>
+            </div>
+          </section>
+        </section>
+
+        <!-- FAQ / TWIJFELS -->
+        <section class="card card-soft">
+          <h2 class="card-title">Twijfels die we vaak horen.</h2>
+          <p class="card-subtitle">
+            En hoe Vrijeplek daar eerlijk op antwoordt.
+          </p>
+
+          <div class="why-faq">
+            <div class="faq-column">
+              <div class="faq-item">
+                <div class="faq-q">“Ik krijg al klanten via Instagram, is dit niet dubbel?”</div>
+                <div class="faq-a">
+                  Instagram is top voor zichtbaarheid en vertrouwen. Vrijeplek sluit daarop aan, maar toont vooral
+                  <em>beschikbaarheid</em> aan mensen die meteen een afspraak willen prikken.
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">“Moet ik alles via Vrijeplek laten lopen?”</div>
+                <div class="faq-a">
+                  Nee. Vrijeplek is net bedoeld als extra laag bovenop wat je nu al doet. Gebruik het voor vrije plekken
+                  en laat je bestaande manier van plannen gewoon bestaan.
+                </div>
+              </div>
+            </div>
+            <div class="faq-column">
+              <div class="faq-item">
+                <div class="faq-q">“€19,95/maand — wat als het niets oplevert?”</div>
+                <div class="faq-a">
+                  Blijft het stil, dan stop je. Het maandplan is maandelijks opzegbaar. Het jaarplan kies je als je merkt dat
+                  je structureel gaten wil vullen en er echt mee aan de slag gaat.
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">“Is dit GDPR-proof?”</div>
+                <div class="faq-a">
+                  Vrijeplek is gebouwd met privacy in het achterhoofd. Gegevens worden alleen gebruikt in functie van de
+                  reservatie en niet doorverkocht.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLOT CTA -->
+        <section class="card card-glass">
+          <h2 class="card-title">Klaar om lege uren om te draaien in extra omzet?</h2>
+          <p class="card-subtitle">
+            Start klein met enkele vrije plekken in de week. Zie wat het doet, schaal rustig op. Jij houdt de controle.
+          </p>
+
+          <div class="why-hero-actions">
+            <button class="btn-primary" type="button" id="cta-monthly-bottom">
+              Start met maandabonnement
+            </button>
+            <button class="btn-ghost" type="button" id="cta-yearly-bottom">
+              Jaarplan — €180 (3 maanden gratis)
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© <span id="year-span"></span> Vrijeplek.be — Last minute afspraken, netjes geregeld.</span>
+        <span><a href="/voorwaarden.html">Algemene voorwaarden</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL: account + gegevens vóór betaling -->
+  <div class="plan-modal-backdrop" id="plan-modal-backdrop" aria-hidden="true">
+    <div class="plan-modal" role="dialog" aria-modal="true" aria-labelledby="plan-modal-title">
+      <div class="plan-modal-header">
+        <div>
+          <span class="plan-badge" id="plan-badge">Maandabonnement</span>
+          <h2 class="plan-modal-title" id="plan-modal-title">Account aanmaken voor je abonnement</h2>
+          <p class="plan-modal-sub" id="plan-modal-sub">
+            Vul je gegevens in. Daarna ga je naar de betaalpagina. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.
+          </p>
+        </div>
+        <button class="plan-modal-close" type="button" id="plan-modal-close" aria-label="Sluiten">✕</button>
+      </div>
+
+      <form id="plan-form" novalidate>
+        <input type="hidden" id="plan-field" value="monthly">
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-name">Naam</label>
+            <input id="pf-name" type="text" required placeholder="Volledige naam">
+          </div>
+          <div class="field">
+            <label for="pf-company">Bedrijfsnaam</label>
+            <input id="pf-company" type="text" placeholder="Naam van je zaak">
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-email">E-mail</label>
+            <input id="pf-email" type="email" required placeholder="naam@voorbeeld.be">
+          </div>
+          <div class="field">
+            <label for="pf-phone">Telefoon</label>
+            <input id="pf-phone" type="tel" placeholder="+32 ...">
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-password">Wachtwoord</label>
+            <input id="pf-password" type="password" required minlength="6" placeholder="Min. 6 tekens">
+          </div>
+          <div class="field">
+            <label for="pf-password2">Herhaal wachtwoord</label>
+            <input id="pf-password2" type="password" required minlength="6" placeholder="Nogmaals wachtwoord">
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-btw">BTW-nummer</label>
+            <input id="pf-btw" type="text" required placeholder="BE0123456789">
+          </div>
+          <div class="field">
+            <label for="pf-cat">Categorie</label>
+            <select id="pf-cat">
+              <option value="">Kies</option>
+              <option value="horeca">Horeca</option>
+              <option value="wellness">Wellness</option>
+              <option value="zorg">Gezondheid</option>
+              <option value="events">Events</option>
+              <option value="huishoudhulp">Huishoudhulp</option>
+              <option value="ramenwasser">Ramenwasser</option>
+              <option value="dieren">Dieren</option>
+              <option value="bouw">Bouw &amp; renovatie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="plan-form-grid">
+          <div class="field">
+            <label for="pf-straat">Straat + nr.</label>
+            <input id="pf-straat" type="text" placeholder="Bergstraat 1">
+          </div>
+          <div class="field">
+            <label for="pf-postcode">Postcode & gemeente</label>
+            <input id="pf-postcode" type="text" placeholder="3500 Hasselt">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pf-peppol">Peppol-ID (voor facturatie)</label>
+          <input id="pf-peppol" type="text" placeholder="bv. 0208:BE0123456789">
+        </div>
+
+        <div class="terms-row">
+          <input type="checkbox" id="pf-terms" required>
+          <label for="pf-terms">
+            Ik ga akkoord met de <a href="/voorwaarden.html" target="_blank" rel="noopener">algemene voorwaarden</a>.
+          </label>
+        </div>
+
+        <div class="plan-modal-footer">
+          <button type="submit" class="btn-primary plan-btn-primary" id="plan-submit">
+            Verder naar betalen
+          </button>
+          <div class="plan-msg" id="plan-msg"></div>
+          <p class="plan-note-small">
+            Je betaalt pas nadat je gegevens zijn bevestigd. BTW-nummer moet geldig zijn voor we de betaling starten.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Config met SUPABASE_URL / ANON_KEY -->
+  <script src="/js/config.js"></script>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const yearSpan = document.getElementById('year-span');
+    if (yearSpan) {
+      yearSpan.textContent = new Date().getFullYear();
+    }
+
+    const val = document.getElementById('val');
+    const amt = document.getElementById('amt');
+    const roi = document.getElementById('roi');
+
+    function fmt(n){
+      return (Math.round(n*100)/100).toLocaleString('nl-BE');
+    }
+
+    function calc(){
+      if (!val || !amt || !roi) return;
+      const v = Math.max(0, Number(val.value||0));
+      const a = Math.max(0, Number(amt.value||0));
+      const extra = v * a;
+      const cost = 19.95;
+      const roiPct = extra>0 ? ((extra - cost)/cost)*100 : -100;
+      roi.innerHTML = `Verwachte extra omzet: €${fmt(extra)} / mnd • ROI: ${fmt(roiPct)}%`
+        + '<small>Kost: €19,95/mnd — geen commissie, geen verrassingen.</small>';
+    }
+    if (val && amt) {
+      val.addEventListener('input', calc);
+      amt.addEventListener('input', calc);
+      calc();
+    }
+
+    function normalizeBEVat(btw) {
+      return (btw || '').replace(/\s+/g, '').toUpperCase();
+    }
+
+    // Echte BE-BTW check met controlegetal
+    function isValidBEVat(btw) {
+      const norm = normalizeBEVat(btw);
+      if (!norm.startsWith('BE')) return false;
+      const digits = norm.slice(2).replace(/\D/g,'');
+      if (digits.length !== 10) return false;
+      const base = parseInt(digits.slice(0,8),10);
+      const check = parseInt(digits.slice(8),10);
+      if (isNaN(base) || isNaN(check)) return false;
+      const calcCheck = 97 - (base % 97);
+      return check === calcCheck;
+    }
+
+    const PEPPOL_SCHEME = '0208';
+
+    function suggestPeppolIdFromVat(btw) {
+      const norm = normalizeBEVat(btw);
+      const digits = norm.slice(2).replace(/\D/g,'');
+      if (digits.length !== 10) return '';
+      return `${PEPPOL_SCHEME}:BE${digits}`;
+    }
+
+    function createSupabaseClient(){
+      const SUPABASE_URL =
+        window.VRIJEPLEK?.SUPABASE_URL ||
+        window.ENV?.SUPABASE_URL ||
+        '';
+      const SUPABASE_ANON_KEY =
+        window.VRIJEPLEK?.SUPABASE_ANON_KEY ||
+        window.ENV?.SUPABASE_ANON_KEY ||
+        '';
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        console.error('Supabase credentials ontbreken op waarom-pagina.');
+        return null;
+      }
+      return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+      });
+    }
+
+    async function initSupabase(){
+      return new Promise((resolve)=>{
+        if (window.VRIJEPLEK?.SUPABASE_URL && window.VRIJEPLEK?.SUPABASE_ANON_KEY) {
+          resolve(createSupabaseClient());
+          return;
+        }
+        window.addEventListener('vrijeplek-config-loaded', () => {
+          resolve(createSupabaseClient());
+        }, { once:true });
+        setTimeout(()=>resolve(createSupabaseClient()), 3000);
+      });
+    }
+
+    const modalBackdrop = document.getElementById('plan-modal-backdrop');
+    const modalClose    = document.getElementById('plan-modal-close');
+    const planBadge     = document.getElementById('plan-badge');
+    const planTitle     = document.getElementById('plan-modal-title');
+    const planSub       = document.getElementById('plan-modal-sub');
+    const planField     = document.getElementById('plan-field');
+    const planForm      = document.getElementById('plan-form');
+    const planMsg       = document.getElementById('plan-msg');
+    const planSubmit    = document.getElementById('plan-submit');
+
+    const ctaMonthlyTop    = document.getElementById('cta-monthly-top');
+    const ctaYearlyTop     = document.getElementById('cta-yearly-top');
+    const ctaMonthlyBottom = document.getElementById('cta-monthly-bottom');
+    const ctaYearlyBottom  = document.getElementById('cta-yearly-bottom');
+
+    function openPlanModal(plan){
+      if (!modalBackdrop) return;
+      planField.value = plan === 'yearly' ? 'yearly' : 'monthly';
+
+      if (plan === 'yearly') {
+        planBadge.textContent = 'Jaarplan — €180/jaar';
+        planTitle.textContent = 'Account aanmaken voor je jaarabonnement';
+        planSub.textContent   = 'Vul je gegevens in. Daarna ga je naar de betaalpagina voor het jaarplan. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.';
+      } else {
+        planBadge.textContent = 'Maandabonnement — €19,95/mnd';
+        planTitle.textContent = 'Account aanmaken voor je maandabonnement';
+        planSub.textContent   = 'Vul je gegevens in. Daarna ga je naar de betaalpagina voor het maandplan. Je ontvangt ook een bevestigingsmail met toegang tot je dashboard.';
+      }
+
+      planMsg.textContent = '';
+      planMsg.className = 'plan-msg';
+      modalBackdrop.classList.add('show');
+      modalBackdrop.setAttribute('aria-hidden','false');
+    }
+
+    function closePlanModal(){
+      if (!modalBackdrop) return;
+      modalBackdrop.classList.remove('show');
+      modalBackdrop.setAttribute('aria-hidden','true');
+    }
+
+    if (modalClose) {
+      modalClose.addEventListener('click', closePlanModal);
+    }
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', (e)=>{
+        if (e.target === modalBackdrop) closePlanModal();
+      });
+    }
+
+    function bindCta(el, plan){
+      if (!el) return;
+      el.addEventListener('click', (e)=>{
+        e.preventDefault();
+        openPlanModal(plan);
+      });
+    }
+
+    bindCta(ctaMonthlyTop, 'monthly');
+    bindCta(ctaYearlyTop, 'yearly');
+    bindCta(ctaMonthlyBottom, 'monthly');
+    bindCta(ctaYearlyBottom, 'yearly');
+
+    planForm?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if (!planMsg || !planSubmit) return;
+
+      planMsg.textContent = '';
+      planMsg.className = 'plan-msg';
+
+      const name      = document.getElementById('pf-name').value.trim();
+      const company   = document.getElementById('pf-company').value.trim();
+      const email     = document.getElementById('pf-email').value.trim().toLowerCase();
+      const phone     = document.getElementById('pf-phone').value.trim();
+      const pass      = document.getElementById('pf-password').value.trim();
+      const pass2     = document.getElementById('pf-password2').value.trim();
+      const btwRaw    = document.getElementById('pf-btw').value.trim();
+      const cat       = document.getElementById('pf-cat').value;
+      const straat    = document.getElementById('pf-straat').value.trim();
+      const postcode  = document.getElementById('pf-postcode').value.trim();
+      const peppEl    = document.getElementById('pf-peppol');
+      const termsOK   = document.getElementById('pf-terms').checked;
+      const plan      = planField.value === 'yearly' ? 'yearly' : 'monthly';
+
+      if (!name || !email || !pass || !pass2) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Vul minstens naam, e-mail en wachtwoord in.';
+        return;
+      }
+      if (pass.length < 6) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Wachtwoord moet minstens 6 tekens lang zijn.';
+        return;
+      }
+      if (pass !== pass2) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Wachtwoorden komen niet overeen.';
+        return;
+      }
+      if (!btwRaw || !isValidBEVat(btwRaw)) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'BTW-nummer lijkt niet geldig. Controleer je Belgische BTW-nummer.';
+        return;
+      }
+      if (!termsOK) {
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Je moet akkoord gaan met de algemene voorwaarden.';
+        return;
+      }
+
+      if (peppEl && !peppEl.value.trim()) {
+        const suggested = suggestPeppolIdFromVat(btwRaw);
+        if (suggested) {
+          peppEl.value = suggested;
+        }
+      }
+
+      const normalizedBtw  = normalizeBEVat(btwRaw);
+      const peppolIdToSave = peppEl ? peppEl.value.trim() : '';
+
+      planSubmit.disabled = true;
+      planSubmit.textContent = 'Account aanmaken…';
+
+      try{
+        const supa = await initSupabase();
+        if (!supa) {
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Configuratiefout. Probeer de pagina te herladen.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        const redirectBase = window.location.origin || 'https://vrijeplek.be';
+        const { error } = await supa.auth.signUp({
+          email,
+          password: pass,
+          options:{
+            data:{
+              display_name: name,
+              bedrijf: company,
+              telefoon: phone,
+              btw: normalizedBtw,
+              peppol_id: peppolIdToSave,
+              cat: cat,
+              straat: straat,
+              postcode: postcode
+            },
+            emailRedirectTo: `${redirectBase}/bedankt.html`
+          }
+        });
+
+        if (error) {
+          planMsg.classList.add('error');
+          planMsg.textContent = error.message.includes('already')
+            ? 'Er bestaat al een account met dit e-mailadres. Log in via de login-knop.'
+            : 'Registratie mislukt: ' + error.message;
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        planMsg.classList.remove('error');
+        planMsg.classList.add('ok');
+        planMsg.textContent = 'Account aangemaakt. Bevestigingsmail verstuurd. We laden de betaalpagina…';
+        planSubmit.textContent = 'Betaalpagina laden…';
+
+        const res = await fetch('/.netlify/functions/create-checkout',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ plan })
+        });
+
+        if (!res.ok) {
+          planMsg.classList.remove('ok');
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Account is aangemaakt, maar de betaalpagina kon niet worden gestart. Probeer zo dadelijk opnieuw of contacteer ons.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+          return;
+        }
+
+        const data = await res.json().catch(()=>null);
+        if (data && data.url) {
+          window.location.href = data.url;
+        } else {
+          planMsg.classList.remove('ok');
+          planMsg.classList.add('error');
+          planMsg.textContent = 'Geen betaal-URL ontvangen. Probeer later opnieuw.';
+          planSubmit.disabled = false;
+          planSubmit.textContent = 'Verder naar betalen';
+        }
+      }catch(err){
+        console.error(err);
+        planMsg.classList.add('error');
+        planMsg.textContent = 'Er ging iets mis bij het aanmaken van je account of de betaling. Probeer later opnieuw.';
+        planSubmit.disabled = false;
+        planSubmit.textContent = 'Verder naar betalen';
+      }
+    });
+  </script>
+</body>
+</html>
