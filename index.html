@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vrijeplek – Zoek en boek</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <!-- Logo as text. Dit kan later vervangen worden door een SVG-logo -->
+      <a href="index.html" class="logo">Vrijeplek</a>
+    </div>
+  </header>
+  <main class="home">
+    <section class="hero">
+      <div class="container hero-content">
+        <h1>Vind en boek je afspraak</h1>
+        <p>Zoek naar diensten in jouw buurt en reserveer direct een tijdslot.</p>
+        <form id="search-form" class="search-form">
+          <input type="text" id="category" name="category" placeholder="Dienst of categorie" required>
+          <input type="text" id="location" name="location" placeholder="Locatie (stad of postcode)" required>
+          <input type="date" id="date" name="date" placeholder="Datum (optioneel)">
+          <button type="submit" class="btn-primary">Zoek</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Categorieënoverzicht -->
+    <section class="categories container">
+      <h2>Ontdek diensten</h2>
+      <div class="category-grid">
+        <!-- Kappers -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- Scissors icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="6" r="3"></circle>
+              <circle cx="6" cy="18" r="3"></circle>
+              <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+              <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+              <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3>Kappers</h3>
+          <p>Knip- en kapsalons bij jou in de buurt.</p>
+        </div>
+        <!-- Therapeuten -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- User/therapeut icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M4 19v-2a4 4 0 0 1 3-3.87"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h3>Therapeuten</h3>
+          <p>Gespreks- en wellnessprofessionals.</p>
+        </div>
+        <!-- Aannemers -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- House icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7"></path>
+              <path d="M9 22V12h6v10"></path>
+            </svg>
+          </div>
+          <h3>Aannemers</h3>
+          <p>Vakmannen voor renovatie en bouw.</p>
+        </div>
+        <!-- Ramenwassers -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- Window icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18"></rect>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="12" y1="3" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3>Ramenwassers</h3>
+          <p>Laat je ramen weer blinken.</p>
+        </div>
+        <!-- Schoonheid -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- Heart/beauty icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <h3>Schoonheid</h3>
+          <p>Beauty en verzorgingsdiensten.</p>
+        </div>
+        <!-- Sport & coaching -->
+        <div class="category-card">
+          <div class="category-icon">
+            <!-- Dumbbell icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="5" cy="12" r="3"></circle>
+              <circle cx="19" cy="12" r="3"></circle>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+          </div>
+          <h3>Sport &amp; coaching</h3>
+          <p>Trainers en beweegcoaches.</p>
+        </div>
+      </div>
+    </section>
+    <section id="results" class="results container">
+      <!-- Zoekresultaten worden hier weergegeven via JavaScript -->
+    </section>
+    <section class="cta container">
+      <p>Is jouw bedrijf nog niet vindbaar?</p>
+      <a href="aanmelden.html" class="btn-secondary">Jouw bedrijf hier?</a>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Vrijeplek. Alle rechten voorbehouden.</p>
+      <a href="voorwaarden.html">Algemene voorwaarden</a>
+    </div>
+  </footer>
+  <!-- Supabase client library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

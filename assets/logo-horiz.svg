@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="280" viewBox="0 0 1000 280">
+
+    <!-- Geen gradient meer; we gebruiken een vaste kleur voor de marker op basis van onze huisstijl -->
+    <defs></defs>
+    
+<g transform="translate(0,14)">
+  <!-- Marker achtergrond met nieuwe primairkleur -->
+  <circle cx="130" cy="112.0" r="72" fill="#3C5A72"/>
+  <path d="M79.6,169.6 Q130,194.79999999999998 130,245.2 Q130,194.79999999999998 180.4,169.6 Z" fill="#3C5A72"/>
+  <!-- V in wit -->
+  <path d="M104.08,112.0 L130,148.0 L155.92,112.0 L130,159.52 Z" fill="#FFFFFF" />
+</g>
+<!-- Logotekst in donkere kleur uit de huisstijl -->
+<text x="250" y="170" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="120" font-weight="800" fill="#3B1F3B">Vrijeplek</text>
+</svg>
