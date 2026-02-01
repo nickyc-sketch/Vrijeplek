@@ -1,0 +1,387 @@
+:root {
+  /* Vrijeplek – Smurfblauw palet met variatie */
+  --blue-950:#0a1b5a;     /* navy diepte (schaduwen/teksten) */
+  --blue-900:#002bff;     /* dieper smurfblauw (headings/accents) */
+  --blue-800:#1a46ff;     /* kern smurfblauw */
+  --blue-700:#0056ff;     /* helder blauw (hover/knoppen) */
+  --blue-600:#1a66ff;     /* standaard accentkleur */
+  --blue-500:#3385ff;     /* lichter voor randen */
+  --blue-300:#80b3ff;     /* zachte highlight/ring */
+  --blue-100:#e6f0ff;     /* achtergrond licht */
+  --cyan-400:#00c2ff;     /* micro-accent glow */
+
+  --text:#0a0a0a;
+  --muted:#444;
+  --white:#ffffff;
+
+  --radius:18px;
+  --shadow:0 12px 30px rgba(10,27,90,.18);      /* mooiere diepte */
+  --ring:0 0 0 3px rgba(0,86,255,.16);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { height:100%; }
+body{
+  font:16px/1.55 "Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 520px at 60% -220px, rgba(31,71,255,.10), transparent 60%),
+    linear-gradient(180deg,#f9fbff,#edf4ff 52%,#e6f0ff 100%);
+}
+
+/* CONTAINERS */
+.container{ width:min(1100px,92vw); margin-inline:auto; }
+.site{ min-height:100vh; display:flex; flex-direction:column; }
+main{ flex:1; }
+
+/* HEADER (contrasterende band, niet 1-tonig) */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:
+    linear-gradient(140deg, #132a8a 0%, var(--blue-900) 55%, var(--blue-700) 100%);
+  color:#fff;
+  backdrop-filter:saturate(140%) blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.18);
+  box-shadow:0 16px 40px rgba(9,22,90,.22);
+}
+.header-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  height:70px; padding:0 16px;
+}
+.brand-name{
+  font-weight:800; font-size:23px; color:#fff;
+}
+.brand-dot{
+  display:inline-block; width:10px; height:10px; margin-left:6px; border-radius:50%;
+  background:conic-gradient(from 200deg, var(--blue-300), var(--blue-600));
+  box-shadow:0 0 0 5px rgba(255,255,255,.14);
+}
+/* Zorg dat je logo netjes naast de naam staat */
+.brand img{ height:40px; width:auto; display:block; }
+
+/* Header knoppen – primair blauw, ghost blijft mogelijk later */
+.header-actions{ display:flex; gap:10px; align-items:center; }
+.header-actions .nav-btn{
+  padding:8px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.45);
+  background:linear-gradient(180deg, var(--blue-800), var(--blue-700));
+  color:#fff;
+  font-weight:700;
+  text-decoration:none;
+  box-shadow:0 10px 22px rgba(17,49,170,.30), 0 0 0 1px rgba(0,194,255,.22);
+  transition:filter .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.header-actions .nav-btn:hover{
+  filter:brightness(1.06);
+  box-shadow:0 14px 28px rgba(17,49,170,.36), 0 0 0 2px rgba(0,194,255,.28);
+}
+.header-actions .nav-btn:active{ transform:translateY(1px); }
+.btn-green{
+  background:linear-gradient(120deg,#16a34a,#0e9f6e);
+  color:#fff!important;
+  border:1px solid rgba(16,185,129,.25);
+  border-radius:999px;
+  padding:10px 16px;
+  font-weight:700;
+  box-shadow:0 6px 18px rgba(16,185,129,.18);
+}
+
+/* HERO */
+.hero{ padding:60px 0 40px; text-align:center; position:relative; }
+.hero::before{
+  content:""; position:absolute; inset:0 0 auto 0; height:220px; pointer-events:none;
+  background:
+    radial-gradient(700px 240px at 20% 8%, rgba(31,71,255,.16), transparent 60%),
+    radial-gradient(760px 240px at 80% 0%, rgba(0,194,255,.14), transparent 62%);
+}
+.hero h1{
+  margin-bottom:16px;
+  font-size:clamp(28px,3.5vw,44px);
+  color:#fff;           /* steekt af op header-glow */
+  text-shadow:0 1px 0 rgba(255,255,255,.25), 0 18px 40px rgba(9,22,90,.30);
+}
+
+/* SEARCH (glas + diepte, meer “touch”) */
+.search-wrap{
+  max-width:clamp(880px,92vw,1000px);
+  margin-inline:auto;
+  margin-top:10px;
+  padding:22px;
+  border-radius:20px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.86)) padding-box,
+    radial-gradient(120% 100% at 12% -10%, rgba(51,133,255,.20), transparent 52%),
+    radial-gradient(120% 100% at 88% 110%, rgba(10,27,90,.18), transparent 58%),
+    linear-gradient(180deg, rgba(51,133,255,.18), rgba(10,27,90,.14)) border-box;
+  border:1px solid rgba(51,133,255,.38);
+  box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.65);
+}
+.search{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 0.9fr 0.9fr 1fr auto;
+  gap:12px;
+  align-items:end;
+}
+.field{ display:flex; flex-direction:column; gap:4px; min-width:0; text-align:left; }
+label{ font-weight:800; font-size:13px; color:var(--blue-950); }
+.search input,.search select{
+  height:44px; padding:0 12px;
+  border:1px solid rgba(0,43,255,.25);
+  border-radius:12px; background:#fff;
+  font-size:14px; font-weight:600; color:var(--text);
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.search input:focus,.search select:focus{
+  border-color:var(--blue-600);
+  box-shadow:var(--ring);
+  outline:none;
+}
+.search .btn{
+  height:44px; align-self:end; padding:0 20px;
+  border-radius:12px;
+  border:1px solid rgba(26,102,255,.40);
+  background:linear-gradient(180deg, var(--blue-700), var(--blue-800));
+  color:#fff; font-weight:800; letter-spacing:.2px;
+  box-shadow:0 12px 26px rgba(17,49,170,.28), 0 0 0 1px rgba(0,194,255,.18) inset;
+  cursor:pointer;
+  transition:filter .14s ease, transform .14s ease, box-shadow .14s ease;
+}
+.search .btn:hover{ filter:brightness(1.07); }
+.search .btn:active{ transform:translateY(1px); }
+
+input[type="date"]::-webkit-datetime-edit{ color:transparent; }
+input[type="date"]:focus::-webkit-datetime-edit,
+input[type="date"][data-has-value="1"]::-webkit-datetime-edit{ color:inherit; }
+
+@media(max-width:900px){
+  .search{ grid-template-columns:1fr; }
+  .search .btn{ width:100%; }
+}
+
+/* CATEGORIEËN */
+.cat-dots{ padding:10px 0; }
+.cat-dots-row{
+  list-style:none; margin:0; padding:6px 2px;
+  display:flex; align-items:center; gap:14px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.cat-dots-row::-webkit-scrollbar{ display:none; }
+.catdot{ --size:72px; display:flex; flex-direction:column; align-items:center; gap:6px; text-decoration:none; min-width:72px; }
+.catdot img{
+  width:var(--size); height:var(--size); border-radius:50%; object-fit:cover;
+  box-shadow:
+    0 0 0 2px var(--blue-500),
+    inset 0 0 0 2px #fff,
+    0 8px 20px rgba(2,12,27,.10);
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.catdot:hover img{
+  transform:translateY(-3px);
+  box-shadow:
+    0 0 0 2px var(--blue-700),
+    inset 0 0 0 2px #fff,
+    0 12px 26px rgba(2,12,27,.16);
+  filter:saturate(1.05);
+}
+.catdot span{ font-size:13px; font-weight:700; color:var(--text); text-align:center; }
+
+@media(min-width:960px){
+  .cat-dots-row{ justify-content:center; overflow-x:visible; }
+}
+
+/* FOOTER */
+.site-footer{
+  font-size:12px;
+  border-top:1px solid rgba(0,43,255,.15);
+  background:rgba(255,255,255,.96);
+  backdrop-filter:saturate(130%) blur(10px);
+  margin-top:auto;
+}
+.footer-inner{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  max-width:1100px; margin-inline:auto; padding:12px 16px;
+}
+.footer-nav{ display:flex; gap:12px; align-items:center; }
+.footer-nav a{ text-decoration:none; font-weight:700; color:var(--blue-700); }
+@media(max-width:520px){
+  .footer-inner{ flex-direction:column; gap:6px; text-align:center; }
+}
+/* Header: brand netjes uitlijnen */
+.brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; }
+
+/* Groen moet winnen van .header-actions .nav-btn */
+.header-actions .nav-btn.btn-green{
+  background:linear-gradient(120deg,#16a34a,#0e9f6e);
+  border:1px solid rgba(16,185,129,.25);
+  color:#fff !important;
+  box-shadow:0 6px 18px rgba(16,185,129,.18);
+}
+.header-actions .nav-btn.btn-green:hover{ filter:brightness(1.07); }
+/* Sidebar & panel altijd gelijke hoogte, niet meeverkleinen */
+.settings{ display:grid; grid-template-columns:260px 1fr; gap:14px; align-items:stretch; }
+.sidenav{ min-height: 560px; }
+.panel-wrap{ min-height: 560px; }
+
+/* optioneel: vaste sticky zijbalk (mag je weglaten als je dat niet wilt) */
+@media(min-width:901px){
+  .sidenav{ position: sticky; top: 90px; }
+}
+/* =========================================
+   MOBIEL LAYOUT FIX (≤ 768px)
+   ========================================= */
+@media (max-width: 768px){
+
+  html, body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+    font-size:14px;
+  }
+
+  /* Header compacter + overzichtelijk */
+  .site-header .header-inner{
+    padding:8px 10px;
+    gap:8px;
+  }
+
+  .header-actions{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:6px;
+  }
+  .header-actions::-webkit-scrollbar{display:none;}
+  .header-actions .nav-btn{
+    font-size:11px;
+    padding:6px 10px;
+    white-space:nowrap;
+  }
+
+  /* Algemeen container-gedrag */
+  .container,
+  .wrap{
+    padding-inline:12px;
+  }
+
+  /* HERO / INDEX (zoekkaart) */
+  .hero{
+    padding:26px 0 24px;
+  }
+  .hero-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    text-align:center;
+    gap:18px;
+  }
+
+  .hero-inner h1{
+    font-size:22px;
+    line-height:1.2;
+  }
+
+  .hero-inner p{
+    font-size:13px;
+  }
+
+  /* Zoekkaart mooi full-width op mobiel */
+  .search-wrap{
+    margin:14px auto 0;
+    max-width:100%;
+    width:100%;
+    padding:14px;
+  }
+
+  .search-wrap .search-row,
+  .search-wrap form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .search-wrap .field,
+  .search-wrap .field-group{
+    width:100%;
+  }
+
+  .search-wrap .btn{
+    width:100%;
+    justify-content:center;
+  }
+
+  /* Kleur-categorie chips / knoppen onder de hero (index) */
+  .cat-strip{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
+  }
+  .cat-chip{
+    flex:0 1 calc(50% - 8px);
+    text-align:center;
+  }
+
+  /* WAAROM-PAGINA */
+  .flow-row{
+    grid-template-columns:1fr;
+  }
+
+  .value-grid{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    padding:14px;
+  }
+
+  /* AANMELDEN (signup) */
+  .signup-grid{
+    grid-template-columns:1fr;
+  }
+
+  .signup-card{
+    margin-top:10px;
+  }
+
+  .signup-card form{
+    gap:10px;
+  }
+
+  .signup-card .two{
+    grid-template-columns:1fr;
+  }
+
+  /* LOGIN-PAGINA */
+  .login-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .login-card{
+    margin-top:6px;
+  }
+
+  /* Forms algemeen (alle pagina’s) */
+  .field input,
+  .field select,
+  .field .input{
+    font-size:13px;
+    padding:9px 11px;
+  }
+
+  .btn{
+    width:100%;
+    padding:11px 14px;
+    font-size:14px;
+  }
+
+  /* Footer altijd netjes onderaan en luchtiger */
+  .site-footer .footer-inner{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    padding-inline:12px;
+    text-align:left;
+  }
+}

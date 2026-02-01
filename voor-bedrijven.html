@@ -1,0 +1,52 @@
+<!doctype html><html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Voor bedrijven — Vrijeplek.be</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body><div class="container">
+<header class="header">
+  <div class="brand"><div class="logo"></div> Vrijeplek<span style="color:#64748b">.be</span></div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="voor-bedrijven.html">Voor bedrijven</a>
+    <a href="login.html" class="button ghost" id="loginLink">Login</a>
+    <a href="#" class="button ghost" id="logoutLink" style="display:none">Uitloggen</a>
+    <a href="signup.html" class="cta">Aanmelden</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="card">
+      <h3>Start vandaag nog</h3>
+      <div class="plan">
+        <div><b>Maandelijks</b><small>€9/maand · 3 maanden gratis na eerste €9</small></div>
+        <a class="button primary" href="signup.html" onclick="localStorage.setItem('plan','monthly')">Kiezen</a>
+      </div>
+      <div class="plan">
+        <div><b>Jaar</b><small>€80/jaar · beste prijs</small></div>
+        <a class="button primary" href="signup.html" onclick="localStorage.setItem('plan','yearly')">Kiezen</a>
+      </div>
+      <p class="notice">Maandelijks opzegbaar. Geen commissie of verborgen kosten.</p>
+    </div>
+  </aside>
+  <main>
+    <div class="card">
+      <div class="kicker">Waarom Vrijeplek?</div>
+      <h2>Direct vol boekbare zichtbaarheid</h2>
+      <p>Vrijeplek.be laat klanten vrije momenten zoeken en meteen reserveren. Jij beheert je agenda in een eenvoudig dashboard en linkt optioneel je Google Reviews.</p>
+    </div>
+    <div class="grid" style="margin-top:14px">
+      <div class="card"><h3>Eenvoudig dashboard</h3><p>Beschikbaarheden toevoegen/verwijderen in seconden.</p></div>
+      <div class="card"><h3>Lokale vindbaarheid</h3><p>Gevonden worden op categorie, naam of locatie.</p></div>
+      <div class="card"><h3>Vaste prijs</h3><p>€9/maand of €80/jaar. Geen commissie.</p></div>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">© <span id="year">2025</span> Vrijeplek.be · <a href="terms.html">Algemene voorwaarden</a></footer>
+</div>
+<script defer src="/.netlify/identity/widget.js"></script>
+<script defer src="app.js"></script>
+</body></html>
