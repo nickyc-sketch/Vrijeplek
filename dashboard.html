@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Vrijeplek</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Vrijeplek</a>
+    </div>
+  </header>
+  <main class="container">
+    <h1>Dashboard</h1>
+    <p>Welkom, <span id="user-name">Ondernemer</span>!</p>
+    <section class="business-details">
+      <h2>Bedrijfsgegevens</h2>
+      <!-- Formulier voor bedrijfsgegevens aanpassen -->
+      <form id="business-form">
+        <div class="form-group">
+          <label for="business_name">Naam van de zaak</label>
+          <input type="text" id="business_name" name="business_name" required>
+        </div>
+        <div class="form-group">
+          <label for="category">Categorie</label>
+          <input type="text" id="category" name="category" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Adres</label>
+          <input type="text" id="address" name="address" required>
+        </div>
+        <div class="form-group">
+          <label for="postal_code">Postcode</label>
+          <input type="text" id="postal_code" name="postal_code" required>
+        </div>
+        <div class="form-group">
+          <label for="city">Stad</label>
+          <input type="text" id="city" name="city" required>
+        </div>
+        <div class="form-group">
+          <label for="deposit">Voorschot</label>
+          <select id="deposit" name="deposit">
+            <option value="none">Geen voorschot</option>
+            <option value="15">€15</option>
+            <option value="30">€30</option>
+            <option value="50">€50</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="visible_on_location" name="visible_on_location">
+            Vindbaar zijn op locatie
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">Opslaan</button>
+      </form>
+    </section>
+    <section class="calendar">
+      <h2>Kalender</h2>
+      <p>Hier kun je tijdsloten toevoegen, wijzigen of verwijderen. Dit onderdeel zal via JavaScript met Supabase verbonden worden.</p>
+      <div id="calendar-placeholder" class="result-card">
+        <p>Kalenderfunctionaliteit komt hier.</p>
+      </div>
+      <button id="add-slot" class="btn-primary" style="margin-top: 1rem;">Tijdslot toevoegen</button>
+    </section>
+    <section class="bookings">
+      <h2>Boekingsaanvragen</h2>
+      <div id="bookings-list" class="results">
+        <p>Je hebt nog geen boekingsaanvragen.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Vrijeplek.</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
